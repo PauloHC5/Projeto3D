@@ -180,6 +180,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseScrollUp"",
+                    ""type"": ""Value"",
+                    ""id"": ""10520a82-03c7-4ba8-931b-34c456c0b961"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MouseScrollDown"",
+                    ""type"": ""Value"",
+                    ""id"": ""ee3c436d-95ff-49f3-8e37-b54465a7d6de"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MouseScroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""e6fcd3fd-3ab2-4b4c-aa38-ad230dc0fc32"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -477,6 +504,50 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Weapon5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""32c51adf-f18a-4af9-a00f-f959375f79a3"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MouseScrollUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a9f34e43-79b1-4ce8-9e14-4ed629c85f28"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MouseScrollDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e0c9171c-3c0b-4d11-9f70-d4b7b602eb1e"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""68bdc13e-0908-4807-b2e4-9ad62f46ff2f"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseScroll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1074,6 +1145,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Weapon3 = m_Player.FindAction("Weapon3", throwIfNotFound: true);
         m_Player_Weapon4 = m_Player.FindAction("Weapon4", throwIfNotFound: true);
         m_Player_Weapon5 = m_Player.FindAction("Weapon5", throwIfNotFound: true);
+        m_Player_MouseScrollUp = m_Player.FindAction("MouseScrollUp", throwIfNotFound: true);
+        m_Player_MouseScrollDown = m_Player.FindAction("MouseScrollDown", throwIfNotFound: true);
+        m_Player_MouseScroll = m_Player.FindAction("MouseScroll", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1177,6 +1251,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Weapon3;
     private readonly InputAction m_Player_Weapon4;
     private readonly InputAction m_Player_Weapon5;
+    private readonly InputAction m_Player_MouseScrollUp;
+    private readonly InputAction m_Player_MouseScrollDown;
+    private readonly InputAction m_Player_MouseScroll;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1228,6 +1305,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Weapon5".
         /// </summary>
         public InputAction @Weapon5 => m_Wrapper.m_Player_Weapon5;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MouseScrollUp".
+        /// </summary>
+        public InputAction @MouseScrollUp => m_Wrapper.m_Player_MouseScrollUp;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MouseScrollDown".
+        /// </summary>
+        public InputAction @MouseScrollDown => m_Wrapper.m_Player_MouseScrollDown;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MouseScroll".
+        /// </summary>
+        public InputAction @MouseScroll => m_Wrapper.m_Player_MouseScroll;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1284,6 +1373,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Weapon5.started += instance.OnWeapon5;
             @Weapon5.performed += instance.OnWeapon5;
             @Weapon5.canceled += instance.OnWeapon5;
+            @MouseScrollUp.started += instance.OnMouseScrollUp;
+            @MouseScrollUp.performed += instance.OnMouseScrollUp;
+            @MouseScrollUp.canceled += instance.OnMouseScrollUp;
+            @MouseScrollDown.started += instance.OnMouseScrollDown;
+            @MouseScrollDown.performed += instance.OnMouseScrollDown;
+            @MouseScrollDown.canceled += instance.OnMouseScrollDown;
+            @MouseScroll.started += instance.OnMouseScroll;
+            @MouseScroll.performed += instance.OnMouseScroll;
+            @MouseScroll.canceled += instance.OnMouseScroll;
         }
 
         /// <summary>
@@ -1325,6 +1423,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Weapon5.started -= instance.OnWeapon5;
             @Weapon5.performed -= instance.OnWeapon5;
             @Weapon5.canceled -= instance.OnWeapon5;
+            @MouseScrollUp.started -= instance.OnMouseScrollUp;
+            @MouseScrollUp.performed -= instance.OnMouseScrollUp;
+            @MouseScrollUp.canceled -= instance.OnMouseScrollUp;
+            @MouseScrollDown.started -= instance.OnMouseScrollDown;
+            @MouseScrollDown.performed -= instance.OnMouseScrollDown;
+            @MouseScrollDown.canceled -= instance.OnMouseScrollDown;
+            @MouseScroll.started -= instance.OnMouseScroll;
+            @MouseScroll.performed -= instance.OnMouseScroll;
+            @MouseScroll.canceled -= instance.OnMouseScroll;
         }
 
         /// <summary>
@@ -1695,6 +1802,27 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnWeapon5(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MouseScrollUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouseScrollUp(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MouseScrollDown" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouseScrollDown(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MouseScroll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouseScroll(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

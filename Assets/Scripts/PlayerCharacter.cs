@@ -25,6 +25,13 @@ public enum PlayerStates
     DEFAULT
 }
 
+public enum WeaponSocket
+{
+    RightHand,
+    LeftHand,
+    Back
+}
+
 public class PlayerCharacter : MonoBehaviour
 {
     [SerializeField] protected GameObject playerMesh;    
@@ -47,13 +54,12 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField] protected LayerMask groundMask;
 
     protected bool isGrounded;
-
     private Weapon equippedWeapon;
-    public Weapon EquippedWeapon { get { return equippedWeapon; } }
-
-    private PlayerInputActions playerControls;    
+    private PlayerInputActions playerControls;
     private PlayerStates playerStates = PlayerStates.DEFAULT;
     private float defaultFoV;
+
+    public Weapon EquippedWeapon => equippedWeapon;
 
     public PlayerStates PlayerStates { 
         get { return playerStates; }
@@ -66,7 +72,14 @@ public class PlayerCharacter : MonoBehaviour
     public bool LmbPressed { get { return lmbPressed; } }
     public bool RmbPressed { get { return rmbPressed; } }
 
+    private int MouseScroll;
+
     private void Awake()
+    {
+        InitializePlayerControls();             
+    }
+
+    private void InitializePlayerControls()
     {
         playerControls = new PlayerInputActions();
 
@@ -80,20 +93,31 @@ public class PlayerCharacter : MonoBehaviour
 
         playerControls.Player.Reload.performed += ctx => Reload();
         playerControls.Player.Weapon1.performed += ctx => SwitchToWeapon(PlayerWeapon.CROWBAR);
-        playerControls.Player.Weapon2.performed += ctx => SwitchToWeapon(PlayerWeapon.PISTOL);        
-        playerControls.Player.Weapon3.performed += ctx => SwitchToWeapon(PlayerWeapon.SHOTGUNS);        
-        playerControls.Player.Weapon4.performed += ctx => SwitchToWeapon(PlayerWeapon.THOMPSOM);        
-        playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(PlayerWeapon.CROSSBOW);        
-    }    
+        playerControls.Player.Weapon2.performed += ctx => SwitchToWeapon(PlayerWeapon.PISTOL);
+        playerControls.Player.Weapon3.performed += ctx => SwitchToWeapon(PlayerWeapon.SHOTGUNS);
+        playerControls.Player.Weapon4.performed += ctx => SwitchToWeapon(PlayerWeapon.THOMPSOM);
+        playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(PlayerWeapon.CROSSBOW);
+
+        // faça com que Mouse Scrool seja 1 quandi o playerControls.Player.MouseScroll for para cima e -1 quando for para baixo
+        playerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };
+        playerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };        
+    }
 
     private void Start()
     {
         SwitchToWeapon(weaponSelected);
     }
 
+    private void HandleMouseScroll()
+    {
+        int weaponCount = Enum.GetValues(typeof(PlayerWeapon)).Length;
+        int newWeaponIndex = ((int)weaponSelected + MouseScroll + weaponCount) % weaponCount;
+        SwitchToWeapon((PlayerWeapon)newWeaponIndex);
+    }
+
     private void SwitchToWeapon(PlayerWeapon weapon)
     {
-        if (playerStates != PlayerStates.DEFAULT || playerStates == PlayerStates.FIRING || (weapon == weaponSelected && weapon != PlayerWeapon.CROWBAR)) return;
+        if (weapon == weaponSelected && weapon != PlayerWeapon.CROWBAR) return;
 
         if (equippedWeapon) Destroy(equippedWeapon.gameObject);
 
@@ -103,7 +127,7 @@ public class PlayerCharacter : MonoBehaviour
         if (weaponSelected == PlayerWeapon.SHOTGUNS) equippedWeapon = SetDualWieldGun(weaponToSpawn);
         else
         {            
-            Transform socketToAttach = playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.tag.Equals(weaponToSpawn.SocketToAttach.ToString()));
+            Transform socketToAttach = playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.tag.Equals(weaponToSpawn.GetSocketToAttach.ToString()));
             equippedWeapon = Instantiate(weaponToSpawn, socketToAttach);
         }
 
@@ -118,10 +142,10 @@ public class PlayerCharacter : MonoBehaviour
     private Gun SetDualWieldGun(Weapon weaponToSpawn)
     {
         DualWieldGun guns = new GameObject("DualWieldGun").AddComponent<DualWieldGun>();
-        guns.transform.SetParent(transform);    
-        
-        Transform socketRight = playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.tag.Equals(guns.SocketToAttach(WhichGun.GunR).ToString()));
-        Transform socketLeft = playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.tag.Equals(guns.SocketToAttach(WhichGun.GunL).ToString()));
+        guns.transform.SetParent(transform);
+
+        Transform socketRight = GetSocketTransform(guns.GetSocketToAttach(WhichGun.GunR));
+        Transform socketLeft = GetSocketTransform(guns.GetSocketToAttach(WhichGun.GunL));
 
         guns.Initialize(
         (Gun)Instantiate(weaponToSpawn, socketRight),
@@ -131,6 +155,11 @@ public class PlayerCharacter : MonoBehaviour
         return guns;
     }
 
+    private Transform GetSocketTransform(WeaponSocket socket)
+    {
+        return playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.gameObject.CompareTag(socket.ToString()));
+    }
+
     protected void PerformPrimaryAction()
     {
         if (playerStates == PlayerStates.RELOADING || playerStates == PlayerStates.ATTACKING || playerStates == PlayerStates.RAISING) return;
@@ -138,18 +167,17 @@ public class PlayerCharacter : MonoBehaviour
         var equippedGun = equippedWeapon.GetComponent<Gun>();
 
         var equippedGuns = equippedGun as DualWieldGun;
-
         if(equippedGuns)
         {
             if (!equippedGuns.CanFire(WhichGun.GunL)) return;
-            equippedGuns.FireL();
+            equippedGuns.Fire();
             playerAnimator.SetTrigger("ShootL");
             return;
         }
         else if (equippedGun)
         {
             if (!equippedGun.CanFire) return;
-            equippedGun.Fire();                        
+            equippedGun.Fire();            
         }
 
         playerAnimator.SetTrigger("UseWeapon");
@@ -160,24 +188,22 @@ public class PlayerCharacter : MonoBehaviour
         if (playerStates != PlayerStates.DEFAULT) return;
         
         bool? performed = equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();
-        
-        if (performed.HasValue)
+
+        if (performed.HasValue && performed.Value && equippedWeapon is DualWieldGun)
         {
-            if ((bool)performed && equippedWeapon as DualWieldGun) playerAnimator.SetTrigger("ShootR");            
-        }        
+            playerAnimator.SetTrigger("ShootR");
+        }
     }
 
     protected void Reload()
     {
         if (playerStates != PlayerStates.DEFAULT) return;
 
-        Gun equippedGun = equippedWeapon as Gun;
-
-        if (equippedGun)
+        if (equippedWeapon is Gun equippedGun)
         {
             playerAnimator.SetTrigger("Reload");
             equippedGun.Reload();
-        }             
+        }
     }
 
     private void OnEnable()

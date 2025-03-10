@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7756443190382612818}
   m_Layer: 0
   m_Name: weponsocket_l
-  m_TagString: WEAPON_SOCKET_L
+  m_TagString: LeftHand
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -270,7 +270,7 @@ GameObject:
   - component: {fileID: 4769118558256722329}
   m_Layer: 0
   m_Name: weaponsocket_r
-  m_TagString: WEAPON_SOCKET_R
+  m_TagString: RightHand
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -994,13 +994,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMesh: {fileID: 5650255268021678111}
-  playerCamera: {fileID: 0}
   weaponSelected: 0
   weapons:
   - {fileID: 680661133788926344, guid: 8ae98ba8c885c4e409a9c66715f417b3, type: 3}
-  - {fileID: 8543464817681143299, guid: 9e559eea5ebc5034f9850db28de8f355, type: 3}
+  - {fileID: 3497594360363031884, guid: 9e559eea5ebc5034f9850db28de8f355, type: 3}
   - {fileID: 8052022965279057298, guid: 1bd71f91def4df84b8e7bd5b96279ba4, type: 3}
-  - {fileID: 4088057121780693688, guid: 7092134928b56b84fb5712131da31c47, type: 3}
+  - {fileID: 3805995797017812115, guid: 7092134928b56b84fb5712131da31c47, type: 3}
   - {fileID: 1646863040332176108, guid: e5edce3a7d4a2094489060a633b58c63, type: 3}
   playerAnimator: {fileID: 728732302384425514}
   speed: 12

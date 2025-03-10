@@ -247,6 +247,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1197535607319847257}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3554507560674131692
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4137415052473122391}
+  m_Layer: 0
+  m_Name: Flare Spawn Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4137415052473122391
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3554507560674131692}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.112, z: 0.262}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4141710918743613609}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6095770796517280337
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,7 +288,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4141710918743613609}
   - component: {fileID: 1882565814810749173}
-  - component: {fileID: 8543464817681143299}
+  - component: {fileID: 3497594360363031884}
   m_Layer: 0
   m_Name: Flaregun
   m_TagString: Untagged
@@ -281,6 +312,7 @@ Transform:
   - {fileID: 1662111845241541373}
   - {fileID: 6983365686092897027}
   - {fileID: 3312056532127850227}
+  - {fileID: 4137415052473122391}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1882565814810749173
@@ -304,7 +336,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8543464817681143299
+--- !u!114 &3497594360363031884
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -313,10 +345,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6095770796517280337}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d7b979813b150642acae66124063f18, type: 3}
+  m_Script: {fileID: 11500000, guid: dfad3912ccd0b3846a3c87a230c0af9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketToAttach: 0
   fireRate: 1.25
+  flareProjectile: {fileID: 341805643774372071, guid: 1d82688dbcc922f4a980235af05ce526,
+    type: 3}
+  flareSpawnPoint: {fileID: 4137415052473122391}
+  FlareForce: 20
 --- !u!1 &6297807432753938133
 GameObject:
   m_ObjectHideFlags: 0

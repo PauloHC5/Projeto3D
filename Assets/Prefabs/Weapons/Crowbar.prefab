@@ -166,7 +166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f95feed8c648b74784cf8c8c097343f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireRate: 0.5
+  socketToAttach: 0
+  crowbarCollider: {fileID: 5761576011746466765}
 --- !u!135 &5761576011746466765
 SphereCollider:
   m_ObjectHideFlags: 0

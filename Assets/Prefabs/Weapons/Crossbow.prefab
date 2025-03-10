@@ -27,12 +27,13 @@ Transform:
   m_GameObject: {fileID: 909998162837649555}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.8863407, y: 1.234, z: 7.1522493}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7706383299726346422}
   - {fileID: 6720337447558493089}
+  - {fileID: 1012128198775458161}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2518716188228916586
@@ -70,8 +71,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   socketToAttach: 0
   fireRate: 0.5
+  boltProjectile: {fileID: 3264521097787777737, guid: cf06b78d659326049966110abd8afe84,
+    type: 3}
+  boltSpawnPoint: {fileID: 1012128198775458161}
+  boltForce: 100
   scopeZoom: 30
   scopeSpeed: 100
+  shootsTimer: 0.08333335
 --- !u!1 &921919319070256424
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,6 +533,37 @@ Transform:
   m_Children:
   - {fileID: 5012136388741776240}
   m_Father: {fileID: 1949499461437337350}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5084033437688323863
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1012128198775458161}
+  m_Layer: 0
+  m_Name: Bolt Spawn Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1012128198775458161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5084033437688323863}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.099, z: 0.422}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4981631966314735685}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5627332089693368963
 GameObject:

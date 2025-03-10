@@ -15,6 +15,9 @@ public class DualWieldGun : Gun, ISecondaryAction
 
     public DualWieldGun Initialize(Gun GunR, Gun GunL)
     {
+        if (GunR == null) throw new System.ArgumentNullException(nameof(GunR));
+        if (GunL == null) throw new System.ArgumentNullException(nameof(GunL));
+
         this.gunR = GunR;
         this.gunL = GunL;
 
@@ -26,18 +29,13 @@ public class DualWieldGun : Gun, ISecondaryAction
         return whichGun == WhichGun.GunR ? gunR.CanFire : gunL.CanFire;
     }
 
-    public new WeaponSocket SocketToAttach(WhichGun whichGun)
+    public new WeaponSocket GetSocketToAttach(WhichGun whichGun)
     {
-        return whichGun == WhichGun.GunR ? WeaponSocket.WEAPON_SOCKET_R : WeaponSocket.WEAPON_SOCKET_L;
+        return whichGun == WhichGun.GunR ? WeaponSocket.RightHand : WeaponSocket.LeftHand;
     }
 
     public override void Fire()
     {        
-        gunR.Fire();
-    }
-
-    public void FireL()
-    {
         gunL.Fire();
     }
 
@@ -49,8 +47,8 @@ public class DualWieldGun : Gun, ISecondaryAction
 
     private void OnDestroy()
     {
-        Destroy(gunR.gameObject);
-        Destroy(gunL.gameObject);
+        if(gunR) Destroy(gunR.gameObject);
+        if(gunL) Destroy(gunL.gameObject);
     }
 
     public bool Perform()
