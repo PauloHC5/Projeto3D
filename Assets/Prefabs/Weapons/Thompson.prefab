@@ -632,6 +632,8 @@ MonoBehaviour:
   fireRate: 0.12
   muzzleFlash: {fileID: 7712377475459072541}
   impactVFX: {fileID: 19800002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
+  gunRange: 50
+  DebugRaycast: 1
 --- !u!1 &8639159340575186765
 GameObject:
   m_ObjectHideFlags: 0

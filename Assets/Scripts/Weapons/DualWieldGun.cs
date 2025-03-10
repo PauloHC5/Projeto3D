@@ -36,7 +36,7 @@ public class DualWieldGun : Gun, ISecondaryAction
 
     public override void Fire()
     {        
-        gunL.Fire();
+        gunL.Fire();        
     }
 
     public override void Reload()

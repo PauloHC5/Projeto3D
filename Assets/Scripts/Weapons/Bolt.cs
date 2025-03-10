@@ -8,6 +8,7 @@ public class Bolt : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        StartCoroutine(DestroyAfterTime());
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -20,4 +21,12 @@ public class Bolt : MonoBehaviour
             }
         }
     }
+
+    // routine to destroy the bolt after 5 seconds
+    private IEnumerator DestroyAfterTime()
+    {
+        yield return new WaitForSeconds(5f);
+        Destroy(gameObject);
+    }
+
 }

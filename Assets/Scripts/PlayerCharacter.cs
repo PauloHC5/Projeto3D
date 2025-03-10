@@ -59,18 +59,18 @@ public class PlayerCharacter : MonoBehaviour
     private PlayerStates playerStates = PlayerStates.DEFAULT;
     private float defaultFoV;
 
+    protected bool lmbPressed = false;
+    protected bool rmbPressed = false;
+
     public Weapon EquippedWeapon => equippedWeapon;
 
     public PlayerStates PlayerStates { 
         get { return playerStates; }
         set { playerStates = value; }
-    }
-    
-    protected bool lmbPressed = false;
-    protected bool rmbPressed = false;
+    }       
 
     public bool LmbPressed { get { return lmbPressed; } }
-    public bool RmbPressed { get { return rmbPressed; } }
+    public bool RmbPressed { get { return rmbPressed; } }    
 
     private int MouseScroll;
 
@@ -117,7 +117,7 @@ public class PlayerCharacter : MonoBehaviour
 
     private void SwitchToWeapon(PlayerWeapon weapon)
     {
-        if (weapon == weaponSelected && weapon != PlayerWeapon.CROWBAR) return;
+        if (playerStates == PlayerStates.FIRING || (weapon == weaponSelected && weapon != PlayerWeapon.CROWBAR)) return;
 
         if (equippedWeapon) Destroy(equippedWeapon.gameObject);
 
@@ -197,12 +197,12 @@ public class PlayerCharacter : MonoBehaviour
 
     protected void Reload()
     {
-        if (playerStates != PlayerStates.DEFAULT) return;
+        if (playerStates == PlayerStates.RELOADING) return;
 
         if (equippedWeapon is Gun equippedGun)
         {
             playerAnimator.SetTrigger("Reload");
-            equippedGun.Reload();
+            //equippedGun.Reload();
         }
     }
 

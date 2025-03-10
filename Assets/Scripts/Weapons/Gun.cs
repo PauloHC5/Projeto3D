@@ -9,6 +9,9 @@ public class Gun : Weapon
     [SerializeField] private float fireRate = 0.5f;
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private ParticleSystem impactVFX;
+    [SerializeField] private float gunRange = 100f;
+    [SerializeField] private Transform fireSocket;
+    [SerializeField] private bool DebugRaycast = false;  
 
     public float FireRate { get { return fireRate; } }
 
@@ -29,7 +32,7 @@ public class Gun : Weapon
     {
         if(muzzleFlash) muzzleFlash.Play();
         StartCoroutine(ShootDelay());        
-        if(gunAnimator) gunAnimator.SetTrigger(FireTrigger);
+        if(gunAnimator) gunAnimator.SetTrigger(FireTrigger);        
     }
 
     public virtual void Reload()
@@ -64,12 +67,22 @@ public class Gun : Weapon
 
     protected void ShootRaycast()
     {
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        Ray ray;
+        if (fireSocket == default) {
+            ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        }
+        else
+        {
+            ray = new Ray(fireSocket.position, Camera.main.transform.forward);
+        }
+
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, gunRange))
         {                                    
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));
-        }        
+        }     
+        
+        if(DebugRaycast) Debug.DrawRay(ray.origin, ray.direction * gunRange, Color.red, 5f);
     }
 
 }

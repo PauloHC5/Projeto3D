@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerCharacterBehaviour : StateMachineBehaviour
 {
     private PlayerCharacter playerCharacter;
+    private Gun equippedGun;
 
     private enum AnimationState
     {
@@ -31,8 +32,9 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         playerCharacter = animator.GetComponentInParent<PlayerCharacter>();
+        equippedGun = playerCharacter.EquippedWeapon as Gun;
 
-        switch(GetAnimationState(stateInfo))
+        switch (GetAnimationState(stateInfo))
         {
             case AnimationState.RaiseWeapon:
                 SetPlayerState(PlayerStates.RAISING);
@@ -43,10 +45,11 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
             case AnimationState.DualWieldFire:
             case AnimationState.Fire:
                 SetPlayerState(PlayerStates.FIRING);
-                HandleDualWieldFireState(animator, stateInfo);
+                HandleDualWieldFireState(animator, stateInfo);                
                 break;
             case AnimationState.Reload:
-                SetPlayerState(PlayerStates.RELOADING);
+                SetPlayerState(PlayerStates.RELOADING);                
+                if (equippedGun != null) equippedGun.Reload();                
                 break;
         }        
         
