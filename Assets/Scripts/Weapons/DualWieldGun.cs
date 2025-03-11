@@ -8,7 +8,7 @@ public enum WhichGun
     GunL
 }
 
-public class DualWieldGun : Gun, ISecondaryAction
+public class DualWieldGun : Gun
 {
     private Gun gunR;
     private Gun gunL;    
@@ -35,8 +35,21 @@ public class DualWieldGun : Gun, ISecondaryAction
     }
 
     public override void Fire()
-    {        
-        gunL.Fire();        
+    {
+        gunR.Fire();
+        gunL.Fire();
+    }
+
+    public void Fire(WhichGun whichGun)
+    {
+        if (whichGun == WhichGun.GunL)
+        {
+            gunL.Fire();
+        }
+        else
+        {
+            gunR.Fire();
+        }
     }
 
     public override void Reload()
@@ -49,15 +62,5 @@ public class DualWieldGun : Gun, ISecondaryAction
     {
         if(gunR) Destroy(gunR.gameObject);
         if(gunL) Destroy(gunL.gameObject);
-    }
-
-    public bool Perform()
-    {
-        if (gunR.CanFire)
-        {
-            gunR.Fire();
-            return true;
-        }
-        return false;
-    }
+    }    
 }
