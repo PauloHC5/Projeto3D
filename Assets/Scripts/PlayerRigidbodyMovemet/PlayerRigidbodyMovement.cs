@@ -20,7 +20,7 @@ public class PlayerRigidbodyMovement : PlayerCharacter
     private void MovePlayer()
     {
         Vector3 MoveVector = transform.TransformDirection(playerMovementInput * speed);
-        PlayerBody.velocity = new Vector3(MoveVector.x, PlayerBody.velocity.y, MoveVector.z);        
+        PlayerBody.linearVelocity = new Vector3(MoveVector.x, PlayerBody.linearVelocity.y, MoveVector.z);        
 
         if(Input.GetButtonDown("Jump") && isGrounded) PlayerBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }

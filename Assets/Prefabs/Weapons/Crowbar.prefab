@@ -49,6 +49,9 @@ SkinnedMeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 3
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -187,8 +190,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Radius: 0.08
-  m_Center: {x: 0, y: 0.38, z: 0.06}
+  m_Radius: 0.22
+  m_Center: {x: 0, y: 0.29, z: 0.18}
 --- !u!1 &2059616495700769633
 GameObject:
   m_ObjectHideFlags: 0
