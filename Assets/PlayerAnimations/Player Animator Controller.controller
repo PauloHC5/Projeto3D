@@ -2078,7 +2078,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 31aca7349567c854c9d537f9ca9a6fc4, type: 2}
-  m_Tag: FIreL
+  m_Tag: FireL
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
