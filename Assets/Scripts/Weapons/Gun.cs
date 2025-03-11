@@ -6,12 +6,12 @@ public class Gun : Weapon
 {
 
     [Header("Gun Properties")]
-    [SerializeField] private float fireRate = 0.5f;
-    [SerializeField] private ParticleSystem muzzleFlash;
-    [SerializeField] private ParticleSystem impactVFX;
-    [SerializeField] private float gunRange = 100f;
-    [SerializeField] private Transform fireSocket;
-    [SerializeField] private bool DebugRaycast = false;  
+    [SerializeField] protected float fireRate = 0.5f;
+    [SerializeField] protected float gunRange = 100f;
+    [SerializeField] protected Transform fireSocket;
+    [SerializeField] protected ParticleSystem muzzleFlash;
+    [SerializeField] protected ParticleSystem impactVFX;    
+    [SerializeField] protected bool DebugRaycast = false;  
 
     public float FireRate { get { return fireRate; } }
 
@@ -30,9 +30,9 @@ public class Gun : Weapon
 
     public virtual void Fire()
     {
-        if(muzzleFlash) muzzleFlash.Play();
-        StartCoroutine(ShootDelay());        
-        if(gunAnimator) gunAnimator.SetTrigger(FireTrigger);        
+        if(muzzleFlash) muzzleFlash.Play();                
+        if(gunAnimator) gunAnimator.SetTrigger(FireTrigger);
+        StartCoroutine(ShootDelay());
     }
 
     public virtual void Reload()
@@ -40,7 +40,7 @@ public class Gun : Weapon
         gunAnimator.SetTrigger(ReloadTrigger);
     }
 
-    private IEnumerator ShootDelay()
+    protected IEnumerator ShootDelay()
     {
         canFire = false;
         yield return new WaitForSeconds(FireRate);
@@ -65,7 +65,7 @@ public class Gun : Weapon
         spawnedProjectile.GetComponent<Rigidbody>().AddForce(ray.direction * impulse, ForceMode.Impulse);
     }
 
-    protected void ShootRaycast()
+    protected virtual void ShootRaycast()
     {
         Ray ray;
         if (fireSocket == default) {

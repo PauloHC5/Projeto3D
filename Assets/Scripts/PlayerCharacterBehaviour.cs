@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+public enum PlayerStates
+{
+    RAISING,
+    RELOADING,
+    ATTACKING,
+    FIRING,
+
+    DEFAULT
+}
+
 public class PlayerCharacterBehaviour : StateMachineBehaviour
 {
     private PlayerCharacter playerCharacter;
@@ -12,20 +23,20 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     {
         None,
         RaiseWeapon,
-        Attack,
-        DualWieldFire,
+        Attack,        
         Fire,
+        FireR,
+        FireL,
         Reload
-    }
+    }    
 
-    private AnimationState GetAnimationState(AnimatorStateInfo stateInfo)
+    private PlayerStates GetAnimationState(AnimatorStateInfo stateInfo)
     {
-        if (stateInfo.IsTag("RaiseWeapon")) return AnimationState.RaiseWeapon;
-        if (stateInfo.IsTag("Attack")) return AnimationState.Attack;
-        if (stateInfo.IsTag("DualWieldFire")) return AnimationState.DualWieldFire;
-        if (stateInfo.IsTag("Fire")) return AnimationState.Fire;
-        if (stateInfo.IsTag("Reload")) return AnimationState.Reload;
-        return AnimationState.None;
+        if (stateInfo.IsTag("RaiseWeapon")) return PlayerStates.RAISING;
+        if (stateInfo.IsTag("Attack")) return PlayerStates.ATTACKING;        
+        if (stateInfo.IsTag("Fire") || stateInfo.IsTag("FireR") || stateInfo.IsTag("FireL")) return PlayerStates.FIRING;        
+        if (stateInfo.IsTag("Reload")) return PlayerStates.RELOADING;
+        return PlayerStates.DEFAULT;
     }
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -36,18 +47,17 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
 
         switch (GetAnimationState(stateInfo))
         {
-            case AnimationState.RaiseWeapon:
+            case PlayerStates.RAISING:
                 SetPlayerState(PlayerStates.RAISING);
                 break;
-            case AnimationState.Attack:
+            case PlayerStates.ATTACKING:
                 HandleAttackState(animator);
                 break;
-            case AnimationState.DualWieldFire:
-            case AnimationState.Fire:
+            case PlayerStates.FIRING:            
                 SetPlayerState(PlayerStates.FIRING);
                 HandleDualWieldFireState(animator, stateInfo);                
                 break;
-            case AnimationState.Reload:
+            case PlayerStates.RELOADING:
                 SetPlayerState(PlayerStates.RELOADING);                
                 if (equippedGun != null) equippedGun.Reload();                
                 break;
@@ -57,21 +67,18 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        if (stateInfo.IsTag("RaiseWeapon") || stateInfo.IsTag("Attack") || stateInfo.IsTag("Fire") || stateInfo.IsTag("DualWieldFire") || stateInfo.IsTag("Reload"))
+    {        
+        if (GetAnimationState(stateInfo) == PlayerStates.ATTACKING)
         {
-            playerCharacter.PlayerStates = PlayerStates.DEFAULT;            
+            DisableCrowbarCollision();            
         }
 
-        if (GetAnimationState(stateInfo) == AnimationState.Attack)
+        if (GetAnimationState(stateInfo) == PlayerStates.FIRING)
         {
-            DisableCrowbarCollision();
+            ResetLayerWeights(animator, stateInfo);
         }
 
-        if (GetAnimationState(stateInfo) == AnimationState.DualWieldFire)
-        {
-            ResetLayerWeights(animator);
-        }
+        playerCharacter.PlayerStates = PlayerStates.DEFAULT;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
@@ -107,10 +114,14 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
 
     private void HandleDualWieldFireState(Animator animator, AnimatorStateInfo stateInfo)
     {
-        if (stateInfo.IsTag("DualWieldFire"))
+        if (stateInfo.IsTag("FireL"))
         {
-            if (playerCharacter.LmbPressed) animator.SetLayerWeight(1, 1f);
-            if (playerCharacter.RmbPressed) animator.SetLayerWeight(2, 1f);
+            if (playerCharacter.LmbPressed) animator.SetLayerWeight(1, 1f);            \            
+        }
+
+        if (stateInfo.IsTag("FireR"))
+        {            
+            if (playerCharacter.RmbPressed) animator.SetLayerWeight(2, 1f);            
         }
     }
 
@@ -123,9 +134,9 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         }
     }
 
-    private void ResetLayerWeights(Animator animator)
+    private void ResetLayerWeights(Animator animator, AnimatorStateInfo stateInfo)
     {
-        animator.SetLayerWeight(1, 0f);
-        animator.SetLayerWeight(2, 0f);
+        if (stateInfo.IsTag("FireL")) animator.SetLayerWeight(1, 0f);
+        if (stateInfo.IsTag("FireR")) animator.SetLayerWeight(2, 0f);
     }
 }

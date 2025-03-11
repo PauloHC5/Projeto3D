@@ -784,7 +784,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 9bcda37e8638c8b4abe53e92c80c0d46, type: 2}
-  m_Tag: DualWieldFire
+  m_Tag: FireR
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
@@ -2035,9 +2035,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0
-  m_TransitionOffset: 0
-  m_ExitTime: 0.43729633
+  m_TransitionDuration: 0.09
+  m_TransitionOffset: 0.1493712
+  m_ExitTime: 0.5567932
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -2078,7 +2078,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 31aca7349567c854c9d537f9ca9a6fc4, type: 2}
-  m_Tag: DualWieldFire
+  m_Tag: FIreL
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 

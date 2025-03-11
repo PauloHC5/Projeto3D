@@ -15,16 +15,6 @@ public enum PlayerWeapon
     CROSSBOW = 4
 }
 
-public enum PlayerStates
-{
-    RAISING,
-    RELOADING,
-    ATTACKING,
-    FIRING,
-
-    DEFAULT
-}
-
 public enum WeaponSocket
 {
     RightHand,
@@ -39,7 +29,7 @@ public class PlayerCharacter : MonoBehaviour
     [Space]
     [Header("Combat")]
     [SerializeField] protected PlayerWeapon weaponSelected;
-    [SerializeField] protected Weapon[] weapons;        
+    [SerializeField] protected Weapon[] weapons = new Weapon[5];
 
     [Space]
     [Header("Animation")]
@@ -105,7 +95,7 @@ public class PlayerCharacter : MonoBehaviour
 
     private void Start()
     {
-        SwitchToWeapon(weaponSelected);
+        SwitchToWeapon(weaponSelected);        
     }
 
     private void HandleMouseScroll()
@@ -117,7 +107,7 @@ public class PlayerCharacter : MonoBehaviour
 
     private void SwitchToWeapon(PlayerWeapon weapon)
     {
-        if (playerStates == PlayerStates.FIRING || (weapon == weaponSelected && weapon != PlayerWeapon.CROWBAR)) return;
+        if (playerStates == PlayerStates.FIRING || playerStates == PlayerStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.CROWBAR)) return;
 
         if (equippedWeapon) Destroy(equippedWeapon.gameObject);
 
@@ -185,7 +175,7 @@ public class PlayerCharacter : MonoBehaviour
 
     protected void PerformSecondaryAction()
     {
-        if (playerStates != PlayerStates.DEFAULT) return;
+        if (playerStates == PlayerStates.RAISING || playerStates ==  PlayerStates.RELOADING) return;
         
         bool? performed = equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();
 
