@@ -10,6 +10,7 @@ public enum PlayerStates
     RELOADING,
     ATTACKING,
     FIRING,
+    DUALWIELDFIRING,
 
     DEFAULT
 }
@@ -34,7 +35,8 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     {
         if (stateInfo.IsTag("RaiseWeapon")) return PlayerStates.RAISING;
         if (stateInfo.IsTag("Attack")) return PlayerStates.ATTACKING;        
-        if (stateInfo.IsTag("Fire") || stateInfo.IsTag("FireR") || stateInfo.IsTag("FireL")) return PlayerStates.FIRING;        
+        if (stateInfo.IsTag("Fire")) return PlayerStates.FIRING;        
+        if (stateInfo.IsTag("FireR") || stateInfo.IsTag("FireL")) return PlayerStates.DUALWIELDFIRING;        
         if (stateInfo.IsTag("Reload")) return PlayerStates.RELOADING;
         return PlayerStates.DEFAULT;
     }
@@ -44,21 +46,24 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     {
         playerCharacter = animator.GetComponentInParent<PlayerCharacter>();
         equippedGun = playerCharacter.EquippedWeapon as Gun;
+        
+        playerCharacter.PlayerStates = GetAnimationState(stateInfo);
 
-        switch (GetAnimationState(stateInfo))
+        switch (playerCharacter.PlayerStates)
         {
-            case PlayerStates.RAISING:
-                SetPlayerState(PlayerStates.RAISING);
+            case PlayerStates.RAISING:                
                 break;
             case PlayerStates.ATTACKING:
                 HandleAttackState(animator);
                 break;
-            case PlayerStates.FIRING:            
-                SetPlayerState(PlayerStates.FIRING);
-                HandleDualWieldFireState(animator, stateInfo);                
+            case PlayerStates.FIRING:                            
+                equippedGun.Fire();
                 break;
-            case PlayerStates.RELOADING:
-                SetPlayerState(PlayerStates.RELOADING);                
+            case PlayerStates.DUALWIELDFIRING: 
+                DualWieldGun equippedGuns = equippedGun as DualWieldGun;
+                if(equippedGuns) HandleDualWieldFireState(equippedGuns, animator, stateInfo);
+                break;
+            case PlayerStates.RELOADING:                
                 if (equippedGun != null) equippedGun.Reload();                
                 break;
         }        
@@ -68,17 +73,17 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {        
-        if (GetAnimationState(stateInfo) == PlayerStates.ATTACKING)
+        if (playerCharacter && playerCharacter.PlayerStates == PlayerStates.ATTACKING)
         {
             DisableCrowbarCollision();            
         }
 
-        if (GetAnimationState(stateInfo) == PlayerStates.FIRING)
+        if (playerCharacter && playerCharacter.PlayerStates == PlayerStates.FIRING)
         {
             ResetLayerWeights(animator, stateInfo);
         }
 
-        playerCharacter.PlayerStates = PlayerStates.DEFAULT;
+        if(playerCharacter) playerCharacter.PlayerStates = PlayerStates.DEFAULT;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
@@ -112,16 +117,18 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         }
     }
 
-    private void HandleDualWieldFireState(Animator animator, AnimatorStateInfo stateInfo)
+    private void HandleDualWieldFireState(DualWieldGun equippedGuns, Animator animator, AnimatorStateInfo stateInfo)
     {
         if (stateInfo.IsTag("FireL"))
         {
-            if (playerCharacter.LmbPressed) animator.SetLayerWeight(1, 1f);                        
+            if (playerCharacter.LmbPressed) animator.SetLayerWeight(1, 1f);
+            equippedGuns.Fire(WhichGun.GunL);
         }
 
         if (stateInfo.IsTag("FireR"))
         {            
-            if (playerCharacter.RmbPressed) animator.SetLayerWeight(2, 1f);            
+            if (playerCharacter.RmbPressed) animator.SetLayerWeight(2, 1f);
+            equippedGuns.Fire(WhichGun.GunR);
         }
     }
 
