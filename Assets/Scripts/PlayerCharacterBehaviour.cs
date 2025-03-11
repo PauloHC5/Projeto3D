@@ -116,7 +116,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     {
         if (stateInfo.IsTag("FireL"))
         {
-            if (playerCharacter.LmbPressed) animator.SetLayerWeight(1, 1f);            \            
+            if (playerCharacter.LmbPressed) animator.SetLayerWeight(1, 1f);                        
         }
 
         if (stateInfo.IsTag("FireR"))
