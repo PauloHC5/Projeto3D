@@ -132,7 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 765417663445914193}
   - component: {fileID: 680661133788926344}
-  - component: {fileID: 5761576011746466765}
+  - component: {fileID: 1100512667738818432}
   m_Layer: 0
   m_Name: Crowbar
   m_TagString: Untagged
@@ -170,9 +170,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   socketToAttach: 0
-  crowbarCollider: {fileID: 5761576011746466765}
---- !u!135 &5761576011746466765
-SphereCollider:
+  crowbarCollider: {fileID: 1100512667738818432}
+--- !u!136 &1100512667738818432
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -189,9 +189,11 @@ SphereCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 0
-  serializedVersion: 3
-  m_Radius: 0.22
-  m_Center: {x: 0, y: 0.29, z: 0.18}
+  serializedVersion: 2
+  m_Radius: 0.2805307
+  m_Height: 0.75309694
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.12345153, z: 0.30908597}
 --- !u!1 &2059616495700769633
 GameObject:
   m_ObjectHideFlags: 0

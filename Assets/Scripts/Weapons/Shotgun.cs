@@ -11,6 +11,8 @@ public class Shotgun : Gun
     public override void Fire()
     {        
         StartCoroutine(BurstFire());
+        ShootRaycast();
+        base.ShootRaycast(gunRange * 2f);
         base.Fire();
     }
 
@@ -20,28 +22,37 @@ public class Shotgun : Gun
         {
             ShootRaycast();     
             yield return new WaitForEndOfFrame();
-        }
+        }        
     }
 
-    protected override void ShootRaycast()
+    protected override void ShootRaycast(float gunRange = default)
     {
         Vector3 direction = fireSocket.forward;
         direction.x += Random.Range(-spreadAngle, spreadAngle);
         direction.y += Random.Range(-spreadAngle, spreadAngle);
 
+        float rayDistance = gunRange == default ? this.gunRange : gunRange;
+
         RaycastHit hit;
-        if (Physics.Raycast(fireSocket.position, direction, out hit, gunRange))
+        if (Physics.Raycast(fireSocket.position, direction, out hit, rayDistance))
         {
             // Lógica de impacto do projétil
             if (impactVFX != null)
             {
                 Instantiate(impactVFX, hit.point, Quaternion.LookRotation(hit.normal));
+
+            }
+
+            // Check if the object hit has rigidbody
+            if (hit.rigidbody)
+            {
+                ApplyImpulse(hit);
             }
         }
 
         if (DebugRaycast)
         {
-            Debug.DrawRay(fireSocket.position, direction * gunRange, Color.red, 5f);
+            Debug.DrawRay(fireSocket.position, direction * rayDistance, Color.red, 5f);
         }        
     }
 }

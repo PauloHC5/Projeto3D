@@ -8,6 +8,9 @@ public class Gun : Weapon
     [Header("Gun Properties")]
     [SerializeField] protected float fireRate = 0.5f;
     [SerializeField] protected float gunRange = 100f;
+    [SerializeField] protected float shootImpulse = 10f;
+
+    [Header("Gun Components")]
     [SerializeField] protected Transform fireSocket;
     [SerializeField] protected ParticleSystem muzzleFlash;
     [SerializeField] protected ParticleSystem impactVFX;    
@@ -65,7 +68,7 @@ public class Gun : Weapon
         spawnedProjectile.GetComponent<Rigidbody>().AddForce(ray.direction * impulse, ForceMode.Impulse);
     }
 
-    protected virtual void ShootRaycast()
+    protected virtual void ShootRaycast(float gunRange = default)
     {
         Ray ray;
         if (fireSocket == default) {
@@ -76,13 +79,28 @@ public class Gun : Weapon
             ray = new Ray(fireSocket.position, Camera.main.transform.forward);
         }
 
+        float rayDistance = gunRange == default ? this.gunRange : gunRange;
+
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, gunRange))
-        {                                    
+        if (Physics.Raycast(ray, out hit, rayDistance))
+        {                             
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));
-        }     
-        
-        if(DebugRaycast) Debug.DrawRay(ray.origin, ray.direction * gunRange, Color.red, 5f);
+            
+            // Check if the object hit has rigidbody
+            if (hit.rigidbody)
+            {
+                ApplyImpulse(hit);
+            }
+        }
+
+        if (DebugRaycast) Debug.DrawRay(ray.origin, ray.direction * rayDistance, Color.red, 5f);
+    }
+
+    protected void ApplyImpulse(RaycastHit hit)
+    {
+        float distance = hit.distance;
+        float shootImpulse = Mathf.Lerp(this.shootImpulse, this.shootImpulse / 2f, distance / gunRange);
+        hit.rigidbody.AddForce(-hit.normal * shootImpulse, ForceMode.Impulse);
     }
 
 }

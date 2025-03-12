@@ -12,14 +12,11 @@ public class Bolt : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.isStatic || (collision.rigidbody != null && collision.rigidbody.isKinematic))
+    {        
+        if (rb != null && collision.gameObject.isStatic)
         {
-            if (rb != null)
-            {
-                rb.isKinematic = true;
-            }
-        }
+            rb.isKinematic = true;
+        }        
     }
 
     // routine to destroy the bolt after 5 seconds

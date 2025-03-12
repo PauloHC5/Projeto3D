@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Crowbar : Weapon
 {
-    [SerializeField] private SphereCollider crowbarCollider;
+    [SerializeField] private Collider crowbarCollider;
 
     public void EnableCollision()
     {
