@@ -55,7 +55,7 @@ public class DualWieldGun : Gun
     public override void Reload()
     {
         gunL.Reload();
-        gunR.Reload();
+        gunR.Reload();        
     }
 
     private void OnDestroy()

@@ -23,10 +23,10 @@ public class Gun : Weapon
     private bool canFire = true;
     public bool CanFire { get { return canFire; } }
 
-    private Animator gunAnimator;
+    private Animator gunAnimator;    
 
-    private const string FireTrigger = "Fire";
-    private const string ReloadTrigger = "Reload";
+    private readonly int FireTrigger = Animator.StringToHash("Fire");
+    private readonly int ReloadTrigger = Animator.StringToHash("Reload");
 
     private void Awake()
     {

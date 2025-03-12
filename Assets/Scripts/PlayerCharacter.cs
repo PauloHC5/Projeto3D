@@ -200,8 +200,7 @@ public class PlayerCharacter : MonoBehaviour
     protected void Reload()
     {
         if (playerStates == PlayerStates.RELOADING) return;
-
-        if (equippedWeapon is Gun equippedGun)
+        if (equippedWeapon is Gun)
         {
             playerAnimator.SetTrigger(ReloadTrigger);            
         }

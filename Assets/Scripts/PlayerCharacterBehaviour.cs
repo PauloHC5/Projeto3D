@@ -46,7 +46,8 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     {
         playerCharacter = animator.GetComponentInParent<PlayerCharacter>();
         equippedGun = playerCharacter.EquippedWeapon as Gun;
-        
+        DualWieldGun equippedGuns = equippedGun as DualWieldGun;
+
         playerCharacter.PlayerStates = GetAnimationState(stateInfo);
 
         switch (playerCharacter.PlayerStates)
@@ -59,12 +60,12 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
             case PlayerStates.FIRING:                            
                 equippedGun.Fire();
                 break;
-            case PlayerStates.DUALWIELDFIRING: 
-                DualWieldGun equippedGuns = equippedGun as DualWieldGun;
-                if(equippedGuns) HandleDualWieldFireState(equippedGuns, animator, stateInfo);
+            case PlayerStates.DUALWIELDFIRING:                 
+                if(equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo);
                 break;
-            case PlayerStates.RELOADING:                
-                if (equippedGun != null) equippedGun.Reload();                
+            case PlayerStates.RELOADING:
+                if (equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo);
+                else equippedGun.Reload();                
                 break;
         }        
         
@@ -117,8 +118,8 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         }
     }
 
-    private void HandleDualWieldFireState(DualWieldGun equippedGuns, Animator animator, AnimatorStateInfo stateInfo)
-    {
+    private void HandleDualWieldState(DualWieldGun equippedGuns, Animator animator, AnimatorStateInfo stateInfo)
+    {        
         if (stateInfo.IsTag("FireL"))
         {
             if (playerCharacter.LmbPressed) animator.SetLayerWeight(1, 1f);
@@ -129,6 +130,11 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         {            
             if (playerCharacter.RmbPressed) animator.SetLayerWeight(2, 1f);
             equippedGuns.Fire(WhichGun.GunR);
+        }
+
+        if (stateInfo.IsTag("Reload"))
+        {
+            equippedGuns.Reload();            
         }
     }
 
