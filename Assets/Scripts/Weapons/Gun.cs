@@ -9,6 +9,8 @@ public class Gun : Weapon
     [SerializeField] protected float fireRate = 0.5f;
     [SerializeField] protected float gunRange = 100f;
     [SerializeField] protected float shootImpulse = 10f;
+    [SerializeField] protected int maxAmmo = 40;
+    [SerializeField] protected int magAmmo = 40;
 
     [Header("Gun Components")]
     [SerializeField] protected Transform fireSocket;
@@ -35,6 +37,7 @@ public class Gun : Weapon
     {
         if(muzzleFlash) muzzleFlash.Play();                
         if(gunAnimator) gunAnimator.SetTrigger(FireTrigger);
+        magAmmo--;
         StartCoroutine(ShootDelay());
     }
 
@@ -43,11 +46,16 @@ public class Gun : Weapon
         gunAnimator.SetTrigger(ReloadTrigger);
     }
 
+    private void FinishReload()
+    {
+        magAmmo = maxAmmo;
+    }
+
     protected IEnumerator ShootDelay()
     {
         canFire = false;
         yield return new WaitForSeconds(FireRate);
-        canFire = true;
+        canFire = magAmmo > 0 ? true : false;
     }
 
     protected void ShootProjectile(GameObject projectile, Transform spawnPoint, float impulse)

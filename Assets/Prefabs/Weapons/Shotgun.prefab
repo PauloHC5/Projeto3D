@@ -137,6 +137,8 @@ MonoBehaviour:
   fireRate: 1
   gunRange: 1
   shootImpulse: 25
+  maxAmmo: 4
+  magAmmo: 4
   fireSocket: {fileID: 5723263459355759405}
   muzzleFlash: {fileID: 325391537946035653}
   impactVFX: {fileID: 0}
