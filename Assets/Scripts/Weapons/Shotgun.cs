@@ -14,6 +14,7 @@ public class Shotgun : Gun
         ShootRaycast();
         base.ShootRaycast(gunRange * 2f);
         base.Fire();
+        magAmmo--;
     }
 
     private IEnumerator BurstFire()
@@ -23,6 +24,11 @@ public class Shotgun : Gun
             ShootRaycast();     
             yield return new WaitForEndOfFrame();
         }        
+    }
+
+    protected override void FinishReload()
+    {
+        base.FinishReload();
     }
 
     protected override void ShootRaycast(float gunRange = default)

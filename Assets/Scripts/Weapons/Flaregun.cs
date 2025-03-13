@@ -12,5 +12,11 @@ public class Flaregun : Gun
     {
         base.ShootProjectile(flareProjectile, flareSpawnPoint, FlareForce);
         base.Fire();
+        magAmmo--;
+    }
+
+    protected override void FinishReload()
+    {
+        base.FinishReload();
     }
 }

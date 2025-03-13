@@ -30,14 +30,15 @@ public class Gun : Weapon
 
     private void Awake()
     {
-        gunAnimator = GetComponent<Animator>();        
+        gunAnimator = GetComponent<Animator>();    
+        
+        magAmmo = magAmmo > maxAmmo ? magAmmo = maxAmmo : magAmmo;
     }    
 
     public virtual void Fire()
-    {
-        if(muzzleFlash) muzzleFlash.Play();                
-        if(gunAnimator) gunAnimator.SetTrigger(FireTrigger);
-        magAmmo--;
+    {        
+        if (muzzleFlash) muzzleFlash.Play();                
+        if(gunAnimator) gunAnimator.SetTrigger(FireTrigger);        
         StartCoroutine(ShootDelay());
     }
 
@@ -46,16 +47,17 @@ public class Gun : Weapon
         gunAnimator.SetTrigger(ReloadTrigger);
     }
 
-    private void FinishReload()
+    protected virtual void FinishReload()
     {
         magAmmo = maxAmmo;
+        canFire = true;
     }
 
     protected IEnumerator ShootDelay()
     {
         canFire = false;
         yield return new WaitForSeconds(FireRate);
-        canFire = magAmmo > 0 ? true : false;
+        canFire = magAmmo > 0;
     }
 
     protected void ShootProjectile(GameObject projectile, Transform spawnPoint, float impulse)
