@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6034327834701676413}
   - component: {fileID: 8589519515119945368}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7178688756893189915}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crowbar.Armature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 765417663445914193}
   - component: {fileID: 680661133788926344}
   - component: {fileID: 1100512667738818432}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crowbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,7 +203,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4818498869398889774}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Root.Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

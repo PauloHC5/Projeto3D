@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1662111845241541373}
   - component: {fileID: 8761337205326551257}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: carcass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7299285558466253638}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: gun_slide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,7 +138,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3312056532127850227}
   - component: {fileID: 2871928586613395282}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Shell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,7 +231,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 835312603646452937}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: gun_ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -262,7 +262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4137415052473122391}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Flare Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 4141710918743613609}
   - component: {fileID: 1882565814810749173}
   - component: {fileID: 3497594360363031884}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Flaregun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,7 +378,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6983365686092897027}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gun_Rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +410,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6657754504926527045}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: gun_trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -441,7 +441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7757707628175649145}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: gun_lock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -472,7 +472,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1197535607319847257}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: gun_root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -507,7 +507,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6468487309472405938}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: gun_shell
   m_TagString: Untagged
   m_Icon: {fileID: 0}

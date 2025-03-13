@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4981631966314735685}
   - component: {fileID: 2518716188228916586}
   - component: {fileID: 1646863040332176108}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6720337447558493089}
   - component: {fileID: 3090105011803919291}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LWFV_Crossbow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +208,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1330476719654324678}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bone.String.1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -240,7 +240,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 970515347753700114}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bow.Pole.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,7 +271,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 711634015277811201}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bone.String.Lock.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -303,7 +303,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 435042247241291467}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bone.String.2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -334,7 +334,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 300811037168134449}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bone.String.2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -365,7 +365,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3780440209267883836}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bolt.Slot.Ctrl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +396,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7706383299726346422}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossbow.Armature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,7 +428,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1452810840900978655}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bow.Bone.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -460,7 +460,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2038884799619310368}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gear.Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -491,7 +491,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4742414321287269803}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bow.Ctrl.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -522,7 +522,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1618343290918519992}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bow.Bone.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -554,7 +554,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1012128198775458161}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bolt Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -585,7 +585,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5012136388741776240}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bone.String.Lock.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -617,7 +617,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3105982599226158400}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bow.Pole.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -648,7 +648,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8708341117938075419}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Trigger.Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -679,7 +679,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 593111474724727479}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Root.Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -719,7 +719,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1857920322971320586}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Magazine.Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -750,7 +750,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1949499461437337350}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bows.Joint.Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -783,7 +783,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1759709042375243442}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bone.String.1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -815,7 +815,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5332153709576401357}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bow.Ctrl.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
