@@ -47,17 +47,17 @@ public class Crossbow : Gun, ISecondaryAction
 
     public bool Perform()
     {
-        wantsToAim = !wantsToAim;                
-        
-        Camera playerCamera = GameObject.FindFirstObjectByType<Camera>();        
-        if (playerCamera != null)
+        wantsToAim = !wantsToAim;
+
+        Camera[] playerCameras = GameObject.FindObjectsByType<Camera>(FindObjectsSortMode.None);
+        if (playerCameras != null)
         {
             if (aimCoroutine != null)
             {
                 StopCoroutine(aimCoroutine);
             }
 
-            aimCoroutine = StartCoroutine(Aim(playerCamera));
+            aimCoroutine = StartCoroutine(Aim(playerCameras));
         }
         else Debug.LogError("No camera found in the scene to scope zoom");
 
@@ -65,20 +65,26 @@ public class Crossbow : Gun, ISecondaryAction
     }
 
 
-    private IEnumerator Aim(Camera playerCamera)
+    private IEnumerator Aim(Camera[] playerCameras)
     {
         float elapsedTime = 0;
-        float startFoV = playerCamera.fieldOfView;
+        float startFoV = playerCameras[0].fieldOfView;
         float targetFoV = wantsToAim ? scopeZoom : defaultFoV;        
         float localscopeSpeed = wantsToAim ? this.scopeSpeed : this.scopeSpeed * 3;        
 
-        while (Mathf.Abs(playerCamera.fieldOfView - targetFoV) > 0.01f)
+        while (Mathf.Abs(playerCameras[0].fieldOfView - targetFoV) > 0.01f)
         {
-            playerCamera.fieldOfView = Mathf.Lerp(startFoV, targetFoV, localscopeSpeed * (elapsedTime / scopeSpeed));
+            foreach (Camera playerCamera in playerCameras)
+            {
+                playerCamera.fieldOfView = Mathf.Lerp(startFoV, targetFoV, localscopeSpeed * (elapsedTime / scopeSpeed));
+            }            
             elapsedTime += Time.deltaTime;            
             yield return null;
         }
 
-        playerCamera.fieldOfView = targetFoV;
+        foreach (Camera playerCamera in playerCameras)
+        {
+            playerCamera.fieldOfView = Mathf.Lerp(startFoV, targetFoV, localscopeSpeed * (elapsedTime / scopeSpeed));
+        }
     }
 }
