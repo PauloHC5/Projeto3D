@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerRigidbodyMovement : PlayerCharacter
+public class PlayerRigidbodyMovement : PlayerCharacterController
 {    
     [SerializeField] private Rigidbody PlayerBody;
 

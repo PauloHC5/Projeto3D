@@ -22,42 +22,13 @@ public enum WeaponSocket
     Back
 }
 
-public class PlayerCharacter : MonoBehaviour
+public class PlayerCharacterController : PlayerCharacterAnimationsController
 {
-    [SerializeField] protected GameObject playerMesh;    
-
-    [Space]
-    [Header("Combat")]
-    [SerializeField] protected PlayerWeapon weaponSelected;
-    [SerializeField] protected Weapon[] weapons = new Weapon[5];
-
-    [Space]
-    [Header("Animation")]
-    [SerializeField] protected Animator playerAnimator;          
-
-    [Space]
-    [Header("Movement")]
-    [SerializeField] protected float speed;
-    [SerializeField] protected float jumpForce;
-    [SerializeField] protected Transform groundCheck;
-    [SerializeField] protected float groundDistance = 0.4f;
-    [SerializeField] protected LayerMask groundMask;
+    [SerializeField] protected GameObject playerMesh;                         
 
     protected bool lmbPressed = false;
     protected bool rmbPressed = false;
-
-    protected bool isGrounded;
-    private Weapon equippedWeapon;
-    private PlayerInputActions playerControls;
-    private PlayerStates playerStates = PlayerStates.DEFAULT;    
-
-    private int UseWeaponTrigger = Animator.StringToHash("UseWeapon");
-    private int RaiseWeaponTrigger = Animator.StringToHash("RaiseWeapon");
-    private int WeaponIndex = Animator.StringToHash("WeaponIndex");
-    private int ReloadTrigger = Animator.StringToHash("Reload");
-
-
-    public Weapon EquippedWeapon => equippedWeapon;
+                    
 
     public PlayerStates PlayerStates { 
         get { return playerStates; }
@@ -68,6 +39,8 @@ public class PlayerCharacter : MonoBehaviour
     public bool RmbPressed { get { return rmbPressed; } }    
 
     private int MouseScroll;
+    private PlayerInputActions playerControls;
+    private Vector2 playerMovementInput;
 
     private void Awake()
     {
@@ -103,6 +76,14 @@ public class PlayerCharacter : MonoBehaviour
         SwitchToWeapon(weaponSelected);        
     }
 
+    void Update()
+    {
+        HandleInput();
+        HandleMovement(playerMovementInput);
+        HandleJump();
+        ApplyGravity();        
+    }
+
     private void HandleMouseScroll()
     {
         int weaponCount = Enum.GetValues(typeof(PlayerWeapon)).Length;
@@ -110,7 +91,15 @@ public class PlayerCharacter : MonoBehaviour
         SwitchToWeapon((PlayerWeapon)newWeaponIndex);
     }
 
-    private void SwitchToWeapon(PlayerWeapon weapon)
+    private void HandleInput()
+    {
+        if (lmbPressed) PerformPrimaryAction();
+        if (rmbPressed && weaponSelected == PlayerWeapon.SHOTGUNS) PerformSecondaryAction();
+
+        playerMovementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+    }
+
+    protected override void SwitchToWeapon(PlayerWeapon weapon)
     {
         if (playerStates == PlayerStates.FIRING || playerStates == PlayerStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.CROWBAR)) return;
 
@@ -126,12 +115,9 @@ public class PlayerCharacter : MonoBehaviour
             equippedWeapon = Instantiate(weaponToSpawn, socketToAttach);
         }
 
-        if (equippedWeapon)
-        {
-            equippedWeapon.transform.localPosition = Vector3.zero;
-            playerAnimator.SetInteger(WeaponIndex, (int)weaponSelected);
-            playerAnimator.SetTrigger(RaiseWeaponTrigger);            
-        }
+        if (equippedWeapon) equippedWeapon.transform.localPosition = Vector3.zero;        
+
+        base.SwitchToWeapon(weapon);
     }
     
     private Gun SetDualWieldGun(Weapon weaponToSpawn)
@@ -169,9 +155,9 @@ public class PlayerCharacter : MonoBehaviour
         else if (equippedGun)
         {
             if (!equippedGun.CanFire) return;               
-        }
+        }        
 
-        playerAnimator.SetTrigger(UseWeaponTrigger);
+        UseWeapon();
     }    
 
     protected void PerformSecondaryAction()
@@ -184,27 +170,22 @@ public class PlayerCharacter : MonoBehaviour
             return;
         }
 
-        equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();        
+        equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();                
     }
 
-    private void HandleDualWieldAction(DualWieldGun equippedGuns, WhichGun whichGun)
+    protected override void Reload()
+    {
+        base.Reload();
+    }
+
+    protected override void HandleDualWieldAction(DualWieldGun equippedGuns, WhichGun whichGun)
     {
         if (!equippedGuns.CanFire(whichGun)) return;
 
-        equippedGuns.Fire(whichGun);        
-        playerAnimator.SetTrigger(
-            Animator.StringToHash(whichGun == WhichGun.GunR ? "ShootR" : "ShootL")
-        );        
-    }
-
-    protected void Reload()
-    {
-        if (playerStates == PlayerStates.RELOADING) return;
-        if (equippedWeapon is Gun)
-        {
-            playerAnimator.SetTrigger(ReloadTrigger);            
-        }
-    }
+        equippedGuns.Fire(whichGun);
+        
+        base.HandleDualWieldAction(equippedGuns, whichGun);        
+    }    
 
     private void OnEnable()
     {

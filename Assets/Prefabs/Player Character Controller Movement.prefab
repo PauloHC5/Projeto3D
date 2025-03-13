@@ -898,7 +898,7 @@ GameObject:
   - component: {fileID: 8022638480331752055}
   - component: {fileID: 1690414651061201987}
   - component: {fileID: 4318405406006644550}
-  - component: {fileID: 6993966159612770054}
+  - component: {fileID: 577134918870399425}
   m_Layer: 0
   m_Name: Player Character Controller Movement
   m_TagString: Player
@@ -983,7 +983,7 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &6993966159612770054
+--- !u!114 &577134918870399425
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -992,18 +992,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3986163303215137444}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f69d2f64b58782b42a38a3b608b3df29, type: 3}
+  m_Script: {fileID: 11500000, guid: 7436e7345f3a3ab4c869a93f64c2ba91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMesh: {fileID: 5650255268021678111}
-  weaponSelected: 0
-  weapons:
-  - {fileID: 680661133788926344, guid: 8ae98ba8c885c4e409a9c66715f417b3, type: 3}
-  - {fileID: 3497594360363031884, guid: 9e559eea5ebc5034f9850db28de8f355, type: 3}
-  - {fileID: 7758476997113949822, guid: 1bd71f91def4df84b8e7bd5b96279ba4, type: 3}
-  - {fileID: 3805995797017812115, guid: 7092134928b56b84fb5712131da31c47, type: 3}
-  - {fileID: 1646863040332176108, guid: e5edce3a7d4a2094489060a633b58c63, type: 3}
-  playerAnimator: {fileID: 728732302384425514}
   speed: 12
   jumpForce: 2
   groundCheck: {fileID: 5241768735091827890}
@@ -1013,6 +1004,15 @@ MonoBehaviour:
     m_Bits: 8
   gravity: -9.81
   characterController: {fileID: 1690414651061201987}
+  weaponSelected: 0
+  weapons:
+  - {fileID: 680661133788926344, guid: 8ae98ba8c885c4e409a9c66715f417b3, type: 3}
+  - {fileID: 3497594360363031884, guid: 9e559eea5ebc5034f9850db28de8f355, type: 3}
+  - {fileID: 7758476997113949822, guid: 1bd71f91def4df84b8e7bd5b96279ba4, type: 3}
+  - {fileID: 3805995797017812115, guid: 7092134928b56b84fb5712131da31c47, type: 3}
+  - {fileID: 1646863040332176108, guid: e5edce3a7d4a2094489060a633b58c63, type: 3}
+  playerAnimator: {fileID: 728732302384425514}
+  playerMesh: {fileID: 5650255268021678111}
 --- !u!1 &4036959574764372477
 GameObject:
   m_ObjectHideFlags: 0

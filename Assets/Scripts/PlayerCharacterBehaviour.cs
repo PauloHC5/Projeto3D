@@ -17,7 +17,7 @@ public enum PlayerStates
 
 public class PlayerCharacterBehaviour : StateMachineBehaviour
 {
-    private PlayerCharacter playerCharacter;
+    private PlayerCharacterController playerCharacter;
     private Gun equippedGun;
 
     private enum AnimationState
@@ -44,9 +44,9 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        playerCharacter = animator.GetComponentInParent<PlayerCharacter>();
+        playerCharacter = animator.GetComponentInParent<PlayerCharacterController>();
         equippedGun = playerCharacter.EquippedWeapon as Gun;
-        DualWieldGun equippedGuns = equippedGun as DualWieldGun;
+        DualWieldGun equippedGuns = equippedGun as DualWieldGun;        
 
         playerCharacter.PlayerStates = GetAnimationState(stateInfo);
 
