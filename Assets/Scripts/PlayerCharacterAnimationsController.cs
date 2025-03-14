@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerCharacterAnimationsController : PlayerCharacterControllerMovement
+public class PlayerCharacterAnimationsController : PlayerCharacterMovementController
 {
     [Space]
     [Header("Animation")]

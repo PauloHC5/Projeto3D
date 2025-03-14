@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerCharacterControllerMovement : MonoBehaviour
+public class PlayerCharacterMovementController : MonoBehaviour
 {    
     [Header("Movement")]
     [SerializeField] protected float speed;
