@@ -658,9 +658,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: ShootL
     m_EventTreshold: 0
-  - m_ConditionMode: 6
-    m_ConditionEvent: WeaponIndex
-    m_EventTreshold: 2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5388615697203446506}
   m_Solo: 0
@@ -1391,13 +1388,13 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: ShootR
+  - m_Name: ShootL
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: ShootL
+  - m_Name: ShootR
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -2010,9 +2007,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: ShootR
     m_EventTreshold: 0
-  - m_ConditionMode: 6
-    m_ConditionEvent: WeaponIndex
-    m_EventTreshold: 2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4702861430074694052}
   m_Solo: 0

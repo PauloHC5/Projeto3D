@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerCharacterMovementController : MonoBehaviour
+public class PlayerCharacterMovementController : PlayerCharacterAnimationsController
 {    
     [Header("Movement")]
     [SerializeField] protected float speed;
@@ -16,27 +16,21 @@ public class PlayerCharacterMovementController : MonoBehaviour
     [SerializeField] protected CharacterController characterController;
 
     protected bool isGrounded;
-    protected Vector3 velocity;
-
-    [Space]
-    [Header("Combat")]
-    [SerializeField] protected PlayerWeapon weaponSelected;
-    [SerializeField] protected Weapon[] weapons = new Weapon[5];
-
-    protected Weapon equippedWeapon;
-    protected PlayerStates playerStates = PlayerStates.DEFAULT;
-
-    public Weapon EquippedWeapon => equippedWeapon;
+    protected Vector3 velocity;    
+    
+    protected PlayerStates playerStates = PlayerStates.DEFAULT;    
 
 
-    protected virtual void HandleMovement(Vector3 playerMovementInput)
+    protected void HandleMovement(Vector3 playerMovementInput)
     {
         isGrounded = CheckIfGrounded();
 
         if (isGrounded && velocity.y < 0) velocity.y = -2f;
 
         Vector3 move = transform.right * playerMovementInput.x + transform.forward * playerMovementInput.y;
-        characterController.Move(move * speed * Time.deltaTime);                   
+        characterController.Move(move * speed * Time.deltaTime);
+
+        base.HandleMovement(characterController.velocity.magnitude);
     }
 
     protected void HandleJump()

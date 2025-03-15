@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Linq;
 using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,10 +21,8 @@ public enum WeaponSocket
     Back
 }
 
-public class PlayerCharacterController : PlayerCharacterAnimationsController
-{
-    [SerializeField] protected GameObject playerMesh;                         
-
+public class PlayerCharacterController : PlayerCharacterCombatController
+{                             
     protected bool lmbPressed = false;
     protected bool rmbPressed = false;
                     
@@ -101,61 +98,14 @@ public class PlayerCharacterController : PlayerCharacterAnimationsController
 
     protected override void SwitchToWeapon(PlayerWeapon weapon)
     {
-        if (playerStates == PlayerStates.FIRING || playerStates == PlayerStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.CROWBAR)) return;
-
-        if (equippedWeapon) Destroy(equippedWeapon.gameObject);
-
-        weaponSelected = weapon;
-        Weapon weaponToSpawn = weapons[(int)weapon];
-
-        if (weaponSelected == PlayerWeapon.SHOTGUNS) equippedWeapon = SetDualWieldGun(weaponToSpawn);
-        else
-        {            
-            Transform socketToAttach = playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.tag.Equals(weaponToSpawn.GetSocketToAttach.ToString()));
-            equippedWeapon = Instantiate(weaponToSpawn, socketToAttach);
-        }
-
-        if (equippedWeapon) equippedWeapon.transform.localPosition = Vector3.zero;        
+        if (playerStates == PlayerStates.FIRING || playerStates == PlayerStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.CROWBAR)) return;        
 
         base.SwitchToWeapon(weapon);
-    }
-    
-    private Gun SetDualWieldGun(Weapon weaponToSpawn)
-    {
-        DualWieldGun guns = new GameObject("DualWieldGun").AddComponent<DualWieldGun>();
-        guns.transform.SetParent(transform);
-
-        Transform socketRight = GetSocketTransform(guns.GetSocketToAttach(WhichGun.GunR));
-        Transform socketLeft = GetSocketTransform(guns.GetSocketToAttach(WhichGun.GunL));
-
-        guns.Initialize(
-        (Gun)Instantiate(weaponToSpawn, socketRight),
-        (Gun)Instantiate(weaponToSpawn, socketLeft)
-        );
-
-        return guns;
-    }
-
-    private Transform GetSocketTransform(WeaponSocket socket)
-    {
-        return playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.gameObject.CompareTag(socket.ToString()));
-    }
+    }           
 
     protected void PerformPrimaryAction()
     {
-        if (playerStates == PlayerStates.RELOADING || playerStates == PlayerStates.ATTACKING || playerStates == PlayerStates.RAISING) return;
-
-        var equippedGun = equippedWeapon.GetComponent<Gun>();
-
-        if (equippedWeapon is DualWieldGun equippedGuns)
-        {
-            HandleDualWieldAction(equippedGuns, WhichGun.GunL);
-            return;
-        }        
-        else if (equippedGun)
-        {
-            if (!equippedGun.CanFire) return;               
-        }        
+        if (playerStates == PlayerStates.RELOADING || playerStates == PlayerStates.ATTACKING || playerStates == PlayerStates.RAISING) return;                
 
         UseWeapon();
     }    
@@ -164,27 +114,12 @@ public class PlayerCharacterController : PlayerCharacterAnimationsController
     {
         if (playerStates == PlayerStates.RAISING || playerStates ==  PlayerStates.RELOADING) return;
 
-        if (equippedWeapon is DualWieldGun equippedGuns)
-        {
-            HandleDualWieldAction(equippedGuns, WhichGun.GunR);
-            return;
-        }
-
-        equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();                
+        UseWeaponGadget();
     }
 
     protected override void Reload()
     {
         base.Reload();
-    }
-
-    protected override void HandleDualWieldAction(DualWieldGun equippedGuns, WhichGun whichGun)
-    {
-        if (!equippedGuns.CanFire(whichGun)) return;
-
-        equippedGuns.Fire(whichGun);
-        
-        base.HandleDualWieldAction(equippedGuns, whichGun);        
     }    
 
     private void OnEnable()

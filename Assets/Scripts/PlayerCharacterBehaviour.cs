@@ -57,7 +57,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
             case PlayerStates.ATTACKING:
                 HandleAttackState(animator);
                 break;
-            case PlayerStates.FIRING:                            
+            case PlayerStates.FIRING:
                 equippedGun.Fire();
                 break;
             case PlayerStates.DUALWIELDFIRING:                 
@@ -79,7 +79,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
             DisableCrowbarCollision();            
         }
 
-        if (playerCharacter && playerCharacter.PlayerStates == PlayerStates.FIRING)
+        if (playerCharacter && playerCharacter.PlayerStates == PlayerStates.DUALWIELDFIRING)
         {
             ResetLayerWeights(animator, stateInfo);
         }
@@ -150,6 +150,6 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     private void ResetLayerWeights(Animator animator, AnimatorStateInfo stateInfo)
     {
         if (stateInfo.IsTag("FireL")) animator.SetLayerWeight(1, 0f);
-        if (stateInfo.IsTag("FireR")) animator.SetLayerWeight(2, 0f);
+        if (stateInfo.IsTag("FireR")) animator.SetLayerWeight(2, 0f);        
     }
 }
