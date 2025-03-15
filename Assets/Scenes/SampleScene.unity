@@ -613,11 +613,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: playerMesh
-      value: 
-      objectReference: {fileID: 1819081711}
     - target: {fileID: 3986163303215137444, guid: 15a079b9ae71c83418ed5d26443361d9,
         type: 3}
       propertyPath: m_Name
@@ -1527,12 +1522,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -36.23}
---- !u!1 &1819081711 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5521116737292277039, guid: 15a079b9ae71c83418ed5d26443361d9,
-    type: 3}
-  m_PrefabInstance: {fileID: 757169393}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1928026245 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8345070699079395522, guid: 09aade0ecefd01e4b8f7661acf64f5c2,
