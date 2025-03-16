@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,13 +19,22 @@ public class Gun : Weapon
     [SerializeField] protected ParticleSystem impactVFX;    
     [SerializeField] protected bool DebugRaycast = false;  
 
+    private Int32 ammoToReload = 0;    
+    public Int32 AmmoToReload { get { return ammoToReload; } set { ammoToReload = value; } }    
+
     public float FireRate { get { return fireRate; } }
 
     private bool canFire = true;
     public bool CanFire { get { return canFire; } }
 
-    private Animator gunAnimator;    
+    // Getter and setter for magAmmo
+    public int MagAmmo { get => magAmmo; }
 
+    // Getter for maxAmmo
+    public int MaxAmmo => maxAmmo;
+
+    // Animator properties
+    private Animator gunAnimator;    
     private readonly int FireTrigger = Animator.StringToHash("Fire");
     private readonly int ReloadTrigger = Animator.StringToHash("Reload");
 
@@ -49,7 +59,7 @@ public class Gun : Weapon
 
     protected virtual void FinishReload()
     {
-        magAmmo = maxAmmo;
+        magAmmo += AmmoToReload;
         canFire = true;
     }
 

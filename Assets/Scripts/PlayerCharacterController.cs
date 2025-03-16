@@ -39,9 +39,10 @@ public class PlayerCharacterController : PlayerCharacterCombatController
     private PlayerInputActions playerControls;
     private Vector2 playerMovementInput;
 
-    private void Awake()
+    private new void Awake()
     {
-        InitializePlayerControls();             
+        InitializePlayerControls();
+        base.Awake();
     }
 
     private void InitializePlayerControls()
@@ -78,7 +79,8 @@ public class PlayerCharacterController : PlayerCharacterCombatController
         HandleInput();
         HandleMovement(playerMovementInput);
         HandleJump();
-        ApplyGravity();        
+        ApplyGravity();
+        HandleAmmo(weaponAmmo[weaponSelected]);
     }
 
     private void HandleMouseScroll()
@@ -119,6 +121,7 @@ public class PlayerCharacterController : PlayerCharacterCombatController
 
     protected override void Reload()
     {
+        if(weaponSelected == PlayerWeapon.CROWBAR || weaponSelected == PlayerWeapon.PISTOL) return;
         base.Reload();
     }    
 

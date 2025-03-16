@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,11 @@ public class DualWieldGun : Gun
 
     public new bool CanFire(WhichGun whichGun)
     {
+        if(magAmmo <= 0)
+        {
+            magAmmo = 0; // Prevent negative ammo
+            return false;
+        }
         return whichGun == WhichGun.GunR ? gunR.CanFire : gunL.CanFire;
     }
 
@@ -62,5 +68,10 @@ public class DualWieldGun : Gun
     {
         if(gunR) Destroy(gunR.gameObject);
         if(gunL) Destroy(gunL.gameObject);
-    }    
+    }
+
+    public Gun GetGun(WhichGun gunR)
+    {
+        return gunR == WhichGun.GunR ? this.gunR : this.gunL;
+    }
 }

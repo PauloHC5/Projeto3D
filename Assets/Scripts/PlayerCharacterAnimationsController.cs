@@ -12,11 +12,17 @@ public class PlayerCharacterAnimationsController : MonoBehaviour
     private int ReloadTrigger = Animator.StringToHash("Reload");
     private int ShootR = Animator.StringToHash("ShootR");
     private int ShootL = Animator.StringToHash("ShootL");    
+    private int GunAmmo = Animator.StringToHash("Gun Ammo");    
 
 
     public void HandleMovement(float speed)
     {        
-        playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(speed, 0f, 10f));
+        playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(speed, 0f, 10f));        
+    }
+
+    public void HandleAmmo(int ammo)
+    {
+        playerAnimator.SetInteger(GunAmmo, ammo);
     }
 
     protected void PlaySwitchToWeapon(PlayerWeapon weapon)

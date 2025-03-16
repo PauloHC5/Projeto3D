@@ -1013,6 +1013,19 @@ MonoBehaviour:
   - {fileID: 3805995797017812115, guid: 7092134928b56b84fb5712131da31c47, type: 3}
   - {fileID: 1646863040332176108, guid: e5edce3a7d4a2094489060a633b58c63, type: 3}
   playerMesh: {fileID: 5521116737292277039}
+  weaponAmmoList:
+  - weapon: 0
+    ammo: 0
+  - weapon: 1
+    ammo: 50
+  - weapon: 2
+    ammo: 20
+  - weapon: 3
+    ammo: 200
+  - weapon: 4
+    ammo: 150
+  - weapon: 4
+    ammo: 150
 --- !u!1 &4036959574764372477
 GameObject:
   m_ObjectHideFlags: 0

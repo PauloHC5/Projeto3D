@@ -613,6 +613,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: weaponAmmoList.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: weaponAmmoList.Array.data[1].ammo
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3986163303215137444, guid: 15a079b9ae71c83418ed5d26443361d9,
         type: 3}
       propertyPath: m_Name
