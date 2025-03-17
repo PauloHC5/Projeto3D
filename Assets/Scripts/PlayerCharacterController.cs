@@ -38,6 +38,7 @@ public class PlayerCharacterController : PlayerCharacterCombatController
     private int MouseScroll;
     private PlayerInputActions playerControls;
     private Vector2 playerMovementInput;
+    private Vector2 playerLookInput;
 
     private new void Awake()
     {
@@ -77,7 +78,8 @@ public class PlayerCharacterController : PlayerCharacterCombatController
     void Update()
     {
         HandleInput();
-        HandleMovement(playerMovementInput);
+        HandleMovement(playerMovementInput, playerLookInput);        
+        CompositePoitionRotation();
         HandleJump();
         ApplyGravity();
         HandleAmmo(playerWeaponAmmo[weaponSelected]);
@@ -109,6 +111,7 @@ public class PlayerCharacterController : PlayerCharacterCombatController
         if (rmbPressed && weaponSelected == PlayerWeapon.Shotgun) PerformSecondaryAction();
 
         playerMovementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        playerLookInput = playerControls.Player.Look.ReadValue<Vector2>();
     }
 
     protected override void SwitchToWeapon(PlayerWeapon weapon)

@@ -46,7 +46,7 @@ public class MouseLook : MonoBehaviour
         if (player)
         {
             player.Rotate(Vector3.up * MouseInput.x * mouseSensitivity * Time.deltaTime);
-            playerMesh.localRotation = Quaternion.Euler(xRotation + 5f, 0f, 0f);
+            playerMesh.localRotation = Quaternion.Euler(xRotation + 5f, playerMesh.localRotation.y, playerMesh.localRotation.z);
             transform.position = player.position + (Vector3.up * 1.70f);
         }        
     }

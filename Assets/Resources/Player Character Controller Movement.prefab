@@ -1005,6 +1005,15 @@ MonoBehaviour:
     m_Bits: 8
   gravity: -9.81
   characterController: {fileID: 1690414651061201987}
+  playerMesh: {fileID: 5521116737292277039}
+  smooth: 4
+  smoothRot: 2
+  sway: 1
+  step: 0.01
+  maxStepDistance: 0.13
+  swayRotation: 1
+  rotationStep: 2
+  maxRotationStep: 8
   weaponSelected: 0
   weapons:
   - {fileID: 0}
@@ -1012,7 +1021,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  playerMesh: {fileID: 5521116737292277039}
   weaponAmmoList:
   - weapon: 0
     ammo: 0

@@ -15,8 +15,7 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
     [Space]
     [Header("Combat")]
     [SerializeField] protected PlayerWeapon weaponSelected;
-    [SerializeField] protected Weapon[] weapons = new Weapon[5];
-    [SerializeField] protected GameObject playerMesh;
+    [SerializeField] protected Weapon[] weapons = new Weapon[5];    
 
     protected Weapon equippedWeapon;
     public Weapon EquippedWeapon => equippedWeapon;
