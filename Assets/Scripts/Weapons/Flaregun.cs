@@ -15,8 +15,14 @@ public class Flaregun : Gun
         magAmmo--;
     }
 
+    public override void PlayReload()
+    {
+        base.PlayReload();
+    }
+
     protected override void FinishReload()
     {
-        base.FinishReload();
+        AmmoToReload = 1;
+        base.FinishReload();        
     }
 }

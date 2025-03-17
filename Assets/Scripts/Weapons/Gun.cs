@@ -6,7 +6,7 @@ using UnityEngine;
 public class Gun : Weapon
 {
 
-    [Header("Gun Properties")]
+    [Header("Gun Properties")]    
     [SerializeField] protected float fireRate = 0.5f;
     [SerializeField] protected float gunRange = 100f;
     [SerializeField] protected float shootImpulse = 10f;
@@ -25,7 +25,7 @@ public class Gun : Weapon
     public float FireRate { get { return fireRate; } }
 
     private bool canFire = true;
-    public bool CanFire { get { return canFire; } }
+    public bool CanFire { get { return canFire; } }    
 
     // Getter and setter for magAmmo
     public int MagAmmo { get => magAmmo; }
@@ -36,7 +36,7 @@ public class Gun : Weapon
     // Animator properties
     private Animator gunAnimator;    
     private readonly int FireTrigger = Animator.StringToHash("Fire");
-    private readonly int ReloadTrigger = Animator.StringToHash("Reload");
+    private readonly int ReloadTrigger = Animator.StringToHash("Reload");    
 
     private void Awake()
     {
@@ -52,9 +52,25 @@ public class Gun : Weapon
         StartCoroutine(ShootDelay());
     }
 
-    public virtual void Reload()
+    public virtual void PlayReload()
     {
         gunAnimator.SetTrigger(ReloadTrigger);
+    }
+
+    public virtual void Reload(Dictionary<PlayerWeapon, Int32> weaponAmmo)
+    {
+        // Get the difference between the max ammo and the current ammo
+        int ammoDifference = MaxAmmo - MagAmmo;
+
+        // Get the ammo to reload
+        ammoToReload = weaponAmmo[weaponType] >= ammoDifference ? ammoDifference : weaponAmmo[weaponType];
+
+        // Subtract the ammo to reload from the weapon ammo
+        weaponAmmo[weaponType] -= ammoToReload;
+
+        // Debug mag ammo and ammoToReload
+        Debug.Log($"Ammo to Reload: {AmmoToReload}");               
+
     }
 
     protected virtual void FinishReload()
@@ -121,6 +137,11 @@ public class Gun : Weapon
         float distance = hit.distance;
         float shootImpulse = Mathf.Lerp(this.shootImpulse, this.shootImpulse / 2f, distance / gunRange);
         hit.rigidbody.AddForce(-hit.normal * shootImpulse, ForceMode.Impulse);
+    }
+
+    private void OnEnable()
+    {
+        canFire = magAmmo > 0;
     }
 
 }

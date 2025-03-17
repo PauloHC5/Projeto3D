@@ -7,11 +7,11 @@ using UnityEngine.InputSystem;
 
 public enum PlayerWeapon
 {
-    CROWBAR = 0,
-    PISTOL = 1,
-    SHOTGUNS = 2,
-    THOMPSOM = 3,
-    CROSSBOW = 4
+    Crowbar = 0,
+    Flaregun = 1,
+    Shotgun = 2,
+    Thompson = 3,
+    Crossbow = 4
 }
 
 public enum WeaponSocket
@@ -58,11 +58,11 @@ public class PlayerCharacterController : PlayerCharacterCombatController
         playerControls.Player.SecondaryAction.performed += ctx => PerformSecondaryAction();
 
         playerControls.Player.Reload.performed += ctx => Reload();
-        playerControls.Player.Weapon1.performed += ctx => SwitchToWeapon(PlayerWeapon.CROWBAR);
-        playerControls.Player.Weapon2.performed += ctx => SwitchToWeapon(PlayerWeapon.PISTOL);
-        playerControls.Player.Weapon3.performed += ctx => SwitchToWeapon(PlayerWeapon.SHOTGUNS);
-        playerControls.Player.Weapon4.performed += ctx => SwitchToWeapon(PlayerWeapon.THOMPSOM);
-        playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(PlayerWeapon.CROSSBOW);
+        playerControls.Player.Weapon1.performed += ctx => SwitchToWeapon(PlayerWeapon.Crowbar);
+        playerControls.Player.Weapon2.performed += ctx => SwitchToWeapon(PlayerWeapon.Flaregun);
+        playerControls.Player.Weapon3.performed += ctx => SwitchToWeapon(PlayerWeapon.Shotgun);
+        playerControls.Player.Weapon4.performed += ctx => SwitchToWeapon(PlayerWeapon.Thompson);
+        playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(PlayerWeapon.Crossbow);
 
         // faça com que Mouse Scrool seja 1 quandi o playerControls.Player.MouseScroll for para cima e -1 quando for para baixo
         playerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };
@@ -80,7 +80,20 @@ public class PlayerCharacterController : PlayerCharacterCombatController
         HandleMovement(playerMovementInput);
         HandleJump();
         ApplyGravity();
-        HandleAmmo(weaponAmmo[weaponSelected]);
+        HandleAmmo(playerWeaponAmmo[weaponSelected]);
+
+        // if k button is pressed, add 3 to playerWeaponAmmo[weaponSelected]
+        if (Keyboard.current.kKey.wasPressedThisFrame) playerWeaponAmmo[weaponSelected] += 3;
+
+        // if l button is pressed, debug log the playerWeaponAmmo[weaponSelected]
+        if (Keyboard.current.lKey.wasPressedThisFrame) Debug.Log($"{weaponSelected} ammo: " + playerWeaponAmmo[weaponSelected]);
+
+        // if j button is pressed, debug log the equippedWeapon.MagAmmo
+        if (Keyboard.current.jKey.wasPressedThisFrame)
+        {
+            Gun equippedGun = equippedWeapon as Gun;
+            Debug.Log($"{weaponSelected} MagAmmo: " + equippedGun.MagAmmo);
+        }
     }
 
     private void HandleMouseScroll()
@@ -93,14 +106,14 @@ public class PlayerCharacterController : PlayerCharacterCombatController
     private void HandleInput()
     {
         if (lmbPressed) PerformPrimaryAction();
-        if (rmbPressed && weaponSelected == PlayerWeapon.SHOTGUNS) PerformSecondaryAction();
+        if (rmbPressed && weaponSelected == PlayerWeapon.Shotgun) PerformSecondaryAction();
 
         playerMovementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     }
 
     protected override void SwitchToWeapon(PlayerWeapon weapon)
     {
-        if (playerStates == PlayerStates.FIRING || playerStates == PlayerStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.CROWBAR)) return;        
+        if (playerStates == PlayerStates.FIRING || playerStates == PlayerStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.Crowbar)) return;        
 
         base.SwitchToWeapon(weapon);
     }           
@@ -121,7 +134,7 @@ public class PlayerCharacterController : PlayerCharacterCombatController
 
     protected override void Reload()
     {
-        if(weaponSelected == PlayerWeapon.CROWBAR || weaponSelected == PlayerWeapon.PISTOL) return;
+        if(weaponSelected == PlayerWeapon.Crowbar) return;
         base.Reload();
     }    
 

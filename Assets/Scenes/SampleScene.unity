@@ -615,6 +615,36 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
         type: 3}
+      propertyPath: weapons.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: 'weapons.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: 'weapons.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: 'weapons.Array.data[2]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: 'weapons.Array.data[3]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: 'weapons.Array.data[4]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
       propertyPath: weaponAmmoList.Array.size
       value: 5
       objectReference: {fileID: 0}
@@ -623,10 +653,30 @@ PrefabInstance:
       propertyPath: weaponAmmoList.Array.data[1].ammo
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: weaponAmmoList.Array.data[2].ammo
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: weaponAmmoList.Array.data[3].ammo
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 577134918870399425, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: weaponAmmoList.Array.data[4].ammo
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3986163303215137444, guid: 15a079b9ae71c83418ed5d26443361d9,
         type: 3}
       propertyPath: m_Name
       value: Player Character Controller Movement
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986163303215137444, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8022638480331752055, guid: 15a079b9ae71c83418ed5d26443361d9,
         type: 3}

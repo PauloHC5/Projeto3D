@@ -65,7 +65,11 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 break;
             case PlayerStates.RELOADING:
                 if (equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo);
-                else equippedGun.Reload();                
+                else
+                {
+                    equippedGun.PlayReload();
+                    equippedGun.Reload(playerCharacter.WeaponAmmo);
+                }                                
                 break;
         }        
         
@@ -134,7 +138,8 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
 
         if (stateInfo.IsTag("Reload"))
         {
-            equippedGuns.Reload();            
+            equippedGuns.PlayReload();          
+            equippedGuns.Reload(playerCharacter.WeaponAmmo);
         }
     }
 

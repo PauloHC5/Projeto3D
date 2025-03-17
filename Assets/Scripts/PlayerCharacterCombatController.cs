@@ -24,45 +24,45 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
     [SerializeField]
     private List<WeaponAmmoPair> weaponAmmoList = new List<WeaponAmmoPair>
     {
-        new WeaponAmmoPair { weapon = PlayerWeapon.CROWBAR, ammo = 0 }, // Crowbar doesn't use ammo
-        new WeaponAmmoPair { weapon = PlayerWeapon.PISTOL, ammo = 50 },
-        new WeaponAmmoPair { weapon = PlayerWeapon.SHOTGUNS, ammo = 20 },
-        new WeaponAmmoPair { weapon = PlayerWeapon.THOMPSOM, ammo = 300 },
-        new WeaponAmmoPair { weapon = PlayerWeapon.CROSSBOW, ammo = 150 }
+        new WeaponAmmoPair { weapon = PlayerWeapon.Crowbar, ammo = 0 }, // Crowbar doesn't use ammo
+        new WeaponAmmoPair { weapon = PlayerWeapon.Flaregun, ammo = 50 },
+        new WeaponAmmoPair { weapon = PlayerWeapon.Shotgun, ammo = 20 },
+        new WeaponAmmoPair { weapon = PlayerWeapon.Thompson, ammo = 300 },
+        new WeaponAmmoPair { weapon = PlayerWeapon.Crossbow, ammo = 150 }
     };
 
-    protected Dictionary<PlayerWeapon, Int32> weaponAmmo;
+    protected Dictionary<PlayerWeapon, Int32> playerWeaponAmmo;
+    public Dictionary<PlayerWeapon, Int32> WeaponAmmo => playerWeaponAmmo;
 
     protected void Awake()
-    {        
+    {
+        InitializeWeapons();
         InitializeWeaponAmmo();        
     }
 
-    private void InitializeWeaponAmmo()
-    {
-        weaponAmmo = weaponAmmoList.ToDictionary(pair => pair.weapon, pair => pair.ammo);
-    }        
-
-    protected virtual void SwitchToWeapon(PlayerWeapon weapon)
-    {
-        if (equippedWeapon) Destroy(equippedWeapon.gameObject);
-
-        weaponSelected = weapon;
-        Weapon weaponToSpawn = weapons[(int)weapon];
-
-        if (weaponSelected == PlayerWeapon.SHOTGUNS) equippedWeapon = SetDualWieldGun(weaponToSpawn);
-        else
+    private void InitializeWeapons()
+    {        
+        // Fill the weapons array with the weapons
+        for (int i = 0; i < weapons.Length; i++)
         {
+            // Load the weapon prefab from the resources folder
+            Weapon weaponToSpawn = Resources.Load<Weapon>($"Weapons/{(PlayerWeapon)i}");
+
+            if(weaponToSpawn.WeaponType == PlayerWeapon.Shotgun) // Shotgun is a dual wield weapon, so we need to be handled differently
+            {
+                weapons[i] = InitializeDualWieldGun(weaponToSpawn); // Set the dual wield gun
+                continue; // Skip the rest of the loop
+            }
+            // Get the socket to attach the weapon
             Transform socketToAttach = playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.tag.Equals(weaponToSpawn.GetSocketToAttach.ToString()));
-            equippedWeapon = Instantiate(weaponToSpawn, socketToAttach);
+
+            // Instantiate the weapon and set it as inactive
+            weapons[i] = Instantiate(weaponToSpawn, socketToAttach);
+            weapons[i].gameObject.SetActive(false);
         }
-
-        if (equippedWeapon) equippedWeapon.transform.localPosition = Vector3.zero;
-
-        PlaySwitchToWeapon(weapon);
     }
 
-    private Gun SetDualWieldGun(Weapon weaponToSpawn)
+    private Gun InitializeDualWieldGun(Weapon weaponToSpawn)
     {
         DualWieldGun guns = new GameObject("DualWieldGun").AddComponent<DualWieldGun>();
         guns.transform.SetParent(transform);
@@ -75,8 +75,35 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
         (Gun)Instantiate(weaponToSpawn, socketLeft)
         );
 
+        guns.gameObject.SetActive(false);   
+
         return guns;
     }
+
+    private void InitializeWeaponAmmo()
+    {
+        playerWeaponAmmo = weaponAmmoList.ToDictionary(pair => pair.weapon, pair => pair.ammo);
+    }        
+
+    protected virtual void SwitchToWeapon(PlayerWeapon weapon)
+    {
+        // If there is an active weapon, disable it
+        if (equippedWeapon) equippedWeapon.gameObject.SetActive(false);
+
+        weaponSelected = weapon; // Set the weapon selected to the weapon passed as parameter
+        equippedWeapon = weapons[(int)weaponSelected]; // Set the equipped weapon to the weapon selected
+
+        // If equipped weapon is a dual wield gun, enable both guns
+        if (equippedWeapon is DualWieldGun equippedGuns) equippedGuns.gameObject.SetActive(true);
+        else equippedWeapon.gameObject.SetActive(true); // Enable the equipped weapon
+
+        // Reset the weapon position
+        if (equippedWeapon) equippedWeapon.transform.localPosition = Vector3.zero;
+
+        PlaySwitchToWeapon(weapon);
+    }
+
+    
 
     private Transform GetSocketTransform(WeaponSocket socket)
     {
@@ -85,7 +112,7 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
 
     protected void UseWeapon()
     {
-        var equippedGun = equippedWeapon.GetComponent<Gun>();
+        var equippedGun = equippedWeapon.GetComponent<Gun>();        
 
         if (equippedWeapon is DualWieldGun equippedGuns)
         {
@@ -103,31 +130,12 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
     protected virtual void Reload()
     {
         if (equippedWeapon is DualWieldGun equippedGuns) HandleDualWieldGunReload(equippedGuns);
-
         else
         {
-
-
-
             Gun equippedGun = equippedWeapon as Gun;
 
-            // If the Mag Ammo is equal to the Max Ammo, means that the gun is full
-            // If the weapon ammo is less than or equal to 0, means that player has no ammo to reload
-            if (equippedGun.MagAmmo == equippedGun.MaxAmmo || weaponAmmo[weaponSelected] <= 0) return;
-
-            // Get the difference between the max ammo and the current ammo
-            int ammoDifference = equippedGun.MaxAmmo - equippedGun.MagAmmo;
-
-            // Get the ammo to reload
-            Int32 ammoToReload = weaponAmmo[weaponSelected] >= ammoDifference ? ammoDifference : weaponAmmo[weaponSelected];
-
-            //Subtract the ammo to reload from the weapon ammo
-            weaponAmmo[weaponSelected] -= ammoToReload;
-            //Add the ammo to reload to the gun AmmoToReload
-            equippedGun.AmmoToReload = ammoToReload;
-
-            // Debug the mag ammo and the weapon ammo
-            Debug.Log($"AmmoToReload: {equippedGun.AmmoToReload} | Weapon Ammo: {weaponAmmo[weaponSelected]}");
+            // IF can't reload, return
+            if (!CanReload(equippedGun)) return;
 
             PlayReload();
         }
@@ -152,32 +160,19 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
 
     private void HandleDualWieldGunReload(DualWieldGun equippedGuns)
     {
+        // Get the guns to reload
         Gun[] gunsToReload = new Gun[] { equippedGuns.GetGun(WhichGun.GunR), equippedGuns.GetGun(WhichGun.GunL) };
+        
+        // If GunR or GunL can't reload, return
+        if (!gunsToReload.Any(gun => CanReload(gun))) return;
 
-        foreach(var gun in gunsToReload)
-        {
+        PlayReload();
+    }
 
-            // If the Mag Ammo is equal to the Max Ammo, means that the gun is full
-            // If the weapon ammo is less than or equal to 0, means that player has no ammo to reload
-            if (gun.MagAmmo == gun.MaxAmmo || weaponAmmo[weaponSelected] <= 0) continue;
-
-            // Get the difference between the max ammo and the current ammo
-            int ammoDifference = gun.MaxAmmo - gun.MagAmmo;
-
-            // Get the ammo to reload
-            // If the weapon ammo is greater than or equal to the ammo difference, reload the ammo difference
-            // Otherwise, reload the weapon ammo
-            Int32 ammoToReload = weaponAmmo[weaponSelected] >= ammoDifference ? ammoDifference : weaponAmmo[weaponSelected];
-
-            // Subtract the ammo to reload from the weapon ammo
-            weaponAmmo[weaponSelected] -= ammoToReload;
-
-            // Add the ammo to reload to the gun AmmoToReload
-            gun.AmmoToReload = ammoToReload;
-
-            Debug.Log($"AmmoToReload: {gun.AmmoToReload} | Weapon Ammo: {weaponAmmo[weaponSelected]}");
-
-            PlayReload();
-        }
+    private bool CanReload(Gun equippedGun)
+    {
+        // If the Mag Ammo is equal to the Max Ammo, means that the gun is full
+        // If the weapon ammo is less than or equal to 0, means that player has no ammo to reload
+        return equippedGun.MagAmmo != equippedGun.MaxAmmo && playerWeaponAmmo[weaponSelected] > 0;
     }
 }

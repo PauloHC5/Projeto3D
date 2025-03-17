@@ -14,6 +14,8 @@ public class DualWieldGun : Gun
     private Gun gunR;
     private Gun gunL;    
 
+    public new int MagAmmo => gunR.MagAmmo + gunL.MagAmmo;
+
     public DualWieldGun Initialize(Gun GunR, Gun GunL)
     {
         if (GunR == null) throw new System.ArgumentNullException(nameof(GunR));
@@ -58,10 +60,18 @@ public class DualWieldGun : Gun
         }
     }
 
-    public override void Reload()
+    public override void Reload(Dictionary<PlayerWeapon, Int32> weaponAmmo)
     {
-        gunL.Reload();
-        gunR.Reload();        
+        Debug.Log("Reloading dual wield gun");
+
+        gunR.Reload(weaponAmmo);
+        gunL.Reload(weaponAmmo);        
+    }
+
+    public override void PlayReload()
+    {
+        gunL.PlayReload();
+        gunR.PlayReload();        
     }
 
     private void OnDestroy()
@@ -73,5 +83,17 @@ public class DualWieldGun : Gun
     public Gun GetGun(WhichGun gunR)
     {
         return gunR == WhichGun.GunR ? this.gunR : this.gunL;
+    }
+
+    private void OnEnable()
+    {
+        if (gunR) gunR.gameObject.SetActive(true);
+        if (gunL) gunL.gameObject.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        if(gunR) gunR.gameObject.SetActive(false);
+        if(gunL) gunL.gameObject.SetActive(false);
     }
 }

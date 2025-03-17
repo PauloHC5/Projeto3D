@@ -9,7 +9,7 @@ public class Thompson : Gun
         ShootRaycast();
         base.Fire();
         magAmmo--;
-    }
+    }        
 
     protected override void FinishReload()
     {
