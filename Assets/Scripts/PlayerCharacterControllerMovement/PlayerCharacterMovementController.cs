@@ -35,7 +35,12 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     protected bool isGrounded;
     protected Vector3 velocity;    
     
-    protected PlayerStates playerStates = PlayerStates.DEFAULT;    
+    protected PlayerStates playerStates = PlayerStates.DEFAULT;
+    public PlayerStates PlayerStates
+    {
+        get { return playerStates; }
+        set { playerStates = value; }
+    }
 
 
     protected void HandleMovement(Vector3 playerMovementInput, Vector2 playerLookInput)

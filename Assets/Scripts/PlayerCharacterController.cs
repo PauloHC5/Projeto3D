@@ -24,13 +24,7 @@ public enum WeaponSocket
 public class PlayerCharacterController : PlayerCharacterCombatController
 {                             
     protected bool lmbPressed = false;
-    protected bool rmbPressed = false;
-                    
-
-    public PlayerStates PlayerStates { 
-        get { return playerStates; }
-        set { playerStates = value; }
-    }       
+    protected bool rmbPressed = false;                       
 
     public bool LmbPressed { get { return lmbPressed; } }
     public bool RmbPressed { get { return rmbPressed; } }    
