@@ -110,21 +110,21 @@ public class PlayerCharacterController : PlayerCharacterCombatController
 
     protected override void SwitchToWeapon(PlayerWeapon weapon)
     {
-        if (playerStates == PlayerStates.FIRING || playerStates == PlayerStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.Crowbar)) return;        
+        if (playerCombatStates == PlayerCombatStates.FIRING || playerCombatStates == PlayerCombatStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.Crowbar)) return;        
 
         base.SwitchToWeapon(weapon);
     }           
 
     protected void PerformPrimaryAction()
     {
-        if (playerStates == PlayerStates.RELOADING || playerStates == PlayerStates.ATTACKING || playerStates == PlayerStates.RAISING) return;                
+        if (playerCombatStates == PlayerCombatStates.RELOADING || playerCombatStates == PlayerCombatStates.ATTACKING || playerCombatStates == PlayerCombatStates.RAISING) return;                
 
         UseWeapon();
     }    
 
     protected void PerformSecondaryAction()
     {
-        if (playerStates == PlayerStates.RAISING || playerStates ==  PlayerStates.RELOADING) return;
+        if (playerCombatStates == PlayerCombatStates.RAISING || playerCombatStates ==  PlayerCombatStates.RELOADING) return;
 
         UseWeaponGadget();
     }

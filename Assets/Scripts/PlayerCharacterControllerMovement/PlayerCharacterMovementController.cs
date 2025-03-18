@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class PlayerCharacterMovementController : PlayerCharacterAnimationsController
 {    
     [Header("Movement")]
@@ -35,11 +36,11 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     protected bool isGrounded;
     protected Vector3 velocity;    
     
-    protected PlayerStates playerStates = PlayerStates.DEFAULT;
-    public PlayerStates PlayerStates
+    protected PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
+    public PlayerCombatStates PlayerCombatStates
     {
-        get { return playerStates; }
-        set { playerStates = value; }
+        get { return playerCombatStates; }
+        set { playerCombatStates = value; }
     }
 
 

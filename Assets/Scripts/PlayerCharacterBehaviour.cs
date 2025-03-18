@@ -3,42 +3,19 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-
-public enum PlayerStates
-{
-    RAISING,
-    RELOADING,
-    ATTACKING,
-    FIRING,
-    DUALWIELDFIRING,
-
-    DEFAULT
-}
-
 public class PlayerCharacterBehaviour : StateMachineBehaviour
 {
     private PlayerCharacterController playerCharacter;
-    private Gun equippedGun;
+    private Gun equippedGun;        
 
-    private enum AnimationState
+    private PlayerCombatStates FindCombatState(AnimatorStateInfo stateInfo)
     {
-        None,
-        RaiseWeapon,
-        Attack,        
-        Fire,
-        FireR,
-        FireL,
-        Reload
-    }    
-
-    private PlayerStates GetAnimationState(AnimatorStateInfo stateInfo)
-    {
-        if (stateInfo.IsTag("RaiseWeapon")) return PlayerStates.RAISING;
-        if (stateInfo.IsTag("Attack")) return PlayerStates.ATTACKING;        
-        if (stateInfo.IsTag("Fire")) return PlayerStates.FIRING;        
-        if (stateInfo.IsTag("FireR") || stateInfo.IsTag("FireL")) return PlayerStates.DUALWIELDFIRING;        
-        if (stateInfo.IsTag("Reload")) return PlayerStates.RELOADING;
-        return PlayerStates.DEFAULT;
+        if (stateInfo.IsTag("RaiseWeapon")) return PlayerCombatStates.RAISING;
+        if (stateInfo.IsTag("Attack")) return PlayerCombatStates.ATTACKING;        
+        if (stateInfo.IsTag("Fire")) return PlayerCombatStates.FIRING;        
+        if (stateInfo.IsTag("FireR") || stateInfo.IsTag("FireL")) return PlayerCombatStates.DUALWIELDFIRING;        
+        if (stateInfo.IsTag("Reload")) return PlayerCombatStates.RELOADING;
+        return PlayerCombatStates.DEFAULT;
     }
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -48,22 +25,22 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         equippedGun = playerCharacter.EquippedWeapon as Gun;
         DualWieldGun equippedGuns = equippedGun as DualWieldGun;        
 
-        playerCharacter.PlayerStates = GetAnimationState(stateInfo);
+        playerCharacter.PlayerCombatStates = FindCombatState(stateInfo);
 
-        switch (playerCharacter.PlayerStates)
+        switch (playerCharacter.PlayerCombatStates)
         {
-            case PlayerStates.RAISING:                
+            case PlayerCombatStates.RAISING:                
                 break;
-            case PlayerStates.ATTACKING:
+            case PlayerCombatStates.ATTACKING:
                 HandleAttackState(animator);
                 break;
-            case PlayerStates.FIRING:
+            case PlayerCombatStates.FIRING:
                 equippedGun.Fire();
                 break;
-            case PlayerStates.DUALWIELDFIRING:                 
+            case PlayerCombatStates.DUALWIELDFIRING:                 
                 if(equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo);
                 break;
-            case PlayerStates.RELOADING:
+            case PlayerCombatStates.RELOADING:
                 if (equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo);
                 else
                 {
@@ -78,17 +55,17 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {        
-        if (playerCharacter && playerCharacter.PlayerStates == PlayerStates.ATTACKING)
+        if (playerCharacter && playerCharacter.PlayerCombatStates == PlayerCombatStates.ATTACKING)
         {
             DisableCrowbarCollision();            
         }
 
-        if (playerCharacter && playerCharacter.PlayerStates == PlayerStates.DUALWIELDFIRING)
+        if (playerCharacter && playerCharacter.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING)
         {
             ResetLayerWeights(animator, stateInfo);
         }
 
-        if(playerCharacter) playerCharacter.PlayerStates = PlayerStates.DEFAULT;
+        if(playerCharacter) playerCharacter.PlayerCombatStates = PlayerCombatStates.DEFAULT;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
@@ -103,14 +80,14 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     //    // Implement code that sets up animation IK (inverse kinematics)
     //}
 
-    private void SetPlayerState(PlayerStates state)
+    private void SetPlayerState(PlayerCombatStates state)
     {
-        playerCharacter.PlayerStates = state;
+        playerCharacter.PlayerCombatStates = state;
     }
 
     private void HandleAttackState(Animator animator)
     {
-        SetPlayerState(PlayerStates.ATTACKING);
+        SetPlayerState(PlayerCombatStates.ATTACKING);
         var attackVar = animator.GetInteger("AttackVar") + 1;
         if (attackVar > 3) attackVar = 1;
         animator.SetInteger("AttackVar", attackVar);

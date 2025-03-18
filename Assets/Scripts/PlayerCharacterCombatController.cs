@@ -10,6 +10,17 @@ public struct WeaponAmmoPair
     public Int32 ammo;
 }
 
+public enum PlayerCombatStates
+{
+    RAISING,
+    RELOADING,
+    ATTACKING,
+    FIRING,
+    DUALWIELDFIRING,
+
+    DEFAULT
+}
+
 public class PlayerCharacterCombatController : PlayerCharacterMovementController
 {
     [Space]
