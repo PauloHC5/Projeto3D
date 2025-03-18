@@ -10,6 +10,7 @@ public class MouseLook : MonoBehaviour
 
     private Transform player;    
     private Transform playerMesh;    
+    private Transform cameraPos;
 
     private float xRotation = 0f;
     private float yRotation = 0f;
@@ -29,6 +30,7 @@ public class MouseLook : MonoBehaviour
 
         player = GameObject.FindGameObjectsWithTag("Player")[0].transform;
         playerMesh = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("PlayerMesh"));       
+        cameraPos = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("CameraPos"));
     }
 
     // Update is called once per frame
@@ -47,7 +49,7 @@ public class MouseLook : MonoBehaviour
         {
             player.Rotate(Vector3.up * MouseInput.x * mouseSensitivity * Time.deltaTime);
             playerMesh.localRotation = Quaternion.Euler(xRotation + 5f, playerMesh.localRotation.y, playerMesh.localRotation.z);
-            transform.position = player.position + (Vector3.up * 1.70f);
+            transform.position = cameraPos.position;
         }        
     }
 

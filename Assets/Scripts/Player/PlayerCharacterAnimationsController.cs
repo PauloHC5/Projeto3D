@@ -15,9 +15,9 @@ public class PlayerCharacterAnimationsController : MonoBehaviour
     private int GunAmmo = Animator.StringToHash("Gun Ammo");    
 
 
-    public void HandleMovement(float speed)
-    {        
-        playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(speed, 0f, 10f));        
+    public void HandleLocomotion(float speed, float maxSpeed)
+    {
+        playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(speed, 0f, maxSpeed));        
     }
 
     public void HandleAmmo(int ammo)

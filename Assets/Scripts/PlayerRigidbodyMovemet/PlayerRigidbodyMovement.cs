@@ -10,7 +10,7 @@ public class PlayerRigidbodyMovement : PlayerCharacterController
 
     void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         playerMovementInput = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
@@ -19,9 +19,9 @@ public class PlayerRigidbodyMovement : PlayerCharacterController
 
     private void MovePlayer()
     {
-        Vector3 MoveVector = transform.TransformDirection(playerMovementInput * speed);
-        PlayerBody.linearVelocity = new Vector3(MoveVector.x, PlayerBody.linearVelocity.y, MoveVector.z);        
+        //Vector3 MoveVector = transform.TransformDirection(playerMovementInput * maxSpeed);
+        //PlayerBody.linearVelocity = new Vector3(MoveVector.x, PlayerBody.linearVelocity.y, MoveVector.z);        
 
-        if(Input.GetButtonDown("Jump") && isGrounded) PlayerBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        //if(Input.GetButtonDown("Jump") && isGrounded) PlayerBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 }
