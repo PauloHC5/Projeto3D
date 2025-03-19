@@ -29,7 +29,7 @@ public class MouseLook : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         player = GameObject.FindGameObjectsWithTag("Player")[0].transform;
-        playerMesh = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("PlayerMesh"));       
+        playerMesh = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("Mesh Root"));       
         cameraPos = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("CameraPos"));
     }
 

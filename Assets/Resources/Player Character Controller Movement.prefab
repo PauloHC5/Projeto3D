@@ -189,7 +189,7 @@ Transform:
   m_GameObject: {fileID: 1035412756657470169}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.6499999, z: 0}
+  m_LocalPosition: {x: 0, y: 1.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1037,21 +1037,23 @@ MonoBehaviour:
     m_Bits: 8
   gravity: -9.81
   characterController: {fileID: 1690414651061201987}
+  meshRoot: {fileID: 5485236345039029983}
   playerMesh: {fileID: 5521116737292277039}
   cameraPos: {fileID: 7674668982629661412}
   playerMovementStates: 0
   isCrouching: 0
   crouchSpeed: 4
-  crouchHeight: 1
-  standingHeight: 2
+  crouchHeight: 0.5
+  crouchRadius: 0.3
+  crouchSmooth: 10
   sway: 1
-  step: 0.01
-  maxStepDistance: 0.13
-  smooth: 4
+  swayStep: 0.01
+  swayMaxStepDistance: 0.06
+  swaySmooth: 4
   swayRotation: 1
   rotationStep: 2
   maxRotationStep: 8
-  smoothRot: 2
+  swaySmoothRot: 2
   weaponSelected: 0
   weapons:
   - {fileID: 0}
@@ -1644,7 +1646,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5485236345039029983}
   m_Layer: 7
-  m_Name: PlayerMesh
+  m_Name: Mesh Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

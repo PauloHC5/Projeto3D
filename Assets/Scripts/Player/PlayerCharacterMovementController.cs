@@ -35,36 +35,47 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private CharacterController characterController;
+    [SerializeField] private Transform meshRoot;
     [SerializeField] protected GameObject playerMesh;
     [SerializeField] protected Transform cameraPos;
     [ReadOnly]
-    [SerializeField] private PlayerMovementStates playerMovementStates;
+    [SerializeField] private PlayerMovementStates playerMovementStates = PlayerMovementStates.DEFAULT;
 
     [Header("Crouch")]
     [SerializeField] private bool isCrouching = false;
     [SerializeField] private float crouchSpeed = 4f;
     [SerializeField] private float crouchHeight = 1f;
-    [SerializeField] private float standingHeight = 2f;
+    [SerializeField] private float crouchRadius = 0.3f;
+    [SerializeField] private float crouchSmooth = 10f;
 
     [Space]
     [Header("Sway")]
     [SerializeField] private bool sway = true;
-    [SerializeField] private float step = 0.01f; // Multiplied by the value from the mouse for 1 frame
-    [SerializeField] private float maxStepDistance = 0.06f; // Max distance from the local origin
-    [SerializeField] private float smooth = 10f;        
+    [SerializeField] private float swayStep = 0.01f; // Multiplied by the value from the mouse for 1 frame
+    [SerializeField] private float swayMaxStepDistance = 0.06f; // Max distance from the local origin
+    [SerializeField] private float swaySmooth = 10f;        
     private Vector3 swayPos; // Store our value for later
 
     [Header("Sway Rotation")]
     [SerializeField] private bool swayRotation = true;
     [SerializeField] private float rotationStep = 4f;
     [SerializeField] private float maxRotationStep = 5f;
-    [SerializeField] private float smoothRot = 12f;    
+    [SerializeField] private float swaySmoothRot = 12f;    
     private Vector3 swayEulerRot;
 
-    protected float maxSpeed;
-    protected bool isGrounded;
-    protected Vector3 velocity;    
-    
+    private float maxSpeed;
+    private bool isGrounded;
+    private Vector3 velocity;
+    private bool hasAppliedCrouchImpulse = false;
+
+    private float standingHeight; // Default height of the character controller
+    private float standingRadius; // Default radius of the character controller    
+    private Vector3 standingCameraPos; // Default position of the camera
+    private Vector3 standingMeshRootPos; // Default position of the mesh root
+    private Vector3 standingGroundCheckPos; // Default position of the ground check    
+
+    private IEnumerator crouchingRoutine; 
+
     protected PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
     public PlayerCombatStates PlayerCombatStates
     {
@@ -75,6 +86,12 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     protected void IntializeMovement()
     {
         maxSpeed = walkSpeed;
+        standingHeight = characterController.height;
+        standingRadius = characterController.radius;
+        standingCameraPos = cameraPos.localPosition;        
+        standingMeshRootPos = meshRoot.transform.localPosition;
+        standingGroundCheckPos = groundCheck.localPosition;
+        playerMovementStates = PlayerMovementStates.DEFAULT;
     }
 
     protected void HandleMovement(Vector3 playerMovementInput, Vector2 playerLookInput)
@@ -98,9 +115,9 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     {
         if(!sway) { swayPos = Vector3.zero; return; }
 
-        Vector3 invertLook = lookInput * -step;
-        invertLook.x = Mathf.Clamp(invertLook.x, -maxStepDistance, maxStepDistance);
-        invertLook.y = Mathf.Clamp(invertLook.y, -maxStepDistance, maxStepDistance);
+        Vector3 invertLook = lookInput * -swayStep;
+        invertLook.x = Mathf.Clamp(invertLook.x, -swayMaxStepDistance, swayMaxStepDistance);
+        invertLook.y = Mathf.Clamp(invertLook.y, -swayMaxStepDistance, swayMaxStepDistance);
 
         swayPos = invertLook;
     }
@@ -122,10 +139,10 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
         Vector3 correctionHeight = new Vector3(0f, -1.65f, 0f);
 
         // position
-        playerMesh.transform.localPosition = Vector3.Lerp(playerMesh.transform.localPosition, correctionHeight + swayPos, Time.deltaTime * smooth);
+        playerMesh.transform.localPosition = Vector3.Lerp(playerMesh.transform.localPosition, correctionHeight + swayPos, Time.deltaTime * swaySmooth);
 
         // rotation
-        playerMesh.transform.localRotation = Quaternion.Lerp(playerMesh.transform.localRotation, Quaternion.Euler(swayEulerRot), Time.deltaTime * smoothRot);
+        playerMesh.transform.localRotation = Quaternion.Lerp(playerMesh.transform.localRotation, Quaternion.Euler(swayEulerRot), Time.deltaTime * swaySmoothRot);
     }
 
     protected virtual void Jump()
@@ -135,19 +152,68 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
 
     protected virtual void Crouch()
     {
-        if (!isCrouching)
+        isCrouching = !isCrouching;
+
+        // If we are already crouching, stop the routine and start a new one
+        if (crouchingRoutine != null)
         {
-            characterController.height = crouchHeight;
-            maxSpeed = crouchSpeed;
-            isCrouching = true;
-            cameraPos.localPosition = new Vector3(cameraPos.localPosition.x, cameraPos.localPosition.y / 2f, cameraPos.localPosition.z);
-            playerMesh.transform.localPosition = new Vector3(playerMesh.transform.localPosition.x, playerMesh.transform.localPosition.y / 2f, playerMesh.transform.localPosition.z);
+            StopCoroutine(crouchingRoutine);
+        }
+
+        crouchingRoutine = CrouchingRoutine();
+        StartCoroutine(crouchingRoutine);
+    }
+
+    private IEnumerator CrouchingRoutine()
+    {
+        Vector3 crouchCameraPos = new Vector3(cameraPos.localPosition.x, 1.25f, cameraPos.localPosition.z);
+        Vector3 crouchMeshRootPos = new Vector3(playerMesh.transform.localPosition.x, 1.170f, playerMesh.transform.localPosition.z);   
+        Vector3 crouchGrundCheckPos = new Vector3(groundCheck.localPosition.x, 0.6f, groundCheck.localPosition.z);        
+
+        if (isCrouching)
+        {
+            playerMovementStates = PlayerMovementStates.CROUCHING;
+
+            // Add impulse to the player when crouching and jumping
+            if (!isGrounded && !hasAppliedCrouchImpulse)
+            {
+                velocity.y = Mathf.Sqrt((jumpForce / 2f) * -2f * gravity);
+                hasAppliedCrouchImpulse = true;                
+            }
+
+            while (Mathf.Abs(characterController.height - crouchHeight) > 0.01f)
+            {
+                characterController.height = Mathf.Lerp(characterController.height, crouchHeight, Time.deltaTime * crouchSmooth);
+                characterController.radius = Mathf.Lerp(characterController.radius, crouchRadius, Time.deltaTime * crouchSmooth);
+                cameraPos.localPosition = Vector3.Lerp(cameraPos.localPosition, crouchCameraPos, Time.deltaTime * crouchSmooth);
+                meshRoot.transform.localPosition = Vector3.Lerp(meshRoot.transform.localPosition, crouchMeshRootPos, Time.deltaTime * crouchSmooth);
+                groundCheck.localPosition = Vector3.Lerp(groundCheck.localPosition, crouchGrundCheckPos, Time.deltaTime * crouchSmooth);                
+                maxSpeed = crouchSpeed;
+                isCrouching = true;
+                yield return null;
+            }
         }
         else
         {
-            characterController.height = standingHeight;
-            maxSpeed = walkSpeed;
-            isCrouching = false;
+            playerMovementStates = PlayerMovementStates.DEFAULT;
+
+            if (!isGrounded) yield break;
+            while (Mathf.Abs(characterController.height - standingHeight) > 0.01f)
+            {
+                characterController.height = Mathf.Lerp(characterController.height, standingHeight, Time.deltaTime * crouchSmooth);
+                characterController.radius = Mathf.Lerp(characterController.radius, standingRadius, Time.deltaTime * crouchSmooth);
+                cameraPos.localPosition = Vector3.Lerp(cameraPos.localPosition, standingCameraPos, Time.deltaTime * crouchSmooth);
+                meshRoot.transform.localPosition = Vector3.Lerp(meshRoot.transform.localPosition, standingMeshRootPos, Time.deltaTime * crouchSmooth);
+                groundCheck.localPosition = Vector3.Lerp(groundCheck.localPosition, standingGroundCheckPos, Time.deltaTime * crouchSmooth);                
+                maxSpeed = walkSpeed;
+                isCrouching = false;
+                yield return null;
+            }
+        }
+        
+        if (isGrounded)
+        {
+            hasAppliedCrouchImpulse = false;
         }
     }
 
