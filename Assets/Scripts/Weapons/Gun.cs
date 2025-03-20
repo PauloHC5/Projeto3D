@@ -66,11 +66,7 @@ public class Gun : Weapon
         ammoToReload = weaponAmmo[weaponType] >= ammoDifference ? ammoDifference : weaponAmmo[weaponType];
 
         // Subtract the ammo to reload from the weapon ammo
-        weaponAmmo[weaponType] -= ammoToReload;
-
-        // Debug mag ammo and ammoToReload
-        Debug.Log($"Ammo to Reload: {AmmoToReload}");               
-
+        weaponAmmo[weaponType] -= ammoToReload;        
     }
 
     protected virtual void FinishReload()
