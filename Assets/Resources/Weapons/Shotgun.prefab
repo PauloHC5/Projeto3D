@@ -146,6 +146,9 @@ MonoBehaviour:
   DebugRaycast: 1
   pelletsPerShot: 8
   spreadAngle: 0.5
+  shootLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &2957617364616530174
 GameObject:
   m_ObjectHideFlags: 0

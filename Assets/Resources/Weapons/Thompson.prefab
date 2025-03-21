@@ -643,6 +643,9 @@ MonoBehaviour:
   muzzleFlash: {fileID: 7712377475459072541}
   impactVFX: {fileID: 19800002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
   DebugRaycast: 1
+  shootLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &8639159340575186765
 GameObject:
   m_ObjectHideFlags: 0

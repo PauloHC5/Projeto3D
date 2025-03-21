@@ -100,7 +100,7 @@ public class Gun : Weapon
         spawnedProjectile.GetComponent<Rigidbody>().AddForce(ray.direction * impulse, ForceMode.Impulse);
     }
 
-    protected virtual void ShootRaycast(float gunRange = default)
+    protected virtual void ShootRaycast(LayerMask shootLayer,float gunRange = default)
     {
         Ray ray;
         if (fireSocket == default) {
@@ -114,7 +114,7 @@ public class Gun : Weapon
         float rayDistance = gunRange == default ? this.gunRange : gunRange;
 
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, rayDistance))
+        if (Physics.Raycast(ray, out hit, rayDistance, shootLayer))
         {                             
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));
             

@@ -6,13 +6,14 @@ public class Shotgun : Gun
 {
     [SerializeField] private int pelletsPerShot = 5;
     [SerializeField] private float spreadAngle = 5f;
+    [SerializeField] private LayerMask shootLayer;
 
 
     public override void Fire()
     {        
         StartCoroutine(BurstFire());
-        ShootRaycast();
-        base.ShootRaycast(gunRange * 2f);
+        ShootRaycast(shootLayer);
+        base.ShootRaycast(shootLayer, gunRange * 2f);
         base.Fire();
         magAmmo--;
     }
@@ -21,7 +22,7 @@ public class Shotgun : Gun
     {
         for (int i = 0; i < pelletsPerShot; i++)
         {
-            ShootRaycast();     
+            ShootRaycast(shootLayer);     
             yield return new WaitForEndOfFrame();
         }        
     }
@@ -31,7 +32,7 @@ public class Shotgun : Gun
         base.FinishReload();
     }
 
-    protected override void ShootRaycast(float gunRange = default)
+    protected override void ShootRaycast(LayerMask shootLayer,float gunRange = default)
     {
         Vector3 direction = fireSocket.forward;
         direction.x += Random.Range(-spreadAngle, spreadAngle);
@@ -40,7 +41,7 @@ public class Shotgun : Gun
         float rayDistance = gunRange == default ? this.gunRange : gunRange;
 
         RaycastHit hit;
-        if (Physics.Raycast(fireSocket.position, direction, out hit, rayDistance))
+        if (Physics.Raycast(fireSocket.position, direction, out hit, rayDistance, shootLayer))
         {
             // Lógica de impacto do projétil
             if (impactVFX != null)
