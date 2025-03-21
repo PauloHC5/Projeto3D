@@ -1184,6 +1184,7 @@ GameObject:
   - component: {fileID: 1118279102}
   - component: {fileID: 1118279106}
   - component: {fileID: 1118279107}
+  - component: {fileID: 1118279108}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -1274,11 +1275,21 @@ MonoBehaviour:
   m_BlackboardVariableOverridesList:
   - rid: 3510279283554386240
   - rid: 3510279283554386241
+  - rid: 1132936174974533764
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
     RefIds:
+    - rid: 1132936174974533764
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]',
+        ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 11808243638646807202
+          m_Value1: 17425944176519324074
+        Name: Enemie Animator
+        m_Value: {fileID: 338687003}
     - rid: 3510279283554386240
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
@@ -1297,6 +1308,23 @@ MonoBehaviour:
           m_Value1: 2722462832918400045
         Name: Target
         m_Value: {fileID: 375824951}
+--- !u!114 &1118279108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118279101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6845a31ac1630c04da15aedaf1357138, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionRadius: 5
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  showDebugVisuals: 1
 --- !u!1001 &1127200480
 PrefabInstance:
   m_ObjectHideFlags: 0
