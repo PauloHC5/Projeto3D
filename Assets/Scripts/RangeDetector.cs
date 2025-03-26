@@ -27,15 +27,15 @@ public class RangeDetector : MonoBehaviour
         foreach (var hitCollider in hitColliders)
         {
             if (hitCollider.CompareTag("Player"))
-            {
-                Debug.Log("Player detected within the detection zone");
+            {                
                 DetectedTarget = hitCollider.gameObject;
             }
             else
             {
                 DetectedTarget = null;
             }            
-        }
+        }        
+
         return DetectedTarget;
     }
 

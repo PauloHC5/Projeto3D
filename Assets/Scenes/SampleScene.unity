@@ -249,12 +249,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1 &375824951 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3986163303215137444, guid: 15a079b9ae71c83418ed5d26443361d9,
-    type: 3}
-  m_PrefabInstance: {fileID: 757169393}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -852,6 +846,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Character Controller Movement
       objectReference: {fileID: 0}
+    - target: {fileID: 3986163303215137444, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8022638480331752055, guid: 15a079b9ae71c83418ed5d26443361d9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1224,7 +1223,7 @@ Transform:
   m_GameObject: {fileID: 1118279101}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.946, y: -0.33199996, z: 2.474}
+  m_LocalPosition: {x: -2.47, y: -0.33199996, z: 6.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1274,7 +1273,6 @@ MonoBehaviour:
   m_Graph: {fileID: 8587700817181152791, guid: 679ce20543dea324b8ea0aecb7f9ca57, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 3510279283554386240
-  - rid: 3510279283554386241
   - rid: 1132936174974533764
   m_IsInitialised: 0
   m_IsStarted: 0
@@ -1299,15 +1297,6 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 1118279101}
-    - rid: 3510279283554386241
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]',
-        ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 17659119909812066703
-          m_Value1: 2722462832918400045
-        Name: Target
-        m_Value: {fileID: 375824951}
 --- !u!114 &1118279108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1323,7 +1312,7 @@ MonoBehaviour:
   detectionRadius: 5
   detectionLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   showDebugVisuals: 1
 --- !u!1001 &1127200480
 PrefabInstance:
