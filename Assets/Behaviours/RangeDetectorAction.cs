@@ -22,9 +22,9 @@ public partial class RangeDetectorAction : Action
 
     protected override Status OnUpdate()
     {
-        Target.Value = Detector.DetectPlayer();               
+        Target.Value = Detector.DetectPlayer();
 
-        return Target.Value != null ? Status.Success : Status.Failure;
+        return Status.Running;
     }
 
     protected override void OnEnd()

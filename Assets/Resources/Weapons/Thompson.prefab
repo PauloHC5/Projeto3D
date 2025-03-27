@@ -645,7 +645,7 @@ MonoBehaviour:
   DebugRaycast: 1
   shootLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 520
 --- !u!1 &8639159340575186765
 GameObject:
   m_ObjectHideFlags: 0

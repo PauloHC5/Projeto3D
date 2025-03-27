@@ -115,13 +115,13 @@ public class Gun : Weapon
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, rayDistance, shootLayer))
-        {                             
+        {            
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));
             
             // Check if the object hit has rigidbody
             if (hit.rigidbody)
             {
-                ApplyImpulse(hit);
+                ApplyImpulse(hit);                
             }
         }
 
