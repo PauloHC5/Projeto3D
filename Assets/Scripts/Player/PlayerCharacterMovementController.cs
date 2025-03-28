@@ -30,6 +30,8 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     [Header("Movement")]
     [SerializeField] private float walkSpeed;
     [SerializeField] private float jumpForce;
+    [SerializeField] private float acceleration = 5f; // New field for acceleration
+    [SerializeField] private float deceleration = 5f; // New field for deceleration
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundDistance = 0.4f;
     [SerializeField] private LayerMask groundMask;
@@ -76,6 +78,9 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
 
     private IEnumerator crouchingRoutine; 
 
+    private Vector3 movementVelocity; // New field for movement velocity
+    private Vector3 gravityVelocity; // New field for gravity velocity
+
     protected PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
     public PlayerCombatStates PlayerCombatStates
     {
@@ -98,10 +103,28 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     {
         isGrounded = CheckIfGrounded();
 
-        if (isGrounded && velocity.y < 0) velocity.y = -2f;
+        if (isGrounded && gravityVelocity.y < 0) gravityVelocity.y = -2f;
 
+        // Calculate movement direction
         Vector3 move = transform.right * playerMovementInput.x + transform.forward * playerMovementInput.y;
-        characterController.Move(move * maxSpeed * Time.deltaTime);
+
+        if (playerMovementInput.magnitude > 0) // If we are moving
+        {
+            if(!isGrounded) // If we are not grounded, divide acceleration by half
+                movementVelocity += move.normalized * acceleration /2f * Time.deltaTime;
+
+            else // increase acceleration normally
+                movementVelocity += move.normalized * acceleration * Time.deltaTime;
+
+            movementVelocity = Vector3.ClampMagnitude(movementVelocity, maxSpeed);
+        }
+        else
+        {
+            // Decrease movement velocity based on deceleration
+            movementVelocity = Vector3.MoveTowards(movementVelocity, Vector3.zero, deceleration * Time.deltaTime);
+        }
+        
+        characterController.Move((movementVelocity + new Vector3(0, gravityVelocity.y, 0)) * Time.deltaTime);
 
         Sway(playerLookInput);
         SwayRotation(playerLookInput);
@@ -147,7 +170,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
 
     protected virtual void Jump()
     {        
-        if(isGrounded) velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);        
+        if(isGrounded) gravityVelocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);        
     }
 
     protected virtual void Crouch()
@@ -177,7 +200,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
             // Add impulse to the player when crouching and jumping
             if (!isGrounded && !hasAppliedCrouchImpulse)
             {
-                velocity.y = Mathf.Sqrt((jumpForce / 2f) * -2f * gravity);
+                gravityVelocity.y = Mathf.Sqrt((jumpForce / 2f) * -2f * gravity);
                 hasAppliedCrouchImpulse = true;                
             }
 
@@ -219,8 +242,9 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
 
     protected void ApplyGravity()
     {
-        velocity.y += gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
+        // Apply gravity only to the gravity velocity
+        gravityVelocity.y += gravity * Time.deltaTime;
+        characterController.Move(new Vector3(0, velocity.y, 0) * Time.deltaTime);
     }
 
     protected bool CheckIfGrounded()

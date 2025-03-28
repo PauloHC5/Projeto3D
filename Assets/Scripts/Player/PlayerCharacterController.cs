@@ -113,7 +113,8 @@ public class PlayerCharacterController : PlayerCharacterCombatController
         if (lmbPressed) PerformPrimaryAction();
         if (rmbPressed && weaponSelected == PlayerWeapon.Shotgun) PerformSecondaryAction();
 
-        playerMovementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        //playerMovementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        playerMovementInput = playerControls.Player.Move.ReadValue<Vector2>();
         playerLookInput = playerControls.Player.Look.ReadValue<Vector2>();
     }
 

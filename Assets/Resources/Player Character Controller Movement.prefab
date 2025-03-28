@@ -1028,8 +1028,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerAnimator: {fileID: 728732302384425514}
-  walkSpeed: 8
+  walkSpeed: 6
   jumpForce: 2
+  acceleration: 20
+  deceleration: 15
   groundCheck: {fileID: 5241768735091827890}
   groundDistance: 0.4
   groundMask:

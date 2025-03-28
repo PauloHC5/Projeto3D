@@ -610,11 +610,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Character Controller Movement
       objectReference: {fileID: 0}
-    - target: {fileID: 3986163303215137444, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8022638480331752055, guid: 15a079b9ae71c83418ed5d26443361d9,
         type: 3}
       propertyPath: m_LocalPosition.x
