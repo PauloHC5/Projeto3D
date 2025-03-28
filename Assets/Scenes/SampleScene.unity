@@ -747,7 +747,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1118279101}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 7839e6f4c2df6864a9715ea0fc7b4219, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -788,9 +788,9 @@ NavMeshAgent:
   m_GameObject: {fileID: 1118279101}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.6
+  m_Radius: 1.82
   m_Speed: 1
-  m_Acceleration: 1.5
+  m_Acceleration: 2
   avoidancePriority: 50
   m_AngularSpeed: 480
   m_StoppingDistance: 4
@@ -865,7 +865,7 @@ MonoBehaviour:
   detectionRadius: 5
   detectionLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 9
   showDebugVisuals: 1
 --- !u!114 &1118279109
 MonoBehaviour:
