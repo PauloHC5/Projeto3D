@@ -31,11 +31,19 @@ public class HUD : MonoBehaviour
             if (equippedGun != null)
             {
                 var magAmmo = 0;
+                var totalAmmo = 0;
 
-                if (dualWieldGun) magAmmo = dualWieldGun.MagAmmo;
-                else magAmmo = equippedGun.MagAmmo;
+                if (dualWieldGun)
+                {
+                    magAmmo = dualWieldGun.MagAmmo;
+                }
+                else
+                {
+                    magAmmo = equippedGun.MagAmmo;
+                }                
                 
-                int totalAmmo = player.WeaponAmmo[equippedGun.WeaponType];
+                
+                totalAmmo = player.WeaponAmmo[equippedGun.WeaponType];
 
                 ammoText.text = $"{weaponSelected} \n Ammo: {magAmmo} / {totalAmmo}";
             }

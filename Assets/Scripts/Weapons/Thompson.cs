@@ -11,10 +11,5 @@ public class Thompson : Gun
         ShootRaycast(shootLayer);
         base.Fire();
         magAmmo--;
-    }        
-
-    protected override void FinishReload()
-    {
-        base.FinishReload();
-    }
+    }            
 }

@@ -57,23 +57,22 @@ public class Gun : Weapon
         gunAnimator.SetTrigger(ReloadTrigger);
     }
 
-    public virtual void Reload(Dictionary<PlayerWeapon, Int32> weaponAmmo)
+    public virtual void Reload()
     {
+        var weaponAmmo = GameManager.Player.WeaponAmmo[GameManager.Player.WeaponSelected]; 
+
         // Get the difference between the max ammo and the current ammo
         int ammoDifference = MaxAmmo - MagAmmo;
 
         // Get the ammo to reload
-        ammoToReload = weaponAmmo[weaponType] >= ammoDifference ? ammoDifference : weaponAmmo[weaponType];
+        ammoToReload = weaponAmmo >= ammoDifference ? ammoDifference : weaponAmmo;
 
         // Subtract the ammo to reload from the weapon ammo
-        weaponAmmo[weaponType] -= ammoToReload;        
-    }
+        GameManager.Player.WeaponAmmo[GameManager.Player.WeaponSelected] -= ammoToReload;
 
-    protected virtual void FinishReload()
-    {
         magAmmo += AmmoToReload;
         canFire = true;
-    }
+    }    
 
     protected IEnumerator ShootDelay()
     {
@@ -137,7 +136,7 @@ public class Gun : Weapon
 
     private void OnEnable()
     {
-        canFire = magAmmo > 0;
+        canFire = magAmmo > 0;        
     }
 
 }

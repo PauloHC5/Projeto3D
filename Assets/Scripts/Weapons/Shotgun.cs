@@ -27,9 +27,9 @@ public class Shotgun : Gun
         }        
     }
 
-    protected override void FinishReload()
+    public override void Reload()
     {
-        base.FinishReload();
+        base.Reload();
     }
 
     protected override void ShootRaycast(LayerMask shootLayer,float gunRange = default)

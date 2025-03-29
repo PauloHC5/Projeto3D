@@ -37,13 +37,7 @@ public class Crossbow : Gun, ISecondaryAction
             base.ShootProjectile(boltProjectile, boltSpawnPoint, boltForce);
             yield return new WaitForSeconds(FireRate / 5);
         }        
-    }
-
-    protected override void FinishReload()
-    {
-        base.FinishReload();
-    }
-
+    }    
 
     public bool Perform()
     {

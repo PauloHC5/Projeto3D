@@ -20,9 +20,8 @@ public class Flaregun : Gun
         base.PlayReload();
     }
 
-    protected override void FinishReload()
-    {
-        AmmoToReload = 1;
-        base.FinishReload();        
+    public override void Reload()
+    {        
+        base.Reload();        
     }
 }

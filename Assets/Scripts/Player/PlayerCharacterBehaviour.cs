@@ -44,14 +44,13 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 if (equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo);
                 else
                 {
-                    equippedGun.PlayReload();
-                    equippedGun.Reload(playerCharacter.WeaponAmmo);
+                    equippedGun.PlayReload();                    
                 }                                
                 break;
         }        
         
-    }    
-
+    }
+    
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {        
@@ -115,8 +114,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
 
         if (stateInfo.IsTag("Reload"))
         {
-            equippedGuns.PlayReload();          
-            equippedGuns.Reload(playerCharacter.WeaponAmmo);
+            equippedGuns.PlayReload();                      
         }
     }
 

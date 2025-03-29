@@ -24,6 +24,8 @@ public class DualWieldGun : Gun
         this.gunR = GunR;
         this.gunL = GunL;
 
+        weaponType = PlayerWeapon.Shotgun;
+
         return this;
     }
 
@@ -60,12 +62,12 @@ public class DualWieldGun : Gun
         }
     }
 
-    public override void Reload(Dictionary<PlayerWeapon, Int32> weaponAmmo)
+    public override void Reload()
     {
         Debug.Log("Reloading dual wield gun");
 
-        gunR.Reload(weaponAmmo);
-        gunL.Reload(weaponAmmo);        
+        gunR.Reload();
+        gunL.Reload();        
     }
 
     public override void PlayReload()

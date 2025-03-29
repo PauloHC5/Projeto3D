@@ -120,7 +120,7 @@ public class PlayerCharacterController : PlayerCharacterCombatController
 
     protected override void SwitchToWeapon(PlayerWeapon weapon)
     {
-        if (playerCombatStates == PlayerCombatStates.FIRING || playerCombatStates == PlayerCombatStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.Crowbar)) return;        
+        if (lmbPressed || playerCombatStates == PlayerCombatStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.Crowbar)) return;        
 
         base.SwitchToWeapon(weapon);
     }           

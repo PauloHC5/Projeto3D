@@ -44,7 +44,19 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
     };
 
     protected Dictionary<PlayerWeapon, Int32> playerWeaponAmmo;
-    public Dictionary<PlayerWeapon, Int32> WeaponAmmo => playerWeaponAmmo;
+    public Dictionary<PlayerWeapon, Int32> WeaponAmmo
+    {
+        get => playerWeaponAmmo;
+
+        set
+        {
+            // set only of value is greater than 0
+            foreach (var pair in value)
+            {
+                if (pair.Value >= 0) playerWeaponAmmo[pair.Key] = pair.Value;
+            }
+        }
+    }
 
     protected void Awake()
     {
