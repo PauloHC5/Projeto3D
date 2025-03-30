@@ -8,7 +8,7 @@ public class MouseLook : MonoBehaviour
 {
     [SerializeField] private float mouseSensitivity = 100f;
 
-    private Transform player;    
+    [SerializeField] private Transform player;    
     private Transform playerMesh;    
     private Transform cameraPos;
 
@@ -27,8 +27,7 @@ public class MouseLook : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-
-        player = GameObject.FindGameObjectsWithTag("Player")[0].transform;
+        
         playerMesh = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("Mesh Root"));       
         cameraPos = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("CameraPos"));
     }
@@ -43,7 +42,7 @@ public class MouseLook : MonoBehaviour
 
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
         if (player)
         {
