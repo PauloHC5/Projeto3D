@@ -40,7 +40,7 @@ public class Crossbow : Gun, ISecondaryAction
     }    
 
     public bool Perform()
-    {
+    {        
         wantsToAim = !wantsToAim;
 
         Camera[] playerCameras = GameObject.FindObjectsByType<Camera>(FindObjectsSortMode.None);
@@ -58,6 +58,21 @@ public class Crossbow : Gun, ISecondaryAction
         return true;
     }
 
+    public void ZoomOut()
+    {
+        wantsToAim = false;
+
+        Camera[] playerCameras = GameObject.FindObjectsByType<Camera>(FindObjectsSortMode.None);
+        if (playerCameras != null)
+        {
+            if (aimCoroutine != null)
+            {
+                StopCoroutine(aimCoroutine);
+            }
+
+            aimCoroutine = StartCoroutine(Aim(playerCameras));
+        }
+    }
 
     private IEnumerator Aim(Camera[] playerCameras)
     {
@@ -78,7 +93,7 @@ public class Crossbow : Gun, ISecondaryAction
 
         foreach (Camera playerCamera in playerCameras)
         {
-            playerCamera.fieldOfView = Mathf.Lerp(startFoV, targetFoV, localscopeSpeed * (elapsedTime / scopeSpeed));
+            playerCamera.fieldOfView = targetFoV;
         }
-    }
+    }    
 }
