@@ -81,17 +81,7 @@ public class PlayerCharacterController : PlayerCharacterCombatController
         HandleAmmo(playerWeaponAmmo[weaponSelected]);
 
         // if k button is pressed, add 3 to playerWeaponAmmo[weaponSelected]
-        if (Keyboard.current.kKey.wasPressedThisFrame) playerWeaponAmmo[weaponSelected] += 3;
-
-        // if l button is pressed, debug log the playerWeaponAmmo[weaponSelected]
-        if (Keyboard.current.lKey.wasPressedThisFrame) Debug.Log($"{weaponSelected} ammo: " + playerWeaponAmmo[weaponSelected]);
-
-        // if j button is pressed, debug log the equippedWeapon.MagAmmo
-        if (Keyboard.current.jKey.wasPressedThisFrame)
-        {
-            Gun equippedGun = equippedWeapon as Gun;
-            Debug.Log($"{weaponSelected} MagAmmo: " + equippedGun.MagAmmo);
-        }
+        if (Keyboard.current.kKey.wasPressedThisFrame) playerWeaponAmmo[weaponSelected] += 3;        
     }
 
     private void HandleMouseScroll()

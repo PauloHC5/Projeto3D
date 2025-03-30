@@ -155,9 +155,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
             }
 
             crouchingRoutine = CrouchingRoutine();
-            StartCoroutine(crouchingRoutine);
-
-            Debug.Log("Obstacle detected, getting up");
+            StartCoroutine(crouchingRoutine);            
         }
     }    
 
