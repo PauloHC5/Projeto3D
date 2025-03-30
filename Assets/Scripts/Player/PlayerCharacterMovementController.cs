@@ -15,19 +15,6 @@ public enum PlayerMovementStates
     DEFAULT
 }
 
-public class ReadOnlyAttribute : PropertyAttribute { }
-
-[CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
-public class ReadOnlyDrawer : PropertyDrawer
-{
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-    {
-        GUI.enabled = false;
-        EditorGUI.PropertyField(position, property, label);
-        GUI.enabled = true;
-    }
-}
-
 public class PlayerCharacterMovementController : PlayerCharacterAnimationsController
 {    
     [Header("Movement")]
@@ -36,16 +23,15 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     [SerializeField] private float acceleration = 5f; // New field for acceleration
     [SerializeField] private float deceleration = 5f; // New field for deceleration
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private float groundCheckRadius = 0.4f;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float gravity = -9.81f;
-    [SerializeField] private CharacterController characterController;
+    [SerializeField] protected CharacterController characterController;
     [SerializeField] private Transform meshRoot;
     [SerializeField] protected GameObject playerMesh;
-    [SerializeField] protected Transform cameraPos;
-    [ReadOnly]
+    [SerializeField] protected Transform cameraPos;    
     [SerializeField] private PlayerMovementStates playerMovementStates = PlayerMovementStates.DEFAULT;
-
+   
     [Header("Crouch")]
     [SerializeField] private bool isCrouching = false;
     [SerializeField] private float crouchSpeed = 4f;
@@ -54,8 +40,10 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     [SerializeField] private float crouchSmooth = 10f;
     [SerializeField] private float crouchCameraPos;
     [SerializeField] private float crouchMeshRootPos;
-    [SerializeField] private float crouchGrundCheckPos;    
+    [SerializeField] private float crouchGrundCheckPos;
+    [SerializeField] private Vector3 obstacleDetectorPosition;
     [SerializeField] private LayerMask obstacleMask; // Layer mask for obstacles
+    [SerializeField] private float obstacleDetectorRadius = 0.5f; // Radius of the sphere used to detect obstacles
     [SerializeField] private bool DebugIsObstacleAboveSphere = false;
 
     [Space]
@@ -79,8 +67,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     private bool hasAppliedCrouchImpulse = false;    
 
     private float standingHeight; // Default height of the character controller
-    private float standingRadius; // Default radius of the character controller    
-    private float standingCenter; // Default center of the character controller
+    private float standingRadius; // Default radius of the character controller        
     private Vector3 standingCameraPos; // Default position of the camera
     private Vector3 standingMeshRootPos; // Default position of the mesh root
     private Vector3 standingGroundCheckPos; // Default position of the ground check    
@@ -101,12 +88,11 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     {
         maxSpeed = walkSpeed;
         standingHeight = characterController.height;
-        standingRadius = characterController.radius;
-        standingCenter = characterController.center.y;
-        standingCameraPos = cameraPos.localPosition;        
-        standingMeshRootPos = meshRoot.transform.localPosition;
+        standingRadius = characterController.radius;        
+        standingCameraPos = cameraPos.position;        
+        standingMeshRootPos = meshRoot.transform.position;
         standingGroundCheckPos = groundCheck.localPosition;
-        playerMovementStates = PlayerMovementStates.DEFAULT;
+        playerMovementStates = PlayerMovementStates.DEFAULT;        
     }
 
     protected void HandleMovement(Vector3 playerMovementInput, Vector2 playerLookInput)
@@ -114,14 +100,17 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
         isGrounded = CheckIfGrounded();
 
         if (isGrounded && gravityVelocity.y < 0) gravityVelocity.y = -2f;
-        
+
+        // Check for collision above and zero gravityVelocity if detected
+        if (IsCollisionAbove()) gravityVelocity.y = -1f;        
+
         // Calculate movement direction
         Vector3 move = transform.right * playerMovementInput.x + transform.forward * playerMovementInput.y;
 
         if (playerMovementInput.magnitude > 0) // If we are moving
         {
             if (!isGrounded) // If we are not grounded, divide acceleration by half
-                movementVelocity += move.normalized * acceleration / 2f * Time.deltaTime;
+                movementVelocity += move.normalized * acceleration / 4f * Time.deltaTime;
 
             else // increase acceleration normally
                 movementVelocity += move.normalized * acceleration * Time.deltaTime;
@@ -134,15 +123,31 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
             movementVelocity = Vector3.MoveTowards(movementVelocity, Vector3.zero, deceleration * Time.deltaTime);
         }
 
-        characterController.Move(movementVelocity * Time.deltaTime);
+        MoveCharacter(movementVelocity, gravityVelocity);
 
         Sway(playerLookInput);
         SwayRotation(playerLookInput);
         CompositePoitionRotation();
 
         float speed = characterController.velocity.magnitude;
-        base.HandleLocomotion(speed, maxSpeed);
-    }
+        base.HandleLocomotion(speed, maxSpeed);    
+        
+        if(playerMovementStates == PlayerMovementStates.GETTINGUP && IsObstacleAbove())
+        {
+            isCrouching = true;
+
+            // f we are already crouching, stop the routine and start a new one
+            if (crouchingRoutine != null)
+            {
+                StopCoroutine(crouchingRoutine);
+            }
+
+            crouchingRoutine = CrouchingRoutine();
+            StartCoroutine(crouchingRoutine);
+
+            Debug.Log("Obstacle detected, getting up");
+        }
+    }    
 
     private void Sway(Vector2 lookInput) // x and y change as a result of moving the mouse
     {
@@ -179,17 +184,19 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     }
 
     protected virtual void Jump()
-    {        
-        if(isGrounded) gravityVelocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);        
+    {
+        if (isCrouching && IsObstacleAbove()) return;
+
+        if (isGrounded) gravityVelocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);        
     }
 
     protected virtual void Crouch()
-    {        
-          
+    {
+        if (isCrouching && IsObstacleAbove()) return;
 
         isCrouching = !isCrouching;
 
-        // If we are already crouching, stop the routine and start a new one
+        // f we are already crouching, stop the routine and start a new one
         if (crouchingRoutine != null)
         {
             StopCoroutine(crouchingRoutine);
@@ -208,7 +215,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
             // Add impulse to the player when crouching and jumping
             if (!isGrounded && !hasAppliedCrouchImpulse)
             {
-                gravityVelocity.y = Mathf.Sqrt((jumpForce / 2f) * -2f * gravity);
+                gravityVelocity.y = Mathf.Sqrt(1f * -2f * gravity);
                 hasAppliedCrouchImpulse = true;
             }
 
@@ -220,14 +227,12 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
                 characterController.center = new Vector3(characterController.center.x, characterController.center.y - heightDifference / 2, characterController.center.z);
 
                 // Adjust the player's position
-                transform.position = new Vector3(transform.position.x, transform.position.y - heightDifference / 2, transform.position.z);
+                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, transform.position.y - heightDifference / 2, transform.position.z), Time.deltaTime * crouchSmooth);
 
-
-                characterController.height = Mathf.Lerp(characterController.height, crouchHeight, Time.deltaTime * crouchSmooth);
                 characterController.radius = Mathf.Lerp(characterController.radius, crouchRadius, Time.deltaTime * crouchSmooth);
+                groundCheck.localPosition = new Vector3(groundCheck.localPosition.x, crouchGrundCheckPos, groundCheck.localPosition.z);
                 cameraPos.localPosition = new Vector3(cameraPos.localPosition.x, Mathf.Lerp(cameraPos.localPosition.y, crouchCameraPos, Time.deltaTime * crouchSmooth), cameraPos.localPosition.z);
-                meshRoot.transform.localPosition = new Vector3(meshRoot.transform.localPosition.x, Mathf.Lerp(meshRoot.transform.localPosition.y, crouchMeshRootPos, Time.deltaTime * crouchSmooth), meshRoot.transform.localPosition.z);
-                groundCheck.localPosition = new Vector3(groundCheck.localPosition.x, Mathf.Lerp(groundCheck.localPosition.y, crouchGrundCheckPos, Time.deltaTime * crouchSmooth), groundCheck.localPosition.z);
+                meshRoot.localPosition = new Vector3(meshRoot.localPosition.x, Mathf.Lerp(meshRoot.localPosition.y, crouchMeshRootPos, Time.deltaTime * crouchSmooth), meshRoot.localPosition.z);
                 maxSpeed = crouchSpeed;
                 isCrouching = true;
                 yield return null;
@@ -236,36 +241,31 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
             playerMovementStates = PlayerMovementStates.CROUCH;
         }
         else
-        {            
-            // Check if there is an obstacle above before getting up
-            if (IsObstacleAbove())
-            {
-                yield break; // Exit the coroutine if there is an obstacle above
-            }
+        {           
+            if(!isGrounded) yield break;
 
             playerMovementStates = PlayerMovementStates.GETTINGUP;
-           
+
             while (Mathf.Abs(characterController.height - standingHeight) > 0.01f)
-            {
+            {                
                 float previousHeight = characterController.height;
                 characterController.height = Mathf.Lerp(characterController.height, standingHeight, Time.deltaTime * crouchSmooth);
                 float heightDifference = previousHeight - characterController.height;
                 characterController.center = new Vector3(characterController.center.x, characterController.center.y - heightDifference / 2, characterController.center.z);
 
                 // Adjust the player's position
-                transform.position = new Vector3(transform.position.x, transform.position.y - heightDifference / 2, transform.position.z);
+                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, transform.position.y - heightDifference / 2, transform.position.z), Time.deltaTime * crouchSmooth);
 
-                characterController.height = Mathf.Lerp(characterController.height, standingHeight, Time.deltaTime * crouchSmooth);
                 characterController.radius = Mathf.Lerp(characterController.radius, standingRadius, Time.deltaTime * crouchSmooth);
+                groundCheck.localPosition = new Vector3(groundCheck.localPosition.x, standingGroundCheckPos.y, groundCheck.localPosition.z);
                 cameraPos.localPosition = new Vector3(cameraPos.localPosition.x, Mathf.Lerp(cameraPos.localPosition.y, standingCameraPos.y, Time.deltaTime * crouchSmooth), cameraPos.localPosition.z);
-                meshRoot.transform.localPosition = new Vector3(meshRoot.transform.localPosition.x, Mathf.Lerp(meshRoot.transform.localPosition.y, standingMeshRootPos.y, Time.deltaTime * crouchSmooth), meshRoot.transform.localPosition.z);
-                groundCheck.localPosition = new Vector3(groundCheck.localPosition.x, Mathf.Lerp(groundCheck.localPosition.y, standingGroundCheckPos.y, Time.deltaTime * crouchSmooth), groundCheck.localPosition.z);
+                meshRoot.localPosition = new Vector3(meshRoot.localPosition.x, Mathf.Lerp(meshRoot.localPosition.y, standingMeshRootPos.y, Time.deltaTime * crouchSmooth), meshRoot.localPosition.z);
                 maxSpeed = walkSpeed;
                 isCrouching = false;
                 yield return null;
-            }            
+            }
 
-            playerMovementStates = PlayerMovementStates.STANDING;            
+            playerMovementStates = PlayerMovementStates.STANDING;
         }
 
         if (isGrounded)
@@ -276,10 +276,10 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
 
     private bool IsObstacleAbove()
     {        
-        Vector3 spherePosition = transform.position + Vector3.up * (characterController.height * 2);
-        if (Physics.CheckSphere(spherePosition, characterController.radius, obstacleMask))
+        Vector3 spherePosition = transform.position + obstacleDetectorPosition;
+        if (Physics.CheckSphere(spherePosition, obstacleDetectorRadius, obstacleMask))
         {
-            isCrouching = true;
+            isCrouching = true;            
             return true; // Obstacle detected
         }
         return false; // No obstacle detected
@@ -290,22 +290,37 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
         if(DebugIsObstacleAboveSphere)
         {
             // Draw the sphere used in IsObstacleAbove for visualization
-            Gizmos.color = Color.red;
-            Vector3 spherePosition = transform.position + Vector3.up * (characterController.height * 2);
-            Gizmos.DrawWireSphere(spherePosition, characterController.radius);
-        }        
+            Gizmos.color = Color.red;            
+            Vector3 spherePosition = transform.position + obstacleDetectorPosition;
+            Gizmos.DrawWireSphere(spherePosition, obstacleDetectorRadius);
+        }
+
+        // Debug groud check sphere
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 
     protected void ApplyGravity()
     {
         // Apply gravity only to the gravity velocity
         gravityVelocity.y += gravity * Time.deltaTime;
-        characterController.Move(new Vector3(0, gravityVelocity.y, 0) * Time.deltaTime);
+        MoveCharacter(movementVelocity, gravityVelocity);
+    }
+
+    private void MoveCharacter(Vector3 movement, Vector3 gravity)
+    {
+        characterController.Move((movement + gravity) * Time.deltaTime);
     }
 
     protected bool CheckIfGrounded()
     {
-        return Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
     }
 
+    // New method to detect collision above the player
+    private bool IsCollisionAbove()
+    {
+        Vector3 spherePosition = transform.position + Vector3.up * (characterController.height + 0.3f);
+        return Physics.CheckSphere(spherePosition, characterController.radius, obstacleMask);
+    }
 }
