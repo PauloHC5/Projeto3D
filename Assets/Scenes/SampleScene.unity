@@ -481,11 +481,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Character Controller Movement
       objectReference: {fileID: 0}
-    - target: {fileID: 4107845651137047694, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 1318669937}
     - target: {fileID: 8022638480331752055, guid: 15a079b9ae71c83418ed5d26443361d9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2213,12 +2208,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -36.23}
---- !u!4 &1318669937 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8022638480331752055, guid: 15a079b9ae71c83418ed5d26443361d9,
-    type: 3}
-  m_PrefabInstance: {fileID: 757169393}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1348458335
 GameObject:
   m_ObjectHideFlags: 0

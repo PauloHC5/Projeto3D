@@ -44,7 +44,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     [SerializeField] private Vector3 obstacleDetectorPosition;
     [SerializeField] private LayerMask obstacleMask; // Layer mask for obstacles
     [SerializeField] private float obstacleDetectorRadius = 0.5f; // Radius of the sphere used to detect obstacles
-    [SerializeField] private bool DebugIsObstacleAboveSphere = false;
+    [SerializeField] private bool DebugSpheresCheck = false;
 
     [Space]
     [Header("Sway")]
@@ -62,8 +62,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     private Vector3 swayEulerRot;
 
     private float maxSpeed;
-    private bool isGrounded;
-    private Vector3 velocity;
+    private bool isGrounded;    
     private bool hasAppliedCrouchImpulse = false;    
 
     private float standingHeight; // Default height of the character controller
@@ -75,7 +74,8 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     private IEnumerator crouchingRoutine; 
 
     private Vector3 movementVelocity; // New field for movement velocity
-    private Vector3 gravityVelocity; // New field for gravity velocity
+    private Vector3 gravityVelocity; // New field for gravity velocity    
+    private float decelerationTime = 0f; // New field to track deceleration time
 
     protected PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
     public PlayerCombatStates PlayerCombatStates
@@ -109,18 +109,30 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
 
         if (playerMovementInput.magnitude > 0) // If we are moving
         {
-            if (!isGrounded) // If we are not grounded, divide acceleration by half
-                movementVelocity += move.normalized * acceleration / 4f * Time.deltaTime;
+            decelerationTime = 0f; // Reset deceleration time when moving
 
-            else // increase acceleration normally
-                movementVelocity += move.normalized * acceleration * Time.deltaTime;
+            if (characterController.velocity.magnitude < maxSpeed)
+            {
+                if (!isGrounded) // If we are not grounded, divide acceleration by half
+                    movementVelocity += move.normalized * acceleration / 4f * Time.deltaTime;
+                else // increase acceleration normally
+                    movementVelocity += move.normalized * acceleration * Time.deltaTime;
 
-            movementVelocity = Vector3.ClampMagnitude(movementVelocity, maxSpeed);
+                movementVelocity = Vector3.ClampMagnitude(movementVelocity, maxSpeed);
+            }
+            else
+            {
+                movementVelocity = move.normalized * maxSpeed;
+            }
         }
         else
         {
-            // Decrease movement velocity based on deceleration
-            movementVelocity = Vector3.MoveTowards(movementVelocity, Vector3.zero, deceleration * Time.deltaTime);
+            // Increase deceleration time
+            decelerationTime += Time.deltaTime;
+
+            // Gradually increase deceleration over time
+            float currentDeceleration = Mathf.Lerp(0f, deceleration, decelerationTime);
+            movementVelocity = Vector3.MoveTowards(movementVelocity, Vector3.zero, currentDeceleration * Time.deltaTime);
         }
 
         MoveCharacter(movementVelocity, gravityVelocity);
@@ -131,12 +143,12 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
 
         float speed = characterController.velocity.magnitude;
         base.HandleLocomotion(speed, maxSpeed);    
-        
+
         if(playerMovementStates == PlayerMovementStates.GETTINGUP && IsObstacleAbove())
         {
             isCrouching = true;
 
-            // f we are already crouching, stop the routine and start a new one
+            // If we are already crouching, stop the routine and start a new one
             if (crouchingRoutine != null)
             {
                 StopCoroutine(crouchingRoutine);
@@ -287,17 +299,22 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
 
     private void OnDrawGizmos()
     {
-        if(DebugIsObstacleAboveSphere)
+        if(DebugSpheresCheck)
         {
             // Draw the sphere used in IsObstacleAbove for visualization
             Gizmos.color = Color.red;            
             Vector3 spherePosition = transform.position + obstacleDetectorPosition;
             Gizmos.DrawWireSphere(spherePosition, obstacleDetectorRadius);
-        }
 
-        // Debug groud check sphere
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+            // Debug groud check sphere
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+
+            // Debug isCollisionAbove sphere
+            Gizmos.color = Color.blue;
+            Vector3 spherePositionAbove = transform.position + Vector3.up * (characterController.height + 0.3f);
+            Gizmos.DrawWireSphere(spherePositionAbove, characterController.radius);
+        }
     }
 
     protected void ApplyGravity()

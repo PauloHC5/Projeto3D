@@ -272,7 +272,7 @@ GameObject:
   m_Layer: 0
   m_Name: Ground Check
   m_TagString: Untagged
-  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1031,8 +1031,8 @@ MonoBehaviour:
   playerAnimator: {fileID: 728732302384425514}
   walkSpeed: 4
   jumpForce: 0.54
-  acceleration: 500
-  deceleration: 500
+  acceleration: 20
+  deceleration: 100
   groundCheck: {fileID: 5241768735091827890}
   groundCheckRadius: 0.15
   groundMask:
@@ -1044,12 +1044,11 @@ MonoBehaviour:
   playerMesh: {fileID: 5521116737292277039}
   cameraPos: {fileID: 7674668982629661412}
   playerMovementStates: 4
-  characterControllerVelocity: {x: 0, y: 0, z: 0}
   isCrouching: 0
   crouchSpeed: 2
   crouchHeight: 0.5
   crouchRadius: 0.2
-  crouchSmooth: 5
+  crouchSmooth: 3
   crouchCameraPos: 0.85
   crouchMeshRootPos: 0.8
   crouchGrundCheckPos: -0.12
@@ -1058,7 +1057,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   obstacleDetectorRadius: 0.22
-  DebugIsObstacleAboveSphere: 1
+  DebugSpheresCheck: 1
   sway: 1
   swayStep: 0.01
   swayMaxStepDistance: 0.06
@@ -2546,6 +2545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 10
+  player: {fileID: 8022638480331752055}
 --- !u!1 &8146135199948112460
 GameObject:
   m_ObjectHideFlags: 0
