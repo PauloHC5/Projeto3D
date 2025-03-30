@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,4 +33,30 @@ public class GameManager : MonoBehaviour
         Debug.Log("GameManager is ready!");        
     }
 
+    private void Update()
+    {
+        // Check if the 'P' key is pressed
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ReloadScene();
+        }
+
+        // Check if the 'Escape' key is pressed
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            QuitApplication();
+        }
+    }
+
+    private void ReloadScene()
+    {
+        // Reload the current scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void QuitApplication()
+    {
+        // Quit the application
+        Application.Quit();
+    }
 }
