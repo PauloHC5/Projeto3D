@@ -29,6 +29,7 @@ public class RangeDetector : MonoBehaviour
             if (hitCollider.CompareTag("Player"))
             {                
                 DetectedTarget = hitCollider.gameObject;
+                return DetectedTarget;
             }
             else
             {
