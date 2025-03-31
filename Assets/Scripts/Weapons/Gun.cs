@@ -99,7 +99,7 @@ public class Gun : Weapon
         spawnedProjectile.GetComponent<Rigidbody>().AddForce(ray.direction * impulse, ForceMode.Impulse);
     }
 
-    protected virtual void ShootRaycast(LayerMask shootLayer,float gunRange = default)
+    protected virtual void ShootRaycast(int damage,LayerMask shootLayer,float gunRange = default)
     {
         Ray ray;
         if (fireSocket == default) {
@@ -115,6 +115,11 @@ public class Gun : Weapon
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, rayDistance, shootLayer))
         {            
+            if(hit.collider.gameObject.GetComponent<Enemy>())
+            {
+                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+            }
+
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));
             
             // Check if the object hit has rigidbody

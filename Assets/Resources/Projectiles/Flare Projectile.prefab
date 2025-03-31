@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1547180931685260109}
   - component: {fileID: 4205680303470180980}
   - component: {fileID: 1912209704668640901}
+  - component: {fileID: 3568736195217449503}
   m_Layer: 6
   m_Name: Flare Projectile
   m_TagString: Untagged
@@ -136,3 +137,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &3568736195217449503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341805643774372071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 934723459f09926428b4f7270a303116, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 100

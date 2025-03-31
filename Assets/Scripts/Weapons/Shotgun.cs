@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Shotgun : Gun    
 {
+    [Header("Hitscan Properties")]
+    [SerializeField] private int damage = 10;
     [SerializeField] private int pelletsPerShot = 5;
     [SerializeField] private float spreadAngle = 5f;
     [SerializeField] private LayerMask shootLayer;
@@ -12,8 +14,8 @@ public class Shotgun : Gun
     public override void Fire()
     {        
         StartCoroutine(BurstFire());
-        ShootRaycast(shootLayer);
-        base.ShootRaycast(shootLayer, gunRange * 2f);
+        ShootRaycast(damage, shootLayer);
+        base.ShootRaycast(damage, shootLayer, gunRange * 2f);
         base.Fire();
         magAmmo--;
     }
@@ -22,7 +24,7 @@ public class Shotgun : Gun
     {
         for (int i = 0; i < pelletsPerShot; i++)
         {
-            ShootRaycast(shootLayer);     
+            ShootRaycast(damage / 2, shootLayer);     
             yield return new WaitForEndOfFrame();
         }        
     }
@@ -32,7 +34,7 @@ public class Shotgun : Gun
         base.Reload();
     }
 
-    protected override void ShootRaycast(LayerMask shootLayer,float gunRange = default)
+    protected override void ShootRaycast(int damage, LayerMask shootLayer, float gunRange = default)
     {
         Vector3 direction = fireSocket.forward;
         direction.x += Random.Range(-spreadAngle, spreadAngle);
@@ -43,7 +45,11 @@ public class Shotgun : Gun
         RaycastHit hit;
         if (Physics.Raycast(fireSocket.position, direction, out hit, rayDistance, shootLayer))
         {
-            // Lógica de impacto do projétil
+            if (hit.collider.gameObject.GetComponent<Enemy>())
+            {
+                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+            }
+
             if (impactVFX != null)
             {
                 Instantiate(impactVFX, hit.point, Quaternion.LookRotation(hit.normal));

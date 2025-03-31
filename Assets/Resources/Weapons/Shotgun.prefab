@@ -142,13 +142,14 @@ MonoBehaviour:
   magAmmo: 2
   fireSocket: {fileID: 5723263459355759405}
   muzzleFlash: {fileID: 325391537946035653}
-  impactVFX: {fileID: 0}
+  impactVFX: {fileID: 19800002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
   DebugRaycast: 1
+  damage: 20
   pelletsPerShot: 8
   spreadAngle: 0.5
   shootLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 521
 --- !u!1 &2957617364616530174
 GameObject:
   m_ObjectHideFlags: 0
