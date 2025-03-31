@@ -24,7 +24,7 @@ public partial class RangeDetectorAction : Action
     {
         Target.Value = Detector.DetectPlayer();
 
-        return Status.Running;
+        return Target.Value != null ? Status.Success : Status.Failure;
     }
 
     protected override void OnEnd()
