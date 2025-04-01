@@ -634,7 +634,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 3
   socketToAttach: 1
-  fireRate: 0.12
+  fireRate: 0.06
   gunRange: 15
   shootImpulse: 10
   maxAmmo: 40
@@ -643,6 +643,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 7712377475459072541}
   impactVFX: {fileID: 19800002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
   DebugRaycast: 1
+  damage: 10
   shootLayer:
     serializedVersion: 2
     m_Bits: 521

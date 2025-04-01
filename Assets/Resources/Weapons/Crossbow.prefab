@@ -72,7 +72,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 4
   socketToAttach: 0
-  fireRate: 0.5
+  fireRate: 0.58
   gunRange: 100
   shootImpulse: 10
   maxAmmo: 36
@@ -81,6 +81,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 0}
   impactVFX: {fileID: 0}
   DebugRaycast: 0
+  intervalBetweenShots: 0.07
   boltProjectile: {fileID: 3264521097787777737, guid: cf06b78d659326049966110abd8afe84,
     type: 3}
   boltSpawnPoint: {fileID: 1012128198775458161}
