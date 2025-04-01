@@ -26,8 +26,7 @@ public class Enemy : MonoBehaviour
 
     // funtion to take damage
     public void TakeDamage(int damage)
-    {
-        Debug.Log("Enemy took damage: " + damage);
+    {        
         health -= damage;
         if (health <= 0)
         {

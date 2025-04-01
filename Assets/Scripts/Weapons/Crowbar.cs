@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class Crowbar : Weapon
 {
+    [Header("Crowbar Properties")]
+    [SerializeField] private int damage = 25;
     [SerializeField] private Collider crowbarCollider;
 
     public void EnableCollision()
     {
-        crowbarCollider.enabled = true;
+        crowbarCollider.enabled = true;        
     }
 
     public void DisableCollision() 
     {
         crowbarCollider.enabled = false;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject) Debug.Log("Collided with " + collision.gameObject.name);
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            collision.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+            Debug.Log("Enemy hit by crowbar");
+        }
     }
 }
