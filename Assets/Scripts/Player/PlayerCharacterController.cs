@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public enum PlayerWeapon
 {
     Crowbar = 0,
-    Flaregun = 1,
+    ACornGun = 1,
     Shotgun = 2,
     Thompson = 3,
     Crossbow = 4
@@ -58,7 +58,7 @@ public class PlayerCharacterController : PlayerCharacterCombatController
 
         // Assign the SwitchToWeapon method to the respective input action
         playerControls.Player.Weapon1.performed += ctx => SwitchToWeapon(PlayerWeapon.Crowbar);
-        playerControls.Player.Weapon2.performed += ctx => SwitchToWeapon(PlayerWeapon.Flaregun);
+        playerControls.Player.Weapon2.performed += ctx => SwitchToWeapon(PlayerWeapon.ACornGun);
         playerControls.Player.Weapon3.performed += ctx => SwitchToWeapon(PlayerWeapon.Shotgun);
         playerControls.Player.Weapon4.performed += ctx => SwitchToWeapon(PlayerWeapon.Thompson);
         playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(PlayerWeapon.Crossbow);

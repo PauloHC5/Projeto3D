@@ -37,7 +37,7 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
     private List<WeaponAmmoPair> weaponAmmoList = new List<WeaponAmmoPair>
     {
         new WeaponAmmoPair { weapon = PlayerWeapon.Crowbar, ammo = 0 }, // Crowbar doesn't use ammo
-        new WeaponAmmoPair { weapon = PlayerWeapon.Flaregun, ammo = 50 },
+        new WeaponAmmoPair { weapon = PlayerWeapon.ACornGun, ammo = 50 },
         new WeaponAmmoPair { weapon = PlayerWeapon.Shotgun, ammo = 20 },
         new WeaponAmmoPair { weapon = PlayerWeapon.Thompson, ammo = 300 },
         new WeaponAmmoPair { weapon = PlayerWeapon.Crossbow, ammo = 150 }
@@ -54,6 +54,7 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
             foreach (var pair in value)
             {
                 if (pair.Value >= 0) playerWeaponAmmo[pair.Key] = pair.Value;
+                if(pair.Value < 0) playerWeaponAmmo[pair.Key] = 0;
             }
         }
     }

@@ -40,8 +40,9 @@ public class Gun : Weapon
 
     private void Awake()
     {
-        gunAnimator = GetComponent<Animator>();    
-        
+        gunAnimator = GetComponent<Animator>();
+        if(gunAnimator == null) gunAnimator = GetComponentInChildren<Animator>();
+
         magAmmo = magAmmo > maxAmmo ? magAmmo = maxAmmo : magAmmo;
     }    
 
