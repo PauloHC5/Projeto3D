@@ -5024,10 +5024,10 @@ GameObject:
   - component: {fileID: 1118279112}
   - component: {fileID: 1118279106}
   - component: {fileID: 1118279107}
+  - component: {fileID: 1118279110}
   - component: {fileID: 1118279108}
   - component: {fileID: 1118279111}
   - component: {fileID: 1118279109}
-  - component: {fileID: 1118279110}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
