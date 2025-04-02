@@ -117,7 +117,7 @@ public class MouseLook : MonoBehaviour
     {
         playerControls.Enable();
         Crossbow.AimEvent += PerformAim;      
-        PlayerCharacterCombatController.ReloadEvent += ZoomOut;
+        PlayerCharacterCombatController.onReload += ZoomOut;
         PlayerCharacterCombatController.onSwitchToWeapon += ZoomOut;
     }
 
@@ -125,7 +125,7 @@ public class MouseLook : MonoBehaviour
     {
         playerControls.Disable();
         Crossbow.AimEvent -= PerformAim;
-        PlayerCharacterCombatController.ReloadEvent -= ZoomOut;
+        PlayerCharacterCombatController.onReload -= ZoomOut;
         PlayerCharacterCombatController.onSwitchToWeapon -= ZoomOut;
     }
 }

@@ -59,6 +59,9 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
         }
     }
 
+    public static event Action<PlayerWeapon> onSwitchToWeapon;
+    public static event Action<PlayerWeapon> onReload;
+
     protected void Awake()
     {
         InitializeWeapons();
@@ -126,6 +129,7 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
         if (equippedWeapon) equippedWeapon.transform.localPosition = Vector3.zero;
 
         PlaySwitchToWeapon(weapon);
+        onSwitchToWeapon?.Invoke(weaponSelected);
     }
 
     
@@ -163,8 +167,20 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
             if (!CanReload(equippedGun)) return;
 
             PlayReload();
+            onReload?.Invoke(weaponSelected);
         }
-    }    
+    }
+
+    private void HandleDualWieldGunReload(DualWieldGun equippedGuns)
+    {
+        // Get the guns to reload
+        Gun[] gunsToReload = new Gun[] { equippedGuns.GetGun(WhichGun.GunR), equippedGuns.GetGun(WhichGun.GunL) };
+
+        // If GunR or GunL can't reload, return
+        if (!gunsToReload.Any(gun => CanReload(gun))) return;
+
+        PlayReload();
+    }
 
     protected void UseWeaponGadget()
     {
@@ -181,18 +197,7 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
     {
         if(whichGun == WhichGun.GunL && equippedGuns.CanFire(whichGun)) PlayUseWeapon(WhichGun.GunL);
         if(whichGun == WhichGun.GunR && equippedGuns.CanFire(whichGun)) PlayUseWeapon(WhichGun.GunR);
-    }
-
-    private void HandleDualWieldGunReload(DualWieldGun equippedGuns)
-    {
-        // Get the guns to reload
-        Gun[] gunsToReload = new Gun[] { equippedGuns.GetGun(WhichGun.GunR), equippedGuns.GetGun(WhichGun.GunL) };
-        
-        // If GunR or GunL can't reload, return
-        if (!gunsToReload.Any(gun => CanReload(gun))) return;
-
-        PlayReload();
-    }
+    }    
 
     private bool CanReload(Gun equippedGun)
     {
