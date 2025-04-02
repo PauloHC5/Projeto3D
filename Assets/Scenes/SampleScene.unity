@@ -5025,9 +5025,7 @@ GameObject:
   - component: {fileID: 1118279106}
   - component: {fileID: 1118279107}
   - component: {fileID: 1118279110}
-  - component: {fileID: 1118279108}
   - component: {fileID: 1118279111}
-  - component: {fileID: 1118279109}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -5090,13 +5088,32 @@ MonoBehaviour:
   m_BlackboardVariableOverridesList:
   - rid: 3510279283554386240
   - rid: 1132936288201343107
-  - rid: 2411677134688616584
   - rid: 1132936395998101855
+  - rid: 139259807984255834
+  - rid: 139259808796115152
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
     RefIds:
+    - rid: 139259807984255834
+      type: {class: 'BlackboardVariable`1[[Enemy, Assembly-CSharp]]', ns: Unity.Behavior,
+        asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 12366345161056652600
+          m_Value1: 17864760183249700672
+        Name: Enemy
+        m_Value: {fileID: 1118279110}
+    - rid: 139259808796115152
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]',
+        ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 817840945196532767
+          m_Value1: 15119925728342937012
+        Name: EnemyAnimator
+        m_Value: {fileID: 919132148981449288}
     - rid: 1132936288201343107
       type: {class: 'BlackboardVariable`1[[UnityEngine.AI.NavMeshAgent, UnityEngine.AIModule]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
@@ -5115,15 +5132,6 @@ MonoBehaviour:
           m_Value1: 17227777724411601075
         Name: Line Of Sight Detector
         m_Value: {fileID: 1118279111}
-    - rid: 2411677134688616584
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]',
-        ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1655634920947684800
-          m_Value1: 13982239538887944732
-        Name: EnemyAnimator
-        m_Value: {fileID: 919132148981449288}
     - rid: 3510279283554386240
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
@@ -5133,35 +5141,6 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 1118279101}
---- !u!114 &1118279108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1118279101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6845a31ac1630c04da15aedaf1357138, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detectionRadius: 8.07
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 9
-  showDebugVisuals: 1
---- !u!114 &1118279109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1118279101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c09f043205829a478ec610453791bf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1118279110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5176,6 +5155,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   damage: 10
+  detectionRadius: 8.07
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 9
+  showDebugVisuals: 1
+  detectionRange: 8
+  detectionHeight: 1.3
+  raycastOrigin: {fileID: 182751885}
 --- !u!114 &1118279111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5183,7 +5170,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1118279101}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa2b81557aa13904a81afddbb8a13df9, type: 3}
   m_Name: 
