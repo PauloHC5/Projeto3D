@@ -6,7 +6,7 @@ using UnityEngine;
 public class Gun : Weapon
 {
 
-    [Header("Gun Properties")]    
+    [Header("Gun Properties")]
     [SerializeField] protected float fireRate = 0.5f;
     [SerializeField] protected float gunRange = 100f;
     [SerializeField] protected float shootImpulse = 10f;
@@ -16,16 +16,16 @@ public class Gun : Weapon
     [Header("Gun Components")]
     [SerializeField] protected Transform fireSocket;
     [SerializeField] protected ParticleSystem muzzleFlash;
-    [SerializeField] protected ParticleSystem impactVFX;    
-    [SerializeField] protected bool DebugRaycast = false;  
+    [SerializeField] protected ParticleSystem impactVFX;
+    [SerializeField] protected bool DebugRaycast = false;
 
-    private Int32 ammoToReload = 0;    
-    public Int32 AmmoToReload { get { return ammoToReload; } set { ammoToReload = value; } }    
+    private Int32 ammoToReload = 0;
+    public Int32 AmmoToReload { get { return ammoToReload; } set { ammoToReload = value; } }
 
     public float FireRate { get { return fireRate; } }
 
     private bool canFire = true;
-    public bool CanFire { get { return canFire; } }    
+    public bool CanFire { get { return canFire; } }
 
     // Getter and setter for magAmmo
     public int MagAmmo { get => magAmmo; }
@@ -34,22 +34,22 @@ public class Gun : Weapon
     public int MaxAmmo => maxAmmo;
 
     // Animator properties
-    private Animator gunAnimator;    
+    private Animator gunAnimator;
     private readonly int FireTrigger = Animator.StringToHash("Fire");
     private readonly int ReloadTrigger = Animator.StringToHash("Reload");    
 
     private void Awake()
     {
         gunAnimator = GetComponent<Animator>();
-        if(gunAnimator == null) gunAnimator = GetComponentInChildren<Animator>();
+        if (gunAnimator == null) gunAnimator = GetComponentInChildren<Animator>();
 
         magAmmo = magAmmo > maxAmmo ? magAmmo = maxAmmo : magAmmo;
     }    
 
     public virtual void Fire()
-    {        
-        if (muzzleFlash) muzzleFlash.Play();                
-        if(gunAnimator) gunAnimator.SetTrigger(FireTrigger);        
+    {
+        if (muzzleFlash) muzzleFlash.Play();
+        if (gunAnimator) gunAnimator.SetTrigger(FireTrigger);
         StartCoroutine(ShootDelay());
     }
 
@@ -60,7 +60,7 @@ public class Gun : Weapon
 
     public virtual void Reload()
     {
-        var weaponAmmo = GameManager.Player.WeaponAmmo[GameManager.Player.WeaponSelected]; 
+        var weaponAmmo = GameManager.Player.WeaponAmmo[GameManager.Player.WeaponSelected];
 
         // Get the difference between the max ammo and the current ammo
         int ammoDifference = MaxAmmo - MagAmmo;
@@ -72,8 +72,8 @@ public class Gun : Weapon
         GameManager.Player.WeaponAmmo[GameManager.Player.WeaponSelected] -= ammoToReload;
 
         magAmmo += AmmoToReload;
-        canFire = true;
-    }    
+        canFire = true;        
+    }
 
     protected IEnumerator ShootDelay()
     {
@@ -94,16 +94,17 @@ public class Gun : Weapon
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
         // Instantiate the flare projectile at the spawn point
-        GameObject spawnedProjectile = Instantiate(projectile, spawnPoint.position, Quaternion.LookRotation(ray.direction));        
+        GameObject spawnedProjectile = Instantiate(projectile, spawnPoint.position, Quaternion.LookRotation(ray.direction));
 
         // Apply force to the flare projectile
         spawnedProjectile.GetComponent<Rigidbody>().AddForce(ray.direction * impulse, ForceMode.Impulse);
     }
 
-    protected virtual void ShootRaycast(int damage,LayerMask shootLayer,float gunRange = default)
+    protected virtual void ShootRaycast(int damage, LayerMask shootLayer, float gunRange = default)
     {
         Ray ray;
-        if (fireSocket == default) {
+        if (fireSocket == default)
+        {
             ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         }
         else
@@ -115,18 +116,18 @@ public class Gun : Weapon
 
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, rayDistance, shootLayer))
-        {            
-            if(hit.collider.gameObject.GetComponent<Enemy>())
+        {
+            if (hit.collider.gameObject.GetComponent<Enemy>())
             {
                 hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage);
             }
 
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));
-            
+
             // Check if the object hit has rigidbody
             if (hit.rigidbody)
             {
-                ApplyImpulse(hit);                
+                ApplyImpulse(hit);
             }
         }
 
@@ -142,12 +143,22 @@ public class Gun : Weapon
 
     private void OnEnable()
     {
-        canFire = magAmmo > 0;        
+        canFire = magAmmo > 0;
+        PlayerCharacterCombatController.onSwitchToWeapon += OnSwitchToWeapon;
     }
 
+    protected virtual void OnSwitchToWeapon(PlayerWeapon weapon)
+    {
+        // To be implemented in derived classes
+    }
+
+    private void OnDisable()
+    {
+        PlayerCharacterCombatController.onSwitchToWeapon -= OnSwitchToWeapon;
+    }
 }
 
 public interface ISecondaryAction
 {
-    bool Perform();
+    void Perform();
 }

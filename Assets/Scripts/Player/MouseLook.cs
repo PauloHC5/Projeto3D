@@ -7,27 +7,41 @@ using UnityEngine.InputSystem;
 public class MouseLook : MonoBehaviour
 {
     [SerializeField] private float mouseSensitivity = 100f;
+    [SerializeField] private Transform player;
 
-    [SerializeField] private Transform player;    
+    private Camera[] playerCameras;
+    
     private Transform playerMesh;    
     private Transform cameraPos;
+    private float defaultFoV;
+    private bool zoomIn = false;
+    private const float defaultZoomSpeed = 1000f;
 
     private float xRotation = 0f;
     private float yRotation = 0f;
 
     private PlayerInputActions playerControls;
-
     private Vector2 MouseInput;
+    private Coroutine zoomCoroutine;    
 
     private void Awake()
     {
         playerControls = new PlayerInputActions();
+
+
     }
         
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        
+
+        playerCameras = GetComponentsInChildren<Camera>();
+
+        if (playerCameras[0] != null)
+        {
+            defaultFoV = playerCameras[0].fieldOfView;
+        }
+
         playerMesh = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("Mesh Root"));       
         cameraPos = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("CameraPos"));
     }
@@ -52,13 +66,66 @@ public class MouseLook : MonoBehaviour
         }        
     }
 
+    private void PerformAim(float zoomFoV, float zoomSpeed)
+    {
+        zoomIn = !zoomIn;
+
+        if (zoomCoroutine != null)
+        {
+            StopCoroutine(zoomCoroutine);
+        }
+        zoomCoroutine = StartCoroutine(Zoom(zoomFoV, zoomSpeed));
+    }
+
+    private IEnumerator Zoom(float zoomFoV, float zoomSpeed)
+    {        
+        float elapsedTime = 0;
+        float startFoV = playerCameras[0].fieldOfView;
+        float targetFoV = zoomIn ? zoomFoV : defaultFoV;
+        float localscopeSpeed = zoomIn ? zoomSpeed : zoomSpeed * 3;
+
+        while (Mathf.Abs(playerCameras[0].fieldOfView - targetFoV) > 0.01f)
+        {
+            foreach (Camera playerCamera in playerCameras)
+            {
+                playerCamera.fieldOfView = Mathf.Lerp(startFoV, targetFoV, localscopeSpeed * (elapsedTime / zoomSpeed));
+            }
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        foreach (Camera playerCamera in playerCameras)
+        {
+            playerCamera.fieldOfView = targetFoV;
+        }
+    }
+
+    public void ZoomOut(PlayerWeapon weapon)
+    {
+        if (zoomIn == false) return;
+
+        zoomIn = false;
+
+        if (zoomCoroutine != null)
+        {
+            StopCoroutine(zoomCoroutine);
+        }
+        zoomCoroutine = StartCoroutine(Zoom(defaultFoV, defaultZoomSpeed));
+    }
+
     private void OnEnable()
     {
         playerControls.Enable();
+        Crossbow.AimEvent += PerformAim;      
+        PlayerCharacterCombatController.ReloadEvent += ZoomOut;
+        PlayerCharacterCombatController.onSwitchToWeapon += ZoomOut;
     }
 
     private void OnDisable()
     {
         playerControls.Disable();
+        Crossbow.AimEvent -= PerformAim;
+        PlayerCharacterCombatController.ReloadEvent -= ZoomOut;
+        PlayerCharacterCombatController.onSwitchToWeapon -= ZoomOut;
     }
 }

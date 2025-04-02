@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,18 +12,12 @@ public class Crossbow : Gun, ISecondaryAction
     [SerializeField] private float boltForce = 100f;
     [SerializeField] private float scopeZoom = 30f;
     [SerializeField] private float scopeSpeed = 5f;    
-
-    private bool wantsToAim = false;
-    private float defaultFoV;
-    private Coroutine aimCoroutine;
+    
+    public static event Action<float, float> AimEvent;    
 
     private void Start()
     {
-        Camera playerCamera = GameObject.FindFirstObjectByType<Camera>();
-        if (playerCamera != null)
-        {
-            defaultFoV = playerCamera.fieldOfView;
-        }
+        Camera playerCamera = GameObject.FindFirstObjectByType<Camera>();        
     }
 
     public override void Fire()
@@ -41,61 +36,8 @@ public class Crossbow : Gun, ISecondaryAction
         }        
     }    
 
-    public bool Perform()
-    {        
-        wantsToAim = !wantsToAim;
-
-        Camera[] playerCameras = GameObject.FindObjectsByType<Camera>(FindObjectsSortMode.None);
-        if (playerCameras != null)
-        {
-            if (aimCoroutine != null)
-            {
-                StopCoroutine(aimCoroutine);
-            }
-
-            aimCoroutine = StartCoroutine(Aim(playerCameras));
-        }
-        else Debug.LogError("No camera found in the scene to scope zoom");
-
-        return true;
-    }
-
-    public void ZoomOut()
-    {
-        wantsToAim = false;
-
-        Camera[] playerCameras = GameObject.FindObjectsByType<Camera>(FindObjectsSortMode.None);
-        if (playerCameras != null)
-        {
-            if (aimCoroutine != null)
-            {
-                StopCoroutine(aimCoroutine);
-            }
-
-            aimCoroutine = StartCoroutine(Aim(playerCameras));
-        }
-    }
-
-    private IEnumerator Aim(Camera[] playerCameras)
-    {
-        float elapsedTime = 0;
-        float startFoV = playerCameras[0].fieldOfView;
-        float targetFoV = wantsToAim ? scopeZoom : defaultFoV;        
-        float localscopeSpeed = wantsToAim ? this.scopeSpeed : this.scopeSpeed * 3;        
-
-        while (Mathf.Abs(playerCameras[0].fieldOfView - targetFoV) > 0.01f)
-        {
-            foreach (Camera playerCamera in playerCameras)
-            {
-                playerCamera.fieldOfView = Mathf.Lerp(startFoV, targetFoV, localscopeSpeed * (elapsedTime / scopeSpeed));
-            }            
-            elapsedTime += Time.deltaTime;            
-            yield return null;
-        }
-
-        foreach (Camera playerCamera in playerCameras)
-        {
-            playerCamera.fieldOfView = targetFoV;
-        }
-    }    
+    public void Perform()
+    {                        
+        AimEvent?.Invoke(scopeZoom, scopeSpeed);
+    }            
 }

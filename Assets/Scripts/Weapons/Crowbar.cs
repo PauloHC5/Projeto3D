@@ -19,9 +19,7 @@ public class Crowbar : Weapon
     }
 
     private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject) Debug.Log("Collided with " + collision.gameObject.name);
-
+    {        
         if (collision.gameObject.CompareTag("Enemy"))
         {
             collision.gameObject.GetComponent<Enemy>().TakeDamage(damage);
