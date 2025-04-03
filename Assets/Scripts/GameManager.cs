@@ -3,35 +3,32 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Static instance of GameManager which allows it to be accessed by any other script
-    public static GameManager Instance { get; private set; }
+    private static GameManager _Instance;
 
-    public static PlayerCharacterController Player { get; private set; }
+    // Static instance of GameManager which allows it to be accessed by any other script
+    public static GameManager Instance {
+        get
+        {
+            if(_Instance == null)
+            {
+                _Instance = Object.FindFirstObjectByType<GameManager>();                
+            }
+
+            return _Instance;
+        }        
+    }
+
+    public PlayerCharacterController Player { get; private set; }
 
     // Awake is called when the script instance is being loaded
     private void Awake()
-    {
-        // Check if instance already exists and if so, destroy this instance
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            // Set the instance to this instance
-            Instance = this;
-            // Make this instance persistent across scenes
-            DontDestroyOnLoad(gameObject);
-        }
+    {        
+        // Make this instance persistent across scenes
+        //DontDestroyOnLoad(gameObject);
 
         // Find the player character controller in the scene
-        Player = Object.FindFirstObjectByType<PlayerCharacterController>();
-    }
-
-    private void Start()
-    {
-        Debug.Log("GameManager is ready!");        
-    }
+        Player = Object.FindFirstObjectByType<PlayerCharacterController>();                
+    }    
 
     private void Update()
     {
@@ -50,6 +47,7 @@ public class GameManager : MonoBehaviour
 
     private void ReloadScene()
     {
+        _Instance = null;
         // Reload the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -58,5 +56,12 @@ public class GameManager : MonoBehaviour
     {
         // Quit the application
         Application.Quit();
+    }
+
+    [RuntimeInitializeOnLoadMethod]
+    private static void OnRuntimeInitialize()
+    {
+        _Instance = null;
+        Debug.Log("GameManager has been reset.");
     }
 }

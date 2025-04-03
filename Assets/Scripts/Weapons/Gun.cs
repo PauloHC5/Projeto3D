@@ -60,7 +60,7 @@ public class Gun : Weapon
 
     public virtual void Reload()
     {
-        var weaponAmmo = GameManager.Player.WeaponAmmo[GameManager.Player.WeaponSelected];
+        var weaponAmmo = GameManager.Instance.Player.WeaponAmmo[GameManager.Instance.Player.WeaponSelected];
 
         // Get the difference between the max ammo and the current ammo
         int ammoDifference = MaxAmmo - MagAmmo;
@@ -69,7 +69,7 @@ public class Gun : Weapon
         ammoToReload = weaponAmmo >= ammoDifference ? ammoDifference : weaponAmmo;
 
         // Subtract the ammo to reload from the weapon ammo
-        GameManager.Player.WeaponAmmo[GameManager.Player.WeaponSelected] -= ammoToReload;
+        GameManager.Instance.Player.WeaponAmmo[GameManager.Instance.Player.WeaponSelected] -= ammoToReload;
 
         magAmmo += AmmoToReload;
         canFire = true;        

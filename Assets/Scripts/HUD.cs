@@ -21,36 +21,34 @@ public class HUD : MonoBehaviour
 
     private void UpdateAmmoDisplay()
     {
-        if (GameManager.Instance != null && GameManager.Player != null)
+        var player = GameManager.Instance.Player;
+        var equippedGun = player.EquippedWeapon as Gun;
+        var dualWieldGun = player.EquippedWeapon as DualWieldGun;
+        var weaponSelected = player.WeaponSelected;
+
+        if (equippedGun != null)
         {
-            var player = GameManager.Player;
-            var equippedGun = player.EquippedWeapon as Gun;
-            var dualWieldGun = player.EquippedWeapon as DualWieldGun;
-            var weaponSelected = player.WeaponSelected;
+            var magAmmo = 0;
+            var totalAmmo = 0;
 
-            if (equippedGun != null)
+            if (dualWieldGun)
             {
-                var magAmmo = 0;
-                var totalAmmo = 0;
-
-                if (dualWieldGun)
-                {
-                    magAmmo = dualWieldGun.MagAmmo;
-                }
-                else
-                {
-                    magAmmo = equippedGun.MagAmmo;
-                }                
-                
-                
-                totalAmmo = player.WeaponAmmo[equippedGun.WeaponType];
-
-                ammoText.text = $"{weaponSelected} \n Ammo: {magAmmo} / {totalAmmo}";
+                magAmmo = dualWieldGun.MagAmmo;
             }
             else
             {
-                ammoText.text = $"{weaponSelected}";
+                magAmmo = equippedGun.MagAmmo;
             }
+
+
+            totalAmmo = player.WeaponAmmo[equippedGun.WeaponType];
+
+            ammoText.text = $"{weaponSelected} \n Ammo: {magAmmo} / {totalAmmo}";
+        }
+        else
+        {
+            ammoText.text = $"{weaponSelected}";
         }
     }
+
 }
