@@ -25,6 +25,7 @@ public class Enemy : MonoBehaviour
 
     private int Death = Animator.StringToHash("Death");
     private int Velocity = Animator.StringToHash("Velocity");
+    private int React = Animator.StringToHash("React");
 
     public GameObject DetectedTarget { get; set; } // The detected target within the detection zone
 
@@ -40,13 +41,14 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));
+        animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));        
     }
 
     // funtion to take damage
     public void TakeDamage(int damage)
     {        
         health -= damage;
+        animator.SetTrigger(React);
         if (health <= 0)
         {
             Die();
