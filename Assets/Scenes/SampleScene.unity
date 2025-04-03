@@ -5,11 +5,12 @@ OcclusionCullingSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_OcclusionBakeSettings:
-    smallestOccluder: 5
+    smallestOccluder: 1
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 00000000000000000000000000000000
-  m_OcclusionCullingData: {fileID: 0}
+  m_SceneGUID: 99c9720ab356a0642a771bea13969a05
+  m_OcclusionCullingData: {fileID: 36300000, guid: e447161da463ddb459a05251d54a6f34,
+    type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -4946,6 +4947,34 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 990058167}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1073968350 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1888427756403250876, guid: 09aade0ecefd01e4b8f7661acf64f5c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1127200480}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1073968354
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073968350}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2416140440825151618, guid: aa38d7b0e367ecc4aac915dcfe957879, type: 3}
 --- !u!1 &1094223805 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7993119983977949264, guid: 40c4f0e250b87e24688de5425628cb9b,
@@ -5025,7 +5054,6 @@ GameObject:
   - component: {fileID: 1118279106}
   - component: {fileID: 1118279107}
   - component: {fileID: 1118279110}
-  - component: {fileID: 1118279111}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -5131,7 +5159,7 @@ MonoBehaviour:
           m_Value0: 15823177687189725668
           m_Value1: 17227777724411601075
         Name: Line Of Sight Detector
-        m_Value: {fileID: 1118279111}
+        m_Value: {fileID: 0}
     - rid: 3510279283554386240
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
@@ -5163,25 +5191,6 @@ MonoBehaviour:
   detectionRange: 8
   detectionHeight: 1.3
   raycastOrigin: {fileID: 182751885}
---- !u!114 &1118279111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1118279101}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa2b81557aa13904a81afddbb8a13df9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detectionRange: 8
-  detectionHeight: 1.3
-  raycastOrigin: {fileID: 182751885}
-  showDebugVisuals: 1
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 9
 --- !u!136 &1118279112
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5342,7 +5351,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 53, y: 22.763062}
+  m_AnchoredPosition: {x: 53, y: 22.76294}
   m_SizeDelta: {x: 247.064, y: 90.101}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1121914859
@@ -6643,7 +6652,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1348458336}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1888427756403250876, guid: 09aade0ecefd01e4b8f7661acf64f5c2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1073968354}
   m_SourcePrefab: {fileID: 100100000, guid: 09aade0ecefd01e4b8f7661acf64f5c2, type: 3}
 --- !u!1001 &1143177297
 PrefabInstance:
@@ -8287,8 +8300,8 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_StaticEditorFlags: 109
+  m_IsActive: 0
 --- !u!4 &1348458336
 Transform:
   m_ObjectHideFlags: 0
@@ -8340,7 +8353,7 @@ Terrain:
   m_TreeMaximumFullLODCount: 50
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
-  m_HeightmapPixelError: 5
+  m_HeightmapPixelError: 200
   m_SplatMapDistance: 1000
   m_HeightmapMinimumLODSimplification: 0
   m_HeightmapMaximumLOD: 0
