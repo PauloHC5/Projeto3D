@@ -57,7 +57,7 @@ public class Shotgun : Gun
             }
 
             // Check if the object hit has rigidbody
-            if (hit.rigidbody)
+            if (hit.rigidbody && !hit.collider.CompareTag("Enemy"))
             {
                 ApplyImpulse(hit);
             }

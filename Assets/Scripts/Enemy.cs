@@ -1,6 +1,8 @@
+using System.Collections;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class Enemy : MonoBehaviour
 {
@@ -8,6 +10,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int health = 100;
     [SerializeField] private int damage = 10;
     [SerializeField] private GameObject weapon;
+    [SerializeField] private CapsuleCollider enemyDeadCollider;
+    [SerializeField] private float shotgunDeathImpulse = 20.0f; 
+    [SerializeField] private float shotgunHitImpulse = 10.0f;
+    [SerializeField] private float stunDuration = 0.5f;
 
     [Header("Range Detector Properties")]
     [SerializeField] private float detectionRadius = 5.0f; // Radius of the detection zone
@@ -17,7 +23,7 @@ public class Enemy : MonoBehaviour
     [Header("Line of Sight Detector Properties")]
     [SerializeField] private float detectionRange = 10.0f;
     [SerializeField] private float detectionHeight = 3.0f;
-    [SerializeField] private Transform raycastOrigin;        
+    [SerializeField] private Transform raycastOrigin;
 
     private NavMeshAgent agent;
     private BehaviorGraphAgent behaviorGraph;
@@ -30,15 +36,18 @@ public class Enemy : MonoBehaviour
     private int React = Animator.StringToHash("React");
     private int WeaponIndex = Animator.StringToHash("WeaponIndex");
 
+    private bool hasApplyiedDamageImpulse = false;
+    private IEnumerator shotgunHitReactRoutine;
+
     private const int reactionLayerIndex = 1; // Index of the reaction layer in the animator
     private const float mediumLayerWeight = 0.75f; // Medium layer weight for the reaction layer
-    private const float fullLayerWeight = 1.0f; // Full layer weight for the reaction layer
+    private const float fullLayerWeight = 1.0f; // Full layer weight for the reaction layer    
 
     public GameObject DetectedTarget { get; set; } // The detected target within the detection zone
 
     private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();        
+        agent = GetComponent<NavMeshAgent>();
         behaviorGraph = GetComponent<BehaviorGraphAgent>();
         animator = GetComponentInChildren<Animator>();
         enemyCollider = GetComponent<Collider>();
@@ -49,17 +58,19 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));        
+        animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));
     }
 
     // funtion to take damage
     public void TakeDamage(int damage, PlayerWeapon damageType)
-    {        
-        health -= damage;        
+    {
+        health -= damage;
 
         if (health <= 0)
         {
+            if (shotgunHitReactRoutine != null) StopCoroutine(shotgunHitReactRoutine);
             Die(damageType);            
+            return;
         }
 
         float layerWeight = (damageType == PlayerWeapon.Thompson || damageType == PlayerWeapon.Crossbow) ? mediumLayerWeight : fullLayerWeight;
@@ -68,23 +79,68 @@ public class Enemy : MonoBehaviour
         // Trigger the react animation based on the damage type
         // You can use an enum or int to represent different damage types
         animator.SetInteger(WeaponIndex, (int)damageType);
-        animator.SetTrigger(React);
-    }
+
+
+        if (damageType == PlayerWeapon.Shotgun)
+        {
+            if (shotgunHitReactRoutine == null)
+            {
+                shotgunHitReactRoutine = StunReact();
+                StartCoroutine(shotgunHitReactRoutine);
+            }            
+        }
+        else
+            animator.SetTrigger(React);
+    }   
 
     private void Die(PlayerWeapon damageType)
     {
         behaviorGraph.enabled = false;
         agent.enabled = false;
         enemyCollider.enabled = false;
+        rb.isKinematic = false;
         animator.SetInteger(WeaponIndex, (int)damageType);
         animator.SetTrigger(Death);
 
+        if (enemyDeadCollider) enemyDeadCollider.enabled = true;
+
         if (damageType == PlayerWeapon.Shotgun)
         {
-            // Apply impulse force to the enemy            
-            rb.isKinematic = false; // Ensure the Rigidbody is not kinematic
-            rb.AddForce(Vector3.forward * 10f, ForceMode.Impulse);            
+            agent.velocity = Vector3.zero;
+            ApplyShotgunImpulse(shotgunDeathImpulse);
         }
+    }
+
+    private IEnumerator StunReact()
+    {                
+        agent.velocity = Vector3.zero;
+        agent.enabled = false;
+        behaviorGraph.enabled = false;
+        rb.isKinematic = false;
+        ApplyShotgunImpulse(shotgunHitImpulse);
+        animator.SetTrigger(React);
+        yield return new WaitForSeconds(stunDuration);
+        agent.enabled = true;
+        behaviorGraph.enabled = true;
+        behaviorGraph.Restart();
+        rb.isKinematic = true;
+    }
+
+    private void ApplyShotgunImpulse(float shotgunImpulse)
+    {                
+        if(rb.isKinematic) Debug.LogWarning("Rigidbody is kinematic, cannot apply impulse.");
+
+        // set the rotation of the enemy to look at the player
+        Vector3 lookAtDirection = Camera.main.transform.position - transform.position;
+        lookAtDirection.y = 0; // Keep the y component zero to only rotate on the y-axis
+        Quaternion rotation = Quaternion.LookRotation(lookAtDirection);
+        transform.rotation = rotation;
+
+        // Apply impulse force to the enemy                        
+        Vector3 direction = Camera.main.transform.forward;        
+        rb.AddForce(direction * shotgunImpulse, ForceMode.Impulse);
+
+        Debug.Log("Shotgun impulse applied to enemy.");
     }
 
     public GameObject DetectPlayer()
@@ -142,5 +198,5 @@ public class Enemy : MonoBehaviour
         if (!showDebugVisuals) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
-    }
+    }    
 }

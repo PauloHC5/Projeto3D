@@ -125,7 +125,7 @@ public class Gun : Weapon
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));
 
             // Check if the object hit has rigidbody
-            if (hit.rigidbody)
+            if (hit.rigidbody && !hit.collider.CompareTag("Enemy"))
             {
                 ApplyImpulse(hit);
             }
