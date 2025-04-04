@@ -146,7 +146,7 @@ MonoBehaviour:
   DebugRaycast: 1
   damage: 10
   pelletsPerShot: 8
-  spreadAngle: 0.5
+  spreadAngle: 0.25
   shootLayer:
     serializedVersion: 2
     m_Bits: 521

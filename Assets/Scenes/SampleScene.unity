@@ -5051,6 +5051,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1118279105}
   - component: {fileID: 1118279112}
+  - component: {fileID: 1118279113}
   - component: {fileID: 1118279106}
   - component: {fileID: 1118279107}
   - component: {fileID: 1118279110}
@@ -5115,8 +5116,6 @@ MonoBehaviour:
   m_Graph: {fileID: 8587700817181152791, guid: 679ce20543dea324b8ea0aecb7f9ca57, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 3510279283554386240
-  - rid: 1132936288201343107
-  - rid: 1132936395998101855
   - rid: 139259807984255834
   - rid: 139259808796115152
   m_IsInitialised: 0
@@ -5142,24 +5141,6 @@ MonoBehaviour:
           m_Value1: 15119925728342937012
         Name: EnemyAnimator
         m_Value: {fileID: 919132148981449288}
-    - rid: 1132936288201343107
-      type: {class: 'BlackboardVariable`1[[UnityEngine.AI.NavMeshAgent, UnityEngine.AIModule]]',
-        ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 8240196091166525589
-          m_Value1: 12618473365467835593
-        Name: NavMeshAgent
-        m_Value: {fileID: 1118279106}
-    - rid: 1132936395998101855
-      type: {class: 'BlackboardVariable`1[[LineOfSightDetector, Assembly-CSharp]]',
-        ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 15823177687189725668
-          m_Value1: 17227777724411601075
-        Name: Line Of Sight Detector
-        m_Value: {fileID: 0}
     - rid: 3510279283554386240
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
@@ -5183,6 +5164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   damage: 10
+  weapon: {fileID: 7896211490164004583}
   detectionRadius: 8.07
   detectionLayer:
     serializedVersion: 2
@@ -5214,6 +5196,33 @@ CapsuleCollider:
   m_Height: 2.0616708
   m_Direction: 1
   m_Center: {x: 0, y: 1.0772111, z: -0.012196541}
+--- !u!54 &1118279113
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118279101}
+  serializedVersion: 4
+  m_Mass: 5
+  m_Drag: 1
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1001 &1118984132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12491,7 +12500,7 @@ Animator:
   m_AnimatePhysics: 0
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
     are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'Armature'\n\tFrom animation clip 'Death'"
+    by Humanoid clips.\n\tTransform 'Armature'\n\tFrom animation clip 'Thompsom Death'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0

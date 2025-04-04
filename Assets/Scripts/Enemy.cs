@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     [Header("Enemy Properties")]
     [SerializeField] private int health = 100;
     [SerializeField] private int damage = 10;
+    [SerializeField] private GameObject weapon;
 
     [Header("Range Detector Properties")]
     [SerializeField] private float detectionRadius = 5.0f; // Radius of the detection zone
@@ -22,10 +23,16 @@ public class Enemy : MonoBehaviour
     private BehaviorGraphAgent behaviorGraph;
     private Animator animator;
     private Collider enemyCollider;
+    private Rigidbody rb;
 
     private int Death = Animator.StringToHash("Death");
     private int Velocity = Animator.StringToHash("Velocity");
     private int React = Animator.StringToHash("React");
+    private int WeaponIndex = Animator.StringToHash("WeaponIndex");
+
+    private const int reactionLayerIndex = 1; // Index of the reaction layer in the animator
+    private const float mediumLayerWeight = 0.75f; // Medium layer weight for the reaction layer
+    private const float fullLayerWeight = 1.0f; // Full layer weight for the reaction layer
 
     public GameObject DetectedTarget { get; set; } // The detected target within the detection zone
 
@@ -35,6 +42,7 @@ public class Enemy : MonoBehaviour
         behaviorGraph = GetComponent<BehaviorGraphAgent>();
         animator = GetComponentInChildren<Animator>();
         enemyCollider = GetComponent<Collider>();
+        rb = GetComponent<Rigidbody>();
 
         behaviorGraph.BlackboardReference.SetVariableValue("Speed", agent.speed);
     }
@@ -45,22 +53,38 @@ public class Enemy : MonoBehaviour
     }
 
     // funtion to take damage
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, PlayerWeapon damageType)
     {        
-        health -= damage;
-        animator.SetTrigger(React);
+        health -= damage;        
+
         if (health <= 0)
         {
-            Die();
+            Die(damageType);            
         }
+
+        float layerWeight = (damageType == PlayerWeapon.Thompson || damageType == PlayerWeapon.Crossbow) ? mediumLayerWeight : fullLayerWeight;
+        animator.SetLayerWeight(reactionLayerIndex, layerWeight);
+
+        // Trigger the react animation based on the damage type
+        // You can use an enum or int to represent different damage types
+        animator.SetInteger(WeaponIndex, (int)damageType);
+        animator.SetTrigger(React);
     }
 
-    private void Die()
+    private void Die(PlayerWeapon damageType)
     {
         behaviorGraph.enabled = false;
         agent.enabled = false;
         enemyCollider.enabled = false;
+        animator.SetInteger(WeaponIndex, (int)damageType);
         animator.SetTrigger(Death);
+
+        if (damageType == PlayerWeapon.Shotgun)
+        {
+            // Apply impulse force to the enemy            
+            rb.isKinematic = false; // Ensure the Rigidbody is not kinematic
+            rb.AddForce(Vector3.forward * 10f, ForceMode.Impulse);            
+        }
     }
 
     public GameObject DetectPlayer()

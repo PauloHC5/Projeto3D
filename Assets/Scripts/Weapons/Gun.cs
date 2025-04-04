@@ -119,7 +119,7 @@ public class Gun : Weapon
         {
             if (hit.collider.gameObject.GetComponent<Enemy>())
             {
-                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);
             }
 
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));

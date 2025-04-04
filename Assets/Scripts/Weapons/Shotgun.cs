@@ -47,7 +47,7 @@ public class Shotgun : Gun
         {
             if (hit.collider.gameObject.GetComponent<Enemy>())
             {
-                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);
             }
 
             if (impactVFX != null)
