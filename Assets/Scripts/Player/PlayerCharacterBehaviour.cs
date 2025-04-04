@@ -9,7 +9,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     private Gun equippedGun;        
 
     private PlayerCombatStates FindCombatState(AnimatorStateInfo stateInfo)
-    {
+    {     
         if (stateInfo.IsTag("RaiseWeapon")) return PlayerCombatStates.RAISING;
         if (stateInfo.IsTag("Attack")) return PlayerCombatStates.ATTACKING;        
         if (stateInfo.IsTag("Fire")) return PlayerCombatStates.FIRING;        
@@ -50,7 +50,13 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         }        
         
     }
-    
+
+    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        playerCharacter.PlayerCombatStates = FindCombatState(stateInfo);
+    }
+
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {        
