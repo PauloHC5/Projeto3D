@@ -30,11 +30,11 @@ public class Enemy : MonoBehaviour
     private Animator animator;
     private Collider enemyCollider;
     private Rigidbody rb;
-
-    private int Death = Animator.StringToHash("Death");
+    
     private int IsDead = Animator.StringToHash("IsDead");
     private int Velocity = Animator.StringToHash("Velocity");
     private int React = Animator.StringToHash("React");
+    private int Stun = Animator.StringToHash("Stun");
     private int WeaponIndex = Animator.StringToHash("WeaponIndex");
 
     private bool isDead = false;
@@ -92,10 +92,11 @@ public class Enemy : MonoBehaviour
                 {
                     shotgunHitReactRoutine = StunReact();
                     StartCoroutine(shotgunHitReactRoutine);
+                    return;
                 }
-            }
-            else
-                animator.SetTrigger(React);
+            }            
+            
+            animator.SetTrigger(React);
         }        
     }   
 
@@ -105,8 +106,7 @@ public class Enemy : MonoBehaviour
         behaviorGraph.enabled = false;
         agent.enabled = false;        
         rb.isKinematic = false;
-        animator.SetInteger(WeaponIndex, (int)damageType);
-        animator.SetTrigger(Death);
+        animator.SetInteger(WeaponIndex, (int)damageType);        
 
         if (enemyDeadCollider) enemyDeadCollider.enabled = true;
 
@@ -124,7 +124,7 @@ public class Enemy : MonoBehaviour
         behaviorGraph.enabled = false;
         rb.isKinematic = false;
         ApplyShotgunImpulse(shotgunHitImpulse);
-        animator.SetTrigger(React);
+        animator.SetTrigger(Stun);
         yield return new WaitForSeconds(stunDuration);
         agent.enabled = true;
         behaviorGraph.enabled = true;
