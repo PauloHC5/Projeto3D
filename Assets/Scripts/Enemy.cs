@@ -32,11 +32,12 @@ public class Enemy : MonoBehaviour
     private Rigidbody rb;
 
     private int Death = Animator.StringToHash("Death");
+    private int IsDead = Animator.StringToHash("IsDead");
     private int Velocity = Animator.StringToHash("Velocity");
     private int React = Animator.StringToHash("React");
     private int WeaponIndex = Animator.StringToHash("WeaponIndex");
 
-    private bool hasApplyiedDamageImpulse = false;
+    private bool isDead = false;
     private IEnumerator shotgunHitReactRoutine;
 
     private const int reactionLayerIndex = 1; // Index of the reaction layer in the animator
@@ -58,46 +59,51 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));
+        animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));   
+        animator.SetBool(IsDead, isDead);
     }
 
     // funtion to take damage
     public void TakeDamage(int damage, PlayerWeapon damageType)
     {
-        health -= damage;
+        if(isDead) return; // Ignore damage if already dead
+
+        health -= damage;        
 
         if (health <= 0)
         {
+            isDead = true;
             if (shotgunHitReactRoutine != null) StopCoroutine(shotgunHitReactRoutine);
-            Die(damageType);            
-            return;
-        }
-
-        float layerWeight = (damageType == PlayerWeapon.Thompson || damageType == PlayerWeapon.Crossbow) ? mediumLayerWeight : fullLayerWeight;
-        animator.SetLayerWeight(reactionLayerIndex, layerWeight);
-
-        // Trigger the react animation based on the damage type
-        // You can use an enum or int to represent different damage types
-        animator.SetInteger(WeaponIndex, (int)damageType);
-
-
-        if (damageType == PlayerWeapon.Shotgun)
-        {
-            if (shotgunHitReactRoutine == null)
-            {
-                shotgunHitReactRoutine = StunReact();
-                StartCoroutine(shotgunHitReactRoutine);
-            }            
+            Die(damageType);                        
         }
         else
-            animator.SetTrigger(React);
+        {
+            float layerWeight = (damageType == PlayerWeapon.Thompson || damageType == PlayerWeapon.Crossbow) ? mediumLayerWeight : fullLayerWeight;
+            animator.SetLayerWeight(reactionLayerIndex, layerWeight);
+
+            // Trigger the react animation based on the damage type
+            // You can use an enum or int to represent different damage types
+            animator.SetInteger(WeaponIndex, (int)damageType);
+
+
+            if (damageType == PlayerWeapon.Shotgun)
+            {
+                if (shotgunHitReactRoutine == null)
+                {
+                    shotgunHitReactRoutine = StunReact();
+                    StartCoroutine(shotgunHitReactRoutine);
+                }
+            }
+            else
+                animator.SetTrigger(React);
+        }        
     }   
 
     private void Die(PlayerWeapon damageType)
-    {
-        behaviorGraph.enabled = false;
-        agent.enabled = false;
+    {        
         enemyCollider.enabled = false;
+        behaviorGraph.enabled = false;
+        agent.enabled = false;        
         rb.isKinematic = false;
         animator.SetInteger(WeaponIndex, (int)damageType);
         animator.SetTrigger(Death);
@@ -112,7 +118,7 @@ public class Enemy : MonoBehaviour
     }
 
     private IEnumerator StunReact()
-    {                
+    {                        
         agent.velocity = Vector3.zero;
         agent.enabled = false;
         behaviorGraph.enabled = false;
@@ -123,7 +129,7 @@ public class Enemy : MonoBehaviour
         agent.enabled = true;
         behaviorGraph.enabled = true;
         behaviorGraph.Restart();
-        rb.isKinematic = true;
+        rb.isKinematic = true;        
     }
 
     private void ApplyShotgunImpulse(float shotgunImpulse)
@@ -140,7 +146,7 @@ public class Enemy : MonoBehaviour
         Vector3 direction = Camera.main.transform.forward;        
         rb.AddForce(direction * shotgunImpulse, ForceMode.Impulse);
 
-        Debug.Log("Shotgun impulse applied to enemy.");
+        Debug.Log($"Shotgun impulse applied to {gameObject.name}.");
     }
 
     public GameObject DetectPlayer()
