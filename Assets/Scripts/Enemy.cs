@@ -133,9 +133,7 @@ public class Enemy : MonoBehaviour
     }
 
     private void ApplyShotgunImpulse(float shotgunImpulse)
-    {                
-        if(rb.isKinematic) Debug.LogWarning("Rigidbody is kinematic, cannot apply impulse.");
-
+    {                        
         // set the rotation of the enemy to look at the player
         Vector3 lookAtDirection = Camera.main.transform.position - transform.position;
         lookAtDirection.y = 0; // Keep the y component zero to only rotate on the y-axis
@@ -144,9 +142,7 @@ public class Enemy : MonoBehaviour
 
         // Apply impulse force to the enemy                        
         Vector3 direction = Camera.main.transform.forward;        
-        rb.AddForce(direction * shotgunImpulse, ForceMode.Impulse);
-
-        Debug.Log($"Shotgun impulse applied to {gameObject.name}.");
+        rb.AddForce(direction * shotgunImpulse, ForceMode.Impulse);        
     }
 
     public GameObject DetectPlayer()
