@@ -131,7 +131,7 @@ public class PlayerCharacterController : PlayerCharacterCombatController
 
     protected override void Reload()
     {
-        if(weaponSelected == PlayerWeapon.Crowbar || playerCombatStates == PlayerCombatStates.RELOADING) return;
+        if(weaponSelected == PlayerWeapon.Crowbar || playerCombatStates == PlayerCombatStates.RELOADING || playerCombatStates == PlayerCombatStates.DUALWIELDFIRING) return;
         base.Reload();
     }
 
