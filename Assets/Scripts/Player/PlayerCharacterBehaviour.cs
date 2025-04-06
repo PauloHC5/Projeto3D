@@ -22,11 +22,21 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         playerCharacter = animator.GetComponentInParent<PlayerCharacterController>();
+        PlayerCombatStates newCombatState = FindCombatState(stateInfo);
+
+        // Condition to prevent state change to default when one of the shoot layers is active
+        if (playerCharacter.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING && newCombatState == PlayerCombatStates.DEFAULT)
+        {
+            // Check if one of the shoot layers is active by checking its weight
+            if (animator.GetLayerWeight(1) != 0f || animator.GetLayerWeight(2) != 0f) 
+                return; // Prevent state change to default if both shoot layers are active
+        }
+
+        playerCharacter.PlayerCombatStates = newCombatState;
+
         equippedGun = playerCharacter.EquippedWeapon as Gun;
-        DualWieldGun equippedGuns = equippedGun as DualWieldGun;        
-
-        playerCharacter.PlayerCombatStates = FindCombatState(stateInfo);
-
+        DualWieldGun equippedGuns = equippedGun as DualWieldGun;                                
+                
         switch (playerCharacter.PlayerCombatStates)
         {
             case PlayerCombatStates.RAISING:                
@@ -57,28 +67,10 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         if (playerCharacter && playerCharacter.PlayerCombatStates == PlayerCombatStates.ATTACKING)
         {
             DisableCrowbarCollision();            
-        }
-
-        if (playerCharacter && playerCharacter.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING)
-        {
-            
-            Debug.Log("Resetting layer weights");
-        }
+        }        
 
         animator.SetLayerWeight(layerIndex, 0f);        
-    }
-
-    // OnStateMove is called right after Animator.OnAnimatorMove()
-    //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    // Implement code that processes and affects root motion
-    //}
-
-    // OnStateIK is called right after Animator.OnAnimatorIK()
-    //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    // Implement code that sets up animation IK (inverse kinematics)
-    //}
+    }    
 
     private void SetPlayerState(PlayerCombatStates state)
     {
@@ -126,5 +118,17 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         {
             crowbar.DisableCollision();
         }
-    }    
+    }
+
+    // OnStateMove is called right after Animator.OnAnimatorMove()
+    //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    // Implement code that processes and affects root motion
+    //}
+
+    // OnStateIK is called right after Animator.OnAnimatorIK()
+    //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    // Implement code that sets up animation IK (inverse kinematics)
+    //}
 }
