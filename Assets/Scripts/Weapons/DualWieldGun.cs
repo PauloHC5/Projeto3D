@@ -31,7 +31,7 @@ public class DualWieldGun : Gun
 
     public new bool CanFire(WhichGun whichGun)
     {
-        if(magAmmo <= 0)
+        if(GetGun(whichGun).MagAmmo <= 0)
         {
             magAmmo = 0; // Prevent negative ammo
             return false;
