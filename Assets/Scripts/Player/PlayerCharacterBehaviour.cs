@@ -38,10 +38,10 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 equippedGun.Fire();
                 break;
             case PlayerCombatStates.DUALWIELDFIRING:                 
-                if(equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo);
+                if(equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo, layerIndex);
                 break;
             case PlayerCombatStates.RELOADING:
-                if (equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo);
+                if (equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo, layerIndex);
                 else
                 {
                     equippedGun.PlayReload();                    
@@ -49,17 +49,11 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 break;
         }        
         
-    }
-
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        playerCharacter.PlayerCombatStates = FindCombatState(stateInfo);
-    }
+    }    
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {        
+    {                
         if (playerCharacter && playerCharacter.PlayerCombatStates == PlayerCombatStates.ATTACKING)
         {
             DisableCrowbarCollision();            
@@ -67,10 +61,11 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
 
         if (playerCharacter && playerCharacter.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING)
         {
-            ResetLayerWeights(animator, stateInfo);
+            
+            Debug.Log("Resetting layer weights");
         }
 
-        if(playerCharacter) playerCharacter.PlayerCombatStates = PlayerCombatStates.DEFAULT;
+        animator.SetLayerWeight(layerIndex, 0f);        
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
@@ -104,17 +99,17 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         }
     }
 
-    private void HandleDualWieldState(DualWieldGun equippedGuns, Animator animator, AnimatorStateInfo stateInfo)
-    {        
+    private void HandleDualWieldState(DualWieldGun equippedGuns, Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.SetLayerWeight(layerIndex, 1f);
+
         if (stateInfo.IsTag("FireL"))
-        {
-            if (playerCharacter.LmbPressed) animator.SetLayerWeight(1, 1f);
+        {            
             equippedGuns.Fire(WhichGun.GunL);
         }
 
         if (stateInfo.IsTag("FireR"))
         {            
-            if (playerCharacter.RmbPressed) animator.SetLayerWeight(2, 1f);
             equippedGuns.Fire(WhichGun.GunR);
         }
 
@@ -131,11 +126,5 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         {
             crowbar.DisableCollision();
         }
-    }
-
-    private void ResetLayerWeights(Animator animator, AnimatorStateInfo stateInfo)
-    {
-        if (stateInfo.IsTag("FireL")) animator.SetLayerWeight(1, 0f);
-        if (stateInfo.IsTag("FireR")) animator.SetLayerWeight(2, 0f);        
-    }
+    }    
 }
