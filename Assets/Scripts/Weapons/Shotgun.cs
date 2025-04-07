@@ -4,19 +4,23 @@ using UnityEngine;
 
 public class Shotgun : Gun    
 {
-    [Header("Hitscan Properties")]
+    [Header("Shotgun Properties")]
     [SerializeField] private int damage = 10;
-    [SerializeField] private int pelletsPerShot = 5;
-    [SerializeField] private float spreadAngle = 5f;
     [SerializeField] private LayerMask shootLayer;
+    [SerializeField] private float damageCapsuleRadius = 0.5f;    
+
+    [Header("Burst Properties")]
+    [SerializeField] private float burstRange = 10f;
+    [SerializeField] private int pelletsPerShot = 5;
+    [SerializeField] private float spreadAngle = 5f;    
 
 
     public override void Fire()
-    {        
-        StartCoroutine(BurstFire());
-        ShootRaycast(damage, shootLayer);
-        base.ShootRaycast(damage, shootLayer, gunRange * 2f);
+    {
+        //base.ShootRaycast(damage, shootLayer, gunRange);
+        base.ShootCapsuleCast(damage, shootLayer, damageCapsuleRadius, gunRange);
         base.Fire();
+        StartCoroutine(BurstFire());
         magAmmo--;
     }
 
@@ -24,7 +28,7 @@ public class Shotgun : Gun
     {
         for (int i = 0; i < pelletsPerShot; i++)
         {
-            ShootRaycast(damage / 2, shootLayer);     
+            BurstRaycast(shootLayer, burstRange);     
             yield return new WaitForEndOfFrame();
         }        
     }
@@ -34,26 +38,18 @@ public class Shotgun : Gun
         base.Reload();
     }
 
-    protected override void ShootRaycast(int damage, LayerMask shootLayer, float gunRange = default)
+    private void BurstRaycast(LayerMask shootLayer, float burstRange)
     {
         Vector3 direction = fireSocket.forward;
         direction.x += Random.Range(-spreadAngle, spreadAngle);
-        direction.y += Random.Range(-spreadAngle, spreadAngle);
-
-        float rayDistance = gunRange == default ? this.gunRange : gunRange;
+        direction.y += Random.Range(-spreadAngle, spreadAngle);        
 
         RaycastHit hit;
-        if (Physics.Raycast(fireSocket.position, direction, out hit, rayDistance, shootLayer))
-        {
-            if (hit.collider.gameObject.GetComponent<Enemy>())
-            {
-                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);
-            }
-
+        if (Physics.Raycast(fireSocket.position, direction, out hit, burstRange, shootLayer))
+        {            
             if (impactVFX != null)
             {
                 Instantiate(impactVFX, hit.point, Quaternion.LookRotation(hit.normal));
-
             }
 
             // Check if the object hit has rigidbody
@@ -65,7 +61,26 @@ public class Shotgun : Gun
 
         if (DebugRaycast)
         {
-            Debug.DrawRay(fireSocket.position, direction * rayDistance, Color.red, 5f);
+            Debug.DrawRay(fireSocket.position, direction * burstRange, Color.red, 5f);
         }        
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (DebugRaycast)
+        {
+            Vector3 point1, point2;            
+
+            point1 = Camera.main.transform.position;
+            point2 = point1 + Camera.main.transform.forward * gunRange;
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(point1, damageCapsuleRadius);
+            Gizmos.DrawWireSphere(point2, damageCapsuleRadius);
+            Gizmos.DrawLine(point1 + Vector3.up * damageCapsuleRadius, point2 + Vector3.up * damageCapsuleRadius);
+            Gizmos.DrawLine(point1 - Vector3.up * damageCapsuleRadius, point2 - Vector3.up * damageCapsuleRadius);
+            Gizmos.DrawLine(point1 + Vector3.right * damageCapsuleRadius, point2 + Vector3.right * damageCapsuleRadius);
+            Gizmos.DrawLine(point1 - Vector3.right * damageCapsuleRadius, point2 - Vector3.right * damageCapsuleRadius);
+        }
     }
 }

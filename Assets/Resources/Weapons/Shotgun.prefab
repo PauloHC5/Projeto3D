@@ -135,7 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 2
   socketToAttach: 0
-  fireRate: 1
+  fireRate: 0.75
   gunRange: 2.5
   shootImpulse: 25
   maxAmmo: 2
@@ -144,12 +144,14 @@ MonoBehaviour:
   muzzleFlash: {fileID: 325391537946035653}
   impactVFX: {fileID: 19800002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
   DebugRaycast: 1
-  damage: 10
-  pelletsPerShot: 8
-  spreadAngle: 0.25
+  damage: 50
   shootLayer:
     serializedVersion: 2
     m_Bits: 521
+  damageCapsuleRadius: 0.5
+  burstRange: 2.5
+  pelletsPerShot: 8
+  spreadAngle: 0.25
 --- !u!1 &2957617364616530174
 GameObject:
   m_ObjectHideFlags: 0

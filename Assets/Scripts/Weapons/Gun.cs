@@ -100,7 +100,7 @@ public class Gun : Weapon
         spawnedProjectile.GetComponent<Rigidbody>().AddForce(ray.direction * impulse, ForceMode.Impulse);
     }
 
-    protected virtual void ShootRaycast(int damage, LayerMask shootLayer, float gunRange = default)
+    protected virtual void ShootRaycast(int damage, LayerMask shootLayer, float gunRange = default, Transform fireSocket = default)
     {
         Ray ray;
         if (fireSocket == default)
@@ -134,6 +134,24 @@ public class Gun : Weapon
         if (DebugRaycast) Debug.DrawRay(ray.origin, ray.direction * rayDistance, Color.red, 5f);
     }
 
+    protected virtual void ShootCapsuleCast(int damage, LayerMask shootLayer, float radius, float height)
+    {
+        Vector3 point1, point2;
+        
+        point1 = Camera.main.transform.position;
+        point2 = point1 + Camera.main.transform.forward * height;                        
+
+        // Use OverlapCapsule to detect all colliders within the capsule's area
+        Collider[] hitColliders = Physics.OverlapCapsule(point1, point2, radius, shootLayer);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.gameObject.GetComponent<Enemy>())
+            {
+                hitCollider.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);
+            }
+        }                
+    }
+
     protected void ApplyImpulse(RaycastHit hit)
     {
         float distance = hit.distance;
@@ -155,7 +173,7 @@ public class Gun : Weapon
     private void OnDisable()
     {
         PlayerCharacterCombatController.onSwitchToWeapon -= OnSwitchToWeapon;
-    }
+    }        
 }
 
 public interface ISecondaryAction
