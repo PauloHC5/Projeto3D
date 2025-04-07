@@ -39,7 +39,9 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 
         switch (playerCharacter.PlayerCombatStates)
         {
-            case PlayerCombatStates.RAISING:                
+            case PlayerCombatStates.RAISING:
+                animator.SetLayerWeight(1, 0f);
+                animator.SetLayerWeight(2, 0f);
                 break;
             case PlayerCombatStates.ATTACKING:
                 HandleAttackState(animator);
