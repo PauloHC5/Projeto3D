@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
     private int WeaponIndex = Animator.StringToHash("WeaponIndex");
 
     private bool isDead = false;
-    private IEnumerator shotgunHitReactRoutine;
+    private IEnumerator shotgunStunReactRoutine;
 
     private const int reactionLayerIndex = 1; // Index of the reaction layer in the animator
     private const float mediumLayerWeight = 0.75f; // Medium layer weight for the reaction layer
@@ -73,7 +73,7 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             isDead = true;
-            if (shotgunHitReactRoutine != null) StopCoroutine(shotgunHitReactRoutine);
+            if (shotgunStunReactRoutine != null) StopCoroutine(shotgunStunReactRoutine);
             Die(damageType);                        
         }
         else
@@ -88,10 +88,10 @@ public class Enemy : MonoBehaviour
 
             if (damageType == PlayerWeapon.Shotgun)
             {
-                if (shotgunHitReactRoutine == null)
+                if (shotgunStunReactRoutine == null)
                 {
-                    shotgunHitReactRoutine = StunReact();
-                    StartCoroutine(shotgunHitReactRoutine);
+                    shotgunStunReactRoutine = StunReact();
+                    StartCoroutine(shotgunStunReactRoutine);
                     return;
                 }
             }            
@@ -129,7 +129,8 @@ public class Enemy : MonoBehaviour
         agent.enabled = true;
         behaviorGraph.enabled = true;
         behaviorGraph.Restart();
-        rb.isKinematic = true;        
+        rb.isKinematic = true;
+        shotgunStunReactRoutine = null; // Reset the coroutine reference
     }
 
     private void ApplyShotgunImpulse(float shotgunImpulse)
