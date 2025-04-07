@@ -1032,7 +1032,7 @@ MonoBehaviour:
   walkSpeed: 2.48
   jumpForce: 0.5
   acceleration: 15
-  deceleration: 50
+  deceleration: 35
   groundCheck: {fileID: 5241768735091827890}
   groundCheckRadius: 0.15
   groundMask:
