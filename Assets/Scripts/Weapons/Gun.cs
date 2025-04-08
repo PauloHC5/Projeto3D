@@ -20,30 +20,35 @@ public class Gun : Weapon
     [SerializeField] protected bool DebugRaycast = false;
 
     private Int32 ammoToReload = 0;
-    public Int32 AmmoToReload { get { return ammoToReload; } set { ammoToReload = value; } }
-
-    public float FireRate { get { return fireRate; } }
-
     private bool canFire = true;
-    public bool CanFire { get { return canFire; } }
-
-    // Getter and setter for magAmmo
-    public int MagAmmo { get => magAmmo; }
-
-    // Getter for maxAmmo
-    public int MaxAmmo => maxAmmo;
+    private CameraRecoil cameraRecoil;
 
     // Animator properties
     private Animator gunAnimator;
     private readonly int FireTrigger = Animator.StringToHash("Fire");
-    private readonly int ReloadTrigger = Animator.StringToHash("Reload");    
+    private readonly int ReloadTrigger = Animator.StringToHash("Reload");
+
+
+    // Getters and Setters
+    public Int32 AmmoToReload { get { return ammoToReload; } set { ammoToReload = value; } }
+    public float FireRate { get { return fireRate; } }    
+    public bool CanFire { get { return canFire; } }    
+    public int MagAmmo { get => magAmmo; }    
+    public int MaxAmmo => maxAmmo;
+    
 
     private void Awake()
     {
         gunAnimator = GetComponent<Animator>();
         if (gunAnimator == null) gunAnimator = GetComponentInChildren<Animator>();
+        
+        magAmmo = magAmmo > maxAmmo ? magAmmo = maxAmmo : magAmmo; // Clamp magAmmo to maxAmmo
 
-        magAmmo = magAmmo > maxAmmo ? magAmmo = maxAmmo : magAmmo;
+        cameraRecoil = transform.Find("CameraRot/CameraRecoil").GetComponent<CameraRecoil>();
+        if (cameraRecoil == null)
+        {
+            Debug.Log("CameraRecoil component not found in the child of CameraRot.");
+        }
     }    
 
     public virtual void Fire()

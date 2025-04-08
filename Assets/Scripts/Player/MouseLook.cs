@@ -8,11 +8,11 @@ public class MouseLook : MonoBehaviour
 {
     [SerializeField] private float mouseSensitivity = 100f;
     [SerializeField] private Transform player;
+    [SerializeField] private Transform playerMesh;
+    [SerializeField] private Transform cameraRot;
 
     private Camera[] playerCameras;
-    
-    private Transform playerMesh;    
-    private Transform cameraPos;
+        
     private float defaultFoV;
     private bool zoomIn = false;
     private const float defaultZoomSpeed = 1000f;
@@ -27,8 +27,6 @@ public class MouseLook : MonoBehaviour
     private void Awake()
     {
         playerControls = new PlayerInputActions();
-
-
     }
         
     void Start()
@@ -40,10 +38,7 @@ public class MouseLook : MonoBehaviour
         if (playerCameras[0] != null)
         {
             defaultFoV = playerCameras[0].fieldOfView;
-        }
-
-        playerMesh = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("Mesh Root"));       
-        cameraPos = player.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.name.Equals("CameraPos"));
+        }        
     }
 
     // Update is called once per frame
@@ -62,7 +57,7 @@ public class MouseLook : MonoBehaviour
         {
             player.Rotate(Vector3.up * MouseInput.x * mouseSensitivity * Time.deltaTime);
             playerMesh.localRotation = Quaternion.Euler(xRotation + 5f, playerMesh.localRotation.y, playerMesh.localRotation.z);
-            transform.position = cameraPos.position;
+            transform.position = cameraRot.position;
         }        
     }
 
