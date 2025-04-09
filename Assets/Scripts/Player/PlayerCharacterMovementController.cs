@@ -27,7 +27,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] protected CharacterController characterController;
-    [SerializeField] private Transform meshRoot;
+    [SerializeField] private Transform playerMeshRoot;
     [SerializeField] protected GameObject playerMesh;
     [SerializeField] protected Transform cameraPos;    
     
@@ -92,7 +92,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
         standingHeight = characterController.height;
         standingRadius = characterController.radius;        
         standingCameraPos = cameraPos.position;        
-        standingMeshRootPos = meshRoot.transform.position;
+        standingMeshRootPos = playerMeshRoot.transform.position;
         standingGroundCheckPos = groundCheck.localPosition;
         playerMovementStates = PlayerMovementStates.DEFAULT;        
     }
@@ -244,7 +244,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
                 characterController.radius = Mathf.Lerp(characterController.radius, crouchRadius, Time.deltaTime * crouchSmooth);
                 groundCheck.localPosition = new Vector3(groundCheck.localPosition.x, crouchGrundCheckPos, groundCheck.localPosition.z);
                 cameraPos.localPosition = new Vector3(cameraPos.localPosition.x, Mathf.Lerp(cameraPos.localPosition.y, crouchCameraPos, Time.deltaTime * crouchSmooth), cameraPos.localPosition.z);
-                meshRoot.localPosition = new Vector3(meshRoot.localPosition.x, Mathf.Lerp(meshRoot.localPosition.y, crouchMeshRootPos, Time.deltaTime * crouchSmooth), meshRoot.localPosition.z);
+                playerMeshRoot.localPosition = new Vector3(playerMeshRoot.localPosition.x, Mathf.Lerp(playerMeshRoot.localPosition.y, crouchMeshRootPos, Time.deltaTime * crouchSmooth), playerMeshRoot.localPosition.z);
                 maxSpeed = crouchSpeed;
                 isCrouching = true;
                 yield return null;
@@ -271,7 +271,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
                 characterController.radius = Mathf.Lerp(characterController.radius, standingRadius, Time.deltaTime * crouchSmooth);
                 groundCheck.localPosition = new Vector3(groundCheck.localPosition.x, standingGroundCheckPos.y, groundCheck.localPosition.z);
                 cameraPos.localPosition = new Vector3(cameraPos.localPosition.x, Mathf.Lerp(cameraPos.localPosition.y, standingCameraPos.y, Time.deltaTime * crouchSmooth), cameraPos.localPosition.z);
-                meshRoot.localPosition = new Vector3(meshRoot.localPosition.x, Mathf.Lerp(meshRoot.localPosition.y, standingMeshRootPos.y, Time.deltaTime * crouchSmooth), meshRoot.localPosition.z);
+                playerMeshRoot.localPosition = new Vector3(playerMeshRoot.localPosition.x, Mathf.Lerp(playerMeshRoot.localPosition.y, standingMeshRootPos.y, Time.deltaTime * crouchSmooth), playerMeshRoot.localPosition.z);
                 maxSpeed = walkSpeed;
                 isCrouching = false;
                 yield return null;
