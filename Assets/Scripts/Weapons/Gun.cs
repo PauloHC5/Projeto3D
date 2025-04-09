@@ -13,6 +13,11 @@ public class Gun : Weapon
     [SerializeField] protected int maxAmmo = 40;
     [SerializeField] protected int magAmmo = 40;
 
+    [Header("Recoil Properties")]
+    [SerializeField] private float recoilX = -2f;
+    [SerializeField] private float recoilY = 2f;
+    [SerializeField] private float recoilZ = 0.35f;
+
     [Header("Gun Components")]
     [SerializeField] protected Transform fireSocket;
     [SerializeField] protected ParticleSystem muzzleFlash;
@@ -20,14 +25,13 @@ public class Gun : Weapon
     [SerializeField] protected bool DebugRaycast = false;
 
     private Int32 ammoToReload = 0;
-    private bool canFire = true;
+    private bool canFire = true;    
     private CameraRecoil cameraRecoil;
 
     // Animator properties
     private Animator gunAnimator;
     private readonly int FireTrigger = Animator.StringToHash("Fire");
     private readonly int ReloadTrigger = Animator.StringToHash("Reload");
-
 
     // Getters and Setters
     public Int32 AmmoToReload { get { return ammoToReload; } set { ammoToReload = value; } }
@@ -42,19 +46,16 @@ public class Gun : Weapon
         gunAnimator = GetComponent<Animator>();
         if (gunAnimator == null) gunAnimator = GetComponentInChildren<Animator>();
         
-        magAmmo = magAmmo > maxAmmo ? magAmmo = maxAmmo : magAmmo; // Clamp magAmmo to maxAmmo
+        magAmmo = magAmmo > maxAmmo ? magAmmo = maxAmmo : magAmmo; // Clamp magAmmo to maxAmmo                
 
-        cameraRecoil = transform.Find("CameraRot/CameraRecoil").GetComponent<CameraRecoil>();
-        if (cameraRecoil == null)
-        {
-            Debug.Log("CameraRecoil component not found in the child of CameraRot.");
-        }
-    }    
+        cameraRecoil = Camera.main.GetComponentInParent<CameraRecoil>();        
+    }
 
     public virtual void Fire()
     {
         if (muzzleFlash) muzzleFlash.Play();
         if (gunAnimator) gunAnimator.SetTrigger(FireTrigger);
+        if (cameraRecoil) cameraRecoil.RecoilFire(recoilX, recoilY, recoilZ);
         StartCoroutine(ShootDelay());
     }
 
