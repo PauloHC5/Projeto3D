@@ -30,7 +30,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     [SerializeField] private Transform meshRoot;
     [SerializeField] protected GameObject playerMesh;
     [SerializeField] protected Transform cameraPos;    
-    [SerializeField] private PlayerMovementStates playerMovementStates = PlayerMovementStates.DEFAULT;
+    
    
     [Header("Crouch")]
     [SerializeField] private bool isCrouching = false;
@@ -77,7 +77,9 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     private Vector3 gravityVelocity; // New field for gravity velocity    
     private float decelerationTime = 0f; // New field to track deceleration time
 
+    private PlayerMovementStates playerMovementStates = PlayerMovementStates.DEFAULT;
     protected PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
+    
     public PlayerCombatStates PlayerCombatStates
     {
         get { return playerCombatStates; }
