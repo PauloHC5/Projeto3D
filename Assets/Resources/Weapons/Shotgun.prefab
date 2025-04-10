@@ -136,10 +136,15 @@ MonoBehaviour:
   weaponType: 2
   socketToAttach: 0
   fireRate: 0.75
-  gunRange: 2.5
+  gunRange: 4.4
   shootImpulse: 25
   maxAmmo: 2
   magAmmo: 2
+  recoilX: -20
+  recoilY: 8
+  recoilZ: 0.35
+  snappiness: 10
+  returnSpeed: 4
   fireSocket: {fileID: 5723263459355759405}
   muzzleFlash: {fileID: 325391537946035653}
   impactVFX: {fileID: 19800002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}

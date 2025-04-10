@@ -4,11 +4,10 @@ public class CameraRecoil : MonoBehaviour
 {
     // Rotations
     private Vector3 currentRotation;
-    private Vector3 targetRotation;    
+    private Vector3 targetRotation;
 
-    // Settings
-    [SerializeField] private float snappiness;
-    [SerializeField] private float returnSpeed;
+    private float snappiness = 0f;
+    private float returnSpeed = 0f;
 
     [SerializeField] private Transform playerMeshRecoil;
 
@@ -38,8 +37,11 @@ public class CameraRecoil : MonoBehaviour
         if(playerMeshRecoil) playerMeshRecoil.localRotation = Quaternion.Euler(currentRotation); // apply the rotation to the player mesh
     }
 
-    public void RecoilFire(float recoilX, float recoilY, float recoilZ)
-    {
+    public void RecoilFire(float recoilX, float recoilY, float recoilZ, float snappiness, float returnSpeed)
+    {        
+        this.snappiness = snappiness;
+        this.returnSpeed = returnSpeed;
+
         // Apply recoil to the target rotation
         targetRotation += new Vector3(recoilX, Random.Range(-recoilY, recoilY), Random.Range(-recoilZ, recoilZ));
     }

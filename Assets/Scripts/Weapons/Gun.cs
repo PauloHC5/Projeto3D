@@ -17,6 +17,8 @@ public class Gun : Weapon
     [SerializeField] private float recoilX = -2f;
     [SerializeField] private float recoilY = 2f;
     [SerializeField] private float recoilZ = 0.35f;
+    [SerializeField] private float snappiness = 6f;
+    [SerializeField] private float returnSpeed = 2f;
 
     [Header("Gun Components")]
     [SerializeField] protected Transform fireSocket;
@@ -55,7 +57,7 @@ public class Gun : Weapon
     {
         if (muzzleFlash) muzzleFlash.Play();
         if (gunAnimator) gunAnimator.SetTrigger(FireTrigger);
-        if (cameraRecoil) cameraRecoil.RecoilFire(recoilX, recoilY, recoilZ);
+        if (cameraRecoil) cameraRecoil.RecoilFire(recoilX, recoilY, recoilZ, snappiness, returnSpeed);
         StartCoroutine(ShootDelay());
     }
 

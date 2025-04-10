@@ -620,6 +620,11 @@ MonoBehaviour:
   shootImpulse: 10
   maxAmmo: 1
   magAmmo: 1
+  recoilX: -9.5
+  recoilY: -0.73
+  recoilZ: -0.23
+  snappiness: 3
+  returnSpeed: 1.5
   fireSocket: {fileID: 0}
   muzzleFlash: {fileID: 0}
   impactVFX: {fileID: 0}

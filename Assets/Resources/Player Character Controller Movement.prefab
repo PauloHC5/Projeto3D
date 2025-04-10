@@ -76,8 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff552ff4f0e19d449885c2354b8b071, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snappiness: 0
-  returnSpeed: 0
+  playerMeshRecoil: {fileID: 2111442703304187023}
 --- !u!1 &502716679715829798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,7 +1078,7 @@ MonoBehaviour:
   walkSpeed: 2.48
   jumpForce: 0.5
   acceleration: 15
-  deceleration: 35
+  deceleration: 50
   groundCheck: {fileID: 5241768735091827890}
   groundCheckRadius: 0.15
   groundMask:
