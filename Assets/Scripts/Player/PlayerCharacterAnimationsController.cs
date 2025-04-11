@@ -34,13 +34,7 @@ public class PlayerCharacterAnimationsController : MonoBehaviour
     protected virtual void UseWeapon()
     {        
         playerAnimator.SetTrigger(UseWeaponTrigger);
-    }
-    
-    protected void UseWeapon(WhichGun whichGun)
-    {
-        if (whichGun == WhichGun.GunR) playerAnimator.SetTrigger(ShootR);
-        else playerAnimator.SetTrigger(ShootL);
-    }
+    }        
 
     protected void PlayReload()
     {                
