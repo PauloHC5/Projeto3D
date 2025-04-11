@@ -139,7 +139,7 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
         return playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.gameObject.CompareTag(socket.ToString()));
     }
 
-    protected void UseWeapon()
+    protected override void UseWeapon()
     {
         var equippedGun = equippedWeapon.GetComponent<Gun>();        
 
@@ -153,7 +153,7 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
             if (!equippedGun.CanFire) return;
         }        
 
-        PlayUseWeapon();
+        base.UseWeapon();
     }
 
     protected virtual void Reload()
@@ -195,8 +195,8 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
 
     private void HandleDualWieldGunFire(DualWieldGun equippedGuns, WhichGun whichGun)
     {
-        if(whichGun == WhichGun.GunL && equippedGuns.CanFire(whichGun)) PlayUseWeapon(WhichGun.GunL);
-        if(whichGun == WhichGun.GunR && equippedGuns.CanFire(whichGun)) PlayUseWeapon(WhichGun.GunR);
+        if(whichGun == WhichGun.GunL && equippedGuns.CanFire(whichGun)) UseWeapon(WhichGun.GunL);
+        if(whichGun == WhichGun.GunR && equippedGuns.CanFire(whichGun)) UseWeapon(WhichGun.GunR);
     }    
 
     private bool CanReload(Gun equippedGun)
