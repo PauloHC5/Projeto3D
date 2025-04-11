@@ -143,15 +143,11 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
     {
         var equippedGun = equippedWeapon.GetComponent<Gun>();        
 
-        if (equippedWeapon is DualWieldGun equippedGuns)
-        {
-            HandleDualWieldGunFire(equippedGuns, WhichGun.GunL);
-            return;
-        }
-        else if (equippedGun)
+        if (equippedGun)
         {
             if (!equippedGun.CanFire) return;
         }        
+        else return;
 
         base.UseWeapon();
     }
@@ -184,20 +180,8 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
 
     protected void UseWeaponGadget()
     {
-        if (equippedWeapon is DualWieldGun equippedGuns)
-        {
-            HandleDualWieldGunFire(equippedGuns, WhichGun.GunR);
-            return;
-        }
-
         equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();
-    }    
-
-    private void HandleDualWieldGunFire(DualWieldGun equippedGuns, WhichGun whichGun)
-    {
-        if(whichGun == WhichGun.GunL && equippedGuns.CanFire(whichGun)) UseWeapon(WhichGun.GunL);
-        if(whichGun == WhichGun.GunR && equippedGuns.CanFire(whichGun)) UseWeapon(WhichGun.GunR);
-    }    
+    }        
 
     private bool CanReload(Gun equippedGun)
     {
