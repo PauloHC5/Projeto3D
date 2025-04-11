@@ -37,11 +37,12 @@ public class Gun : Weapon
 
     // Getters and Setters
     public Int32 AmmoToReload { get { return ammoToReload; } set { ammoToReload = value; } }
-    public float FireRate { get { return fireRate; } }    
-    public bool CanFire { get { return canFire; } }    
+    public float FireRate { get { return fireRate; } }            
     public int MagAmmo { get => magAmmo; }    
     public int MaxAmmo => maxAmmo;
-    
+
+    public virtual bool CanFire => canFire;
+
 
     private void Awake()
     {

@@ -16,6 +16,8 @@ public class DualWieldGun : Gun
 
     public new int MagAmmo => gunR.MagAmmo + gunL.MagAmmo;
 
+    public override bool CanFire => gunR.CanFire || gunL.CanFire;
+
     public DualWieldGun Initialize(Gun GunR, Gun GunL)
     {
         if (GunR == null) throw new System.ArgumentNullException(nameof(GunR));
@@ -27,17 +29,7 @@ public class DualWieldGun : Gun
         weaponType = PlayerWeapon.Shotgun;
 
         return this;
-    }
-
-    public new bool CanFire(WhichGun whichGun)
-    {
-        if(GetGun(whichGun).MagAmmo <= 0)
-        {
-            magAmmo = 0; // Prevent negative ammo
-            return false;
-        }
-        return whichGun == WhichGun.GunR ? gunR.CanFire : gunL.CanFire;
-    }
+    }    
 
     public new WeaponSocket GetSocketToAttach(WhichGun whichGun)
     {
