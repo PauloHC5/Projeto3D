@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class PlayerCharacterBehaviour : StateMachineBehaviour
 {
-    private PlayerCharacterController playerCharacter;
-    private Gun equippedGun;        
+    private static PlayerCharacterController playerCharacter;
+    private Gun equippedGun;    
 
     private PlayerCombatStates FindCombatState(AnimatorStateInfo stateInfo)
     {     
@@ -21,7 +21,11 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        playerCharacter = animator.GetComponentInParent<PlayerCharacterController>();
+        if (playerCharacter == null)
+        {            
+            playerCharacter = animator.GetComponentInParent<PlayerCharacterController>();
+        }                
+
         PlayerCombatStates newCombatState = FindCombatState(stateInfo);
 
         // Condition to prevent state change to default when one of the shoot layers is active
