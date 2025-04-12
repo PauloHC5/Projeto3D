@@ -8,6 +8,8 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     private static PlayerCharacterController playerCharacter;
     private Gun equippedGun;    
 
+    private readonly int AttackAlternation = Animator.StringToHash("AttackAlternation");
+
     private PlayerCombatStates FindCombatState(AnimatorStateInfo stateInfo)
     {     
         if (stateInfo.IsTag("RaiseWeapon")) return PlayerCombatStates.RAISING;
@@ -84,11 +86,11 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     }
 
     private void HandleAttackState(Animator animator)
-    {
+    {        
         SetPlayerState(PlayerCombatStates.ATTACKING);
-        var attackVar = animator.GetInteger("AttackVar") + 1;
-        if (attackVar > 3) attackVar = 1;
-        animator.SetInteger("AttackVar", attackVar);
+        var alternateAttack = animator.GetInteger(AttackAlternation) + 1;
+        if (alternateAttack > 3) alternateAttack = 1;
+        animator.SetInteger(AttackAlternation, alternateAttack);
 
         Crowbar crowbar = playerCharacter.EquippedWeapon as Crowbar;
         if (crowbar != null)
