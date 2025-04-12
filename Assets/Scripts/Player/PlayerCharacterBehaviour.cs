@@ -6,9 +6,9 @@ using UnityEngine;
 public class PlayerCharacterBehaviour : StateMachineBehaviour
 {
     private static PlayerCharacterController playerCharacter;
-    private Gun equippedGun;    
+    private Gun equippedGun;        
 
-    private readonly int AttackAlternation = Animator.StringToHash("AttackAlternation");
+    private readonly int ToggleAttack = Animator.StringToHash("ToggleAttack");    
 
     private PlayerCombatStates FindCombatState(AnimatorStateInfo stateInfo)
     {     
@@ -88,9 +88,9 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     private void HandleAttackState(Animator animator)
     {        
         SetPlayerState(PlayerCombatStates.ATTACKING);
-        var alternateAttack = animator.GetInteger(AttackAlternation) + 1;
-        if (alternateAttack > 3) alternateAttack = 1;
-        animator.SetInteger(AttackAlternation, alternateAttack);
+        var toggleAttack = animator.GetInteger(ToggleAttack) + 1;
+        if (toggleAttack > 3) toggleAttack = 1;
+        animator.SetInteger(ToggleAttack, toggleAttack);
 
         Crowbar crowbar = playerCharacter.EquippedWeapon as Crowbar;
         if (crowbar != null)
