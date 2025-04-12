@@ -10,6 +10,9 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
 
     private readonly int ToggleAttack = Animator.StringToHash("ToggleAttack");    
 
+    private const int FireLeftHandLayer = 1;
+    private const int FireRightHandLayer = 2;
+
     private PlayerCombatStates FindCombatState(AnimatorStateInfo stateInfo)
     {     
         if (stateInfo.IsTag("RaiseWeapon")) return PlayerCombatStates.RAISING;
@@ -34,7 +37,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         if (playerCharacter.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING && newCombatState == PlayerCombatStates.DEFAULT)
         {
             // Check if one of the shoot layers is active by checking its weight
-            if (animator.GetLayerWeight(1) != 0f || animator.GetLayerWeight(2) != 0f) 
+            if (animator.GetLayerWeight(FireLeftHandLayer) != 0f || animator.GetLayerWeight(FireRightHandLayer) != 0f) 
                 return; // Prevent state change to default if both shoot layers are active
         }
 
@@ -46,8 +49,8 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         switch (playerCharacter.PlayerCombatStates)
         {
             case PlayerCombatStates.RAISING:
-                animator.SetLayerWeight(1, 0f);
-                animator.SetLayerWeight(2, 0f);
+                animator.SetLayerWeight(FireLeftHandLayer, 0f);
+                animator.SetLayerWeight(FireRightHandLayer, 0f);
                 break;
             case PlayerCombatStates.ATTACKING:
                 HandleAttackState(animator);
