@@ -5,14 +5,14 @@ public class PlayerCharacterAnimationsController : MonoBehaviour
     
     [SerializeField] private Animator playerAnimator;
 
-    private int CurrentSpeed = Animator.StringToHash("CurrentSpeed");
-    private int UseWeaponTrigger = Animator.StringToHash("UseWeapon");
-    private int RaiseWeaponTrigger = Animator.StringToHash("RaiseWeapon");
-    private int WeaponIndex = Animator.StringToHash("WeaponIndex");
-    private int ReloadTrigger = Animator.StringToHash("Reload");
-    private int ShootR = Animator.StringToHash("ShootR");
-    private int ShootL = Animator.StringToHash("ShootL");    
-    private int GunAmmo = Animator.StringToHash("Gun Ammo");    
+    private readonly int CurrentSpeed = Animator.StringToHash("CurrentSpeed");
+    private readonly int UseWeaponTrigger = Animator.StringToHash("UseWeapon");
+    private readonly int RaiseWeaponTrigger = Animator.StringToHash("RaiseWeapon");
+    private readonly int WeaponIndex = Animator.StringToHash("WeaponIndex");
+    private readonly int ReloadTrigger = Animator.StringToHash("Reload");
+    private readonly int ShootR = Animator.StringToHash("ShootR");
+    private readonly int ShootL = Animator.StringToHash("ShootL");    
+    private readonly int GunAmmo = Animator.StringToHash("Gun Ammo");    
 
 
     public void HandleLocomotion(float speed, float maxSpeed)
