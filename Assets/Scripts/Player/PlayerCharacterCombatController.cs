@@ -146,8 +146,7 @@ public class PlayerCharacterCombatController : PlayerCharacterMovementController
         if (equippedGun)
         {
             if (!equippedGun.CanFire) return;
-        }        
-        else return;
+        }                
 
         base.UseWeapon();
     }
