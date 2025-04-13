@@ -21,7 +21,7 @@ public enum PlayerCombatStates
     DEFAULT
 }
 
-public abstract class PlayerCharacterCombatController : PlayerCharacterAnimationsController
+public abstract class PlayerCharacterCombatController : PlayerCharacterMovementController
 {
     [Space]
     [Header("Combat")]
@@ -127,8 +127,7 @@ public abstract class PlayerCharacterCombatController : PlayerCharacterAnimation
 
         // Reset the weapon position
         if (equippedWeapon) equippedWeapon.transform.localPosition = Vector3.zero;
-
-        PlaySwitchToWeapon(weapon);
+        
         onSwitchToWeapon?.Invoke(weaponSelected);
     }
 
@@ -137,53 +136,30 @@ public abstract class PlayerCharacterCombatController : PlayerCharacterAnimation
     private Transform GetSocketTransform(WeaponSocket socket)
     {
         return playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.gameObject.CompareTag(socket.ToString()));
-    }
-
-    protected override void UseWeapon()
-    {
-        var equippedGun = equippedWeapon.GetComponent<Gun>();        
-
-        if (equippedGun)
-        {
-            if (!equippedGun.CanFire) return;
-        }                
-
-        base.UseWeapon();
-    }
+    }    
 
     protected virtual void Reload()
     {
-        if (equippedWeapon is DualWieldGun equippedGuns) HandleDualWieldGunReload(equippedGuns);
-        else
-        {
-            Gun equippedGun = equippedWeapon as Gun;
-
-            // IF can't reload, return
-            if (!CanReload(equippedGun)) return;
-
-            PlayReload();
-            onReload?.Invoke(weaponSelected);
-        }
-    }
-
-    private void HandleDualWieldGunReload(DualWieldGun equippedGuns)
-    {
-        // Get the guns to reload
-        Gun[] gunsToReload = new Gun[] { equippedGuns.GetGun(WhichGun.GunR), equippedGuns.GetGun(WhichGun.GunL) };
-
-        // If GunR or GunL can't reload, return
-        if (!gunsToReload.Any(gun => CanReload(gun))) return;
-
-        PlayReload();
-    }
+        onReload?.Invoke(weaponSelected);        
+    }    
 
     protected void UseWeaponGadget()
     {
         equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();
     }        
 
-    private bool CanReload(Gun equippedGun)
+    protected bool CanReload(Gun equippedGun)
     {
+        if(equippedGun is DualWieldGun equippedGuns)
+        {
+            // Get the guns to reload
+            Gun[] gunsToReload = new Gun[] { equippedGuns.GetGun(WhichGun.GunR), equippedGuns.GetGun(WhichGun.GunL) };
+
+            // If any of the guns can be reloaded, return true
+            if (gunsToReload.Any(gun => CanReload(gun))) return true;
+            else return false;
+        }
+        
         // If the Mag Ammo is equal to the Max Ammo, means that the gun is full
         // If the weapon ammo is less than or equal to 0, means that player has no ammo to reload
         return equippedGun.MagAmmo != equippedGun.MaxAmmo && playerWeaponAmmo[weaponSelected] > 0;

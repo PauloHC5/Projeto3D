@@ -21,7 +21,7 @@ public enum WeaponSocket
     Back
 }
 
-public class PlayerCharacterController : PlayerCharacterCombatController
+public class PlayerCharacterController : PlayerCharacterAnimationsController
 {                             
     protected bool lmbPressed = false;
     protected bool rmbPressed = false;                       

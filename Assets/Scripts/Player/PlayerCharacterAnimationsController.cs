@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class PlayerCharacterAnimationsController : PlayerCharacterMovementController
+public abstract class PlayerCharacterAnimationsController : PlayerCharacterCombatController
 {
     
     [SerializeField] private Animator playerAnimator;
@@ -26,20 +26,28 @@ public abstract class PlayerCharacterAnimationsController : PlayerCharacterMovem
         playerAnimator.SetInteger(GunAmmo, ammo);
     }
 
-    protected void PlaySwitchToWeapon(PlayerWeapon weapon)
+    protected override void SwitchToWeapon(PlayerWeapon weapon)
     {                                    
+        base.SwitchToWeapon(weapon);
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
         playerAnimator.SetTrigger(RaiseWeaponTrigger);        
     }    
 
-    protected virtual void UseWeapon()
-    {        
-        playerAnimator.SetTrigger(UseWeaponTrigger);
+    protected void UseWeapon()
+    {
+        if (equippedWeapon is Gun equippedGun && !equippedGun.CanFire) return;
+        
+        playerAnimator.SetTrigger(UseWeaponTrigger);            
+
+        if(weaponSelected == PlayerWeapon.Crowbar) HandleToggleAttackAnimation();
     }        
 
-    protected void PlayReload()
-    {                
-        playerAnimator.SetTrigger(ReloadTrigger);        
+    protected override void Reload()
+    {
+        if (equippedWeapon is Gun equippedGun && !CanReload(equippedGun)) return;
+
+        playerAnimator.SetTrigger(ReloadTrigger);
+        base.Reload();
     }
 
     private void HandleToggleAttackAnimation()
