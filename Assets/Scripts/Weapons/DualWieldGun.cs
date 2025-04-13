@@ -14,9 +14,9 @@ public class DualWieldGun : Gun
     private Gun gunR;
     private Gun gunL;    
 
-    public new int MagAmmo => gunR.MagAmmo + gunL.MagAmmo;
-
-    public override bool CanFire => gunR.CanFire || gunL.CanFire;
+    public new int MagAmmo => gunR.MagAmmo + gunL.MagAmmo;   
+    
+    public new bool CanFire => gunR.CanFire && gunL.CanFire;
 
     public DualWieldGun Initialize(Gun GunR, Gun GunL)
     {
@@ -40,6 +40,8 @@ public class DualWieldGun : Gun
     {
         gunR.Fire();
         gunL.Fire();
+
+        StartCoroutine(ShootDelay());
     }
 
     public void Fire(WhichGun whichGun)
@@ -52,6 +54,8 @@ public class DualWieldGun : Gun
         {
             gunR.Fire();
         }
+
+        StartCoroutine(ShootDelay());
     }
 
     public override void Reload()
