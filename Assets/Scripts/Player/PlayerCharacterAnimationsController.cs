@@ -2,7 +2,8 @@ using UnityEngine;
 
 public abstract class PlayerCharacterAnimationsController : PlayerCharacterCombatController
 {
-    
+    [Space]
+    [Header("Combat")]
     [SerializeField] private Animator playerAnimator;
 
     private readonly int CurrentSpeed = Animator.StringToHash("CurrentSpeed");
@@ -15,6 +16,7 @@ public abstract class PlayerCharacterAnimationsController : PlayerCharacterComba
     private readonly int GunAmmo = Animator.StringToHash("Gun Ammo");
     private readonly int ToggleAttack = Animator.StringToHash("ToggleAttack");
 
+    private bool toggleFire = false;
 
     protected void HandleLocomotion()
     {
@@ -36,11 +38,47 @@ public abstract class PlayerCharacterAnimationsController : PlayerCharacterComba
     protected void UseWeapon()
     {
         if (equippedWeapon is Gun equippedGun && !equippedGun.CanFire) return;
-        
+
+        if (equippedWeapon is DualWieldGun equippedGuns)
+        {
+            ToggleDualWieldFire(equippedGuns);
+            return;
+        }
+
         playerAnimator.SetTrigger(UseWeaponTrigger);            
 
         if(weaponSelected == PlayerWeapon.Crowbar) HandleToggleAttackAnimation();
-    }        
+    }
+
+    protected override void UseWeaponGadget()
+    {        
+        if (equippedWeapon is DualWieldGun equippedGuns && equippedGuns.CanFire)
+        {
+            playerAnimator.SetTrigger(ShootL);
+            playerAnimator.SetTrigger(ShootR);
+        }
+            
+        else
+            base.UseWeaponGadget();
+    }
+
+    private void ToggleDualWieldFire(DualWieldGun equippedGuns)
+    {
+        if (toggleFire == false)
+        {
+            if(!equippedGuns.GetGun(WhichGun.GunL).CanFire) return;
+
+            playerAnimator.SetTrigger(ShootL);
+            toggleFire = true;
+        }
+        else
+        {
+            if (!equippedGuns.GetGun(WhichGun.GunR).CanFire) return;
+
+            playerAnimator.SetTrigger(ShootR);
+            toggleFire = false;
+        }
+    }
 
     protected override void Reload()
     {
