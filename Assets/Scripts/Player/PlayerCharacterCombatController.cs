@@ -143,7 +143,7 @@ public abstract class PlayerCharacterCombatController : PlayerCharacterMovementC
         onReload?.Invoke(weaponSelected);        
     }    
 
-    protected void UseWeaponGadget()
+    protected virtual void UseWeaponGadget()
     {
         equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();
     }        
