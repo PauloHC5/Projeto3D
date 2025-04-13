@@ -83,12 +83,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         }        
 
         animator.SetLayerWeight(layerIndex, 0f);        
-    }    
-
-    private void SetPlayerState(PlayerCombatStates state)
-    {
-        playerCharacter.PlayerCombatStates = state;
-    }
+    }        
     
 
     private void HandleDualWieldState(DualWieldGun equippedGuns, Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
