@@ -41,7 +41,7 @@ public class Gun : Weapon
     public int MagAmmo { get => magAmmo; }    
     public int MaxAmmo => maxAmmo;
 
-    public virtual bool CanFire => canFire;
+    public bool CanFire => canFire;
 
 
     private void Awake()
