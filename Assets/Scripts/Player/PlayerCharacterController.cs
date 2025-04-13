@@ -76,7 +76,8 @@ public class PlayerCharacterController : PlayerCharacterCombatController
     void Update()
     {
         HandleInput();
-        HandleMovement(playerMovementInput, playerLookInput);                        
+        HandleMovement(playerMovementInput, playerLookInput);
+        HandleLocomotion();
         ApplyGravity();
         HandleAmmo(playerWeaponAmmo[weaponSelected]);
 

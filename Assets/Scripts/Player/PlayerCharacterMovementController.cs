@@ -15,7 +15,7 @@ public enum PlayerMovementStates
     DEFAULT
 }
 
-public class PlayerCharacterMovementController : PlayerCharacterAnimationsController
+public abstract class PlayerCharacterMovementController : PlayerCharacter
 {    
     [Header("Movement")]
     [SerializeField] private float walkSpeed;
@@ -61,9 +61,10 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
     [SerializeField] private float swaySmoothRot = 12f;    
     private Vector3 swayEulerRot;
 
+    private float playerVelocityMagnitude;
     private float maxSpeed;
     private bool isGrounded;    
-    private bool hasAppliedCrouchImpulse = false;    
+    private bool hasAppliedCrouchImpulse = false;        
 
     private float standingHeight; // Default height of the character controller
     private float standingRadius; // Default radius of the character controller        
@@ -85,7 +86,10 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
         get { return playerCombatStates; }
         set { playerCombatStates = value; }
     }
-    
+
+    public float PlayerVelocityMagnitude => playerVelocityMagnitude;
+    public float PlayerMaxSpeed => maxSpeed;
+
     protected void IntializeMovement()
     {
         maxSpeed = walkSpeed;
@@ -139,14 +143,16 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
 
         MoveCharacter(movementVelocity, gravityVelocity);
 
+        playerVelocityMagnitude = characterController.velocity.magnitude;
+
         Sway(playerLookInput);
         SwayRotation(playerLookInput);
-        CompositePoitionRotation();
+        CompositePoitionRotation();        
 
-        float speed = characterController.velocity.magnitude;
-        base.HandleLocomotion(speed, maxSpeed);    
+        //float speed = characterController.velocity.magnitude;
+        //base.HandleLocomotion(speed, maxSpeed);    
 
-        if(playerMovementStates == PlayerMovementStates.GETTINGUP && IsObstacleAbove())
+        if (playerMovementStates == PlayerMovementStates.GETTINGUP && IsObstacleAbove())
         {
             isCrouching = true;
 
@@ -158,7 +164,7 @@ public class PlayerCharacterMovementController : PlayerCharacterAnimationsContro
 
             crouchingRoutine = CrouchingRoutine();
             StartCoroutine(crouchingRoutine);            
-        }
+        }                
     }    
 
     private void Sway(Vector2 lookInput) // x and y change as a result of moving the mouse

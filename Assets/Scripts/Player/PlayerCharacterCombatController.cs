@@ -21,7 +21,7 @@ public enum PlayerCombatStates
     DEFAULT
 }
 
-public class PlayerCharacterCombatController : PlayerCharacterMovementController
+public abstract class PlayerCharacterCombatController : PlayerCharacterAnimationsController
 {
     [Space]
     [Header("Combat")]

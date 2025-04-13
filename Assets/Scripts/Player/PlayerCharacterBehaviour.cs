@@ -6,9 +6,7 @@ using UnityEngine;
 public class PlayerCharacterBehaviour : StateMachineBehaviour
 {
     private static PlayerCharacterController playerCharacter;
-    private Gun equippedGun;        
-
-    private readonly int ToggleAttack = Animator.StringToHash("ToggleAttack");    
+    private Gun equippedGun;                
 
     private const int FireLeftHandLayer = 1;
     private const int FireRightHandLayer = 2;
@@ -52,8 +50,12 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 animator.SetLayerWeight(FireLeftHandLayer, 0f);
                 animator.SetLayerWeight(FireRightHandLayer, 0f);
                 break;
-            case PlayerCombatStates.ATTACKING:
-                HandleAttackState(animator);
+            case PlayerCombatStates.ATTACKING:                
+                Crowbar crowbar = playerCharacter.EquippedWeapon as Crowbar;
+                if (crowbar != null)
+                {
+                    crowbar.EnableCollision();
+                }
                 break;
             case PlayerCombatStates.FIRING:
                 equippedGun.Fire();
@@ -87,20 +89,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     {
         playerCharacter.PlayerCombatStates = state;
     }
-
-    private void HandleAttackState(Animator animator)
-    {        
-        SetPlayerState(PlayerCombatStates.ATTACKING);
-        var toggleAttack = animator.GetInteger(ToggleAttack) + 1;
-        if (toggleAttack > 3) toggleAttack = 1;
-        animator.SetInteger(ToggleAttack, toggleAttack);
-
-        Crowbar crowbar = playerCharacter.EquippedWeapon as Crowbar;
-        if (crowbar != null)
-        {
-            crowbar.EnableCollision();
-        }
-    }
+    
 
     private void HandleDualWieldState(DualWieldGun equippedGuns, Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

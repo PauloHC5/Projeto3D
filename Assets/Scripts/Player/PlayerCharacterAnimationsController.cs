@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerCharacterAnimationsController : MonoBehaviour
+public abstract class PlayerCharacterAnimationsController : PlayerCharacterMovementController
 {
     
     [SerializeField] private Animator playerAnimator;
@@ -12,15 +12,16 @@ public class PlayerCharacterAnimationsController : MonoBehaviour
     private readonly int ReloadTrigger = Animator.StringToHash("Reload");
     private readonly int ShootR = Animator.StringToHash("ShootR");
     private readonly int ShootL = Animator.StringToHash("ShootL");    
-    private readonly int GunAmmo = Animator.StringToHash("Gun Ammo");    
+    private readonly int GunAmmo = Animator.StringToHash("Gun Ammo");
+    private readonly int ToggleAttack = Animator.StringToHash("ToggleAttack");
 
 
-    public void HandleLocomotion(float speed, float maxSpeed)
+    protected void HandleLocomotion()
     {
-        playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(speed, 0f, maxSpeed));        
+        playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(PlayerVelocityMagnitude, 0f, PlayerMaxSpeed));        
     }
 
-    public void HandleAmmo(int ammo)
+    protected void HandleAmmo(int ammo)
     {
         playerAnimator.SetInteger(GunAmmo, ammo);
     }
@@ -39,5 +40,12 @@ public class PlayerCharacterAnimationsController : MonoBehaviour
     protected void PlayReload()
     {                
         playerAnimator.SetTrigger(ReloadTrigger);        
+    }
+
+    private void HandleToggleAttackAnimation()
+    {        
+        var toggleAttack = playerAnimator.GetInteger(ToggleAttack) + 1;
+        if (toggleAttack > 3) toggleAttack = 1;
+        playerAnimator.SetInteger(ToggleAttack, toggleAttack);
     }
 }
