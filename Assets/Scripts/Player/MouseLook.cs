@@ -9,7 +9,7 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 100f;
     [SerializeField] private Transform player;
     [SerializeField] private Transform playerMesh;
-    [SerializeField] private Transform cameraRot;
+    [SerializeField] private Transform cameraRot;    
 
     private Camera[] playerCameras;
         
@@ -57,7 +57,7 @@ public class MouseLook : MonoBehaviour
         {
             player.Rotate(Vector3.up * MouseInput.x * mouseSensitivity * Time.deltaTime);
             playerMesh.localRotation = Quaternion.Euler(xRotation + 5f, playerMesh.localRotation.y, playerMesh.localRotation.z);
-            transform.position = cameraRot.position;
+            //transform.position = cameraRot.position;
         }        
     }
 

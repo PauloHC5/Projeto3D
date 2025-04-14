@@ -87,6 +87,8 @@ public abstract class PlayerCharacterMovementController : PlayerCharacter
         set { playerCombatStates = value; }
     }
 
+    public PlayerMovementStates PlayerMovementStates => playerMovementStates;    
+
     public float PlayerVelocityMagnitude => playerVelocityMagnitude;
     public float PlayerMaxSpeed => maxSpeed;
 
