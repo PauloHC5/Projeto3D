@@ -15,7 +15,7 @@ public enum PlayerMovementStates
     DEFAULT
 }
 
-public abstract class PlayerCharacterMovementController : PlayerCharacter
+public abstract class PlayerCharacterMovementController : MonoBehaviour
 {    
     [Header("Movement")]
     [SerializeField] private float walkSpeed;
@@ -92,7 +92,12 @@ public abstract class PlayerCharacterMovementController : PlayerCharacter
     public float PlayerVelocityMagnitude => playerVelocityMagnitude;
     public float PlayerMaxSpeed => maxSpeed;
 
-    protected void IntializeMovement()
+    private void Awake()
+    {
+        IntializeMovement();
+    }
+
+    private void IntializeMovement()
     {
         maxSpeed = walkSpeed;
         standingHeight = characterController.height;
@@ -103,7 +108,12 @@ public abstract class PlayerCharacterMovementController : PlayerCharacter
         playerMovementStates = PlayerMovementStates.DEFAULT;        
     }
 
-    protected void HandleMovement(Vector3 playerMovementInput, Vector2 playerLookInput)
+    private void Update()
+    {
+        ApplyGravity();
+    }
+
+    public void HandleMovement(Vector3 playerMovementInput, Vector2 playerLookInput)
     {
         isGrounded = CheckIfGrounded();
 

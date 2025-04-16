@@ -33,7 +33,7 @@ public class DualWieldGun : Gun
 
     public new WeaponSocket GetSocketToAttach(WhichGun whichGun)
     {
-        return whichGun == WhichGun.GunR ? WeaponSocket.RightHand : WeaponSocket.LeftHand;
+        return whichGun == WhichGun.GunR ? WeaponSocket.RightHandSocket : WeaponSocket.LeftHandSocket;
     }
 
     public override void Fire()

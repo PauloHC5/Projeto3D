@@ -14,14 +14,7 @@ public enum PlayerWeapon
     Crossbow = 4
 }
 
-public enum WeaponSocket
-{
-    RightHand,
-    LeftHand,
-    Back
-}
-
-public class PlayerCharacterController : PlayerCharacterAnimationsController
+public class PlayerCharacterController : MonoBehaviour
 {                             
     protected bool lmbPressed = false;
     protected bool rmbPressed = false;                       
@@ -34,11 +27,15 @@ public class PlayerCharacterController : PlayerCharacterAnimationsController
     private Vector2 playerMovementInput;
     private Vector2 playerLookInput;
 
-    private new void Awake()
+    private PlayerCharacterMovementController playerCharacterMovementController;
+    private PlayerCharacterCombatController playerCharacterCombatController;
+
+    private void Awake()
     {
-        InitializePlayerControls();
-        IntializeMovement();
-        base.Awake();
+        InitializePlayerControls();                
+
+        playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
+        playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
     }
 
     private void InitializePlayerControls()
@@ -66,23 +63,14 @@ public class PlayerCharacterController : PlayerCharacterAnimationsController
         // Assign the HandleMouseScroll method to the respective input actions
         playerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };
         playerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };        
-    }    
-
-    private void Start()
-    {
-        SwitchToWeapon(weaponSelected);        
-    }
+    }        
 
     void Update()
     {
         HandleInput();
-        HandleMovement(playerMovementInput, playerLookInput);
-        HandleLocomotion();
-        ApplyGravity();
-        HandleAmmo(playerWeaponAmmo[weaponSelected]);
-
-        // if k button is pressed, add 3 to playerWeaponAmmo[weaponSelected]
-        if (Keyboard.current.kKey.wasPressedThisFrame) playerWeaponAmmo[weaponSelected] += 3;        
+        playerCharacterMovementController.HandleMovement(playerMovementInput, playerLookInput);
+        //HandleLocomotion();        
+        //HandleAmmo(playerWeaponAmmo[weaponSelected]);        
     }
 
     private void HandleMouseScroll()
@@ -94,7 +82,7 @@ public class PlayerCharacterController : PlayerCharacterAnimationsController
          * This will allow the player to cycle through the weapons
          * For example, if the player has the Crossbow equipped and scrolls down, the new weapon index will be 0 (Crowbar)
          * If the player has the Crowbar equipped and scrolls up, the new weapon index will be 4 (Crossbow) */        
-        int newWeaponIndex = ((int)weaponSelected + MouseScroll + weaponCount) % weaponCount;
+        int newWeaponIndex = ((int)playerCharacterCombatController.WeaponSelected + MouseScroll + weaponCount) % weaponCount;
         
         SwitchToWeapon((PlayerWeapon)newWeaponIndex);
     }

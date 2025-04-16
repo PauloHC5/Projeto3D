@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using UnityEngine.InputSystem;
 
 [Serializable]
 public struct WeaponAmmoPair
@@ -21,18 +22,20 @@ public enum PlayerCombatStates
     DEFAULT
 }
 
-public abstract class PlayerCharacterCombatController : PlayerCharacterMovementController
+public enum WeaponSocket
+{
+    RightHandSocket,
+    LeftHandSocket    
+}
+
+public abstract class PlayerCharacterCombatController : MonoBehaviour
 {
     [Space]
     [Header("Combat")]
-    [SerializeField] protected PlayerWeapon weaponSelected;
-    public PlayerWeapon WeaponSelected => weaponSelected;
-
-    [SerializeField] protected Weapon[] weapons = new Weapon[5];    
-
-    protected Weapon equippedWeapon;
-    public Weapon EquippedWeapon => equippedWeapon;
-
+    [SerializeField] private PlayerWeapon weaponSelected;    
+    [SerializeField] private Weapon[] weapons = new Weapon[5];
+    [SerializeField] private Transform rightHandSocket, leftHandSocket;    
+   
     [SerializeField]
     private List<WeaponAmmoPair> weaponAmmoList = new List<WeaponAmmoPair>
     {
@@ -43,7 +46,12 @@ public abstract class PlayerCharacterCombatController : PlayerCharacterMovementC
         new WeaponAmmoPair { weapon = PlayerWeapon.Crossbow, ammo = 150 }
     };
 
+    protected Weapon equippedWeapon;
     protected Dictionary<PlayerWeapon, Int32> playerWeaponAmmo;
+    
+
+    public PlayerWeapon WeaponSelected => weaponSelected;
+    public Weapon EquippedWeapon => equippedWeapon;
     public Dictionary<PlayerWeapon, Int32> WeaponAmmo
     {
         get => playerWeaponAmmo;
@@ -63,13 +71,30 @@ public abstract class PlayerCharacterCombatController : PlayerCharacterMovementC
     public static event Action<PlayerWeapon> onReload;
 
     protected void Awake()
-    {
+    {        
         InitializeWeapons();
         InitializeWeaponAmmo();        
     }
 
+    private void Start()
+    {
+        SwitchToWeapon(weaponSelected);
+    }
+
+    private void Update()
+    {
+        // if k button is pressed, add 3 to playerWeaponAmmo[weaponSelected]
+        if (Keyboard.current.kKey.wasPressedThisFrame) playerWeaponAmmo[weaponSelected] += 3;
+    }
+
     private void InitializeWeapons()
-    {        
+    {
+        if (rightHandSocket == null || leftHandSocket == null)
+        {
+            Debug.LogError("Right hand socket or left hand socket is not set.");
+            return;
+        }
+
         // Fill the weapons array with the weapons
         for (int i = 0; i < weapons.Length; i++)
         {
@@ -82,7 +107,7 @@ public abstract class PlayerCharacterCombatController : PlayerCharacterMovementC
                 continue; // Skip the rest of the loop
             }
             // Get the socket to attach the weapon
-            Transform socketToAttach = playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(Component => Component.gameObject.tag.Equals(weaponToSpawn.GetSocketToAttach.ToString()));
+            Transform socketToAttach = GetSocketTransform(weaponToSpawn.GetSocketToAttach);
 
             // Instantiate the weapon and set it as inactive
             weapons[i] = Instantiate(weaponToSpawn, socketToAttach);
@@ -133,9 +158,9 @@ public abstract class PlayerCharacterCombatController : PlayerCharacterMovementC
 
     
 
-    private Transform GetSocketTransform(WeaponSocket socket)
+    private Transform GetSocketTransform(WeaponSocket weaponSocketToAttach)
     {
-        return playerMesh.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.gameObject.CompareTag(socket.ToString()));
+        return weaponSocketToAttach == WeaponSocket.RightHandSocket ? rightHandSocket : leftHandSocket;
     }    
 
     protected virtual void Reload()
