@@ -169,7 +169,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void UseWeapon()
     {
-        if (equippedWeapon is Gun equippedGun && !equippedGun.CanFire) return;
+        if (equippedWeapon is not Gun equippedGun || !equippedGun.CanFire) return;
 
         playerAnimator.PlayeUseWeapon(equippedWeapon);
     }    
@@ -180,13 +180,23 @@ public class PlayerCharacterCombatController : MonoBehaviour
     }    
 
     public void Reload()
-    {
+    {        
+        if (equippedWeapon is not Gun equippedGun || !CanReload(equippedGun)) return;
+
         playerAnimator.PlayReload();
-        onReload?.Invoke(weaponSelected);        
-    }    
+        onReload?.Invoke(weaponSelected);
+    }
 
     public void UseWeaponGadget()
-    {
+    {        
+        if (equippedWeapon is DualWieldGun equippedGuns)
+        {
+            if (!equippedGuns.CanFire) return;
+
+            playerAnimator.PlayFireBothGuns(equippedGuns);
+            return;
+        }
+
         equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();
     }        
 

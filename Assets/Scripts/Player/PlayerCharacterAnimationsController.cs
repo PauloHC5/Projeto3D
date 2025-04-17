@@ -45,7 +45,13 @@ public class PlayerCharacterAnimationsController : MonoBehaviour
         playerAnimator.SetTrigger(UseWeaponTrigger);            
 
         if(equippedWeapon.WeaponType == PlayerWeapon.Crowbar) HandleToggleAttackAnimation();
-    }        
+    }
+
+    public void PlayFireBothGuns(DualWieldGun dualWieldGun)
+    {        
+        playerAnimator.SetTrigger(ShootL);
+        playerAnimator.SetTrigger(ShootR);                    
+    }
 
     private void ToggleDualWieldFire(DualWieldGun equippedGuns)
     {
