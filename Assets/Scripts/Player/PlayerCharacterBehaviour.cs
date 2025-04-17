@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerCharacterBehaviour : StateMachineBehaviour
 {
-    private static PlayerCharacterController playerCharacter;
+    private static PlayerCharacterCombatController playerCharacterCombatController;
     private Gun equippedGun;                
 
     private const int FireLeftHandLayer = 1;
@@ -24,34 +24,34 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (playerCharacter == null)
+        if (playerCharacterCombatController == null)
         {            
-            playerCharacter = animator.GetComponentInParent<PlayerCharacterController>();
+            playerCharacterCombatController = animator.GetComponentInParent<PlayerCharacterCombatController>();
         }                
 
         PlayerCombatStates newCombatState = FindCombatState(stateInfo);
 
         // Condition to prevent state change to default when one of the shoot layers is active
-        if (playerCharacter.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING && newCombatState == PlayerCombatStates.DEFAULT)
+        if (playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING && newCombatState == PlayerCombatStates.DEFAULT)
         {
             // Check if one of the shoot layers is active by checking its weight
             if (animator.GetLayerWeight(FireLeftHandLayer) != 0f || animator.GetLayerWeight(FireRightHandLayer) != 0f) 
                 return; // Prevent state change to default if both shoot layers are active
         }
 
-        playerCharacter.PlayerCombatStates = newCombatState;
+        playerCharacterCombatController.PlayerCombatStates = newCombatState;
 
-        equippedGun = playerCharacter.EquippedWeapon as Gun;
+        equippedGun = playerCharacterCombatController.EquippedWeapon as Gun;
         DualWieldGun equippedGuns = equippedGun as DualWieldGun;                                
                 
-        switch (playerCharacter.PlayerCombatStates)
+        switch (playerCharacterCombatController.PlayerCombatStates)
         {
             case PlayerCombatStates.RAISING:
                 animator.SetLayerWeight(FireLeftHandLayer, 0f);
                 animator.SetLayerWeight(FireRightHandLayer, 0f);
                 break;
             case PlayerCombatStates.ATTACKING:                
-                Crowbar crowbar = playerCharacter.EquippedWeapon as Crowbar;
+                Crowbar crowbar = playerCharacterCombatController.EquippedWeapon as Crowbar;
                 if (crowbar != null)
                 {
                     crowbar.EnableCollision();
@@ -77,7 +77,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {                
-        if (playerCharacter && playerCharacter.PlayerCombatStates == PlayerCombatStates.ATTACKING)
+        if (playerCharacterCombatController && playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING)
         {
             DisableCrowbarCollision();            
         }        
@@ -108,7 +108,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
 
     private void DisableCrowbarCollision()
     {
-        Crowbar crowbar = playerCharacter.EquippedWeapon as Crowbar;
+        Crowbar crowbar = playerCharacterCombatController.EquippedWeapon as Crowbar;
         if (crowbar != null)
         {
             crowbar.DisableCollision();

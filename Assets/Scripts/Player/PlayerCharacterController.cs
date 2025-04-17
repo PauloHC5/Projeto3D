@@ -29,6 +29,7 @@ public class PlayerCharacterController : MonoBehaviour
 
     private PlayerCharacterMovementController playerCharacterMovementController;
     private PlayerCharacterCombatController playerCharacterCombatController;
+    private PlayerCharacterAnimationsController playerCharacterAnimationsController;
 
     private void Awake()
     {
@@ -36,6 +37,7 @@ public class PlayerCharacterController : MonoBehaviour
 
         playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
         playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
+        playerCharacterAnimationsController = GetComponent<PlayerCharacterAnimationsController>();
     }
 
     private void InitializePlayerControls()
@@ -49,8 +51,8 @@ public class PlayerCharacterController : MonoBehaviour
         playerControls.Player.SecondaryAction.canceled += ctx => rmbPressed = false;
 
         playerControls.Player.SecondaryAction.performed += ctx => PerformSecondaryAction();
-        playerControls.Player.Jump.performed += ctx => Jump();
-        playerControls.Player.Reload.performed += ctx => Reload();
+        playerControls.Player.Jump.performed += ctx => PerformJump();
+        playerControls.Player.Reload.performed += ctx => PerformReload();
         playerControls.Player.Crouch.performed += ctx => Crouch();
 
         // Assign the SwitchToWeapon method to the respective input action
@@ -69,8 +71,7 @@ public class PlayerCharacterController : MonoBehaviour
     {
         HandleInput();
         playerCharacterMovementController.HandleMovement(playerMovementInput, playerLookInput);
-        //HandleLocomotion();        
-        //HandleAmmo(playerWeaponAmmo[weaponSelected]);        
+        playerCharacterAnimationsController.HandleAmmo(playerCharacterCombatController.WeaponAmmo[playerCharacterCombatController.WeaponSelected]);        
     }
 
     private void HandleMouseScroll()
@@ -90,48 +91,49 @@ public class PlayerCharacterController : MonoBehaviour
     private void HandleInput()
     {
         if (lmbPressed) PerformPrimaryAction();
-        if (rmbPressed && weaponSelected == PlayerWeapon.Shotgun) PerformSecondaryAction();
+        if (rmbPressed && playerCharacterCombatController.WeaponSelected == PlayerWeapon.Shotgun) PerformSecondaryAction();
 
         //playerMovementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         playerMovementInput = playerControls.Player.Move.ReadValue<Vector2>();
         playerLookInput = playerControls.Player.Look.ReadValue<Vector2>();
     }
 
-    protected override void SwitchToWeapon(PlayerWeapon weapon)
+    private void SwitchToWeapon(PlayerWeapon weapon)
     {
-        if (lmbPressed || playerCombatStates == PlayerCombatStates.ATTACKING || (weapon == weaponSelected && weapon != PlayerWeapon.Crowbar)) return;        
+        if (lmbPressed || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING || (weapon == playerCharacterCombatController.WeaponSelected && weapon != PlayerWeapon.Crowbar)) return;        
 
-        base.SwitchToWeapon(weapon);
+        playerCharacterCombatController.SwitchToWeapon(weapon);
     }           
 
-    protected void PerformPrimaryAction()
+    private void PerformPrimaryAction()
     {
-        if (playerCombatStates == PlayerCombatStates.RELOADING || playerCombatStates == PlayerCombatStates.ATTACKING || playerCombatStates == PlayerCombatStates.RAISING) return;                
+        if (playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RAISING) return;                
 
-        UseWeapon();
+        playerCharacterCombatController.UseWeapon();
     }    
 
-    protected void PerformSecondaryAction()
+    private void PerformSecondaryAction()
     {
-        if (playerCombatStates == PlayerCombatStates.RAISING || playerCombatStates ==  PlayerCombatStates.RELOADING) return;
+        if (playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RAISING || playerCharacterCombatController.PlayerCombatStates ==  PlayerCombatStates.RELOADING) return;
 
-        UseWeaponGadget();
+        playerCharacterCombatController.UseWeaponGadget();
     }
 
-    protected override void Reload()
+    private void PerformReload()
     {
-        if(weaponSelected == PlayerWeapon.Crowbar || playerCombatStates == PlayerCombatStates.RELOADING) return;
-        base.Reload();
+        if(playerCharacterCombatController.WeaponSelected == PlayerWeapon.Crowbar || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING) return;
+        
+        playerCharacterCombatController.Reload();
     }
 
-    protected override void Jump()
-    {        
-        base.Jump();
+    private void PerformJump()
+    {
+        playerCharacterMovementController.Jump();
     }
 
-    protected override void Crouch()
+    private void Crouch()
     {
-        base.Crouch();
+        playerCharacterMovementController.Crouch();
     }
 
     private void OnEnable()

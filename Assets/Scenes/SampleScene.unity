@@ -3587,6 +3587,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Character Controller Movement
       objectReference: {fileID: 0}
+    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: walkSpeed
+      value: 2.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 1399683897}
+    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
+        type: 3}
+      propertyPath: characterController
+      value: 
+      objectReference: {fileID: 1456560298}
     - target: {fileID: 8022638480331752055, guid: 15a079b9ae71c83418ed5d26443361d9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8694,6 +8709,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1379475011}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1399683897 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5241768735091827890, guid: 15a079b9ae71c83418ed5d26443361d9,
+    type: 3}
+  m_PrefabInstance: {fileID: 757169393}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1432534407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8898,6 +8919,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 281332592}
   m_SourcePrefab: {fileID: 100100000, guid: 40c4f0e250b87e24688de5425628cb9b, type: 3}
+--- !u!143 &1456560298 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 1690414651061201987, guid: 15a079b9ae71c83418ed5d26443361d9,
+    type: 3}
+  m_PrefabInstance: {fileID: 757169393}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1460949777 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7993119983977949264, guid: 40c4f0e250b87e24688de5425628cb9b,

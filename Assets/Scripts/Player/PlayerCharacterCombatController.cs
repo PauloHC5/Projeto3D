@@ -28,7 +28,7 @@ public enum WeaponSocket
     LeftHandSocket    
 }
 
-public abstract class PlayerCharacterCombatController : MonoBehaviour
+public class PlayerCharacterCombatController : MonoBehaviour
 {
     [Space]
     [Header("Combat")]
@@ -46,9 +46,11 @@ public abstract class PlayerCharacterCombatController : MonoBehaviour
         new WeaponAmmoPair { weapon = PlayerWeapon.Crossbow, ammo = 150 }
     };
 
-    protected Weapon equippedWeapon;
-    protected Dictionary<PlayerWeapon, Int32> playerWeaponAmmo;
-    
+    private Weapon equippedWeapon;
+    private Dictionary<PlayerWeapon, Int32> playerWeaponAmmo;
+    private PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
+    private PlayerCharacterAnimationsController playerAnimator;
+
 
     public PlayerWeapon WeaponSelected => weaponSelected;
     public Weapon EquippedWeapon => equippedWeapon;
@@ -66,12 +68,19 @@ public abstract class PlayerCharacterCombatController : MonoBehaviour
             }
         }
     }
+    public PlayerCombatStates PlayerCombatStates
+    {
+        get { return playerCombatStates; }
+        set { playerCombatStates = value; }
+    }
 
     public static event Action<PlayerWeapon> onSwitchToWeapon;
     public static event Action<PlayerWeapon> onReload;
 
-    protected void Awake()
-    {        
+    private void Awake()
+    {
+        playerAnimator = GetComponent<PlayerCharacterAnimationsController>();
+
         InitializeWeapons();
         InitializeWeaponAmmo();        
     }
@@ -138,7 +147,7 @@ public abstract class PlayerCharacterCombatController : MonoBehaviour
         playerWeaponAmmo = weaponAmmoList.ToDictionary(pair => pair.weapon, pair => pair.ammo);
     }        
 
-    protected virtual void SwitchToWeapon(PlayerWeapon weapon)
+    public virtual void SwitchToWeapon(PlayerWeapon weapon)
     {
         // If there is an active weapon, disable it
         if (equippedWeapon) equippedWeapon.gameObject.SetActive(false);
@@ -152,28 +161,36 @@ public abstract class PlayerCharacterCombatController : MonoBehaviour
 
         // Reset the weapon position
         if (equippedWeapon) equippedWeapon.transform.localPosition = Vector3.zero;
-        
+
+        playerAnimator.PlaySwitchToWeapon(weaponSelected); // Play the switch to weapon animation
+
         onSwitchToWeapon?.Invoke(weaponSelected);
     }
 
-    
+    public void UseWeapon()
+    {
+        if (equippedWeapon is Gun equippedGun && !equippedGun.CanFire) return;
+
+        playerAnimator.PlayeUseWeapon(equippedWeapon);
+    }    
 
     private Transform GetSocketTransform(WeaponSocket weaponSocketToAttach)
     {
         return weaponSocketToAttach == WeaponSocket.RightHandSocket ? rightHandSocket : leftHandSocket;
     }    
 
-    protected virtual void Reload()
+    public void Reload()
     {
+        playerAnimator.PlayReload();
         onReload?.Invoke(weaponSelected);        
     }    
 
-    protected virtual void UseWeaponGadget()
+    public void UseWeaponGadget()
     {
         equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();
     }        
 
-    protected bool CanReload(Gun equippedGun)
+    private bool CanReload(Gun equippedGun)
     {
         if(equippedGun is DualWieldGun equippedGuns)
         {

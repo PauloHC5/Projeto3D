@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class PlayerCharacter : MonoBehaviour
+public class PlayerCharacter : MonoBehaviour
 {
     [SerializeField] private int Health = 100;
 }

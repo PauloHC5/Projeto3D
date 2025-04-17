@@ -21,7 +21,7 @@ public class HUD : MonoBehaviour
 
     private void UpdateAmmoDisplay()
     {
-        var player = GameManager.Instance.Player;
+        PlayerCharacterCombatController player = GameManager.Instance.Player.GetComponent<PlayerCharacterCombatController>();
         var equippedGun = player.EquippedWeapon as Gun;
         var dualWieldGun = player.EquippedWeapon as DualWieldGun;
         var weaponSelected = player.WeaponSelected;

@@ -14,13 +14,13 @@ public class CameraHeadbob : MonoBehaviour
 
     [SerializeField] private Transform armsHeadbob;
 
-    private PlayerCharacterController playerCharacterController;    
+    private PlayerCharacterMovementController playerCharacterMovementController;    
     private Vector3 originalPosition;
     private float originalFrequency;
 
     private void Awake()
     {
-        playerCharacterController = GetComponentInParent<PlayerCharacterController>();
+        playerCharacterMovementController = GetComponentInParent<PlayerCharacterMovementController>();
         originalFrequency = Frequency;
     }
 
@@ -34,14 +34,14 @@ public class CameraHeadbob : MonoBehaviour
     {
         CheckForHeadbobTrigger();
 
-        if (playerCharacterController.PlayerMovementStates == PlayerMovementStates.CROUCH || playerCharacterController.PlayerMovementStates == PlayerMovementStates.CROUCHING)
+        if (playerCharacterMovementController.PlayerMovementStates == PlayerMovementStates.CROUCH || playerCharacterMovementController.PlayerMovementStates == PlayerMovementStates.CROUCHING)
             Frequency /= 2f;
         else Frequency = originalFrequency;
     }    
 
     private void CheckForHeadbobTrigger()
     {
-        float inputMagnitude = playerCharacterController.PlayerVelocityMagnitude;        
+        float inputMagnitude = playerCharacterMovementController.PlayerVelocityMagnitude;        
 
         if (inputMagnitude > 0f)
         {

@@ -15,7 +15,7 @@ public enum PlayerMovementStates
     DEFAULT
 }
 
-public abstract class PlayerCharacterMovementController : MonoBehaviour
+public class PlayerCharacterMovementController : MonoBehaviour
 {    
     [Header("Movement")]
     [SerializeField] private float walkSpeed;
@@ -64,7 +64,8 @@ public abstract class PlayerCharacterMovementController : MonoBehaviour
     private float playerVelocityMagnitude;
     private float maxSpeed;
     private bool isGrounded;    
-    private bool hasAppliedCrouchImpulse = false;        
+    private bool hasAppliedCrouchImpulse = false;
+    private PlayerCharacterAnimationsController animationsController;
 
     private float standingHeight; // Default height of the character controller
     private float standingRadius; // Default radius of the character controller        
@@ -78,14 +79,7 @@ public abstract class PlayerCharacterMovementController : MonoBehaviour
     private Vector3 gravityVelocity; // New field for gravity velocity    
     private float decelerationTime = 0f; // New field to track deceleration time
 
-    private PlayerMovementStates playerMovementStates = PlayerMovementStates.DEFAULT;
-    protected PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
-    
-    public PlayerCombatStates PlayerCombatStates
-    {
-        get { return playerCombatStates; }
-        set { playerCombatStates = value; }
-    }
+    private PlayerMovementStates playerMovementStates = PlayerMovementStates.DEFAULT;    
 
     public PlayerMovementStates PlayerMovementStates => playerMovementStates;    
 
@@ -105,7 +99,9 @@ public abstract class PlayerCharacterMovementController : MonoBehaviour
         standingCameraPos = cameraPos.position;        
         standingMeshRootPos = playerMeshRoot.transform.position;
         standingGroundCheckPos = groundCheck.localPosition;
-        playerMovementStates = PlayerMovementStates.DEFAULT;        
+        playerMovementStates = PlayerMovementStates.DEFAULT;     
+        characterController = GetComponent<CharacterController>();
+        animationsController = GetComponent<PlayerCharacterAnimationsController>();
     }
 
     private void Update()
@@ -161,8 +157,8 @@ public abstract class PlayerCharacterMovementController : MonoBehaviour
         SwayRotation(playerLookInput);
         CompositePoitionRotation();        
 
-        //float speed = characterController.velocity.magnitude;
-        //base.HandleLocomotion(speed, maxSpeed);    
+        float speed = characterController.velocity.magnitude;
+        animationsController.HandleLocomotion(speed, maxSpeed);        
 
         if (playerMovementStates == PlayerMovementStates.GETTINGUP && IsObstacleAbove())
         {
@@ -213,14 +209,14 @@ public abstract class PlayerCharacterMovementController : MonoBehaviour
         playerMesh.transform.localRotation = Quaternion.Lerp(playerMesh.transform.localRotation, Quaternion.Euler(swayEulerRot), Time.deltaTime * swaySmoothRot);
     }
 
-    protected virtual void Jump()
+    public void Jump()
     {
         if (isCrouching && IsObstacleAbove()) return;
 
         if (isGrounded) gravityVelocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);        
     }
 
-    protected virtual void Crouch()
+    public void Crouch()
     {
         if (isCrouching && IsObstacleAbove()) return;
 

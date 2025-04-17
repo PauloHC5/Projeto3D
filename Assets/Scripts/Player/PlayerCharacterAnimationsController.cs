@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class PlayerCharacterAnimationsController : PlayerCharacterCombatController
+public class PlayerCharacterAnimationsController : MonoBehaviour
 {
     [Space]
     [Header("Combat")]
@@ -18,49 +18,34 @@ public abstract class PlayerCharacterAnimationsController : PlayerCharacterComba
 
     private bool toggleFire = false;
 
-    protected void HandleLocomotion()
+    public void HandleLocomotion(float playerVelocityMagnitude, float playerMaxSpeed)
     {
-        playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(PlayerVelocityMagnitude, 0f, PlayerMaxSpeed));        
+        playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(playerVelocityMagnitude, 0f, playerMaxSpeed));        
     }
 
-    protected void HandleAmmo(int ammo)
+    public void HandleAmmo(int ammo)
     {
         playerAnimator.SetInteger(GunAmmo, ammo);
     }
 
-    protected override void SwitchToWeapon(PlayerWeapon weapon)
-    {                                    
-        base.SwitchToWeapon(weapon);
+    public void PlaySwitchToWeapon(PlayerWeapon weapon)
+    {                                            
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
         playerAnimator.SetTrigger(RaiseWeaponTrigger);        
     }    
 
-    protected void UseWeapon()
+    public void PlayeUseWeapon(Weapon equippedWeapon)
     {
-        if (equippedWeapon is Gun equippedGun && !equippedGun.CanFire) return;
-
-        if (equippedWeapon is DualWieldGun equippedGuns)
+        if (equippedWeapon is DualWieldGun)
         {
-            ToggleDualWieldFire(equippedGuns);
+            ToggleDualWieldFire((DualWieldGun)equippedWeapon);
             return;
         }
 
         playerAnimator.SetTrigger(UseWeaponTrigger);            
 
-        if(weaponSelected == PlayerWeapon.Crowbar) HandleToggleAttackAnimation();
-    }
-
-    protected override void UseWeaponGadget()
-    {        
-        if (equippedWeapon is DualWieldGun equippedGuns && equippedGuns.CanFire)
-        {
-            playerAnimator.SetTrigger(ShootL);
-            playerAnimator.SetTrigger(ShootR);
-        }
-            
-        else
-            base.UseWeaponGadget();
-    }
+        if(equippedWeapon.WeaponType == PlayerWeapon.Crowbar) HandleToggleAttackAnimation();
+    }        
 
     private void ToggleDualWieldFire(DualWieldGun equippedGuns)
     {
@@ -80,12 +65,9 @@ public abstract class PlayerCharacterAnimationsController : PlayerCharacterComba
         }
     }
 
-    protected override void Reload()
+    public void PlayReload()
     {
-        if (equippedWeapon is Gun equippedGun && !CanReload(equippedGun)) return;
-
-        playerAnimator.SetTrigger(ReloadTrigger);
-        base.Reload();
+        playerAnimator.SetTrigger(ReloadTrigger);        
     }
 
     private void HandleToggleAttackAnimation()
