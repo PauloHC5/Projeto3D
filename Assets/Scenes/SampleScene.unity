@@ -3587,116 +3587,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Character Controller Movement
       objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: gravity
-      value: -5.86
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: jumpForce
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: walkSpeed
-      value: 2.48
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: swaySmooth
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: crouchSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: groundCheck
-      value: 
-      objectReference: {fileID: 1399683897}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: acceleration
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: crouchHeight
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: crouchRadius
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: crouchSmooth
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: deceleration
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: rotationStep
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: swaySmoothRot
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: crouchCameraPos
-      value: 0.85
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: maxRotationStep
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: DebugSpheresCheck
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: crouchMeshRootPos
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: groundCheckRadius
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: characterController
-      value: 
-      objectReference: {fileID: 1456560298}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: crouchGrundCheckPos
-      value: -0.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: obstacleDetectorRadius
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 5573212292333405970, guid: 15a079b9ae71c83418ed5d26443361d9,
-        type: 3}
-      propertyPath: obstacleDetectorPosition.y
-      value: 1.15
-      objectReference: {fileID: 0}
     - target: {fileID: 8022638480331752055, guid: 15a079b9ae71c83418ed5d26443361d9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3747,8 +3637,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7586776778822965348, guid: 15a079b9ae71c83418ed5d26443361d9, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -8805,12 +8694,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1379475011}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1399683897 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5241768735091827890, guid: 15a079b9ae71c83418ed5d26443361d9,
-    type: 3}
-  m_PrefabInstance: {fileID: 757169393}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1432534407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9015,12 +8898,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 281332592}
   m_SourcePrefab: {fileID: 100100000, guid: 40c4f0e250b87e24688de5425628cb9b, type: 3}
---- !u!143 &1456560298 stripped
-CharacterController:
-  m_CorrespondingSourceObject: {fileID: 1690414651061201987, guid: 15a079b9ae71c83418ed5d26443361d9,
-    type: 3}
-  m_PrefabInstance: {fileID: 757169393}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1460949777 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7993119983977949264, guid: 40c4f0e250b87e24688de5425628cb9b,

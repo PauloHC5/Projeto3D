@@ -1012,7 +1012,6 @@ GameObject:
   - component: {fileID: 1567451808282193836}
   - component: {fileID: 5573212292333405970}
   - component: {fileID: 3325826522407024318}
-  - component: {fileID: 7586776778822965348}
   m_Layer: 10
   m_Name: Player Character Controller Movement
   m_TagString: Player
@@ -1135,42 +1134,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f69d2f64b58782b42a38a3b608b3df29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 2
-  jumpForce: 8
-  acceleration: 5
-  deceleration: 5
-  groundCheck: {fileID: 0}
-  groundCheckRadius: 0.4
+  walkSpeed: 2.48
+  jumpForce: 0.5
+  acceleration: 15
+  deceleration: 50
+  groundCheck: {fileID: 5241768735091827890}
+  groundCheckRadius: 0.15
   groundMask:
     serializedVersion: 2
     m_Bits: 8
-  gravity: -9.81
-  characterController: {fileID: 0}
+  gravity: -5.86
+  characterController: {fileID: 1690414651061201987}
   playerMeshRoot: {fileID: 5485236345039029983}
   playerMesh: {fileID: 5521116737292277039}
   cameraPos: {fileID: 7674668982629661412}
   isCrouching: 0
-  crouchSpeed: 4
-  crouchHeight: 1
-  crouchRadius: 0.3
-  crouchSmooth: 10
-  crouchCameraPos: 0
-  crouchMeshRootPos: 0
-  crouchGrundCheckPos: 0
-  obstacleDetectorPosition: {x: 0, y: 0, z: 0}
+  crouchSpeed: 1
+  crouchHeight: 0.5
+  crouchRadius: 0.2
+  crouchSmooth: 3
+  crouchCameraPos: 0.85
+  crouchMeshRootPos: 0.8
+  crouchGrundCheckPos: -0.12
+  obstacleDetectorPosition: {x: 0, y: 1.15, z: 0}
   obstacleMask:
     serializedVersion: 2
     m_Bits: 8
-  obstacleDetectorRadius: 0.5
-  DebugSpheresCheck: 0
+  obstacleDetectorRadius: 0.22
+  DebugSpheresCheck: 1
   sway: 1
   swayStep: 0.01
   swayMaxStepDistance: 0.06
-  swaySmooth: 10
+  swaySmooth: 4
   swayRotation: 1
-  rotationStep: 4
-  maxRotationStep: 5
-  swaySmoothRot: 12
+  rotationStep: 2
+  maxRotationStep: 8
+  swaySmoothRot: 2
 --- !u!114 &3325826522407024318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1203,19 +1202,6 @@ MonoBehaviour:
     ammo: 300
   - weapon: 4
     ammo: 150
---- !u!114 &7586776778822965348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3986163303215137444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ad3d79dbaae5fa428c71259ffc45ad7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerAnimator: {fileID: 728732302384425514}
 --- !u!1 &4036959574764372477
 GameObject:
   m_ObjectHideFlags: 0
