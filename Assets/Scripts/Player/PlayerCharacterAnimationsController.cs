@@ -1,10 +1,8 @@
 using UnityEngine;
 
-public class PlayerCharacterAnimationsController : MonoBehaviour
+public class PlayerCharacterAnimationsController
 {
-    [Space]
-    [Header("Combat")]
-    [SerializeField] private Animator playerAnimator;
+    private Animator playerAnimator;
 
     private readonly int CurrentSpeed = Animator.StringToHash("CurrentSpeed");
     private readonly int UseWeaponTrigger = Animator.StringToHash("UseWeapon");
@@ -17,6 +15,11 @@ public class PlayerCharacterAnimationsController : MonoBehaviour
     private readonly int ToggleAttack = Animator.StringToHash("ToggleAttack");
 
     private bool toggleFire = false;
+
+    public PlayerCharacterAnimationsController(Animator animator)
+    {
+        playerAnimator = animator;
+    }
 
     public void HandleLocomotion(float playerVelocityMagnitude, float playerMaxSpeed)
     {

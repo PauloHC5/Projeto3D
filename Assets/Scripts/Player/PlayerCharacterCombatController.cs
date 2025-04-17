@@ -29,9 +29,7 @@ public enum WeaponSocket
 }
 
 public class PlayerCharacterCombatController : MonoBehaviour
-{
-    [Space]
-    [Header("Combat")]
+{    
     [SerializeField] private PlayerWeapon weaponSelected;    
     [SerializeField] private Weapon[] weapons = new Weapon[5];
     [SerializeField] private Transform rightHandSocket, leftHandSocket;    
@@ -49,7 +47,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private Weapon equippedWeapon;
     private Dictionary<PlayerWeapon, Int32> playerWeaponAmmo;
     private PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
-    private PlayerCharacterAnimationsController playerAnimator;
+    private PlayerCharacterAnimationsController playerCharacterAnimationsController;
 
 
     public PlayerWeapon WeaponSelected => weaponSelected;
@@ -79,7 +77,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private void Awake()
     {
-        playerAnimator = GetComponent<PlayerCharacterAnimationsController>();
+        playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
 
         InitializeWeapons();
         InitializeWeaponAmmo();        
@@ -162,7 +160,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         // Reset the weapon position
         if (equippedWeapon) equippedWeapon.transform.localPosition = Vector3.zero;
 
-        playerAnimator.PlaySwitchToWeapon(weaponSelected); // Play the switch to weapon animation
+        playerCharacterAnimationsController.PlaySwitchToWeapon(weaponSelected); // Play the switch to weapon animation
 
         onSwitchToWeapon?.Invoke(weaponSelected);
     }
@@ -171,7 +169,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         if (equippedWeapon is not Gun equippedGun || !equippedGun.CanFire) return;
 
-        playerAnimator.PlayeUseWeapon(equippedWeapon);
+        playerCharacterAnimationsController.PlayeUseWeapon(equippedWeapon);
     }    
 
     private Transform GetSocketTransform(WeaponSocket weaponSocketToAttach)
@@ -183,7 +181,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {        
         if (equippedWeapon is not Gun equippedGun || !CanReload(equippedGun)) return;
 
-        playerAnimator.PlayReload();
+        playerCharacterAnimationsController.PlayReload();
         onReload?.Invoke(weaponSelected);
     }
 
@@ -193,7 +191,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             if (!equippedGuns.CanFire) return;
 
-            playerAnimator.PlayFireBothGuns(equippedGuns);
+            playerCharacterAnimationsController.PlayFireBothGuns(equippedGuns);
             return;
         }
 

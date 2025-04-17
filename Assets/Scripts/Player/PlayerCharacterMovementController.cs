@@ -64,7 +64,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
     private float maxSpeed;
     private bool isGrounded;    
     private bool hasAppliedCrouchImpulse = false;
-    private PlayerCharacterAnimationsController animationsController;
+    private PlayerCharacterAnimationsController playerCharacterAnimationsController;
 
     private float standingHeight; // Default height of the character controller
     private float standingRadius; // Default radius of the character controller        
@@ -89,6 +89,8 @@ public class PlayerCharacterMovementController : MonoBehaviour
     private void Awake()
     {
         IntializeMovement();
+
+        playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
     }
 
     private void IntializeMovement()
@@ -100,8 +102,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
         standingMeshRootPos = playerMeshRoot.transform.position;
         standingGroundCheckPos = groundCheck.localPosition;
         playerMovementStates = PlayerMovementStates.DEFAULT;     
-        characterController = GetComponent<CharacterController>();
-        animationsController = GetComponent<PlayerCharacterAnimationsController>();
+        characterController = GetComponent<CharacterController>();        
     }
 
     private void Update()
@@ -156,7 +157,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
         CompositePoitionRotation();        
 
         float speed = characterController.velocity.magnitude;
-        animationsController.HandleLocomotion(speed, maxSpeed);        
+        playerCharacterAnimationsController.HandleLocomotion(speed, maxSpeed);        
 
         if (playerMovementStates == PlayerMovementStates.GETTINGUP && IsObstacleAbove())
         {

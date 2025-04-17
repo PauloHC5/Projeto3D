@@ -37,7 +37,7 @@ public class PlayerCharacterController : MonoBehaviour
 
         playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
         playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
-        playerCharacterAnimationsController = GetComponent<PlayerCharacterAnimationsController>();
+        playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
     }
 
     private void InitializePlayerControls()
