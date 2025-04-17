@@ -60,8 +60,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
     [SerializeField] private float maxRotationStep = 5f;
     [SerializeField] private float swaySmoothRot = 12f;    
     private Vector3 swayEulerRot;
-
-    private float playerVelocityMagnitude;
+    
     private float maxSpeed;
     private bool isGrounded;    
     private bool hasAppliedCrouchImpulse = false;
@@ -73,18 +72,19 @@ public class PlayerCharacterMovementController : MonoBehaviour
     private Vector3 standingMeshRootPos; // Default position of the mesh root
     private Vector3 standingGroundCheckPos; // Default position of the ground check    
 
-    private IEnumerator crouchingRoutine; 
-
+    private IEnumerator crouchingRoutine;
+    
     private Vector3 movementVelocity; // New field for movement velocity
     private Vector3 gravityVelocity; // New field for gravity velocity    
     private float decelerationTime = 0f; // New field to track deceleration time
 
     private PlayerMovementStates playerMovementStates = PlayerMovementStates.DEFAULT;    
 
-    public PlayerMovementStates PlayerMovementStates => playerMovementStates;    
+    public PlayerMovementStates PlayerMovementStates => playerMovementStates;
 
-    public float PlayerVelocityMagnitude => playerVelocityMagnitude;
+    public float PlayerMovementVelocityMagnitude => movementVelocity.magnitude;
     public float PlayerMaxSpeed => maxSpeed;
+    public bool IsGrounded => isGrounded;
 
     private void Awake()
     {
@@ -149,9 +149,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
             movementVelocity = Vector3.MoveTowards(movementVelocity, Vector3.zero, currentDeceleration * Time.deltaTime);
         }
 
-        MoveCharacter(movementVelocity, gravityVelocity);
-
-        playerVelocityMagnitude = characterController.velocity.magnitude;
+        MoveCharacter(movementVelocity, gravityVelocity);        
 
         Sway(playerLookInput);
         SwayRotation(playerLookInput);

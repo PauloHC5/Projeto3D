@@ -41,7 +41,9 @@ public class CameraHeadbob : MonoBehaviour
 
     private void CheckForHeadbobTrigger()
     {
-        float inputMagnitude = playerCharacterMovementController.PlayerVelocityMagnitude;        
+        if (!playerCharacterMovementController.IsGrounded) return;
+
+        float inputMagnitude = playerCharacterMovementController.PlayerMovementVelocityMagnitude;        
 
         if (inputMagnitude > 0f)
         {
