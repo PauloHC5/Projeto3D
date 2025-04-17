@@ -167,7 +167,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void UseWeapon()
     {
-        if (equippedWeapon is not Gun equippedGun || !equippedGun.CanFire) return;
+        if (equippedWeapon is Gun equippedGun && !equippedGun.CanFire) return;
 
         playerCharacterAnimationsController.PlayeUseWeapon(equippedWeapon);
     }    
