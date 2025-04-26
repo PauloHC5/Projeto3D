@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 858a0435dc6ecfb48bc7336bb7f5111e
+guid: ba69b2ac2b440ba49bf1d45471773f90
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -31,7 +31,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Reload
+      name: Corngun_Reload
       takeName: Scene
       internalID: -623603649343465320
       firstFrame: 1
@@ -122,12 +122,11 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 5bea14bdaf130fa4f8d274414a48f870,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 2
+  avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
