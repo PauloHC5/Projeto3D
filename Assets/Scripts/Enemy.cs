@@ -11,8 +11,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int damage = 10;
     [SerializeField] private GameObject weapon;
     [SerializeField] private CapsuleCollider enemyDeadCollider;
-    [SerializeField] private float shotgunDeathImpulse = 20.0f; 
-    [SerializeField] private float shotgunHitImpulse = 10.0f;
+    [SerializeField] private float deathImpulse = 20.0f; 
+    [SerializeField] private float stunHitImpulse = 10.0f;
     [SerializeField] private float stunDuration = 0.5f;
 
     [Header("Range Detector Properties")]
@@ -113,7 +113,7 @@ public class Enemy : MonoBehaviour
         if (damageType == PlayerWeapon.Shotgun)
         {
             agent.velocity = Vector3.zero;
-            ApplyShotgunImpulse(shotgunDeathImpulse);
+            ApplyImpulse(deathImpulse);
         }
     }
 
@@ -123,7 +123,7 @@ public class Enemy : MonoBehaviour
         agent.enabled = false;
         behaviorGraph.enabled = false;
         rb.isKinematic = false;
-        ApplyShotgunImpulse(shotgunHitImpulse);
+        ApplyImpulse(stunHitImpulse);
         animator.SetTrigger(Stun);
         yield return new WaitForSeconds(stunDuration);
         agent.enabled = true;
@@ -133,7 +133,7 @@ public class Enemy : MonoBehaviour
         shotgunStunReactRoutine = null; // Reset the coroutine reference
     }
 
-    private void ApplyShotgunImpulse(float shotgunImpulse)
+    private void ApplyImpulse(float impulse)
     {                        
         // set the rotation of the enemy to look at the player
         Vector3 lookAtDirection = Camera.main.transform.position - transform.position;
@@ -143,7 +143,7 @@ public class Enemy : MonoBehaviour
 
         // Apply impulse force to the enemy                        
         Vector3 direction = Camera.main.transform.forward;        
-        rb.AddForce(direction * shotgunImpulse, ForceMode.Impulse);        
+        rb.AddForce(direction * impulse, ForceMode.Impulse);        
     }
 
     public GameObject DetectPlayer()
