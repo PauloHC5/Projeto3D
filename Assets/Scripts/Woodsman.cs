@@ -2,9 +2,8 @@ using System.Collections;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
 
-public class Enemy : MonoBehaviour
+public class Woodsman : MonoBehaviour
 {
     [Header("Enemy Properties")]
     [SerializeField] private int health = 100;

@@ -5128,10 +5128,10 @@ GameObject:
   - component: {fileID: 1096596414}
   - component: {fileID: 1096596413}
   - component: {fileID: 1096596412}
-  - component: {fileID: 1096596411}
+  - component: {fileID: 1096596415}
   - component: {fileID: 1096596410}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Woodsman
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5169,7 +5169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   damage: 10
-  weapon: {fileID: 0}
+  weapon: {fileID: 5451210548131291163}
   enemyDeadCollider: {fileID: 296301919}
   deathImpulse: 200
   stunHitImpulse: 10
@@ -5182,55 +5182,6 @@ MonoBehaviour:
   detectionRange: 8
   detectionHeight: 1.3
   raycastOrigin: {fileID: 284071708}
---- !u!114 &1096596411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096596408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Graph: {fileID: 8587700817181152791, guid: 679ce20543dea324b8ea0aecb7f9ca57, type: 2}
-  m_BlackboardVariableOverridesList:
-  - rid: 3510279283554386240
-  - rid: 139259807984255834
-  - rid: 139259808796115152
-  m_IsInitialised: 0
-  m_IsStarted: 0
-  references:
-    version: 2
-    RefIds:
-    - rid: 139259807984255834
-      type: {class: 'BlackboardVariable`1[[Enemy, Assembly-CSharp]]', ns: Unity.Behavior,
-        asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 12366345161056652600
-          m_Value1: 17864760183249700672
-        Name: Enemy
-        m_Value: {fileID: 1096596410}
-    - rid: 139259808796115152
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]',
-        ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 817840945196532767
-          m_Value1: 15119925728342937012
-        Name: EnemyAnimator
-        m_Value: {fileID: 669555549}
-    - rid: 3510279283554386240
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]',
-        ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1
-          m_Value1: 0
-        Name: Self
-        m_Value: {fileID: 1096596408}
 --- !u!195 &1096596412
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5303,6 +5254,45 @@ CapsuleCollider:
   m_Height: 2.0616708
   m_Direction: 1
   m_Center: {x: 0, y: 0.99, z: -0.012196541}
+--- !u!114 &1096596415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096596408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Graph: {fileID: 8587700817181152791, guid: 679ce20543dea324b8ea0aecb7f9ca57, type: 2}
+  m_BlackboardVariableOverridesList:
+  - rid: 3255442424451039379
+  - rid: 3255442424451039380
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 3255442424451039379
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]',
+        ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 1096596408}
+    - rid: 3255442424451039380
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]',
+        ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 817840945196532767
+          m_Value1: 15119925728342937012
+        Name: EnemyAnimator
+        m_Value: {fileID: 669555549}
 --- !u!1 &1114144302 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7993119983977949264, guid: 40c4f0e250b87e24688de5425628cb9b,
@@ -5412,31 +5402,11 @@ MonoBehaviour:
   m_Graph: {fileID: 8587700817181152791, guid: 679ce20543dea324b8ea0aecb7f9ca57, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 3510279283554386240
-  - rid: 139259807984255834
-  - rid: 139259808796115152
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
     RefIds:
-    - rid: 139259807984255834
-      type: {class: 'BlackboardVariable`1[[Enemy, Assembly-CSharp]]', ns: Unity.Behavior,
-        asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 12366345161056652600
-          m_Value1: 17864760183249700672
-        Name: Enemy
-        m_Value: {fileID: 1118279110}
-    - rid: 139259808796115152
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]',
-        ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 817840945196532767
-          m_Value1: 15119925728342937012
-        Name: EnemyAnimator
-        m_Value: {fileID: 919132148981449288}
     - rid: 3510279283554386240
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
@@ -12990,7 +12960,7 @@ GameObject:
   - component: {fileID: 543450653175273297}
   - component: {fileID: 669555549}
   m_Layer: 0
-  m_Name: Lenhador
+  m_Name: WoodsmanMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
