@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 82c42771a1e8440438d0a95ede51a038
+guid: c974fa6a595f1f34e9cd5c4c61da17da
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -31,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: PlayerArms_BananaShotgun_BasePose
+      name: PlayerArms_BananaShotgun_Walk
       takeName: Scene
       internalID: -623603649343465320
       firstFrame: 1
-      lastFrame: 100
+      lastFrame: 80
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
