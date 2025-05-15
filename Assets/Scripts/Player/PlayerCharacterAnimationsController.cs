@@ -45,9 +45,9 @@ public class PlayerCharacterAnimationsController
             return;
         }
 
-        playerAnimator.SetTrigger(UseWeaponTrigger);            
+        playerAnimator.SetTrigger(UseWeaponTrigger);        
 
-        if(equippedWeapon.WeaponType == PlayerWeapon.Crowbar) HandleToggleAttackAnimation();
+        if(equippedWeapon?.WeaponType == PlayerWeapon.Crowbar) HandleToggleAttackAnimation();
     }
 
     public void PlayFireBothGuns(DualWieldGun dualWieldGun)
