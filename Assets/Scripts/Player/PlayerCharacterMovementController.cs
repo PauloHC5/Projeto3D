@@ -28,8 +28,8 @@ public class PlayerCharacterMovementController : MonoBehaviour
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] protected CharacterController characterController;
     [SerializeField] private Transform playerMeshRoot;
-    [SerializeField] protected GameObject playerMesh;
-    [SerializeField] protected Transform cameraPos;    
+    [SerializeField] private Transform playerMeshSway;
+    [SerializeField] private Transform cameraPos;    
     
    
     [Header("Crouch")]
@@ -51,7 +51,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
     [SerializeField] private bool sway = true;
     [SerializeField] private float swayStep = 0.01f; // Multiplied by the value from the mouse for 1 frame
     [SerializeField] private float swayMaxStepDistance = 0.06f; // Max distance from the local origin
-    [SerializeField] private float swaySmooth = 10f;        
+    [SerializeField] private float swaySmooth = 10f;            
     private Vector3 swayPos; // Store our value for later
 
     [Header("Sway Rotation")]
@@ -70,7 +70,9 @@ public class PlayerCharacterMovementController : MonoBehaviour
     private float standingRadius; // Default radius of the character controller        
     private Vector3 standingCameraPos; // Default position of the camera
     private Vector3 standingMeshRootPos; // Default position of the mesh root
-    private Vector3 standingGroundCheckPos; // Default position of the ground check    
+    private Vector3 standingGroundCheckPos; // Default position of the ground check
+                                            
+    private Vector3 defaultMeshSwayPosition; // Default position of the mesh sway
 
     private IEnumerator crouchingRoutine;
     
@@ -102,12 +104,13 @@ public class PlayerCharacterMovementController : MonoBehaviour
         standingMeshRootPos = playerMeshRoot.transform.position;
         standingGroundCheckPos = groundCheck.localPosition;
         playerMovementStates = PlayerMovementStates.DEFAULT;     
-        characterController = GetComponent<CharacterController>();        
+        characterController = GetComponent<CharacterController>();
+        defaultMeshSwayPosition = playerMeshSway.localPosition;
     }
 
     private void Update()
     {
-        ApplyGravity();
+        ApplyGravity();        
     }
 
     public void HandleMovement(Vector3 playerMovementInput, Vector2 playerLookInput)
@@ -197,15 +200,12 @@ public class PlayerCharacterMovementController : MonoBehaviour
     }
 
     private void CompositePoitionRotation()
-    {
-        // correction height for the player mesh
-        Vector3 correctionHeight = new Vector3(0f, -1.65f, 0f);
-
+    {                
         // position
-        playerMesh.transform.localPosition = Vector3.Lerp(playerMesh.transform.localPosition, correctionHeight + swayPos, Time.deltaTime * swaySmooth);
+        playerMeshSway.localPosition = Vector3.Lerp(playerMeshSway.localPosition, defaultMeshSwayPosition + swayPos, Time.deltaTime * swaySmooth);
 
         // rotation
-        playerMesh.transform.localRotation = Quaternion.Lerp(playerMesh.transform.localRotation, Quaternion.Euler(swayEulerRot), Time.deltaTime * swaySmoothRot);
+        playerMeshSway.localRotation = Quaternion.Lerp(playerMeshSway.localRotation, Quaternion.Euler(swayEulerRot), Time.deltaTime * swaySmoothRot);
     }
 
     public void Jump()
