@@ -103,7 +103,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         }
 
         // Fill the weapons array with the weapons
-        for (int i = 0; i < weapons.Length; i++)
+        /*for (int i = 0; i < weapons.Length; i++)
         {
             // Load the weapon prefab from the resources folder
             Weapon weaponToSpawn = Resources.Load<Weapon>($"Weapons/{(PlayerWeapon)i}");
@@ -119,6 +119,25 @@ public class PlayerCharacterCombatController : MonoBehaviour
             // Instantiate the weapon and set it as inactive
             weapons[i] = Instantiate(weaponToSpawn, socketToAttach);
             weapons[i].gameObject.SetActive(false);
+        }*/
+
+        // Intializee each weapon in the weapons array        
+        foreach(var weapon in weapons)
+        {
+            if(weapon == null) continue; // Skip if the weapon is null
+
+            if(weapon.WeaponType == PlayerWeapon.Shotgun)
+            {
+                InitializeDualWieldGun(weapon);
+                continue; // Skip the rest of the loop
+            }
+
+            // Get the socket to attach the weapon
+            Transform socketToAttach = GetSocketTransform(weapon.GetSocketToAttach);
+
+            // Instantiate the weapon and set it as inactive
+            Weapon weaponsSpawned = Instantiate(weapon, socketToAttach);
+            weaponsSpawned.gameObject.SetActive(false);
         }
     }
 
