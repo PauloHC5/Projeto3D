@@ -155,7 +155,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
         // If equipped weapon is a dual wield gun, enable both guns
         if (equippedWeapon is DualWieldGun equippedGuns) equippedGuns.gameObject.SetActive(true);
-        else equippedWeapon.gameObject.SetActive(true); // Enable the equipped weapon
+        else equippedWeapon?.gameObject.SetActive(true); // Enable the equipped weapon
 
         // Reset the weapon position
         if (equippedWeapon) equippedWeapon.transform.localPosition = Vector3.zero;
@@ -195,7 +195,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             return;
         }
 
-        equippedWeapon.GetComponent<ISecondaryAction>()?.Perform();
+        equippedWeapon?.GetComponent<ISecondaryAction>()?.Perform();
     }        
 
     private bool CanReload(Gun equippedGun)
