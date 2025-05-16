@@ -870,7 +870,7 @@ Transform:
   m_Children:
   - {fileID: 8803219471767102900}
   m_Father: {fileID: 5490197579916750568}
-  m_LocalEulerAnglesHint: {x: -89.98021, y: 8.592991e-31, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98021, y: 6.9665593e-31, z: 0}
 --- !u!95 &2352808732092941608
 Animator:
   serializedVersion: 7
@@ -1278,9 +1278,9 @@ MonoBehaviour:
   crouchHeight: 0.5
   crouchRadius: 0.2
   crouchSmooth: 3
-  crouchCameraPos: 0.85
-  crouchMeshRootPos: -0.67
-  crouchGrundCheckPos: -0.12
+  crouchCameraHeight: 0.85
+  crouchMeshRootHeight: 0.67
+  crouchGroundCheckHeight: -0.12
   obstacleDetectorPosition: {x: 0, y: 1.15, z: 0}
   obstacleMask:
     serializedVersion: 2
@@ -1309,8 +1309,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponSelected: 0
   weapons:
-  - {fileID: 7646214553458913523, guid: f309566e5b334dd4b8484ae8263e9713, type: 3}
   - {fileID: 0}
+  - {fileID: 7646214553458913523, guid: f309566e5b334dd4b8484ae8263e9713, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

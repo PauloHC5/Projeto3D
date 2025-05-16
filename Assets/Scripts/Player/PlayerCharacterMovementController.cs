@@ -38,9 +38,9 @@ public class PlayerCharacterMovementController : MonoBehaviour
     [SerializeField] private float crouchHeight = 1f;
     [SerializeField] private float crouchRadius = 0.3f;    
     [SerializeField] private float crouchSmooth = 10f;
-    [SerializeField] private float crouchCameraPos;
-    [SerializeField] private float crouchMeshRootPos;
-    [SerializeField] private float crouchGrundCheckPos;
+    [SerializeField] private float crouchCameraHeight;
+    [SerializeField] private float crouchMeshRootHeight;
+    [SerializeField] private float crouchGroundCheckHeight;
     [SerializeField] private Vector3 obstacleDetectorPosition;
     [SerializeField] private LayerMask obstacleMask; // Layer mask for obstacles
     [SerializeField] private float obstacleDetectorRadius = 0.5f; // Radius of the sphere used to detect obstacles
@@ -255,9 +255,9 @@ public class PlayerCharacterMovementController : MonoBehaviour
                 transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, transform.position.y - heightDifference / 2, transform.position.z), Time.deltaTime * crouchSmooth);
 
                 characterController.radius = Mathf.Lerp(characterController.radius, crouchRadius, Time.deltaTime * crouchSmooth);
-                groundCheck.localPosition = new Vector3(groundCheck.localPosition.x, crouchGrundCheckPos, groundCheck.localPosition.z);
-                cameraPos.localPosition = new Vector3(cameraPos.localPosition.x, Mathf.Lerp(cameraPos.localPosition.y, crouchCameraPos, Time.deltaTime * crouchSmooth), cameraPos.localPosition.z);
-                playerMeshRoot.localPosition = new Vector3(playerMeshRoot.localPosition.x, Mathf.Lerp(playerMeshRoot.localPosition.y, crouchMeshRootPos, Time.deltaTime * crouchSmooth), playerMeshRoot.localPosition.z);
+                groundCheck.localPosition = new Vector3(groundCheck.localPosition.x, crouchGroundCheckHeight, groundCheck.localPosition.z);
+                cameraPos.localPosition = new Vector3(cameraPos.localPosition.x, Mathf.Lerp(cameraPos.localPosition.y, crouchCameraHeight, Time.deltaTime * crouchSmooth), cameraPos.localPosition.z);
+                playerMeshRoot.localPosition = new Vector3(playerMeshRoot.localPosition.x, Mathf.Lerp(playerMeshRoot.localPosition.y, crouchMeshRootHeight, Time.deltaTime * crouchSmooth), playerMeshRoot.localPosition.z);
                 maxSpeed = crouchSpeed;
                 isCrouching = true;
                 yield return null;
