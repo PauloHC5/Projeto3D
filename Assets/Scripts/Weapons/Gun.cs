@@ -56,8 +56,10 @@ public class Gun : Weapon
 
     public virtual void Fire()
     {
-        if (muzzleFlash) muzzleFlash.Play();
         if (gunAnimator) gunAnimator.SetTrigger(FireTrigger);
+        else Debug.LogWarning("Gun animator not found.");
+
+        if (muzzleFlash) muzzleFlash.Play();        
         if (cameraRecoil) cameraRecoil.RecoilFire(recoilX, recoilY, recoilZ, snappiness, returnSpeed);
         StartCoroutine(ShootDelay());
     }
