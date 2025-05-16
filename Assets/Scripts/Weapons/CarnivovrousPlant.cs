@@ -6,6 +6,25 @@ public class CarnivovrousPlant : Weapon
     [SerializeField] private int damage = 25;
     [SerializeField] private Collider hitCollider;
 
+    private Animator animator;
+
+    private void Awake()
+    {
+        animator = GetComponentInChildren<Animator>();
+    }
+
+    public void Attack()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("Attack");
+        }
+        else
+        {
+            Debug.LogWarning("Animator not found on Carnivorous Plant.");
+        }
+    }
+
     public void EnableCollision()
     {
         hitCollider.enabled = true;
