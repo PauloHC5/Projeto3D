@@ -47,7 +47,7 @@ public class PlayerCharacterAnimationsController
 
         playerAnimator.SetTrigger(UseWeaponTrigger);        
 
-        if(equippedWeapon?.WeaponType == PlayerWeapon.Crowbar) HandleToggleAttackAnimation();
+        if(equippedWeapon?.WeaponType == PlayerWeapon.Melee) HandleToggleAttackAnimation();
     }
 
     public void PlayFireBothGuns(DualWieldGun dualWieldGun)

@@ -7,10 +7,10 @@ using UnityEngine.InputSystem;
 
 public enum PlayerWeapon
 {
-    Crowbar = 0,
-    ACornGun = 1,
+    Melee = 0,
+    Pistol = 1,
     Shotgun = 2,
-    Thompson = 3,
+    Smg = 3,
     Crossbow = 4
 }
 
@@ -121,7 +121,7 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void PerformReload()
     {
-        if(playerCharacterCombatController.WeaponSelected == PlayerWeapon.Crowbar || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING) return;
+        if(playerCharacterCombatController.WeaponSelected == PlayerWeapon.Melee || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING) return;
         
         playerCharacterCombatController.Reload();
     }

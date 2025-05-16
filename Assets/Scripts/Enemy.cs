@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            float layerWeight = (damageType == PlayerWeapon.Thompson || damageType == PlayerWeapon.Crossbow) ? mediumLayerWeight : fullLayerWeight;
+            float layerWeight = (damageType == PlayerWeapon.Smg || damageType == PlayerWeapon.Crossbow) ? mediumLayerWeight : fullLayerWeight;
             animator.SetLayerWeight(reactionLayerIndex, layerWeight);
 
             // Trigger the react animation based on the damage type
