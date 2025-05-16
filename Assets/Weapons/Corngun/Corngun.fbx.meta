@@ -3,32 +3,7 @@ guid: 1777fb461aeb0914bb143e01315db25f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: cabecanoz
-    second: {fileID: 2800000, guid: 4d8f4f91ba5b411479f59ac540764eef, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: cabo
-    second: {fileID: 2800000, guid: 730588d1792646642aa62cf6748768e0, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: cabonoz
-    second: {fileID: 2800000, guid: bc0f9c82033ae01449bea622de88805f, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: canoarma
-    second: {fileID: 2800000, guid: 754046a5143535845b098ad211603ed4, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: gatilho
-    second: {fileID: 2800000, guid: e4073ef185d419242bc6e1d18c1f2756, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
