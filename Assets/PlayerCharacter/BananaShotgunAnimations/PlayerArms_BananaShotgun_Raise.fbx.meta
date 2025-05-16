@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 608ebdc5508bedc49aabbe34c91dd0c7
+guid: 5594360030cd7ee47ae16670b4679549
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -31,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: PlayerArms_BananaShotgun_FireR
+      name: PlayerArms_BananaShotgun_Raise
       takeName: Scene
       internalID: -623603649343465320
       firstFrame: 1
-      lastFrame: 20
+      lastFrame: 60
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -118,7 +118,7 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     globalScale: 1
-    rootMotionBoneName: 
+    rootMotionBoneName: root
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1

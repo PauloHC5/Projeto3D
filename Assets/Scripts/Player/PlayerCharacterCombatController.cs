@@ -136,9 +136,9 @@ public class PlayerCharacterCombatController : MonoBehaviour
             Transform socketToAttach = GetSocketTransform(weapon.GetSocketToAttach);
 
             // Instantiate the weapon and set it as inactive
-            Weapon weaponSpawned = Instantiate(weapon, socketToAttach);
-            Debug.Log($"Weapon {weaponSpawned.name} spawned at {socketToAttach.name}");
-            //weaponSpawned.gameObject.SetActive(false);
+            Weapon weaponSpawned = Instantiate(weapon, socketToAttach);            
+            weaponSpawned.gameObject.SetActive(false);
+            weapons[(int)weapon.WeaponType] = weaponSpawned; // Set the weapon in the weapons array
         }
     }
 
