@@ -56,11 +56,11 @@ public class PlayerCharacterController : MonoBehaviour
         playerControls.Player.Crouch.performed += ctx => Crouch();
 
         // Assign the SwitchToWeapon method to the respective input action
-        playerControls.Player.Weapon1.performed += ctx => SwitchToWeapon(PlayerWeapon.Crowbar);
-        playerControls.Player.Weapon2.performed += ctx => SwitchToWeapon(PlayerWeapon.ACornGun);
-        playerControls.Player.Weapon3.performed += ctx => SwitchToWeapon(PlayerWeapon.Shotgun);
-        playerControls.Player.Weapon4.performed += ctx => SwitchToWeapon(PlayerWeapon.Thompson);
-        playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(PlayerWeapon.Crossbow);
+        playerControls.Player.Weapon1.performed += ctx => SwitchToWeapon(0);
+        playerControls.Player.Weapon2.performed += ctx => SwitchToWeapon(1);
+        playerControls.Player.Weapon3.performed += ctx => SwitchToWeapon(2);
+        playerControls.Player.Weapon4.performed += ctx => SwitchToWeapon(3);
+        playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(4);
 
         // Assign the HandleMouseScroll method to the respective input actions
         playerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };
@@ -85,7 +85,7 @@ public class PlayerCharacterController : MonoBehaviour
          * If the player has the Crowbar equipped and scrolls up, the new weapon index will be 4 (Crossbow) */        
         int newWeaponIndex = ((int)playerCharacterCombatController.WeaponSelected + MouseScroll + weaponCount) % weaponCount;
         
-        SwitchToWeapon((PlayerWeapon)newWeaponIndex);
+        SwitchToWeapon(newWeaponIndex);
     }
 
     private void HandleInput()
@@ -98,11 +98,11 @@ public class PlayerCharacterController : MonoBehaviour
         playerLookInput = playerControls.Player.Look.ReadValue<Vector2>();
     }
 
-    private void SwitchToWeapon(PlayerWeapon weapon)
-    {
-        if (lmbPressed || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING || (weapon == playerCharacterCombatController.WeaponSelected && weapon != PlayerWeapon.Crowbar)) return;        
+    private void SwitchToWeapon(int weaponsIndex)
+    {        
+        if (lmbPressed || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING) return;        
 
-        playerCharacterCombatController.SwitchToWeapon(weapon);
+        playerCharacterCombatController.SwitchToWeapon(weaponsIndex);
     }           
 
     private void PerformPrimaryAction()

@@ -85,7 +85,16 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private void Start()
     {
-        SwitchToWeapon(weaponSelected);
+        // Try to switch to the first valid weapon that you have in the array
+        foreach (Weapon weapon in weapons)
+        {
+            if(weapon != null)
+            {
+                // Switch to the first weapon that you have found
+                SwitchToWeapon(Array.IndexOf(weapons, weapon));
+                break; // Break the loop after switching to the first weapon
+            }                               
+        }        
     }
 
     private void Update()
@@ -102,43 +111,32 @@ public class PlayerCharacterCombatController : MonoBehaviour
             return;
         }
 
-        // Fill the weapons array with the weapons
-        /*for (int i = 0; i < weapons.Length; i++)
-        {
-            // Load the weapon prefab from the resources folder
-            Weapon weaponToSpawn = Resources.Load<Weapon>($"Weapons/{(PlayerWeapon)i}");
-
-            if(weaponToSpawn.WeaponType == PlayerWeapon.Shotgun) // Shotgun is a dual wield weapon, so we need to be handled differently
-            {
-                weapons[i] = InitializeDualWieldGun(weaponToSpawn); // Set the dual wield gun
-                continue; // Skip the rest of the loop
-            }
-            // Get the socket to attach the weapon
-            Transform socketToAttach = GetSocketTransform(weaponToSpawn.GetSocketToAttach);
-
-            // Instantiate the weapon and set it as inactive
-            weapons[i] = Instantiate(weaponToSpawn, socketToAttach);
-            weapons[i].gameObject.SetActive(false);
-        }*/
-
-        // Intializee each weapon in the weapons array        
-        foreach(var weapon in weapons)
+        // Intialize each weapon based on the weapons setted in the inspector
+        foreach (var weapon in weapons)
         {
             if(weapon == null) continue; // Skip if the weapon is null
 
-            if(weapon.WeaponType == PlayerWeapon.Shotgun)
+            Weapon weaponSpawned; // Will hold the spawned weapon
+
+            // If the weapon is a DualWieldGun, it needs to be initialized differently
+            if (weapon is DualWieldGun)
             {
-                InitializeDualWieldGun(weapon);
-                continue; // Skip the rest of the loop
+                // Will create a new instance of the DualWieldGuns
+                weaponSpawned = InitializeDualWieldGun(weapon);                
             }
+            else // Proceed with the normal weapon initialization
+            {
+                // Get the socket to attach the weapon
+                Transform socketToAttach = GetSocketTransform(weapon.GetSocketToAttach);
 
-            // Get the socket to attach the weapon
-            Transform socketToAttach = GetSocketTransform(weapon.GetSocketToAttach);
+                // Instantiate the weapon and set it as inactive
+                weaponSpawned = Instantiate(weapon, socketToAttach);
+                weaponSpawned.gameObject.SetActive(false);
+            }            
 
-            // Instantiate the weapon and set it as inactive
-            Weapon weaponSpawned = Instantiate(weapon, socketToAttach);            
-            weaponSpawned.gameObject.SetActive(false);
-            weapons[(int)weapon.WeaponType] = weaponSpawned; // Set the weapon in the weapons array
+            // Get the correct index of the weapon in the array, and set it to the spawned weapon
+            // Othwerwise, it will be refferencing the prefab
+            weapons[Array.IndexOf(weapons, weapon)] = weaponSpawned;
         }
     }
 
@@ -165,13 +163,21 @@ public class PlayerCharacterCombatController : MonoBehaviour
         playerWeaponAmmo = weaponAmmoList.ToDictionary(pair => pair.weapon, pair => pair.ammo);
     }        
 
-    public virtual void SwitchToWeapon(PlayerWeapon weapon)
-    {
+    public virtual void SwitchToWeapon(int weaponsIndex)
+    {        
+        if (weapons[weaponsIndex] == null)
+        {
+            Debug.LogWarning($"There is no Weapon at index {weaponsIndex}.");
+            return;
+        }
+
+        if (weapons[weaponsIndex] == equippedWeapon) return; // If the weapon is already equipped, do nothing
+
         // If there is an active weapon, disable it
         if (equippedWeapon) equippedWeapon.gameObject.SetActive(false);
-
-        weaponSelected = weapon; // Set the weapon selected to the weapon passed as parameter
-        equippedWeapon = weapons[(int)weaponSelected]; // Set the equipped weapon to the weapon selected
+        
+        equippedWeapon = weapons[weaponsIndex]; // Set the equipped weapon using the index
+        weaponSelected = equippedWeapon.WeaponType;
 
         // If equipped weapon is a dual wield gun, enable both guns
         if (equippedWeapon is DualWieldGun equippedGuns) equippedGuns.gameObject.SetActive(true);
