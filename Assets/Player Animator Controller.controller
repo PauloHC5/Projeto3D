@@ -25,33 +25,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!1102 &-8607854153409017486
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Crossbow_BaseArms_Climber
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: -623603649343465320, guid: aaecd469d59a0614da4bd7498c3ed7a7,
-    type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1101 &-8133039821046339303
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -171,7 +144,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Crossbow Locomotion
+  m_Name: Plaayer Arms Cactus Crossbow Locomotion
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -352,7 +325,7 @@ AnimatorStateMachine:
     m_Position: {x: 600, y: -170, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: -5449368436367619648}
-    m_Position: {x: 600, y: -110, z: 0}
+    m_Position: {x: 440, y: 100, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: 1451366978645145080}
     m_Position: {x: 600, y: -50, z: 0}
@@ -443,7 +416,7 @@ AnimatorStateTransition:
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8526558085709870925}
   m_Solo: 0
-  m_Mute: 0
+  m_Mute: 1
   m_IsExit: 0
   serializedVersion: 3
   m_TransitionDuration: 0
@@ -808,7 +781,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Crossbow_BaseArms_Reload
+  m_Name: PlayerArms CactusCrossbow Reload
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -822,7 +795,8 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 3a9ab934345d04542a173db3529f659c, type: 2}
+  m_Motion: {fileID: -623603649343465320, guid: de87882c7c2a2174489f06742be005dc,
+    type: 3}
   m_Tag: Reload
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -835,7 +809,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Crossbow_BaseArms_Shoot
+  m_Name: PlayerArms CactusCrossbow Fire
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -849,7 +823,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -623603649343465320, guid: bb5912c5f72c3e048b3830e15088cf41,
+  m_Motion: {fileID: -623603649343465320, guid: feea1e1a7e5716d488a8e3c1318ae8e9,
     type: 3}
   m_Tag: Fire
   m_SpeedParameter: 
@@ -865,7 +839,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -623603649343465320, guid: 0c59195d34df0924787175e06b1c2958,
+    m_Motion: {fileID: -623603649343465320, guid: 8016232e3b28b84409e626344625254c,
       type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
@@ -874,7 +848,8 @@ BlendTree:
     m_DirectBlendParameter: CurrentSpeed
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 5ad9e3779f318db408dec5ba15937f0e, type: 2}
+    m_Motion: {fileID: -623603649343465320, guid: 16a1bf6e66cfcbe4b95cb72ed5943d71,
+      type: 3}
     m_Threshold: 2.48
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -1485,14 +1460,11 @@ AnimatorStateMachine:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Crossbow State
+  m_Name: Cactus Crossbow State
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 6724443535057014863}
     m_Position: {x: -20, y: 260, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -8607854153409017486}
-    m_Position: {x: 690, y: 310, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3298808944572730311}
     m_Position: {x: 200, y: 400, z: 0}
@@ -1501,14 +1473,14 @@ AnimatorStateMachine:
     m_Position: {x: 470, y: 350, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7612191687826402343}
-    m_Position: {x: 230, y: 250, z: 0}
+    m_Position: {x: 250, y: 240, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours:
   - {fileID: -8117030032396292708}
-  m_AnyStatePosition: {x: -150, y: 340, z: 0}
+  m_AnyStatePosition: {x: -220, y: 260, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
@@ -2025,7 +1997,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Crossbow_BaseArms_Raise
+  m_Name: PlayerArms CactusCrossbow Raise
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -2039,7 +2011,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 1f7cd46f2da61e1409e7d743fdc636d7, type: 2}
+  m_Motion: {fileID: 7400000, guid: 7751254def4a8d64fb4ae9739d3bdaeb, type: 2}
   m_Tag: RaiseWeapon
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -2096,7 +2068,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ab97d5d94791ea4aa92f3fa97e3cbad, type: 3}
   m_Name: 
