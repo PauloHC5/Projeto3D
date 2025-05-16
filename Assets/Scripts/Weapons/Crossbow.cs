@@ -7,8 +7,7 @@ public class Crossbow : Gun, ISecondaryAction
 {
     [Header("Crossbow properties")]
     [SerializeField] private float intervalBetweenShots = 0.5f;
-    [SerializeField] private GameObject boltProjectile;
-    [SerializeField] private Transform boltSpawnPoint;
+    [SerializeField] private GameObject boltProjectile;    
     [SerializeField] private float boltForce = 100f;
     [SerializeField] private float scopeZoom = 30f;
     [SerializeField] private float scopeSpeed = 5f;    
@@ -21,8 +20,7 @@ public class Crossbow : Gun, ISecondaryAction
     }
 
     public override void Fire()
-    {
-        //base.ShootProjectile(boltProjectile, boltSpawnPoint, boltForce);
+    {        
         StartCoroutine(FireBurst());
         base.Fire();
         magAmmo -= 3;
@@ -31,7 +29,7 @@ public class Crossbow : Gun, ISecondaryAction
     {
         for (int i = 0; i < 3; i++)
         {
-            base.ShootProjectile(boltProjectile, boltSpawnPoint, boltForce);
+            base.ShootProjectile(boltProjectile, fireSocket, boltForce);
             yield return new WaitForSeconds(intervalBetweenShots);
         }        
     }    
