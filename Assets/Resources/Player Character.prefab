@@ -1143,16 +1143,16 @@ MonoBehaviour:
   gravity: -5.86
   characterController: {fileID: 6758552470141053996}
   playerMeshRoot: {fileID: 6865738352203423560}
-  playerMesh: {fileID: 2790892364111231615}
+  playerMeshSway: {fileID: 0}
   cameraPos: {fileID: 1791096781010398446}
   isCrouching: 0
   crouchSpeed: 1
   crouchHeight: 0.5
   crouchRadius: 0.2
   crouchSmooth: 3
-  crouchCameraPos: 0.85
-  crouchMeshRootPos: 0.8
-  crouchGrundCheckPos: -0.12
+  crouchCameraHeight: 0
+  crouchMeshRootHeight: 0
+  crouchGroundCheckHeight: 0
   obstacleDetectorPosition: {x: 0, y: 1.15, z: 0}
   obstacleMask:
     serializedVersion: 2
@@ -1995,8 +1995,8 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8960941309747762578}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 114ba54ca971dec488da4ab140e39d6d, type: 2}
+  m_Avatar: {fileID: 9000000, guid: 5bea14bdaf130fa4f8d274414a48f870, type: 3}
+  m_Controller: {fileID: 9100000, guid: 9106cd4adac07174296394cb95b9e6b6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

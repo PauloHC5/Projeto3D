@@ -1309,11 +1309,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponSelected: 0
   weapons:
-  - {fileID: 0}
+  - {fileID: 186649536490876846, guid: b668074fe76b63f43bea7b67044c27e5, type: 3}
   - {fileID: 7646214553458913523, guid: f309566e5b334dd4b8484ae8263e9713, type: 3}
+  - {fileID: 2297985535481940187, guid: d455c95032e16d743ad1388472a47104, type: 3}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4709857358180033657, guid: cac6572748ee7e14cb6cb7f8ce128c81, type: 3}
   rightHandSocket: {fileID: 2860071523350465062}
   leftHandSocket: {fileID: 7072074740685791458}
   weaponAmmoList:
@@ -1525,7 +1525,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5732146100652384554}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.077490665, y: -0.04770717, z: -0.010193616, w: 0.9957988}
+  m_LocalRotation: {x: 0.07749067, y: -0.04770717, z: -0.010193617, w: 0.9957988}
   m_LocalPosition: {x: 0.00000007633935, y: 0.0000000034924597, z: -0.09993431}
   m_LocalScale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
   m_ConstrainProportionsScale: 0
@@ -1873,7 +1873,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8979182769011469720}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.23467435, y: -0.10209186, z: 0.027591372, w: 0.96630424}
+  m_LocalRotation: {x: 0.23467436, y: -0.10209186, z: 0.027591374, w: 0.96630424}
   m_LocalPosition: {x: 0.00000007728181, y: 0.0000000086729415, z: -0.07888565}
   m_LocalScale: {x: 0.9999999, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
