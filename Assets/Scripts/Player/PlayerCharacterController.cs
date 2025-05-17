@@ -112,9 +112,7 @@ public class PlayerCharacterController : MonoBehaviour
         if (newIndex < 0)
             newIndex = 3;
         else if (newIndex >= inventoryCount)
-            newIndex = 0;
-
-        Debug.Log($"Switching to weapon index: {newIndex}");
+            newIndex = 0;        
 
         // Switch weapon
         SwitchToWeapon(newIndex);
