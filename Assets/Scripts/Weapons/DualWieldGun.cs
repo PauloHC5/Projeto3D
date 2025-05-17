@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum WhichGun
@@ -26,7 +27,9 @@ public class DualWieldGun : Gun
         this.gunR = GunR;
         this.gunL = GunL;
 
-        weaponType = PlayerWeapon.Shotgun;
+        weaponType = WeaponTypes.Shotgun;
+
+        AnimationTriggerEvents.onDropShotgun += DropShotgun;
 
         return this;
     }    
@@ -76,12 +79,23 @@ public class DualWieldGun : Gun
     {
         if(gunR) Destroy(gunR.gameObject);
         if(gunL) Destroy(gunL.gameObject);
+
+        AnimationTriggerEvents.onDropShotgun -= DropShotgun;
     }
 
     public Gun GetGun(WhichGun gunR)
     {
         return gunR == WhichGun.GunR ? this.gunR : this.gunL;
     }
+
+    private void DropShotgun()
+    {
+        gunL = null;
+        gunR = null;                
+
+        // Self destruct
+        Destroy(gameObject);
+    }    
 
     private void OnEnable()
     {
@@ -93,5 +107,5 @@ public class DualWieldGun : Gun
     {
         if(gunR) gunR.gameObject.SetActive(false);
         if(gunL) gunL.gameObject.SetActive(false);
-    }
+    }    
 }

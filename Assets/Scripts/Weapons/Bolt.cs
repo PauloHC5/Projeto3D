@@ -11,7 +11,7 @@ public class Bolt : Projectile
         Enemy enemy = collision.gameObject.GetComponent<Enemy>();
         if (enemy)
         {
-            enemy.TakeDamage(damage, PlayerWeapon.Crossbow);
+            enemy.TakeDamage(damage, WeaponTypes.Crossbow);
             Destroy(gameObject);
         }
     }

@@ -11,7 +11,8 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     private const int FireLeftHandLayer = 1;
     private const int FireRightHandLayer = 2;
 
-    private int ToggleAttack = Animator.StringToHash("ToggleAttack");
+    private readonly int ToggleAttack = Animator.StringToHash("ToggleAttack");
+    private readonly int CanReload = Animator.StringToHash("CanReload");
 
     private PlayerCombatStates FindCombatState(AnimatorStateInfo stateInfo)
     {     
@@ -41,7 +42,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 return; // Prevent state change to default if both shoot layers are active
         }
 
-        playerCharacterCombatController.PlayerCombatStates = newCombatState;
+        playerCharacterCombatController.PlayerCombatStates = newCombatState;        
 
         equippedGun = playerCharacterCombatController.EquippedWeapon as Gun;
         DualWieldGun equippedGuns = equippedGun as DualWieldGun;
@@ -53,7 +54,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 animator.SetLayerWeight(FireLeftHandLayer, 0f);
                 animator.SetLayerWeight(FireRightHandLayer, 0f);
 
-                
+
                 if (carnivorousPlants != null)
                 {
                     carnivorousPlants.EnableCollisions();
@@ -61,13 +62,15 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                     carnivorousPlants.PlayRaiseWeapon();
                 }
 
+                animator.SetBool(CanReload, false);
+
                 break;
-            case PlayerCombatStates.ATTACKING:                                
+            case PlayerCombatStates.ATTACKING:
                 if (carnivorousPlants != null)
                 {
                     carnivorousPlants.EnableCollisions();
 
-                    switch(animator.GetInteger(ToggleAttack))
+                    switch (animator.GetInteger(ToggleAttack))
                     {
                         case 1:
                             carnivorousPlants.Attack(WhichPlant.PlantR);
@@ -80,20 +83,32 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 break;
             case PlayerCombatStates.FIRING:
                 equippedGun.Fire();
+                animator.SetBool(CanReload, false);
                 break;
-            case PlayerCombatStates.DUALWIELDFIRING:                 
-                if(equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo, layerIndex);
+            case PlayerCombatStates.DUALWIELDFIRING:
+                if (equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo, layerIndex);
+                animator.SetBool(CanReload, false);
                 break;
             case PlayerCombatStates.RELOADING:
                 if (equippedGuns) HandleDualWieldState(equippedGuns, animator, stateInfo, layerIndex);
                 else
                 {
-                    equippedGun.PlayReload();                    
-                }                                
-                break;
-        }        
-        
-    }    
+                    equippedGun.PlayReload();
+                }
+                break;            
+        }
+
+    }
+
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (playerCharacterCombatController == null)
+        {
+            playerCharacterCombatController = animator.GetComponentInParent<PlayerCharacterCombatController>();
+        }
+
+        if(playerCharacterCombatController && stateInfo.IsTag("Reload")) playerCharacterCombatController.PlayerCombatStates = PlayerCombatStates.RELOADING;
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -103,12 +118,27 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
             DisableCrowbarCollision();            
         }        
 
-        animator.SetLayerWeight(layerIndex, 0f);        
+        animator.SetLayerWeight(layerIndex, 0f);
+
+        if(playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING &&            
+            animator.GetLayerWeight(1) == 0f &&
+            animator.GetLayerWeight(2) == 0f)
+        {
+            if(playerCharacterCombatController.PlayerCombatStates != PlayerCombatStates.RELOADING) playerCharacterCombatController.PlayerCombatStates = PlayerCombatStates.DEFAULT;
+            animator.SetBool(CanReload, true);
+
+        }
+        else
+        {
+            animator.SetBool(CanReload, true);
+        }
+
+        if(stateInfo.IsTag("Reload")) playerCharacterCombatController.PlayerCombatStates = PlayerCombatStates.DEFAULT;
     }        
     
 
     private void HandleDualWieldState(DualWieldGun equippedGuns, Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
+    {        
         animator.SetLayerWeight(layerIndex, 1f);
 
         if (stateInfo.IsTag("FireL"))
@@ -121,7 +151,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
             equippedGuns.Fire(WhichGun.GunR);
         }
 
-        if (stateInfo.IsTag("Reload"))
+        if (stateInfo.IsTag("Reload") && playerCharacterCombatController.PlayerCombatStates != PlayerCombatStates.DUALWIELDFIRING)
         {
             equippedGuns.PlayReload();                      
         }

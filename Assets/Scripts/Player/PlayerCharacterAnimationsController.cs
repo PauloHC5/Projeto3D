@@ -31,8 +31,9 @@ public class PlayerCharacterAnimationsController
         playerAnimator.SetInteger(GunAmmo, ammo);
     }
 
-    public void PlaySwitchToWeapon(PlayerWeapon weapon)
-    {                                            
+    public void PlaySwitchToWeapon(WeaponTypes weapon)
+    {                                  
+        Debug.Log($"Switching to weapon: {(int)weapon}");
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
         playerAnimator.SetTrigger(RaiseWeaponTrigger);        
     }    
@@ -47,7 +48,7 @@ public class PlayerCharacterAnimationsController
 
         playerAnimator.SetTrigger(UseWeaponTrigger);        
 
-        if(equippedWeapon?.WeaponType == PlayerWeapon.Melee) HandleToggleAttackAnimation();
+        if(equippedWeapon?.WeaponType == WeaponTypes.Melee) HandleToggleAttackAnimation();
     }
 
     public void PlayFireBothGuns(DualWieldGun dualWieldGun)

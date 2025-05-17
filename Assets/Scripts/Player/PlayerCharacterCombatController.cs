@@ -3,11 +3,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [Serializable]
 public struct WeaponAmmoPair
 {
-    public PlayerWeapon weapon;
+    public WeaponTypes weapon;
     public Int32 ammo;
 }
 
@@ -30,29 +31,31 @@ public enum WeaponSocket
 
 public class PlayerCharacterCombatController : MonoBehaviour
 {    
-    [SerializeField] private PlayerWeapon weaponSelected;    
-    [SerializeField] private Weapon[] weapons = new Weapon[5];
+    [SerializeField] private WeaponTypes weaponSelected;    
+    [SerializeField] private Weapon[] weaponsSet = new Weapon[5];
     [SerializeField] private Transform rightHandSocket, leftHandSocket;    
    
     [SerializeField]
     private List<WeaponAmmoPair> weaponAmmoList = new List<WeaponAmmoPair>
     {
-        new WeaponAmmoPair { weapon = PlayerWeapon.Melee, ammo = 0 }, // Crowbar doesn't use ammo
-        new WeaponAmmoPair { weapon = PlayerWeapon.Pistol, ammo = 50 },
-        new WeaponAmmoPair { weapon = PlayerWeapon.Shotgun, ammo = 20 },
-        new WeaponAmmoPair { weapon = PlayerWeapon.Smg, ammo = 300 },
-        new WeaponAmmoPair { weapon = PlayerWeapon.Crossbow, ammo = 150 }
+        new WeaponAmmoPair { weapon = WeaponTypes.Melee, ammo = 0 }, // Crowbar doesn't use ammo
+        new WeaponAmmoPair { weapon = WeaponTypes.Pistol, ammo = 50 },
+        new WeaponAmmoPair { weapon = WeaponTypes.Shotgun, ammo = 20 },
+        new WeaponAmmoPair { weapon = WeaponTypes.Smg, ammo = 300 },
+        new WeaponAmmoPair { weapon = WeaponTypes.Crossbow, ammo = 150 }
     };
 
     private Weapon equippedWeapon;
-    private Dictionary<PlayerWeapon, Int32> playerWeaponAmmo;
+    private List<Weapon> weaponsInventory = new List<Weapon>();
+    private Dictionary<WeaponTypes, Int32> playerWeaponAmmo;
     private PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
     private PlayerCharacterAnimationsController playerCharacterAnimationsController;
 
 
-    public PlayerWeapon WeaponSelected => weaponSelected;
+    public WeaponTypes WeaponSelected => weaponSelected;
+    public int WeaponsInventoryCount => weaponsInventory.Count;
     public Weapon EquippedWeapon => equippedWeapon;
-    public Dictionary<PlayerWeapon, Int32> WeaponAmmo
+    public Dictionary<WeaponTypes, Int32> WeaponAmmo
     {
         get => playerWeaponAmmo;
 
@@ -72,8 +75,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
         set { playerCombatStates = value; }
     }
 
-    public static event Action<PlayerWeapon> onSwitchToWeapon;
-    public static event Action<PlayerWeapon> onReload;
+    public static event Action<WeaponTypes> onSwitchToWeapon;
+    public static event Action<WeaponTypes> onReload;
 
     private void Awake()
     {
@@ -85,16 +88,15 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private void Start()
     {
-        // Try to switch to the first valid weapon that you have in the array
-        foreach (Weapon weapon in weapons)
+        // Switch to the first weapon in the inventory
+        if (weaponsInventory.Count > 0)
         {
-            if(weapon != null)
-            {
-                // Switch to the first weapon that you have found
-                SwitchToWeapon(Array.IndexOf(weapons, weapon));
-                break; // Break the loop after switching to the first weapon
-            }                               
-        }        
+            SwitchToWeapon(0);            
+        }
+        else
+        {
+            Debug.LogWarning("No weapons in the inventory.");
+        }
     }
 
     private void Update()
@@ -109,17 +111,18 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             Debug.LogError("Right hand socket or left hand socket is not set.");
             return;
-        }
+        }        
+
 
         // Intialize each weapon based on the weapons setted in the inspector
-        foreach (var weapon in weapons)
+        foreach (var weapon in weaponsSet)
         {
             if(weapon == null) continue; // Skip if the weapon is null
 
             Weapon weaponSpawned; // Will hold the spawned weapon
 
             // If the weapon is a DualWieldGun, it needs to be initialized differently
-            if (weapon.WeaponType == PlayerWeapon.Melee || weapon.WeaponType == PlayerWeapon.Shotgun)
+            if (weapon.WeaponType == WeaponTypes.Melee || weapon.WeaponType == WeaponTypes.Shotgun)
             {
                 // Will create a new instance of the DualWieldGuns
                 weaponSpawned = InitializeDualWieldGun(weapon);                
@@ -132,11 +135,15 @@ public class PlayerCharacterCombatController : MonoBehaviour
                 // Instantiate the weapon and set it as inactive
                 weaponSpawned = Instantiate(weapon, socketToAttach);
                 weaponSpawned.gameObject.SetActive(false);
-            }            
+            }
 
-            // Get the correct index of the weapon in the array, and set it to the spawned weapon
-            // Othwerwise, it will be refferencing the prefab
-            weapons[Array.IndexOf(weapons, weapon)] = weaponSpawned;
+            if(weaponSpawned == null)
+            {
+                Debug.LogError($"Weapon {weapon.name} could not be spawned.");                
+            }
+
+            // add the weapon spawned to the weapons inventory
+            weaponsInventory.Add(weaponSpawned);
         }
     }
 
@@ -144,7 +151,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         Weapon weapons;
 
-        if(weaponToSpawn.WeaponType == PlayerWeapon.Melee)
+        if(weaponToSpawn.WeaponType == WeaponTypes.Melee)
         {
             CarnivorousPlants carnivovrousPlants = new GameObject("CarnivovrousPlants").AddComponent<CarnivorousPlants>();
             carnivovrousPlants.transform.SetParent(transform);
@@ -187,18 +194,18 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public virtual void SwitchToWeapon(int weaponsIndex)
     {        
-        if (weapons[weaponsIndex] == null)
+        if (weaponsInventory[weaponsIndex] == null)
         {
             Debug.LogWarning($"There is no Weapon at index {weaponsIndex}.");
             return;
         }
 
-        if (weapons[weaponsIndex] == equippedWeapon) return; // If the weapon is already equipped, do nothing
+        if (weaponsInventory[weaponsIndex] == equippedWeapon) return; // If the weapon is already equipped, do nothing
 
         // If there is an active weapon, disable it
         if (equippedWeapon) equippedWeapon.gameObject.SetActive(false);
         
-        equippedWeapon = weapons[weaponsIndex]; // Set the equipped weapon using the index
+        equippedWeapon = weaponsInventory[weaponsIndex]; // Set the equipped weapon using the index
         weaponSelected = equippedWeapon.WeaponType;
 
         // If equipped weapon is a dual wield gun, enable both guns
@@ -216,7 +223,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void UseWeapon()
     {
-        if (equippedWeapon is Gun equippedGun && !equippedGun.CanFire) return;
+        if (equippedWeapon == null || (equippedWeapon is Gun equippedGun && !equippedGun.CanFire)) return;
 
         playerCharacterAnimationsController.PlayeUseWeapon(equippedWeapon);
     }    
@@ -262,5 +269,50 @@ public class PlayerCharacterCombatController : MonoBehaviour
         // If the Mag Ammo is equal to the Max Ammo, means that the gun is full
         // If the weapon ammo is less than or equal to 0, means that player has no ammo to reload
         return equippedGun.MagAmmo != equippedGun.MaxAmmo && playerWeaponAmmo[weaponSelected] > 0;
+    }
+
+    private void DropShotgun()
+    {
+        Weapon ShotgunsSpawned = InitializeDualWieldGun(weaponsSet[2]); // Assuming Shotgun is at index 2
+
+        // Find where the shotuns are in the inventory and set them to the shotguns spawned       /
+        int index = weaponsInventory.FindIndex(weapon => weapon.WeaponType == WeaponTypes.Shotgun);
+        if (index != -1)
+        {
+            weaponsInventory[index] = ShotgunsSpawned;
+        }
+        else
+        {
+            Debug.LogWarning("Shotgun not found in the inventory.");
+            return;
+        }
+
+
+
+        weaponsInventory.Remove(equippedWeapon);
+        
+
+        equippedWeapon = null;
+    }
+
+    private void RetrieveNewShotguns()
+    {
+        Weapon ShotgunsSpawned = InitializeDualWieldGun(weaponsSet[2]); // Assuming Shotgun is at index 2
+        ShotgunsSpawned.gameObject.SetActive(true);
+        weaponsInventory.Add(ShotgunsSpawned);
+
+        equippedWeapon = ShotgunsSpawned;
+    }
+
+    private void OnEnable()
+    {
+        AnimationTriggerEvents.onDropShotgun += DropShotgun;
+        AnimationTriggerEvents.onReTrieveNewShotguns += RetrieveNewShotguns;
+    }
+
+    private void OnDisable()
+    {
+        AnimationTriggerEvents.onDropShotgun -= DropShotgun;
+        AnimationTriggerEvents.onReTrieveNewShotguns -= RetrieveNewShotguns;
     }
 }

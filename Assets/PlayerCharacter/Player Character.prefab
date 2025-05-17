@@ -848,6 +848,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3495299973754289782}
   - component: {fileID: 2352808732092941608}
+  - component: {fileID: 7142449974659973943}
   m_Layer: 7
   m_Name: Armature
   m_TagString: Untagged
@@ -893,6 +894,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7142449974659973943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3034870466490217532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41f828f21e8577b4684a43f80ae96182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3228755084753925262
 GameObject:
   m_ObjectHideFlags: 0
@@ -1308,7 +1321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSelected: 0
-  weapons:
+  weaponsSet:
   - {fileID: 186649536490876846, guid: b668074fe76b63f43bea7b67044c27e5, type: 3}
   - {fileID: 7646214553458913523, guid: f309566e5b334dd4b8484ae8263e9713, type: 3}
   - {fileID: 2297985535481940187, guid: d455c95032e16d743ad1388472a47104, type: 3}
@@ -1325,8 +1338,6 @@ MonoBehaviour:
     ammo: 20
   - weapon: 3
     ammo: 300
-  - weapon: 4
-    ammo: 150
 --- !u!1 &5042317255202969701
 GameObject:
   m_ObjectHideFlags: 0

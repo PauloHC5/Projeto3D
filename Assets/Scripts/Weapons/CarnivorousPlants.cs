@@ -19,7 +19,7 @@ public class CarnivorousPlants : Weapon
         this.plantR = plantR;
         this.plantL = plantL;
 
-        weaponType = PlayerWeapon.Melee;
+        weaponType = WeaponTypes.Melee;
 
         return this;
     }

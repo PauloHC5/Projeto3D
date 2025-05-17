@@ -64,7 +64,7 @@ public class Enemy : MonoBehaviour
     }
 
     // funtion to take damage
-    public void TakeDamage(int damage, PlayerWeapon damageType)
+    public void TakeDamage(int damage, WeaponTypes damageType)
     {
         if(isDead) return; // Ignore damage if already dead
 
@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            float layerWeight = (damageType == PlayerWeapon.Smg || damageType == PlayerWeapon.Crossbow) ? mediumLayerWeight : fullLayerWeight;
+            float layerWeight = (damageType == WeaponTypes.Smg || damageType == WeaponTypes.Crossbow) ? mediumLayerWeight : fullLayerWeight;
             animator.SetLayerWeight(reactionLayerIndex, layerWeight);
 
             // Trigger the react animation based on the damage type
@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour
             animator.SetInteger(WeaponIndex, (int)damageType);
 
 
-            if (damageType == PlayerWeapon.Shotgun)
+            if (damageType == WeaponTypes.Shotgun)
             {
                 if (shotgunStunReactRoutine == null)
                 {
@@ -100,7 +100,7 @@ public class Enemy : MonoBehaviour
         }        
     }   
 
-    private void Die(PlayerWeapon damageType)
+    private void Die(WeaponTypes damageType)
     {        
         enemyCollider.enabled = false;
         behaviorGraph.enabled = false;
@@ -110,7 +110,7 @@ public class Enemy : MonoBehaviour
 
         if (enemyDeadCollider) enemyDeadCollider.enabled = true;
 
-        if (damageType == PlayerWeapon.Shotgun)
+        if (damageType == WeaponTypes.Shotgun)
         {
             agent.velocity = Vector3.zero;
             ApplyShotgunImpulse(shotgunDeathImpulse);

@@ -1778,7 +1778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70a82076cdc239342ba421eb7bd4fee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 4
+  weaponType: 3
   socketToAttach: 0
   fireRate: 0.58
   gunRange: 100
@@ -1796,8 +1796,6 @@ MonoBehaviour:
   DebugRaycast: 0
   intervalBetweenShots: 0.07
   boltProjectile: {fileID: 0}
-  boltSpawnPoint: {fileID: 1012128198775458161, guid: e5edce3a7d4a2094489060a633b58c63,
-    type: 3}
   boltForce: 100
   scopeZoom: 30
   scopeSpeed: 100

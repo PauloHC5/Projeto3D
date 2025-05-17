@@ -7,13 +7,25 @@ public class Shotgun : Gun
     [Header("Shotgun Properties")]
     [SerializeField] private int damage = 10;
     [SerializeField] private LayerMask shootLayer;
-    [SerializeField] private float damageCapsuleRadius = 0.5f;    
+    [SerializeField] private float damageCapsuleRadius = 0.5f;
+    [SerializeField] private float throwForce = 10f;
 
     [Header("Burst Properties")]
     [SerializeField] private float burstRange = 10f;
     [SerializeField] private int pelletsPerShot = 5;
-    [SerializeField] private float spreadAngle = 5f;    
+    [SerializeField] private float spreadAngle = 5f;
 
+    private Rigidbody rb;
+    private Collider collider;
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        rb = GetComponent<Rigidbody>();
+        collider = GetComponent<Collider>();
+    }    
 
     public override void Fire()
     {
@@ -22,6 +34,18 @@ public class Shotgun : Gun
         base.Fire();
         StartCoroutine(BurstFire());
         magAmmo--;
+    }
+
+    public void DropShotgun()
+    {
+        // Desaatch shotgun from player
+        transform.SetParent(null);
+
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        collider.enabled = true;
+        rb.AddForce(transform.forward * throwForce, ForceMode.Impulse);
+        AnimationTriggerEvents.onDropShotgun -= DropShotgun;
     }
 
     private IEnumerator BurstFire()
@@ -82,5 +106,15 @@ public class Shotgun : Gun
             Gizmos.DrawLine(point1 + Vector3.right * damageCapsuleRadius, point2 + Vector3.right * damageCapsuleRadius);
             Gizmos.DrawLine(point1 - Vector3.right * damageCapsuleRadius, point2 - Vector3.right * damageCapsuleRadius);
         }
+    }
+
+    private void OnEnable()
+    {
+        AnimationTriggerEvents.onDropShotgun += DropShotgun;
+    }
+
+    private void OnDisable()
+    {
+        AnimationTriggerEvents.onDropShotgun -= DropShotgun;
     }
 }

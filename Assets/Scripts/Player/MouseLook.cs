@@ -95,7 +95,7 @@ public class MouseLook : MonoBehaviour
         }
     }
 
-    public void ZoomOut(PlayerWeapon weapon)
+    public void ZoomOut(WeaponTypes weapon)
     {
         if (zoomIn == false) return;
 

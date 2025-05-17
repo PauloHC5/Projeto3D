@@ -5,13 +5,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum PlayerWeapon
+public enum WeaponTypes
 {
     Melee = 0,
     Pistol = 1,
     Shotgun = 2,
-    Smg = 3,
-    Crossbow = 4
+    Crossbow = 3,
+    Smg = 4,
 }
 
 public class PlayerCharacterController : MonoBehaviour
@@ -60,11 +60,11 @@ public class PlayerCharacterController : MonoBehaviour
         playerControls.Player.Weapon2.performed += ctx => SwitchToWeapon(1);
         playerControls.Player.Weapon3.performed += ctx => SwitchToWeapon(2);
         playerControls.Player.Weapon4.performed += ctx => SwitchToWeapon(3);
-        playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(4);
+        //playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(4);
 
         // Assign the HandleMouseScroll method to the respective input actions
-        playerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };
-        playerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };        
+        playerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };
+        playerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };        
     }        
 
     void Update()
@@ -76,22 +76,54 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void HandleMouseScroll()
     {
-        // Get the number of weapons in the PlayerWeapon enum
-        int weaponCount = Enum.GetValues(typeof(PlayerWeapon)).Length;
+        if (lmbPressed || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING)
+            return;
 
-        /* Calculate the new weapon index        
-         * This will allow the player to cycle through the weapons
-         * For example, if the player has the Crossbow equipped and scrolls down, the new weapon index will be 0 (Crowbar)
-         * If the player has the Crowbar equipped and scrolls up, the new weapon index will be 4 (Crossbow) */        
-        int newWeaponIndex = ((int)playerCharacterCombatController.WeaponSelected + MouseScroll + weaponCount) % weaponCount;
-        
-        SwitchToWeapon(newWeaponIndex);
+        // Get the current weapon index
+        int currentIndex;
+        switch(playerCharacterCombatController.WeaponSelected)
+        {
+            case WeaponTypes.Melee:
+                currentIndex = 0;
+                break;
+            case WeaponTypes.Pistol:
+                currentIndex = 1;
+                break;
+            case WeaponTypes.Shotgun:
+                currentIndex = 2;
+                break;            
+            case WeaponTypes.Crossbow:
+                currentIndex = 3;
+                break;
+            default:
+                currentIndex = -1; // Invalid index
+                break;
+        }
+
+        int inventoryCount = playerCharacterCombatController.WeaponsInventoryCount;
+
+        if (inventoryCount <= 1)
+            return; // No need to scroll if only one weapon
+
+        // Calculate new index based on scroll direction
+        int newIndex = currentIndex + MouseScroll;
+
+        // Wrap around
+        if (newIndex < 0)
+            newIndex = 3;
+        else if (newIndex >= inventoryCount)
+            newIndex = 0;
+
+        Debug.Log($"Switching to weapon index: {newIndex}");
+
+        // Switch weapon
+        SwitchToWeapon(newIndex);
     }
 
     private void HandleInput()
     {
         if (lmbPressed) PerformPrimaryAction();
-        if (rmbPressed && playerCharacterCombatController.WeaponSelected == PlayerWeapon.Shotgun) PerformSecondaryAction();
+        if (rmbPressed && playerCharacterCombatController.WeaponSelected == WeaponTypes.Shotgun) PerformSecondaryAction();
 
         //playerMovementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         playerMovementInput = playerControls.Player.Move.ReadValue<Vector2>();
@@ -107,7 +139,7 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void PerformPrimaryAction()
     {
-        if (playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RAISING) return;                
+        if (playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RAISING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING) return;                
 
         playerCharacterCombatController.UseWeapon();
     }    
@@ -121,7 +153,7 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void PerformReload()
     {
-        if(playerCharacterCombatController.WeaponSelected == PlayerWeapon.Melee || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING) return;
+        if(playerCharacterCombatController.WeaponSelected == WeaponTypes.Melee || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING) return;
         
         playerCharacterCombatController.Reload();
     }

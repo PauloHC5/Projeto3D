@@ -44,14 +44,14 @@ public class Gun : Weapon
     public bool CanFire => canFire;
 
 
-    private void Awake()
-    {
+    protected virtual void Awake()
+    {        
         gunAnimator = GetComponent<Animator>();
         if (gunAnimator == null) gunAnimator = GetComponentInChildren<Animator>();
         
         magAmmo = magAmmo > maxAmmo ? magAmmo = maxAmmo : magAmmo; // Clamp magAmmo to maxAmmo                
 
-        cameraRecoil = Camera.main.GetComponentInParent<CameraRecoil>();        
+        cameraRecoil = Camera.main.GetComponentInParent<CameraRecoil>();             
     }
 
     public virtual void Fire()
@@ -66,7 +66,8 @@ public class Gun : Weapon
 
     public virtual void PlayReload()
     {
-        gunAnimator.SetTrigger(ReloadTrigger);
+        if (gunAnimator) gunAnimator.SetTrigger(ReloadTrigger);
+        else Debug.LogWarning("Gun animator not found.");
     }
 
     public virtual void Reload()
@@ -177,7 +178,7 @@ public class Gun : Weapon
         PlayerCharacterCombatController.onSwitchToWeapon += OnSwitchToWeapon;
     }
 
-    protected virtual void OnSwitchToWeapon(PlayerWeapon weapon)
+    protected virtual void OnSwitchToWeapon(WeaponTypes weapon)
     {
         // To be implemented in derived classes
     }

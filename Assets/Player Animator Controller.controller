@@ -277,12 +277,12 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.83011115
-  m_TransitionOffset: 0.0013022246
-  m_ExitTime: 1
+  m_TransitionDuration: 0.10150397
+  m_TransitionOffset: 0.001263569
+  m_ExitTime: 0.9501279
   m_HasExitTime: 1
   m_HasFixedDuration: 1
-  m_InterruptionSource: 3
+  m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
 --- !u!1101 &-6288404523182311890
@@ -304,7 +304,7 @@ AnimatorStateTransition:
   m_ExitTime: 0.45454544
   m_HasExitTime: 1
   m_HasFixedDuration: 1
-  m_InterruptionSource: 0
+  m_InterruptionSource: 3
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
 --- !u!1107 &-6273463550773095771
@@ -395,8 +395,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -623603649343465320, guid: 9c136e9c11884884cb43f69528d2f1da,
-    type: 3}
+  m_Motion: {fileID: 7400000, guid: 34ab71099eb5ee245bc36f867af2b35f, type: 2}
   m_Tag: Reload
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -521,9 +520,9 @@ AnimatorStateTransition:
   m_ExitTime: 0.75
   m_HasExitTime: 0
   m_HasFixedDuration: 1
-  m_InterruptionSource: 1
+  m_InterruptionSource: 0
   m_OrderedInterruption: 1
-  m_CanTransitionToSelf: 1
+  m_CanTransitionToSelf: 0
 --- !u!1102 &-5274467378758392768
 AnimatorState:
   serializedVersion: 6
@@ -748,7 +747,7 @@ AnimatorStateTransition:
   m_ExitTime: 0.5
   m_HasExitTime: 1
   m_HasFixedDuration: 1
-  m_InterruptionSource: 0
+  m_InterruptionSource: 3
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
 --- !u!1101 &-3524997051464846084
@@ -1215,6 +1214,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: CanReload
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -1438,7 +1443,7 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 6
     m_ConditionEvent: WeaponIndex
-    m_EventTreshold: 4
+    m_EventTreshold: 3
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6724443535057014863}
   m_Solo: 0
@@ -1661,10 +1666,10 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.42
   m_TransitionOffset: 0
-  m_ExitTime: 1
+  m_ExitTime: 0.5
   m_HasExitTime: 1
   m_HasFixedDuration: 0
-  m_InterruptionSource: 2
+  m_InterruptionSource: 3
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
 --- !u!1102 &3067923055494013247
@@ -1733,10 +1738,10 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.42
   m_TransitionOffset: 0
-  m_ExitTime: 1
+  m_ExitTime: 0.5
   m_HasExitTime: 1
   m_HasFixedDuration: 1
-  m_InterruptionSource: 2
+  m_InterruptionSource: 3
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
 --- !u!1101 &3662992393777114756
@@ -1761,9 +1766,9 @@ AnimatorStateTransition:
   m_ExitTime: 0.75
   m_HasExitTime: 0
   m_HasFixedDuration: 1
-  m_InterruptionSource: 2
+  m_InterruptionSource: 0
   m_OrderedInterruption: 1
-  m_CanTransitionToSelf: 1
+  m_CanTransitionToSelf: 0
 --- !u!1102 &4423791937839127150
 AnimatorState:
   serializedVersion: 6
@@ -1841,8 +1846,8 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.09
-  m_TransitionOffset: 0.1493712
+  m_TransitionDuration: 0
+  m_TransitionOffset: 0
   m_ExitTime: 0.5567932
   m_HasExitTime: 0
   m_HasFixedDuration: 1
@@ -2239,13 +2244,16 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Reload
     m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: CanReload
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6028623547386625794}
   m_Solo: 0
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.24550915
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
   m_ExitTime: 0.95562136
   m_HasExitTime: 0
