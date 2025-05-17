@@ -627,8 +627,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -623603649343465320, guid: d3c767af8216be04ca89051022a99c7a,
-    type: 3}
+  m_Motion: {fileID: 7400000, guid: dc0f8cfc41e2cdf4cb8470b5b43faeeb, type: 2}
   m_Tag: FireR
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -954,8 +953,7 @@ BlendTree:
     m_DirectBlendParameter: CurrentSpeed
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -623603649343465320, guid: aa7bcc31089bc5c44ac05a77405c447e,
-      type: 3}
+    m_Motion: {fileID: 7400000, guid: d4863ec76e1b6f44ebc1e5f66d568552, type: 2}
     m_Threshold: 2.48
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -1245,7 +1243,7 @@ AnimatorController:
   - serializedVersion: 5
     m_Name: Shoot Right Hand Layer
     m_StateMachine: {fileID: 251060390493623317}
-    m_Mask: {fileID: 0}
+    m_Mask: {fileID: 31900000, guid: 1ac1608f209ab4542b4c716b9388f194, type: 2}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
