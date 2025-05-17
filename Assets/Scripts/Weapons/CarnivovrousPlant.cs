@@ -25,6 +25,11 @@ public class CarnivovrousPlant : Weapon
         }
     }
 
+    public void PlayRaise(string trigger)
+    {
+        animator.SetTrigger(trigger);
+    }
+
     public void EnableCollision()
     {
         hitCollider.enabled = true;

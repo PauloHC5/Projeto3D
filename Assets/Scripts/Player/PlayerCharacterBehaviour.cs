@@ -44,16 +44,25 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         playerCharacterCombatController.PlayerCombatStates = newCombatState;
 
         equippedGun = playerCharacterCombatController.EquippedWeapon as Gun;
-        DualWieldGun equippedGuns = equippedGun as DualWieldGun;                                
-                
+        DualWieldGun equippedGuns = equippedGun as DualWieldGun;
+        CarnivorousPlants carnivorousPlants = playerCharacterCombatController.EquippedWeapon as CarnivorousPlants;
+
         switch (playerCharacterCombatController.PlayerCombatStates)
         {
             case PlayerCombatStates.RAISING:
                 animator.SetLayerWeight(FireLeftHandLayer, 0f);
                 animator.SetLayerWeight(FireRightHandLayer, 0f);
+
+                
+                if (carnivorousPlants != null)
+                {
+                    carnivorousPlants.EnableCollisions();
+
+                    carnivorousPlants.PlayRaiseWeapon();
+                }
+
                 break;
-            case PlayerCombatStates.ATTACKING:                
-                CarnivorousPlants carnivorousPlants = playerCharacterCombatController.EquippedWeapon as CarnivorousPlants;
+            case PlayerCombatStates.ATTACKING:                                
                 if (carnivorousPlants != null)
                 {
                     carnivorousPlants.EnableCollisions();

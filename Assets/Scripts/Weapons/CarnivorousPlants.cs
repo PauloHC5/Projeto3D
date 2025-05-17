@@ -9,7 +9,7 @@ public enum WhichPlant
 public class CarnivorousPlants : Weapon
 {
     private CarnivovrousPlant plantR;
-    private CarnivovrousPlant plantL;    
+    private CarnivovrousPlant plantL;        
 
     public CarnivorousPlants Initialize(CarnivovrousPlant plantR, CarnivovrousPlant plantL)
     {
@@ -51,6 +51,12 @@ public class CarnivorousPlants : Weapon
     {
        plantL.EnableCollision();
        plantR.EnableCollision();
+    }
+
+    public void PlayRaiseWeapon()
+    {
+        plantL.PlayRaise("RaiseL");
+        plantR.PlayRaise("RaiseR");
     }
 
     private void OnDestroy()
