@@ -32,8 +32,7 @@ public class PlayerCharacterAnimationsController
     }
 
     public void PlaySwitchToWeapon(WeaponTypes weapon)
-    {                                  
-        Debug.Log($"Switching to weapon: {(int)weapon}");
+    {                                          
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
         playerAnimator.SetTrigger(RaiseWeaponTrigger);        
     }    
