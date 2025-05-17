@@ -82,7 +82,7 @@ public class PlayerCharacterAnimationsController
     private void HandleToggleAttackAnimation()
     {        
         var toggleAttack = playerAnimator.GetInteger(ToggleAttack) + 1;
-        if (toggleAttack > 3) toggleAttack = 1;
+        if (toggleAttack > 2) toggleAttack = 1;
         playerAnimator.SetInteger(ToggleAttack, toggleAttack);
     }
 }

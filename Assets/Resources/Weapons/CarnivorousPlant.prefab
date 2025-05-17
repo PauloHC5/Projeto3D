@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5092186306055428272}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: boca2 R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2541091806887628244}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: planta3 R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1469146855488385059}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: boca3 R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5377538982682264868}
   - component: {fileID: 8974374481044100569}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Hit Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,7 +141,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
@@ -156,7 +156,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7440619594981359813}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pulso R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8682852924018832914}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: planta2 R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2242732106394913126}
   - component: {fileID: 186649536490876846}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CarnivorousPlant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,7 +239,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.009999998, y: 0.010000001, z: 0.009999944}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 320685187649402859}
@@ -273,7 +273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2110312977563113297}
   - component: {fileID: 3964728914535852654}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlantaRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -328,7 +328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 320685187649402859}
   - component: {fileID: 8727996987080070461}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlantaR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,7 +424,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5387078088854463887}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: boca1 R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -456,7 +456,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4974019443607593407}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: planta1 R
   m_TagString: Untagged
   m_Icon: {fileID: 0}

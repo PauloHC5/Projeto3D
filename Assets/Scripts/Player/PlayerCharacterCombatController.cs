@@ -119,11 +119,11 @@ public class PlayerCharacterCombatController : MonoBehaviour
             Weapon weaponSpawned; // Will hold the spawned weapon
 
             // If the weapon is a DualWieldGun, it needs to be initialized differently
-            if (weapon is DualWieldGun)
+            if (weapon.WeaponType == PlayerWeapon.Melee || weapon.WeaponType == PlayerWeapon.Shotgun)
             {
                 // Will create a new instance of the DualWieldGuns
                 weaponSpawned = InitializeDualWieldGun(weapon);                
-            }
+            }            
             else // Proceed with the normal weapon initialization
             {
                 // Get the socket to attach the weapon
@@ -140,22 +140,44 @@ public class PlayerCharacterCombatController : MonoBehaviour
         }
     }
 
-    private Gun InitializeDualWieldGun(Weapon weaponToSpawn)
+    private Weapon InitializeDualWieldGun(Weapon weaponToSpawn)
     {
-        DualWieldGun guns = new GameObject("DualWieldGun").AddComponent<DualWieldGun>();
-        guns.transform.SetParent(transform);
+        Weapon weapons;
 
-        Transform socketRight = GetSocketTransform(guns.GetSocketToAttach(WhichGun.GunR));
-        Transform socketLeft = GetSocketTransform(guns.GetSocketToAttach(WhichGun.GunL));
+        if(weaponToSpawn.WeaponType == PlayerWeapon.Melee)
+        {
+            CarnivorousPlants carnivovrousPlants = new GameObject("CarnivovrousPlants").AddComponent<CarnivorousPlants>();
+            carnivovrousPlants.transform.SetParent(transform);
 
-        guns.Initialize(
-        (Gun)Instantiate(weaponToSpawn, socketRight),
-        (Gun)Instantiate(weaponToSpawn, socketLeft)
-        );
+            Transform socketRight = GetSocketTransform(carnivovrousPlants.GetSocketToAttach(WhichPlant.PlantR));
+            Transform socketLeft = GetSocketTransform(carnivovrousPlants.GetSocketToAttach(WhichPlant.PlantL));
 
-        guns.gameObject.SetActive(false);   
+            carnivovrousPlants.Initialize(
+                (CarnivovrousPlant)Instantiate(weaponToSpawn, socketRight),
+                (CarnivovrousPlant)Instantiate(weaponToSpawn, socketLeft)
+            );
 
-        return guns;
+            weapons = carnivovrousPlants;
+        }
+        else
+        {
+            DualWieldGun guns = new GameObject("DualWieldGun").AddComponent<DualWieldGun>();
+            guns.transform.SetParent(transform);
+
+            Transform socketRight = GetSocketTransform(guns.GetSocketToAttach(WhichGun.GunR));
+            Transform socketLeft = GetSocketTransform(guns.GetSocketToAttach(WhichGun.GunL));
+
+            guns.Initialize(
+            (Gun)Instantiate(weaponToSpawn, socketRight),
+            (Gun)Instantiate(weaponToSpawn, socketLeft)
+            );
+
+            guns.gameObject.SetActive(false);
+
+            weapons = guns;
+        }        
+
+        return weapons;
     }
 
     private void InitializeWeaponAmmo()
@@ -181,6 +203,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
         // If equipped weapon is a dual wield gun, enable both guns
         if (equippedWeapon is DualWieldGun equippedGuns) equippedGuns.gameObject.SetActive(true);
+        else if(equippedWeapon is CarnivorousPlants carnivorousPlants) carnivorousPlants.gameObject.SetActive(true);        
         else equippedWeapon?.gameObject.SetActive(true); // Enable the equipped weapon
 
         // Reset the weapon position

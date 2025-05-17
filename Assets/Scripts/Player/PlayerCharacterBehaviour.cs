@@ -11,6 +11,8 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     private const int FireLeftHandLayer = 1;
     private const int FireRightHandLayer = 2;
 
+    private int ToggleAttack = Animator.StringToHash("ToggleAttack");
+
     private PlayerCombatStates FindCombatState(AnimatorStateInfo stateInfo)
     {     
         if (stateInfo.IsTag("RaiseWeapon")) return PlayerCombatStates.RAISING;
@@ -51,10 +53,20 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 animator.SetLayerWeight(FireRightHandLayer, 0f);
                 break;
             case PlayerCombatStates.ATTACKING:                
-                Crowbar crowbar = playerCharacterCombatController.EquippedWeapon as Crowbar;
-                if (crowbar != null)
+                CarnivorousPlants carnivorousPlants = playerCharacterCombatController.EquippedWeapon as CarnivorousPlants;
+                if (carnivorousPlants != null)
                 {
-                    crowbar.EnableCollision();
+                    carnivorousPlants.EnableCollisions();
+
+                    switch(animator.GetInteger(ToggleAttack))
+                    {
+                        case 1:
+                            carnivorousPlants.Attack(WhichPlant.PlantR);
+                            break;
+                        case 2:
+                            carnivorousPlants.Attack(WhichPlant.PlantL);
+                            break;
+                    }
                 }
                 break;
             case PlayerCombatStates.FIRING:
