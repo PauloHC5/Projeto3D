@@ -24,4 +24,14 @@ public class Flaregun : Gun
     {        
         base.Reload();        
     }
+
+    private void OnEnable()
+    {
+        CorngunAnimationTriggerEvents.onReloadCorngun += Reload;
+    }
+
+    private void OnDisable()
+    {
+        CorngunAnimationTriggerEvents.onReloadCorngun -= Reload;
+    }
 }

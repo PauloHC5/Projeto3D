@@ -54,6 +54,12 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 animator.SetLayerWeight(FireLeftHandLayer, 0f);
                 animator.SetLayerWeight(FireRightHandLayer, 0f);
 
+                if (playerCharacterCombatController.WeaponSelected == WeaponTypes.Pistol && equippedGun.MagAmmo == 0)
+                {
+                    
+                    playerCharacterCombatController.Reload();
+                    
+                }
 
                 if (carnivorousPlants != null)
                 {
@@ -127,7 +133,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
             if(playerCharacterCombatController.PlayerCombatStates != PlayerCombatStates.RELOADING) playerCharacterCombatController.PlayerCombatStates = PlayerCombatStates.DEFAULT;
             animator.SetBool(CanReload, true);
 
-        }
+        }        
         else
         {
             animator.SetBool(CanReload, true);

@@ -348,10 +348,9 @@ MonoBehaviour:
   muzzleFlash: {fileID: 0}
   impactVFX: {fileID: 0}
   DebugRaycast: 0
-  flareProjectile: {fileID: 7545303316391790199, guid: 0ed3afc0ecad0fb4b97f34b84b946256,
+  flareProjectile: {fileID: 7392494035453153853, guid: 0a87dd43d1d759148bab6cbfab6cb510,
     type: 3}
-  flareSpawnPoint: {fileID: 5127488804480369277, guid: ea714789a6843cd44b72939c9bb78946,
-    type: 3}
+  flareSpawnPoint: {fileID: 1729148229857485247}
   FlareForce: 20
 --- !u!1 &2901351047078527544
 GameObject:
@@ -486,6 +485,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1048106593993494956}
   - component: {fileID: 3046049957753602304}
+  - component: {fileID: 5617076831993270352}
   m_Layer: 7
   m_Name: Corngun.Armature
   m_TagString: Untagged
@@ -531,6 +531,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5617076831993270352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4515764236445207513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d7f071932a0c6b4ca8352339792690d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4917749040341360208
 GameObject:
   m_ObjectHideFlags: 0
