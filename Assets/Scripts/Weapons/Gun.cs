@@ -130,9 +130,9 @@ public class Gun : Weapon
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, rayDistance, shootLayer))
         {
-            if (hit.collider.gameObject.GetComponent<Enemy>())
+            if (hit.collider.gameObject.GetComponent<Woodsman>())
             {
-                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);
+                hit.collider.gameObject.GetComponent<Woodsman>().TakeDamage(damage, weaponType);
             }
 
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));
@@ -158,9 +158,9 @@ public class Gun : Weapon
         Collider[] hitColliders = Physics.OverlapCapsule(point1, point2, radius, shootLayer);
         foreach (var hitCollider in hitColliders)
         {
-            if (hitCollider.gameObject.GetComponent<Enemy>())
+            if (hitCollider.gameObject.GetComponent<Woodsman>())
             {
-                hitCollider.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);
+                hitCollider.gameObject.GetComponent<Woodsman>().TakeDamage(damage, weaponType);
             }
         }                
     }

@@ -8,7 +8,7 @@ public class Bolt : Projectile
     private  void OnCollisionEnter(Collision collision)
     {                   
         rb.isKinematic = true;
-        Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+        Woodsman enemy = collision.gameObject.GetComponent<Woodsman>();
         if (enemy)
         {
             enemy.TakeDamage(damage, WeaponTypes.Crossbow);

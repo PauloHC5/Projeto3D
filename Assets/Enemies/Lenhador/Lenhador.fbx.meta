@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: 4496e9b9070fe4740942962727a64fc9
+guid: a4c3b84ae40fc5f4eaf0f4f65a51b471
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: texturalenhador
+    second: {fileID: 2800000, guid: 94d82900b995b094592e88eac86b3e21, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

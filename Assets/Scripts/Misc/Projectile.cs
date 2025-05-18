@@ -22,7 +22,7 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+        Woodsman enemy = collision.gameObject.GetComponent<Woodsman>();
         if (enemy)
         {
             enemy.TakeDamage(damage, WeaponTypes.Pistol);
