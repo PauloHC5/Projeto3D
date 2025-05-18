@@ -1702,6 +1702,7 @@ MonoBehaviour:
   m_Graph: {fileID: 8587700817181152791, guid: 679ce20543dea324b8ea0aecb7f9ca57, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 3510279283554386240
+  - rid: 9193738420943323413
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -1716,6 +1717,15 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 4606631036157506938}
+    - rid: 9193738420943323413
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]',
+        ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 817840945196532767
+          m_Value1: 15119925728342937012
+        Name: EnemyAnimator
+        m_Value: {fileID: 8390743050022896996}
 --- !u!114 &6130848782019653931
 MonoBehaviour:
   m_ObjectHideFlags: 0
