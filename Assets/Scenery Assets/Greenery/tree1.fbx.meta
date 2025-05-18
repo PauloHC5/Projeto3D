@@ -3,7 +3,42 @@ guid: 4d29cdad4c7827448bd399dc125a320a
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 61f97dac91ab8fc4ca1cbcef41e17e01, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: folha
+    second: {fileID: 2100000, guid: 9fa05d5c6782fc34eb8f361351a3c082, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tree1
+    second: {fileID: 2100000, guid: 31266fc11ca306941aba8250b63bb226, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: bark_tree_diffuse1k
+    second: {fileID: 2800000, guid: a0f5cbd72076f6c4380e17a7b7183925, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: bark_tree_normal1k
+    second: {fileID: 2800000, guid: f5f843dc188099e4581535f1970562d9, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: folha
+    second: {fileID: 2800000, guid: 9df3b150b30ba3043b6975685a727f9c, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: tree1
+    second: {fileID: 2800000, guid: 1f5b0aeb6f633f7459f3ce3572555e6a, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -33,8 +68,8 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages:
-    - 0.25
-    - 0.01
+    - 0.0051771617
+    - 0.0014168841
     globalScale: 1
     meshCompression: 0
     addColliders: 0
