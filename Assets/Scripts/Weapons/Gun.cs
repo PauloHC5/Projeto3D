@@ -31,7 +31,7 @@ public class Gun : Weapon
     private CameraRecoil cameraRecoil;
 
     // Animator properties
-    private Animator gunAnimator;
+    protected Animator gunAnimator;
     private readonly int FireTrigger = Animator.StringToHash("Fire");
     private readonly int ReloadTrigger = Animator.StringToHash("Reload");
 
@@ -175,17 +175,7 @@ public class Gun : Weapon
     private void OnEnable()
     {
         canFire = magAmmo > 0;
-        PlayerCharacterCombatController.onSwitchToWeapon += OnSwitchToWeapon;
-    }
-
-    protected virtual void OnSwitchToWeapon(WeaponTypes weapon)
-    {
-        // To be implemented in derived classes
-    }
-
-    private void OnDisable()
-    {
-        PlayerCharacterCombatController.onSwitchToWeapon -= OnSwitchToWeapon;
+        
     }        
 }
 

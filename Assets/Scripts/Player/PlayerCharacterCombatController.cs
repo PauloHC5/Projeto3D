@@ -75,8 +75,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
         set { playerCombatStates = value; }
     }
 
-    public static event Action<WeaponTypes> onSwitchToWeapon;
-    public static event Action<WeaponTypes> onReload;
+    public static event Action onSwitchToWeapon;
+    public static event Action onReload;
 
     private void Awake()
     {
@@ -218,7 +218,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
         playerCharacterAnimationsController.PlaySwitchToWeapon(weaponSelected); // Play the switch to weapon animation
 
-        onSwitchToWeapon?.Invoke(weaponSelected);
+        onSwitchToWeapon?.Invoke();
     }
 
     public void UseWeapon()
@@ -238,7 +238,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         if (equippedWeapon is not Gun equippedGun || !CanReload(equippedGun)) return;
 
         playerCharacterAnimationsController.PlayReload();
-        onReload?.Invoke(weaponSelected);
+        onReload?.Invoke();
     }
 
     public void UseWeaponGadget()

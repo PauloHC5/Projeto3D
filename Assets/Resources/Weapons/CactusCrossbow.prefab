@@ -1795,7 +1795,8 @@ MonoBehaviour:
   impactVFX: {fileID: 0}
   DebugRaycast: 0
   intervalBetweenShots: 0.07
-  boltProjectile: {fileID: 0}
+  boltProjectile: {fileID: 5969348226918421055, guid: 5c4a490cd8edef34581c9f20f0473aa6,
+    type: 3}
   boltForce: 100
   scopeZoom: 30
   scopeSpeed: 100
