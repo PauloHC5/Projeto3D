@@ -11,7 +11,7 @@ public class Bolt : Projectile
         Woodsman enemy = collision.gameObject.GetComponent<Woodsman>();
         if (enemy)
         {
-            enemy.TakeDamage(damage, PlayerWeapon.Crossbow);
+            enemy.TakeDamage(damage, WeaponTypes.Crossbow);
             Destroy(gameObject);
         }
     }

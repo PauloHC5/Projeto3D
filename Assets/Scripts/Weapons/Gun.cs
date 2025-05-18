@@ -31,7 +31,7 @@ public class Gun : Weapon
     private CameraRecoil cameraRecoil;
 
     // Animator properties
-    private Animator gunAnimator;
+    protected Animator gunAnimator;
     private readonly int FireTrigger = Animator.StringToHash("Fire");
     private readonly int ReloadTrigger = Animator.StringToHash("Reload");
 
@@ -44,27 +44,30 @@ public class Gun : Weapon
     public bool CanFire => canFire;
 
 
-    private void Awake()
-    {
+    protected virtual void Awake()
+    {        
         gunAnimator = GetComponent<Animator>();
         if (gunAnimator == null) gunAnimator = GetComponentInChildren<Animator>();
         
         magAmmo = magAmmo > maxAmmo ? magAmmo = maxAmmo : magAmmo; // Clamp magAmmo to maxAmmo                
 
-        cameraRecoil = Camera.main.GetComponentInParent<CameraRecoil>();        
+        cameraRecoil = Camera.main.GetComponentInParent<CameraRecoil>();             
     }
 
     public virtual void Fire()
     {
-        if (muzzleFlash) muzzleFlash.Play();
         if (gunAnimator) gunAnimator.SetTrigger(FireTrigger);
+        else Debug.LogWarning("Gun animator not found.");
+
+        if (muzzleFlash) muzzleFlash.Play();        
         if (cameraRecoil) cameraRecoil.RecoilFire(recoilX, recoilY, recoilZ, snappiness, returnSpeed);
         StartCoroutine(ShootDelay());
     }
 
     public virtual void PlayReload()
     {
-        gunAnimator.SetTrigger(ReloadTrigger);
+        if (gunAnimator) gunAnimator.SetTrigger(ReloadTrigger);
+        else Debug.LogWarning("Gun animator not found.");
     }
 
     public virtual void Reload()
@@ -172,17 +175,7 @@ public class Gun : Weapon
     private void OnEnable()
     {
         canFire = magAmmo > 0;
-        PlayerCharacterCombatController.onSwitchToWeapon += OnSwitchToWeapon;
-    }
-
-    protected virtual void OnSwitchToWeapon(PlayerWeapon weapon)
-    {
-        // To be implemented in derived classes
-    }
-
-    private void OnDisable()
-    {
-        PlayerCharacterCombatController.onSwitchToWeapon -= OnSwitchToWeapon;
+        
     }        
 }
 

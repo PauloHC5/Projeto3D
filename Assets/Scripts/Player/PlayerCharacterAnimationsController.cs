@@ -31,8 +31,8 @@ public class PlayerCharacterAnimationsController
         playerAnimator.SetInteger(GunAmmo, ammo);
     }
 
-    public void PlaySwitchToWeapon(PlayerWeapon weapon)
-    {                                            
+    public void PlaySwitchToWeapon(WeaponTypes weapon)
+    {                                          
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
         playerAnimator.SetTrigger(RaiseWeaponTrigger);        
     }    
@@ -45,9 +45,9 @@ public class PlayerCharacterAnimationsController
             return;
         }
 
-        playerAnimator.SetTrigger(UseWeaponTrigger);            
+        playerAnimator.SetTrigger(UseWeaponTrigger);        
 
-        if(equippedWeapon.WeaponType == PlayerWeapon.Crowbar) HandleToggleAttackAnimation();
+        if(equippedWeapon?.WeaponType == WeaponTypes.Melee) HandleToggleAttackAnimation();
     }
 
     public void PlayFireBothGuns(DualWieldGun dualWieldGun)
@@ -82,7 +82,7 @@ public class PlayerCharacterAnimationsController
     private void HandleToggleAttackAnimation()
     {        
         var toggleAttack = playerAnimator.GetInteger(ToggleAttack) + 1;
-        if (toggleAttack > 3) toggleAttack = 1;
+        if (toggleAttack > 2) toggleAttack = 1;
         playerAnimator.SetInteger(ToggleAttack, toggleAttack);
     }
 }
