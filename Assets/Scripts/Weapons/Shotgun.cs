@@ -8,7 +8,7 @@ public class Shotgun : Gun
     [SerializeField] private int damage = 10;
     [SerializeField] private LayerMask shootLayer;
     [SerializeField] private float damageCapsuleRadius = 0.5f;
-    [SerializeField] private float throwForce = 10f;
+    [SerializeField] private float throwForce = 10f;    
 
     [Header("Burst Properties")]
     [SerializeField] private float burstRange = 10f;
@@ -18,6 +18,7 @@ public class Shotgun : Gun
     private Rigidbody rb;
     private Collider collider;
 
+    private readonly int magAmmoHash = Animator.StringToHash("MagAmmo");
 
     protected override void Awake()
     {
@@ -25,7 +26,12 @@ public class Shotgun : Gun
 
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<Collider>();
-    }    
+    }
+
+    private void Update()
+    {
+        gunAnimator.SetInteger(magAmmoHash, magAmmo);
+    }
 
     public override void Fire()
     {
@@ -33,13 +39,24 @@ public class Shotgun : Gun
         base.ShootCapsuleCast(damage, shootLayer, damageCapsuleRadius, gunRange);
         base.Fire();
         StartCoroutine(BurstFire());
-        magAmmo--;
+        magAmmo--;        
     }
+
 
     public void DropShotgun()
     {
         // Desaatch shotgun from player
         transform.SetParent(null);
+
+        // Set shotgun to default layer
+        int defaultLayer = LayerMask.NameToLayer("Default");
+        gameObject.layer = defaultLayer;
+
+        // Find all objectss in this prefab and set their layer to default        
+        foreach (Transform children in gameObject.GetComponentsInChildren<Transform>())
+        {
+            children.gameObject.layer = defaultLayer;
+        }
 
         rb.isKinematic = false;
         rb.useGravity = true;
