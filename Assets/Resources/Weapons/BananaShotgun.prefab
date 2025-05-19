@@ -2352,11 +2352,11 @@ MonoBehaviour:
   shootImpulse: 25
   maxAmmo: 2
   magAmmo: 2
-  recoilX: -20
-  recoilY: 8
+  recoilX: -30.2
+  recoilY: 12.29
   recoilZ: 0.35
   snappiness: 10
-  returnSpeed: 4
+  returnSpeed: 2.6
   fireSocket: {fileID: 7309336431696816505}
   muzzleFlash: {fileID: 0}
   impactVFX: {fileID: 0}
@@ -2367,9 +2367,6 @@ MonoBehaviour:
     m_Bits: 521
   damageCapsuleRadius: 0.5
   throwForce: 10
-  defaultLayer:
-    serializedVersion: 2
-    m_Bits: 1
   burstRange: 2.5
   pelletsPerShot: 8
   spreadAngle: 0.25
