@@ -6,7 +6,7 @@ using UnityEngine;
 [Condition(name: "Enemy line fo sight condition", story: "[Enemy] can see [Target] ?", category: "Conditions", id: "26e3f3a02ac4cbcc7a3fd2934e3e519a")]
 public partial class EnemyLineOfSightCheckCondition : Condition
 {
-    [SerializeReference] public BlackboardVariable<Woodsman> Enemy;
+    [SerializeReference] public BlackboardVariable<Enemy> Enemy;
     [SerializeReference] public BlackboardVariable<GameObject> Target;    
     
 

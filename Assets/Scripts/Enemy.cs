@@ -3,7 +3,7 @@ using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Woodsman : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     [Header("Enemy Properties")]
     [SerializeField] private int health = 100;
@@ -13,6 +13,7 @@ public class Woodsman : MonoBehaviour
     [SerializeField] private float deathImpulse = 20.0f; 
     [SerializeField] private float stunHitImpulse = 10.0f;
     [SerializeField] private float stunDuration = 0.5f;
+    [SerializeField] private bool canStun = true;
 
     [Header("Range Detector Properties")]
     [SerializeField] private float detectionRadius = 5.0f; // Radius of the detection zone
@@ -54,6 +55,7 @@ public class Woodsman : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         behaviorGraph.BlackboardReference.SetVariableValue("Speed", agent.speed);
+        behaviorGraph.BlackboardReference.SetVariableValue("EnemyAnimator", animator);
     }
 
     private void Update()
@@ -117,7 +119,9 @@ public class Woodsman : MonoBehaviour
     }
 
     private IEnumerator StunReact()
-    {                        
+    {
+        if(!canStun) yield break; // Exit if stun is not allowed
+
         agent.velocity = Vector3.zero;
         agent.enabled = false;
         behaviorGraph.enabled = false;

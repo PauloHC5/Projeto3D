@@ -1703,6 +1703,8 @@ MonoBehaviour:
   m_BlackboardVariableOverridesList:
   - rid: 3510279283554386240
   - rid: 9193738420943323413
+  - rid: 9193738441663447228
+  - rid: 9193738441663447277
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -1726,6 +1728,24 @@ MonoBehaviour:
           m_Value1: 15119925728342937012
         Name: EnemyAnimator
         m_Value: {fileID: 8390743050022896996}
+    - rid: 9193738441663447228
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior,
+        asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 9504461261836893942
+          m_Value1: 12434960302848756003
+        Name: AttackRate
+        m_Value: 1
+    - rid: 9193738441663447277
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior,
+        asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 17789152177081557426
+          m_Value1: 17410840093009490970
+        Name: DistanceToTarget
+        m_Value: 1.5
 --- !u!114 &6130848782019653931
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -22,7 +22,7 @@ public class Crowbar : Weapon
     {        
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<Woodsman>().TakeDamage(damage, weaponType);            
+            collision.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);            
         }
     }
 }
