@@ -4597,6 +4597,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Character
       objectReference: {fileID: 0}
+    - target: {fileID: 7876855611953362698, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: scopeVolume
+      value: 
+      objectReference: {fileID: 1155966603}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12125,6 +12130,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ChemAgent
+      objectReference: {fileID: 0}
+    - target: {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: health
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

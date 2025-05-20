@@ -1799,7 +1799,7 @@ MonoBehaviour:
     type: 3}
   boltForce: 100
   scopeZoom: 30
-  scopeSpeed: 100
+  scopeSpeed: 200
 --- !u!1 &8710296038748516173
 GameObject:
   m_ObjectHideFlags: 0

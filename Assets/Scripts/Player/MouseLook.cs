@@ -9,6 +9,7 @@ public class MouseLook : MonoBehaviour
     [Header("Camera Properties")]
     [SerializeField] private float mouseSensitivity = 100f;    
     [SerializeField] private Transform cameraRot;
+    [SerializeField] private GameObject scopeVolume;
 
     [Header("Player Mesh Properties")]
     [SerializeField] private Transform player;
@@ -103,6 +104,17 @@ public class MouseLook : MonoBehaviour
     {
         zoomIn = !zoomIn;
 
+        if(zoomIn)
+        {
+            scopeVolume.SetActive(true);
+            playerCameras[1].enabled = false;
+        }
+        else
+        {
+            scopeVolume.SetActive(false);
+            playerCameras[1].enabled = true;
+        }
+
         if (zoomCoroutine != null)
         {
             StopCoroutine(zoomCoroutine);
@@ -138,6 +150,8 @@ public class MouseLook : MonoBehaviour
         if (zoomIn == false) return;
 
         zoomIn = false;
+        scopeVolume.SetActive(false);
+        playerCameras[1].enabled = true;
 
         if (zoomCoroutine != null)
         {
