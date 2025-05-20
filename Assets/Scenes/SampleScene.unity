@@ -12126,11 +12126,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChemAgent
       objectReference: {fileID: 0}
-    - target: {fileID: 1070014290292914364, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12241,6 +12236,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Woodsman
+      objectReference: {fileID: 0}
+    - target: {fileID: 2698330378980774502, guid: 21b3b941d463e4a41bfb64ecaa0b65ff,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5380157350571352226, guid: 21b3b941d463e4a41bfb64ecaa0b65ff,
         type: 3}

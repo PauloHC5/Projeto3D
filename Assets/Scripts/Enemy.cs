@@ -25,19 +25,19 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float detectionHeight = 3.0f;
     [SerializeField] private Transform raycastOrigin;
 
-    private NavMeshAgent agent;
+    protected NavMeshAgent agent;
     private BehaviorGraphAgent behaviorGraph;
-    private Animator animator;
+    protected Animator animator;
     private Collider enemyCollider;
     private Rigidbody rb;
     
-    private int IsDead = Animator.StringToHash("IsDead");
-    private int Velocity = Animator.StringToHash("Velocity");
+    protected int IsDead = Animator.StringToHash("IsDead");
+    protected int Velocity = Animator.StringToHash("Velocity");
     private int React = Animator.StringToHash("React");
     private int Stun = Animator.StringToHash("Stun");
     private int WeaponIndex = Animator.StringToHash("WeaponIndex");
 
-    private bool isDead = false;
+    protected bool isDead = false;
     private IEnumerator shotgunStunReactRoutine;
 
     private const int reactionLayerIndex = 1; // Index of the reaction layer in the animator
@@ -87,7 +87,7 @@ public class Enemy : MonoBehaviour
             animator.SetInteger(WeaponIndex, (int)damageType);
 
 
-            if (damageType == WeaponTypes.Shotgun)
+            if (canStun && damageType == WeaponTypes.Shotgun)
             {
                 if (shotgunStunReactRoutine == null)
                 {
