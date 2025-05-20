@@ -6,10 +6,24 @@ using UnityEngine.InputSystem;
 
 public class MouseLook : MonoBehaviour
 {
-    [SerializeField] private float mouseSensitivity = 100f;
+    [Header("Camera Properties")]
+    [SerializeField] private float mouseSensitivity = 100f;    
+    [SerializeField] private Transform cameraRot;
+    [SerializeField] private GameObject scopeVolume;
+
+    [Header("Player Mesh Properties")]
     [SerializeField] private Transform player;
     [SerializeField] private Transform playerMesh;
-    [SerializeField] private Transform cameraRot;    
+    [SerializeField] private float xRotationDeltaPlayerMesh = 0f;    
+
+    [Range(-2f, 2f)]
+    [SerializeField] private float maxPullBack = -0.5f; // How far back to pull
+    [SerializeField] private float pullSpeed = 5f;      // How fast to interpolate
+    [Range(-2f, 2f)]
+    [SerializeField] private float maxPushForward = 0.5f; // How far to push forward
+    [SerializeField] private float pushSpeed = 5f;      // How fast to interpolate
+
+    private Vector3 playerMeshDefaultLocalPos;    
 
     private Camera[] playerCameras;
         
@@ -18,7 +32,7 @@ public class MouseLook : MonoBehaviour
     private const float defaultZoomSpeed = 1000f;
 
     private float xRotation = 0f;
-    private float yRotation = 0f;
+    private float yRotation = 0f;    
 
     private PlayerInputActions playerControls;
     private Vector2 MouseInput;
@@ -26,7 +40,7 @@ public class MouseLook : MonoBehaviour
 
     private void Awake()
     {
-        playerControls = new PlayerInputActions();
+        playerControls = new PlayerInputActions();        
     }
         
     void Start()
@@ -38,7 +52,8 @@ public class MouseLook : MonoBehaviour
         if (playerCameras[0] != null)
         {
             defaultFoV = playerCameras[0].fieldOfView;
-        }        
+        }
+        playerMeshDefaultLocalPos = playerMesh.localPosition;
     }
 
     // Update is called once per frame
@@ -47,23 +62,58 @@ public class MouseLook : MonoBehaviour
         MouseInput = playerControls.Player.Look.ReadValue<Vector2>();        
 
         xRotation -= MouseInput.y * mouseSensitivity * Time.deltaTime;
-        yRotation += MouseInput.x * mouseSensitivity * Time.deltaTime;
+        yRotation = MouseInput.x * mouseSensitivity * Time.deltaTime;
 
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);        
 
         if (player)
         {
-            player.Rotate(Vector3.up * MouseInput.x * mouseSensitivity * Time.deltaTime);
-            playerMesh.localRotation = Quaternion.Euler(xRotation + 5f, playerMesh.localRotation.y, playerMesh.localRotation.z);
-            //transform.position = cameraRot.position;
+            UpdatePlayerMeshPushAndPull();
+            player.Rotate(Vector3.up * yRotation);
+            playerMesh.localRotation = Quaternion.Euler(xRotation + xRotationDeltaPlayerMesh, playerMesh.localRotation.y, playerMesh.localRotation.z);            
         }        
+    }
+
+    private void UpdatePlayerMeshPushAndPull()
+    {
+        float moveAmount = 0f;
+        if (xRotation > 0f)
+        {
+            moveAmount = Mathf.InverseLerp(0f, 90f, xRotation) * maxPullBack;
+        }
+        else if (xRotation < 0f)
+        {
+            moveAmount = Mathf.InverseLerp(0f, -90f, xRotation) * maxPushForward;
+        }
+
+        // Move along the camera's forward direction, relative to the mesh's parent
+        Vector3 cameraForwardLocal = playerMesh.parent.InverseTransformDirection(playerCameras[0].transform.forward);
+        Vector3 targetLocalPos = playerMeshDefaultLocalPos + cameraForwardLocal * moveAmount;
+
+        // Smoothly interpolate to the target position
+        playerMesh.localPosition = Vector3.Lerp(
+            playerMesh.localPosition,
+            targetLocalPos,
+            Time.deltaTime * pullSpeed
+        );
     }
 
     private void PerformAim(float zoomFoV, float zoomSpeed)
     {
         zoomIn = !zoomIn;
+
+        if(zoomIn)
+        {
+            scopeVolume.SetActive(true);
+            playerCameras[1].enabled = false;
+        }
+        else
+        {
+            scopeVolume.SetActive(false);
+            playerCameras[1].enabled = true;
+        }
 
         if (zoomCoroutine != null)
         {
@@ -95,11 +145,13 @@ public class MouseLook : MonoBehaviour
         }
     }
 
-    public void ZoomOut(PlayerWeapon weapon)
+    public void ZoomOut()
     {
         if (zoomIn == false) return;
 
         zoomIn = false;
+        scopeVolume.SetActive(false);
+        playerCameras[1].enabled = true;
 
         if (zoomCoroutine != null)
         {

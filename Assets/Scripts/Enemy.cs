@@ -2,18 +2,18 @@ using System.Collections;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
 
 public class Enemy : MonoBehaviour
 {
     [Header("Enemy Properties")]
     [SerializeField] private int health = 100;
     [SerializeField] private int damage = 10;
-    [SerializeField] private GameObject weapon;
+    [SerializeField] protected GameObject weapon;
     [SerializeField] private CapsuleCollider enemyDeadCollider;
-    [SerializeField] private float shotgunDeathImpulse = 20.0f; 
-    [SerializeField] private float shotgunHitImpulse = 10.0f;
+    [SerializeField] private float deathImpulse = 20.0f; 
+    [SerializeField] private float stunHitImpulse = 10.0f;
     [SerializeField] private float stunDuration = 0.5f;
+    [SerializeField] private bool canStun = true;
 
     [Header("Range Detector Properties")]
     [SerializeField] private float detectionRadius = 5.0f; // Radius of the detection zone
@@ -25,19 +25,19 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float detectionHeight = 3.0f;
     [SerializeField] private Transform raycastOrigin;
 
-    private NavMeshAgent agent;
+    protected NavMeshAgent agent;
     private BehaviorGraphAgent behaviorGraph;
-    private Animator animator;
+    protected Animator animator;
     private Collider enemyCollider;
     private Rigidbody rb;
     
-    private int IsDead = Animator.StringToHash("IsDead");
-    private int Velocity = Animator.StringToHash("Velocity");
+    protected int IsDead = Animator.StringToHash("IsDead");
+    protected int Velocity = Animator.StringToHash("Velocity");
     private int React = Animator.StringToHash("React");
     private int Stun = Animator.StringToHash("Stun");
     private int WeaponIndex = Animator.StringToHash("WeaponIndex");
 
-    private bool isDead = false;
+    protected bool isDead = false;
     private IEnumerator shotgunStunReactRoutine;
 
     private const int reactionLayerIndex = 1; // Index of the reaction layer in the animator
@@ -55,6 +55,7 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         behaviorGraph.BlackboardReference.SetVariableValue("Speed", agent.speed);
+        behaviorGraph.BlackboardReference.SetVariableValue("EnemyAnimator", animator);
     }
 
     private void Update()
@@ -64,7 +65,7 @@ public class Enemy : MonoBehaviour
     }
 
     // funtion to take damage
-    public void TakeDamage(int damage, PlayerWeapon damageType)
+    public void TakeDamage(int damage, WeaponTypes damageType)
     {
         if(isDead) return; // Ignore damage if already dead
 
@@ -78,7 +79,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            float layerWeight = (damageType == PlayerWeapon.Thompson || damageType == PlayerWeapon.Crossbow) ? mediumLayerWeight : fullLayerWeight;
+            float layerWeight = (damageType == WeaponTypes.Smg || damageType == WeaponTypes.Crossbow) ? mediumLayerWeight : fullLayerWeight;
             animator.SetLayerWeight(reactionLayerIndex, layerWeight);
 
             // Trigger the react animation based on the damage type
@@ -86,7 +87,7 @@ public class Enemy : MonoBehaviour
             animator.SetInteger(WeaponIndex, (int)damageType);
 
 
-            if (damageType == PlayerWeapon.Shotgun)
+            if (canStun && damageType == WeaponTypes.Shotgun)
             {
                 if (shotgunStunReactRoutine == null)
                 {
@@ -100,7 +101,7 @@ public class Enemy : MonoBehaviour
         }        
     }   
 
-    private void Die(PlayerWeapon damageType)
+    protected virtual void Die(WeaponTypes damageType)
     {        
         enemyCollider.enabled = false;
         behaviorGraph.enabled = false;
@@ -110,20 +111,22 @@ public class Enemy : MonoBehaviour
 
         if (enemyDeadCollider) enemyDeadCollider.enabled = true;
 
-        if (damageType == PlayerWeapon.Shotgun)
+        if (damageType == WeaponTypes.Shotgun)
         {
             agent.velocity = Vector3.zero;
-            ApplyShotgunImpulse(shotgunDeathImpulse);
+            ApplyImpulse(deathImpulse);
         }
     }
 
     private IEnumerator StunReact()
-    {                        
+    {
+        if(!canStun) yield break; // Exit if stun is not allowed
+
         agent.velocity = Vector3.zero;
         agent.enabled = false;
         behaviorGraph.enabled = false;
         rb.isKinematic = false;
-        ApplyShotgunImpulse(shotgunHitImpulse);
+        ApplyImpulse(stunHitImpulse);
         animator.SetTrigger(Stun);
         yield return new WaitForSeconds(stunDuration);
         agent.enabled = true;
@@ -133,7 +136,7 @@ public class Enemy : MonoBehaviour
         shotgunStunReactRoutine = null; // Reset the coroutine reference
     }
 
-    private void ApplyShotgunImpulse(float shotgunImpulse)
+    private void ApplyImpulse(float impulse)
     {                        
         // set the rotation of the enemy to look at the player
         Vector3 lookAtDirection = Camera.main.transform.position - transform.position;
@@ -143,7 +146,7 @@ public class Enemy : MonoBehaviour
 
         // Apply impulse force to the enemy                        
         Vector3 direction = Camera.main.transform.forward;        
-        rb.AddForce(direction * shotgunImpulse, ForceMode.Impulse);        
+        rb.AddForce(direction * impulse, ForceMode.Impulse);        
     }
 
     public GameObject DetectPlayer()
