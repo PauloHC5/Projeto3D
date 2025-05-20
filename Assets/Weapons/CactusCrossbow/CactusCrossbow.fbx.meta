@@ -3,7 +3,47 @@ guid: 7d0c2cc612310794899eb9b3515b15d5
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cactus.003
+    second: {fileID: 2100000, guid: 312edd92a80800b4f873c83d770f3fa7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cactus.004
+    second: {fileID: 2100000, guid: 7e74eb2fdc0cfb344a770d6717913e0b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cactus.005
+    second: {fileID: 2100000, guid: 752858982217f7e4fb3450b678345a95, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.006
+    second: {fileID: 2100000, guid: 3609fc05e390417469a7ed2999488f7c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.008
+    second: {fileID: 2100000, guid: 070ac4f5ed13f46429b469c88f435254, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.010
+    second: {fileID: 2100000, guid: b32f3c9dd020ed748bacaac3748a05ca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.012
+    second: {fileID: 2100000, guid: 889194d7dc9077e44b02f241a53e1685, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.013
+    second: {fileID: 2100000, guid: 55ba01b24156998498684fb3bababbb3, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
