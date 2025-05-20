@@ -7,13 +7,31 @@ public class Shotgun : Gun
     [Header("Shotgun Properties")]
     [SerializeField] private int damage = 10;
     [SerializeField] private LayerMask shootLayer;
-    [SerializeField] private float damageCapsuleRadius = 0.5f;    
+    [SerializeField] private float damageCapsuleRadius = 0.5f;
+    [SerializeField] private float throwForce = 10f;    
 
     [Header("Burst Properties")]
     [SerializeField] private float burstRange = 10f;
     [SerializeField] private int pelletsPerShot = 5;
-    [SerializeField] private float spreadAngle = 5f;    
+    [SerializeField] private float spreadAngle = 5f;
 
+    private Rigidbody rb;
+    private Collider collider;
+
+    private readonly int magAmmoHash = Animator.StringToHash("MagAmmo");
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        rb = GetComponent<Rigidbody>();
+        collider = GetComponent<Collider>();
+    }
+
+    private void Update()
+    {
+        gunAnimator.SetInteger(magAmmoHash, magAmmo);
+    }
 
     public override void Fire()
     {
@@ -21,7 +39,30 @@ public class Shotgun : Gun
         base.ShootCapsuleCast(damage, shootLayer, damageCapsuleRadius, gunRange);
         base.Fire();
         StartCoroutine(BurstFire());
-        magAmmo--;
+        magAmmo--;        
+    }
+
+
+    public void DropShotgun()
+    {
+        // Desaatch shotgun from player
+        transform.SetParent(null);
+
+        // Set shotgun to default layer
+        int defaultLayer = LayerMask.NameToLayer("Default");
+        gameObject.layer = defaultLayer;
+
+        // Find all objectss in this prefab and set their layer to default        
+        foreach (Transform children in gameObject.GetComponentsInChildren<Transform>())
+        {
+            children.gameObject.layer = defaultLayer;
+        }
+
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        collider.enabled = true;
+        rb.AddForce(transform.forward * throwForce, ForceMode.Impulse);
+        AnimationTriggerEvents.onDropShotgun -= DropShotgun;
     }
 
     private IEnumerator BurstFire()
@@ -82,5 +123,15 @@ public class Shotgun : Gun
             Gizmos.DrawLine(point1 + Vector3.right * damageCapsuleRadius, point2 + Vector3.right * damageCapsuleRadius);
             Gizmos.DrawLine(point1 - Vector3.right * damageCapsuleRadius, point2 - Vector3.right * damageCapsuleRadius);
         }
+    }
+
+    private void OnEnable()
+    {
+        AnimationTriggerEvents.onDropShotgun += DropShotgun;
+    }
+
+    private void OnDisable()
+    {
+        AnimationTriggerEvents.onDropShotgun -= DropShotgun;
     }
 }
