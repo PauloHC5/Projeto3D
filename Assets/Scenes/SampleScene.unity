@@ -12074,7 +12074,7 @@ PrefabInstance:
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.672
+      value: 0.711
       objectReference: {fileID: 0}
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
@@ -12084,7 +12084,7 @@ PrefabInstance:
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.274
+      value: 7.2
       objectReference: {fileID: 0}
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
@@ -12236,11 +12236,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Woodsman
-      objectReference: {fileID: 0}
-    - target: {fileID: 2698330378980774502, guid: 21b3b941d463e4a41bfb64ecaa0b65ff,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5380157350571352226, guid: 21b3b941d463e4a41bfb64ecaa0b65ff,
         type: 3}

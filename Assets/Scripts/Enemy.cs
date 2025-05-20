@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour
     [Header("Enemy Properties")]
     [SerializeField] private int health = 100;
     [SerializeField] private int damage = 10;
-    [SerializeField] private GameObject weapon;
+    [SerializeField] protected GameObject weapon;
     [SerializeField] private CapsuleCollider enemyDeadCollider;
     [SerializeField] private float deathImpulse = 20.0f; 
     [SerializeField] private float stunHitImpulse = 10.0f;
@@ -101,7 +101,7 @@ public class Enemy : MonoBehaviour
         }        
     }   
 
-    private void Die(WeaponTypes damageType)
+    protected virtual void Die(WeaponTypes damageType)
     {        
         enemyCollider.enabled = false;
         behaviorGraph.enabled = false;
