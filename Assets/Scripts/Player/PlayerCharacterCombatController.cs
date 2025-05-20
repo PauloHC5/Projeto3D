@@ -302,6 +302,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         weaponsInventory.Add(ShotgunsSpawned);
 
         equippedWeapon = ShotgunsSpawned;
+        playerWeaponAmmo[WeaponTypes.Shotgun] -= 4;
     }
 
     private void OnEnable()
