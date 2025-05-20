@@ -1,9 +1,7 @@
 using UnityEngine;
 
 public class Woodsman : Enemy
-{
-    [SerializeField] private Transform weaponSocket;
-
+{    
     protected override void Die(WeaponTypes damageType)
     {
         base.Die(damageType);
@@ -14,11 +12,7 @@ public class Woodsman : Enemy
             weapon.GetComponent<Collider>().enabled = true;            
 
             // Desatch weapon from player
-            weapon.transform.SetParent(null);
-
-            // Set position and rotation of the weapon to the world position and rotation
-            weapon.transform.position = weaponSocket.position;
-            weapon.transform.rotation = weapon.transform.rotation;
+            weapon.transform.SetParent(null);            
         }             
     }
 }

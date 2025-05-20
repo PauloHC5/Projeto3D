@@ -12126,6 +12126,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChemAgent
       objectReference: {fileID: 0}
+    - target: {fileID: 1070014290292914364, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
