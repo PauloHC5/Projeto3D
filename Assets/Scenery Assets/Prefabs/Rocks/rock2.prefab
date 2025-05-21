@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6220746079261433124}
   - component: {fileID: 109762037449214657}
   - component: {fileID: 2405475705348714333}
-  - component: {fileID: -8157452111039484831}
+  - component: {fileID: -217399544561413409}
   m_Layer: 0
   m_Name: rock2
   m_TagString: Untagged
@@ -87,7 +87,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &-8157452111039484831
+--- !u!64 &-217399544561413409
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

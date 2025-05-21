@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7797494891839191746}
   - component: {fileID: 4366604516202742972}
   - component: {fileID: 5200397798770793619}
-  - component: {fileID: 414820063065645540}
+  - component: {fileID: -8798796088125534713}
   m_Layer: 0
   m_Name: rock4
   m_TagString: Untagged
@@ -87,7 +87,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &414820063065645540
+--- !u!64 &-8798796088125534713
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
