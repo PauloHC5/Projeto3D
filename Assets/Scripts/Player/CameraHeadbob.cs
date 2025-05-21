@@ -3,17 +3,13 @@ using UnityEngine;
 
 public class CameraHeadbob : MonoBehaviour
 {
-    [SerializeField] private Transform mainCameraPos;
-    [SerializeField] private Transform armsHeadbob;
+    [SerializeField] private Transform target;
 
-    [Range(0.001f, 1f)]
-    [SerializeField] private float Amount = 0.002f;
+    //[Range(0.001f, 0.1f)]
+    [SerializeField] private Vector2 Amount;
 
-    [Range(1f, 30f)]
-    [SerializeField] private float Frequency = 10f;                  
-
-    [Range(10f, 100f)]
-    [SerializeField] private float Smooth = 10f;    
+    //[Range(1f, 20)]
+    [SerializeField] private Vector2 Frequency;                  
 
     private PlayerCharacterMovementController playerCharacterMovementController;    
     private Vector3 originalPosition;    
@@ -25,12 +21,11 @@ public class CameraHeadbob : MonoBehaviour
 
     void Start()
     {
-        if (mainCameraPos)
-            originalPosition = mainCameraPos.localPosition;
+        originalPosition = target.localPosition;
     }
 
     
-    void Update()
+    void LateUpdate()
     {        
         CheckForHeadbobTrigger();
 
@@ -53,30 +48,17 @@ public class CameraHeadbob : MonoBehaviour
 
     private void StartHeadbob()
     {
-        if (mainCameraPos)
-        {
-            Vector3 camPos = Vector3.zero;
-            camPos.y += Mathf.Lerp(camPos.y, Mathf.Sin(Time.time * Frequency) * Amount * 1.4f, Smooth * Time.deltaTime);
-            camPos.x += Mathf.Lerp(camPos.x, Mathf.Cos(Time.time * Frequency / 2f) * Amount * 1.6f, Smooth * Time.deltaTime);
-            mainCameraPos.localPosition = camPos;
-        }
-
-        if (armsHeadbob)
+        if (target)
         {            
             Vector3 armsPos = Vector3.zero;
-            armsPos.y += Mathf.Lerp(armsPos.y, Mathf.Sin(Time.time * Frequency) * Amount * 1.4f, Smooth * Time.deltaTime);
-            armsPos.x += Mathf.Lerp(armsPos.x, Mathf.Cos(Time.time * Frequency / 2f) * Amount * 1.6f, Smooth * Time.deltaTime);
-            armsHeadbob.localPosition = armsPos;
+            armsPos.x += Mathf.Sin(Time.time * Frequency.x) * Amount.x;
+            armsPos.y += Mathf.Sin(Time.time * Frequency.y) * Amount.y;
+            target.localPosition = armsPos;
         }
     }
 
     private void StopHeadbob()
     {
-        if (mainCameraPos)
-        {
-            if (mainCameraPos.localPosition == originalPosition) return;
-            mainCameraPos.localPosition = Vector3.Slerp(mainCameraPos.localPosition, originalPosition, 1f * Time.deltaTime);
-        }
-        if (armsHeadbob) armsHeadbob.localPosition = Vector3.Slerp(armsHeadbob.localPosition, originalPosition, 1f * Time.deltaTime);
+        if (target) target.localPosition = Vector3.Slerp(target.localPosition, originalPosition, 1f * Time.smoothDeltaTime);
     }
 }

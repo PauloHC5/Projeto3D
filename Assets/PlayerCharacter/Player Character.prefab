@@ -592,6 +592,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSensitivity: 20
   cameraRot: {fileID: 1790979581169680410}
+  scopeVolume: {fileID: 0}
   player: {fileID: 2075349027788936261}
   playerMesh: {fileID: 1367476817322579109}
   xRotationDeltaPlayerMesh: 0
@@ -676,11 +677,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe35e60867b11b4387a382138a3cc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCameraPos: {fileID: 4467828325005743524}
-  armsHeadbob: {fileID: 8002709758977372624}
-  Amount: 0.133
-  Frequency: 12
-  Smooth: 23.8
+  target: {fileID: 8002709758977372624}
+  Amount: {x: 0.05, y: 0.025}
+  Frequency: {x: 1, y: 10}
 --- !u!1 &2168371858986161816
 GameObject:
   m_ObjectHideFlags: 0
@@ -1297,7 +1296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbb162efe33ab04cbdc00bc228e86b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 100
+  health: 100
 --- !u!114 &5645082565342579536
 MonoBehaviour:
   m_ObjectHideFlags: 0
