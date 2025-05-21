@@ -4,6 +4,9 @@ using TMPro;
 public class HUD : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI ammoText;
+    [SerializeField] private TextMeshProUGUI magAmmoText;
+    [SerializeField] private TextMeshProUGUI gunAmmoText;
+    [SerializeField] private TextMeshProUGUI meleeText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,8 +29,11 @@ public class HUD : MonoBehaviour
         var dualWieldGun = player.EquippedWeapon as DualWieldGun;
         var weaponSelected = player.WeaponSelected;
 
-        if (equippedGun != null)
+        if (player.WeaponSelected != WeaponTypes.Melee)
         {
+            meleeText.gameObject.SetActive(false);
+            ammoText.gameObject.SetActive(true);
+
             var magAmmo = 0;
             var totalAmmo = 0;
 
@@ -37,17 +43,31 @@ public class HUD : MonoBehaviour
             }
             else
             {
-                magAmmo = equippedGun.MagAmmo;
+                if(equippedGun) magAmmo = equippedGun.MagAmmo;
             }
 
 
-            totalAmmo = player.WeaponAmmo[equippedGun.WeaponType];
+            if(equippedGun) totalAmmo = player.WeaponAmmo[equippedGun.WeaponType];
+            else totalAmmo = player.WeaponAmmo[WeaponTypes.Shotgun];
 
-            ammoText.text = $"{weaponSelected} \n Ammo: {magAmmo} / {totalAmmo}";
+            if (magAmmoText != null)
+            {
+                magAmmoText.text = $"{magAmmo}";
+            }
+            else Debug.LogWarning("Mag Ammo Text is not assigned in the inspector.");
+
+            if(ammoText != null)
+            {
+                gunAmmoText.text = $"{totalAmmo}";
+            }
+            else Debug.LogWarning("Ammo Text is not assigned in the inspector.");
+
         }
         else
         {
-            ammoText.text = $"{weaponSelected}";
+            meleeText.gameObject.SetActive(true);            
+            ammoText.gameObject.SetActive(false);
+
         }
     }
 
