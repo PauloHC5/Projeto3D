@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
         if(spawnPoints.Length == 0)
         {
-            Debug.LogWarning("No spawn points found in the scene.");
+            Debug.LogWarning("No enemy spawn points found in the scene.");
         }
     }
 
