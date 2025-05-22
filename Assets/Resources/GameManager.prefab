@@ -48,5 +48,5 @@ MonoBehaviour:
   - {fileID: 6076036143720261335, guid: 21b3b941d463e4a41bfb64ecaa0b65ff, type: 3}
   - {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9, type: 3}
   maxEnemies: 30
-  timeToSpawn: 10
-  spawnInterval: 1
+  timeToSpawn: 20
+  spawnInterval: 3
