@@ -4,13 +4,17 @@ public class CarnivovrousPlant : Weapon
 {
     [Header("Carnivovrous Plant Properties")]
     [SerializeField] private int damage = 25;
-    [SerializeField] private Collider hitCollider;
+    
+    
+    private Collider hitCollider;
 
     private Animator animator;
 
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
+
+        hitCollider = GetComponent<Collider>();
     }
 
     public void Attack()
@@ -45,6 +49,17 @@ public class CarnivovrousPlant : Weapon
         if (collision.gameObject.CompareTag("Enemy"))
         {
             collision.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);
+            Debug.Log("Hit enemy with carnivorous plant");
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            other.GetComponent<Enemy>().TakeDamage(damage, weaponType);
+            hitCollider.enabled = false; // Disable the collider after hitting
+            Debug.Log("Hit enemy with carnivorous plant");
         }
     }
 }

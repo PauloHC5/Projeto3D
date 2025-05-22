@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum WhichPlant
@@ -80,5 +81,11 @@ public class CarnivorousPlants : Weapon
     {
         if (plantR) plantR.gameObject.SetActive(false);
         if (plantL) plantL.gameObject.SetActive(false);
+    }
+
+    internal void DisableCollision()
+    {
+        if (plantR) plantR.DisableCollision();
+        if (plantL) plantL.DisableCollision();
     }
 }

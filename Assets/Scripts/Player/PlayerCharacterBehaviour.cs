@@ -62,9 +62,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 }
 
                 if (carnivorousPlants != null)
-                {
-                    carnivorousPlants.EnableCollisions();
-
+                {                    
                     carnivorousPlants.PlayRaiseWeapon();
                 }
 
@@ -73,16 +71,16 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 break;
             case PlayerCombatStates.ATTACKING:
                 if (carnivorousPlants != null)
-                {
-                    carnivorousPlants.EnableCollisions();
-
+                {                    
                     switch (animator.GetInteger(ToggleAttack))
                     {
                         case 1:
                             carnivorousPlants.Attack(WhichPlant.PlantR);
+                            carnivorousPlants.GetPlant(WhichPlant.PlantR).EnableCollision();
                             break;
                         case 2:
                             carnivorousPlants.Attack(WhichPlant.PlantL);
+                            carnivorousPlants.GetPlant(WhichPlant.PlantL).EnableCollision();
                             break;
                     }
                 }
@@ -119,9 +117,9 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {                
-        if (playerCharacterCombatController && playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING)
+        if (playerCharacterCombatController)
         {
-            DisableCrowbarCollision();            
+            DisableCrowbarCollision();                  
         }        
 
         animator.SetLayerWeight(layerIndex, 0f);
@@ -169,6 +167,12 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         if (crowbar != null)
         {
             crowbar.DisableCollision();
+        }
+
+        CarnivorousPlants carnivorousPlants = playerCharacterCombatController.EquippedWeapon as CarnivorousPlants;
+        if (carnivorousPlants != null)
+        {
+            carnivorousPlants.DisableCollision();
         }
     }
 

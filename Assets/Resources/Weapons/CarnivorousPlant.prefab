@@ -94,59 +94,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5092186306055428272}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3122840105246769273
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5377538982682264868}
-  - component: {fileID: 8974374481044100569}
-  m_Layer: 7
-  m_Name: Hit Collider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5377538982682264868
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3122840105246769273}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.087319285, z: -0, w: 0.9961804}
-  m_LocalPosition: {x: 0.105, y: 0, z: 0.516}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2242732106394913126}
-  m_LocalEulerAnglesHint: {x: 0, y: 10.019, z: 0}
---- !u!135 &8974374481044100569
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3122840105246769273}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Radius: 0.23
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4759253900589212283
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,6 +169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2242732106394913126}
   - component: {fileID: 186649536490876846}
+  - component: {fileID: 3994713568038292647}
   m_Layer: 7
   m_Name: CarnivorousPlant
   m_TagString: Untagged
@@ -244,7 +192,6 @@ Transform:
   m_Children:
   - {fileID: 320685187649402859}
   - {fileID: 2110312977563113297}
-  - {fileID: 5377538982682264868}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &186649536490876846
@@ -261,8 +208,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 0
   socketToAttach: 0
-  damage: 25
-  hitCollider: {fileID: 8974374481044100569}
+  damage: 50
+--- !u!135 &3994713568038292647
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5723683411905504031}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Radius: 0.23
+  m_Center: {x: 0.15, y: 0, z: 0.4}
 --- !u!1 &5841407486347231694
 GameObject:
   m_ObjectHideFlags: 0
