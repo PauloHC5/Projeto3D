@@ -100,8 +100,8 @@ public class PlayerCharacterMovementController : MonoBehaviour
         maxSpeed = walkSpeed;
         standingHeight = characterController.height;
         standingRadius = characterController.radius;        
-        standingCameraPos = cameraPos.position;        
-        standingMeshRootPos = playerMeshRoot.transform.position;
+        standingCameraPos = cameraPos.localPosition;        
+        standingMeshRootPos = playerMeshRoot.transform.localPosition;
         standingGroundCheckPos = groundCheck.localPosition;
         playerMovementStates = PlayerMovementStates.DEFAULT;     
         characterController = GetComponent<CharacterController>();
