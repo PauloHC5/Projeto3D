@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5897782181196101075}
   - component: {fileID: 87962814136871156}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Silo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   - component: {fileID: 5761915089901675825}
   - component: {fileID: 6628359410794308526}
   - component: {fileID: 67594156183158084}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 4472904977226884027}
   - component: {fileID: 6935459712512961701}
   - component: {fileID: 5764127025412332034}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 7650118747891769859}
   - component: {fileID: 4995028567832840075}
   - component: {fileID: 4286547296284928088}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

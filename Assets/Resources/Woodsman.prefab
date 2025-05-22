@@ -1057,7 +1057,7 @@ MonoBehaviour:
           m_Value0: 9504461261836893942
           m_Value1: 12434960302848756003
         Name: AttackRate
-        m_Value: 1.5
+        m_Value: 1.2
     - rid: 9193738441663447276
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior,
         asm: Unity.Behavior}

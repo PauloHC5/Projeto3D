@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8647202311666188204}
   - component: {fileID: 4810458953926860403}
   - component: {fileID: 8312662114373169726}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 1671458400136060137}
   - component: {fileID: 1458807991098935378}
   - component: {fileID: 1041687818236739646}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube.095
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 2978234827865701023}
   - component: {fileID: 7261379360506232937}
   - component: {fileID: 6741484437367335948}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TelhadoSuperior.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 1506790139343220612}
   - component: {fileID: 8117587746479623854}
   - component: {fileID: 3513421982671885886}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube.040
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 6132321361540350180}
   - component: {fileID: 5106853894982698783}
   - component: {fileID: 7841250424571734761}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TelhadoSuperior.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 5737265797684857376}
   - component: {fileID: 5772639439971516023}
   - component: {fileID: 6532496334317766577}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TelhadoSuperior.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -527,7 +527,7 @@ GameObject:
   - component: {fileID: 8849491287515797809}
   - component: {fileID: 1177677792760862723}
   - component: {fileID: 433429041226373642}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube.074
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -612,7 +612,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1860468431550331414}
   - component: {fileID: -4762207918124127459}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PlayerHouse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
