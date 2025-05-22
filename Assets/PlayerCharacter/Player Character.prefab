@@ -1374,7 +1374,7 @@ MonoBehaviour:
   - weapon: 1
     ammo: 50
   - weapon: 2
-    ammo: 20
+    ammo: 80
   - weapon: 3
     ammo: 300
 --- !u!1 &5042317255202969701

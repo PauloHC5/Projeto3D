@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 741022655631127922}
   - component: {fileID: 1389670235970858883}
   - component: {fileID: 5683360611694863761}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Cube.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 8586409650179593484}
   - component: {fileID: 6136786675292967331}
   - component: {fileID: 3231047367168758869}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Cube.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2987219436254543283}
   - component: {fileID: -465409892799944315}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Shack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,7 +228,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: -153338023226527911, guid: f10f24c25c92da84c9524d3324a75810, type: 3}
 --- !u!1 &2942903025904773893
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 2366506709941686691}
   - component: {fileID: 7941955419115786592}
   - component: {fileID: 433307060343232787}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Cube.009
   m_TagString: Untagged
   m_Icon: {fileID: 0}

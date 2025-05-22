@@ -597,10 +597,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe35e60867b11b4387a382138a3cc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Amount: 0.278
-  Frequency: 12
-  Smooth: 35
-  armsHeadbob: {fileID: 2476399673605807485}
+  target: {fileID: 0}
+  Amount: {x: 0, y: 0}
+  Frequency: {x: 0, y: 0}
 --- !u!1 &3998021676993423666
 GameObject:
   m_ObjectHideFlags: 0
@@ -1009,7 +1008,7 @@ GameObject:
   - component: {fileID: 1686549701214739533}
   - component: {fileID: 202747477811474014}
   - component: {fileID: 7737472161129786554}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1118,7 +1117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbb162efe33ab04cbdc00bc228e86b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 100
+  health: 100
 --- !u!114 &202747477811474014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1145,6 +1144,7 @@ MonoBehaviour:
   playerMeshRoot: {fileID: 6865738352203423560}
   playerMeshSway: {fileID: 0}
   cameraPos: {fileID: 1791096781010398446}
+  impulseForce: 5
   isCrouching: 0
   crouchSpeed: 1
   crouchHeight: 0.5
@@ -1180,7 +1180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSelected: 0
-  weapons:
+  weaponsSet:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1352,9 +1352,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 20
+  cameraRot: {fileID: 1791096781010398446}
+  scopeVolume: {fileID: 0}
   player: {fileID: 8611289765573875607}
   playerMesh: {fileID: 6865738352203423560}
-  cameraRot: {fileID: 1791096781010398446}
+  xRotationDeltaPlayerMesh: 0
+  maxPullBack: -0.5
+  pullSpeed: 5
+  maxPushForward: 0.5
+  pushSpeed: 5
 --- !u!1 &7062637032327186552
 GameObject:
   m_ObjectHideFlags: 0
