@@ -294,13 +294,31 @@ MonoBehaviour:
   m_BlackboardVariableOverridesList:
   - rid: 9193738396552921410
   - rid: 9193738441663447181
-  - rid: 9193738441663447229
-  - rid: 9193738441663447278
+  - rid: 7173494709259600040
+  - rid: 7173494709259600039
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
     version: 2
     RefIds:
+    - rid: 7173494709259600039
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior,
+        asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 9504461261836893942
+          m_Value1: 12434960302848756003
+        Name: AttackRate
+        m_Value: 0.5
+    - rid: 7173494709259600040
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior,
+        asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 17789152177081557426
+          m_Value1: 17410840093009490970
+        Name: DistanceToTarget
+        m_Value: 4
     - rid: 9193738396552921410
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
@@ -319,24 +337,6 @@ MonoBehaviour:
           m_Value1: 15119925728342937012
         Name: EnemyAnimator
         m_Value: {fileID: 7006886526161810871}
-    - rid: 9193738441663447229
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior,
-        asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 9504461261836893942
-          m_Value1: 12434960302848756003
-        Name: AttackRate
-        m_Value: 0.06
-    - rid: 9193738441663447278
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior,
-        asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 17789152177081557426
-          m_Value1: 17410840093009490970
-        Name: DistanceToTarget
-        m_Value: 3.12
 --- !u!114 &5140632698899567251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,7 +349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45f686b6ef6999c4fa022dbb18ff2f19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 200
   damage: 10
   weapon: {fileID: 0}
   enemyDeadCollider: {fileID: 3259341249199294510}

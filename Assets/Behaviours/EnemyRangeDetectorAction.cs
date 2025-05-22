@@ -9,13 +9,29 @@ using Unity.Properties;
 public partial class EnemyRangeDetectorAction : Action
 {
     [SerializeReference] public BlackboardVariable<Enemy> Enemy;
-    [SerializeReference] public BlackboardVariable<GameObject> Target;        
+    [SerializeReference] public BlackboardVariable<GameObject> Target;
+    [SerializeReference] public BlackboardVariable<TargetType> BlackboardTargetType;
 
     protected override Status OnUpdate()
     {
         Target.Value = Enemy.Value.DetectPlayer();
+        if (Target.Value != null)
+        {
+            BlackboardTargetType.Value = TargetType.Player;
+            return Status.Success;
+        }
+        else
+        {
+            Target.Value = GameObject.FindWithTag("Nexus");
+            if (Target.Value != null)
+            {
+                BlackboardTargetType.Value = TargetType.Nexus;
+                return Status.Success;
+            }
+        }        
+        
 
-        return Target.Value != null ? Status.Success : Status.Failure;
+        return Status.Failure;
     }   
 }
 

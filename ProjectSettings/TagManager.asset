@@ -8,6 +8,7 @@ TagManager:
   - LeftHand
   - Enemy
   - FxTemporaire
+  - Nexus
   layers:
   - Default
   - TransparentFX
