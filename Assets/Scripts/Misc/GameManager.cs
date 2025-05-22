@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float timeToSpawn = 1f;
     [SerializeField] private float spawnInterval = 2f;
 
-    private int enemyCount = 0;
+    private List<GameObject> enemiesInScene = new List<GameObject>();
     private GameObject[] spawnPoints;
 
     private void Start()
@@ -64,13 +64,10 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             QuitApplication();
-        }
-
-        enemyCount = Object.FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length;
-
-        if (enemyCount >= maxEnemies)
+        }   
+        
+        if (enemiesInScene.Count >= maxEnemies)
         {
-            // Stop spawning enemies if the limit is reached
             CancelInvoke(nameof(SpawnEnemy));
         }
     }
@@ -113,7 +110,16 @@ public class GameManager : MonoBehaviour
             Enemy enemy = enemies[Random.Range(0, enemies.Count)];
 
             // Instantiate the enemy at the spawn point
-            Instantiate(enemy, spawnPoint.position, Quaternion.identity);
+            Enemy enemySpawned = Instantiate(enemy, spawnPoint.position, Quaternion.identity);
+
+            // Add the spawned enemy to the list of enemies in the scene
+            enemiesInScene.Add(enemySpawned.gameObject);
         }
+    }
+
+    internal void EnemyDied(Enemy enemy)
+    {
+        // Remove the enemy from the list of enemies in the scene
+        enemiesInScene.Remove(enemy.gameObject);
     }
 }
