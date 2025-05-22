@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - FxTemporaire
   - Nexus
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

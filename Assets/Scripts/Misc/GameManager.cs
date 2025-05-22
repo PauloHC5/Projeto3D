@@ -1,9 +1,31 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager _Instance;
+
+    [SerializeField] private List<Enemy> enemies = new List<Enemy>();
+    [SerializeField] private int maxEnemies = 10;
+    [SerializeField] private float timeToSpawn = 1f;
+    [SerializeField] private float spawnInterval = 2f;
+
+    private int enemyCount = 0;
+    private GameObject[] spawnPoints;
+
+    private void Start()
+    {
+        InvokeRepeating(nameof(SpawnEnemy), timeToSpawn, spawnInterval);
+
+        // Find all spawn points in the scene by tag
+        spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+
+        if(spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("No spawn points found in the scene.");
+        }
+    }
 
     // Static instance of GameManager which allows it to be accessed by any other script
     public static GameManager Instance {
@@ -43,6 +65,14 @@ public class GameManager : MonoBehaviour
         {
             QuitApplication();
         }
+
+        enemyCount = Object.FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length;
+
+        if (enemyCount >= maxEnemies)
+        {
+            // Stop spawning enemies if the limit is reached
+            CancelInvoke(nameof(SpawnEnemy));
+        }
     }
 
     private void ReloadScene()
@@ -63,5 +93,27 @@ public class GameManager : MonoBehaviour
     {
         _Instance = null;
         Debug.Log("GameManager has been reset.");
+    }
+
+    private void SpawnEnemy()
+    {
+        if (enemies.Count == 0)
+        {
+            Debug.LogWarning("No enemies available to spawn.");
+            return;
+        }
+
+        // Check if the player is not null
+        if (spawnPoints != null && spawnPoints.Length > 0)
+        {
+            // Get a random spawn point from the list
+            Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform;
+
+            // Get a random enemy from the list
+            Enemy enemy = enemies[Random.Range(0, enemies.Count)];
+
+            // Instantiate the enemy at the spawn point
+            Instantiate(enemy, spawnPoint.position, Quaternion.identity);
+        }
     }
 }
