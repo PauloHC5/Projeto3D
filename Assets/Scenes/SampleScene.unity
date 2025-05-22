@@ -763,26 +763,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 107179209}
-  - component: {fileID: 107179208}
   m_Layer: 0
   m_Name: Enemy Spawn
   m_TagString: SpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &107179208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 107179207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1da861a42426fe45b5b255753ac75b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_IsActive: 0
 --- !u!4 &107179209
 Transform:
   m_ObjectHideFlags: 0
@@ -9240,7 +9227,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.23333333
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 006b05d2123ed0d47b6c7fb7f016340a, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 2ea4b7ac631944349bf43c9880902233, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &1604497029
 Transform:

@@ -76,7 +76,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
     }
 
     public static event Action onSwitchToWeapon;
-    public static event Action onReload;
+    public static event Action onReload;    
+    public static event Action applyImpulse;
 
     private void Awake()
     {
@@ -247,8 +248,11 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             if (!equippedGuns.CanFire) return;
 
-            playerCharacterAnimationsController.PlayFireBothGuns(equippedGuns);
-            return;
+            if (equippedGuns.MagAmmo == 4)
+            {
+                playerCharacterAnimationsController.PlayFireBothGuns(equippedGuns);
+                applyImpulse?.Invoke();
+            }                        
         }
 
         equippedWeapon?.GetComponent<ISecondaryAction>()?.Perform();
@@ -287,10 +291,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             return;
         }
 
-
-
         weaponsInventory.Remove(equippedWeapon);
-        
 
         equippedWeapon = null;
     }

@@ -10,7 +10,7 @@ public enum WhichGun
     GunL
 }
 
-public class DualWieldGun : Gun
+public class DualWieldGun : Gun, ISecondaryAction
 {
     private Gun gunR;
     private Gun gunL;    
@@ -42,7 +42,7 @@ public class DualWieldGun : Gun
     public override void Fire()
     {
         gunR.Fire();
-        gunL.Fire();
+        gunL.Fire();        
 
         StartCoroutine(ShootDelay());
     }
@@ -107,5 +107,14 @@ public class DualWieldGun : Gun
     {
         if(gunR) gunR.gameObject.SetActive(false);
         if(gunL) gunL.gameObject.SetActive(false);
-    }    
+    }
+
+    public void Perform()
+    {
+        if (gunL.MagAmmo == gunL.MaxAmmo && gunR.MagAmmo == gunR.MaxAmmo)
+        {
+            // Fire both guns
+            Fire();
+        }
+    }
 }

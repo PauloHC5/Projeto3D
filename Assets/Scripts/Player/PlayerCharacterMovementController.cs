@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -29,9 +30,10 @@ public class PlayerCharacterMovementController : MonoBehaviour
     [SerializeField] protected CharacterController characterController;
     [SerializeField] private Transform playerMeshRoot;
     [SerializeField] private Transform playerMeshSway;
-    [SerializeField] private Transform cameraPos;    
-    
-   
+    [SerializeField] private Transform cameraPos;
+    [SerializeField] private float impulseForce = 5f; // Impulse force to apply to the player
+
+
     [Header("Crouch")]
     [SerializeField] private bool isCrouching = false;
     [SerializeField] private float crouchSpeed = 4f;
@@ -86,7 +88,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
 
     public float PlayerMovementVelocityMagnitude => movementVelocity.magnitude;
     public float PlayerMaxSpeed => maxSpeed;
-    public bool IsGrounded => isGrounded;
+    public bool IsGrounded => isGrounded;    
 
     private void Awake()
     {
@@ -334,7 +336,24 @@ public class PlayerCharacterMovementController : MonoBehaviour
     {
         // Apply gravity only to the gravity velocity
         gravityVelocity.y += gravity * Time.deltaTime;
+        if(gravityVelocity.x != 0)
+        {
+            gravityVelocity.x = Mathf.Lerp(gravityVelocity.x, 0, Time.deltaTime * deceleration);
+        }
+
+        if(gravityVelocity.z != 0)
+        {
+            gravityVelocity.z = Mathf.Lerp(gravityVelocity.z, 0, Time.deltaTime * deceleration);
+        }
+
         MoveCharacter(movementVelocity, gravityVelocity);
+    }
+
+    private void ApplyImpulse()
+    {
+        // Apply impulse to the player in the backward direction
+        Vector3 impulseDirection = -Camera.main.transform.forward; // Backward direction
+        gravityVelocity += impulseDirection * impulseForce; // Apply impulse force        
     }
 
     private void MoveCharacter(Vector3 movement, Vector3 gravity)
@@ -352,5 +371,15 @@ public class PlayerCharacterMovementController : MonoBehaviour
     {
         Vector3 spherePosition = transform.position + Vector3.up * (characterController.height + 0.3f);
         return Physics.CheckSphere(spherePosition, characterController.radius, obstacleMask);
+    }
+
+    private void OnEnable()
+    {
+        PlayerCharacterCombatController.applyImpulse += ApplyImpulse;
+    }
+
+    private void OnDisable()
+    {
+        PlayerCharacterCombatController.applyImpulse -= ApplyImpulse;
     }
 }

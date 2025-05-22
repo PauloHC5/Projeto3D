@@ -1324,6 +1324,7 @@ MonoBehaviour:
   playerMeshRoot: {fileID: 586123004645549830}
   playerMeshSway: {fileID: 5835229652152186125}
   cameraPos: {fileID: 1790979581169680410}
+  impulseForce: 3
   isCrouching: 0
   crouchSpeed: 1
   crouchHeight: 0.5
