@@ -349,7 +349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45f686b6ef6999c4fa022dbb18ff2f19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 200
+  health: 150
   damage: 10
   weapon: {fileID: 0}
   enemyDeadCollider: {fileID: 3259341249199294510}
