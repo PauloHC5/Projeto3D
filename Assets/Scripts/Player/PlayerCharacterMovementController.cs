@@ -371,15 +371,5 @@ public class PlayerCharacterMovementController : MonoBehaviour
     {
         Vector3 spherePosition = transform.position + Vector3.up * (characterController.height + 0.3f);
         return Physics.CheckSphere(spherePosition, characterController.radius, obstacleMask);
-    }
-
-    private void OnEnable()
-    {
-        PlayerCharacterCombatController.applyImpulse += ApplyImpulse;
-    }
-
-    private void OnDisable()
-    {
-        PlayerCharacterCombatController.applyImpulse -= ApplyImpulse;
-    }
+    }    
 }

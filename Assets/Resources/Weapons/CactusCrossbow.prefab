@@ -1797,9 +1797,7 @@ MonoBehaviour:
   weaponType: 3
   socketToAttach: 0
   fireRate: 0.58
-  gunRange: 100
-  shootImpulse: 10
-  maxAmmo: 36
+  magCapacity: 36
   magAmmo: 36
   recoilX: -2
   recoilY: 2
@@ -1808,12 +1806,11 @@ MonoBehaviour:
   returnSpeed: 4
   fireSocket: {fileID: 7556959668680944268}
   muzzleFlash: {fileID: 0}
-  impactVFX: {fileID: 0}
-  DebugRaycast: 0
-  intervalBetweenShots: 0.07
-  boltProjectile: {fileID: 5969348226918421055, guid: 5c4a490cd8edef34581c9f20f0473aa6,
+  projectile: {fileID: 5969348226918421055, guid: 5c4a490cd8edef34581c9f20f0473aa6,
     type: 3}
-  boltForce: 100
+  spawnPoint: {fileID: 7556959668680944268}
+  projectileForce: 120
+  intervalBetweenShots: 0.07
   scopeZoom: 30
   scopeSpeed: 200
 --- !u!1 &8681570866536669022

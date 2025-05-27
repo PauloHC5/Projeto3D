@@ -27,6 +27,9 @@ public class CarnivovrousPlant : Weapon
         {
             Debug.LogWarning("Animator not found on Carnivorous Plant.");
         }
+
+        PlayerCharacterCombatController playerCombat = GetComponentInParent<PlayerCharacterCombatController>();
+        if (playerCombat != null) playerCombat.PlayerCharacterAnimationsController.PlayUseWeapon();
     }
 
     public void PlayRaise(string trigger)

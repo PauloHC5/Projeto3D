@@ -600,7 +600,6 @@ MonoBehaviour:
   maxPullBack: -0.4
   pullSpeed: 31.18
   maxPushForward: 0.1
-  pushSpeed: 5
 --- !u!1 &2128802348096803783
 GameObject:
   m_ObjectHideFlags: 0
@@ -1362,9 +1361,8 @@ MonoBehaviour:
   weaponSelected: 0
   weaponsSet:
   - {fileID: 186649536490876846, guid: b668074fe76b63f43bea7b67044c27e5, type: 3}
-  - {fileID: 7646214553458913523, guid: f309566e5b334dd4b8484ae8263e9713, type: 3}
+  - {fileID: 9184081368244243887, guid: f309566e5b334dd4b8484ae8263e9713, type: 3}
   - {fileID: 2297985535481940187, guid: d455c95032e16d743ad1388472a47104, type: 3}
-  - {fileID: 0}
   - {fileID: 4709857358180033657, guid: cac6572748ee7e14cb6cb7f8ce128c81, type: 3}
   rightHandSocket: {fileID: 2860071523350465062}
   leftHandSocket: {fileID: 7072074740685791458}
@@ -1372,7 +1370,7 @@ MonoBehaviour:
   - weapon: 0
     ammo: 0
   - weapon: 1
-    ammo: 50
+    ammo: 10
   - weapon: 2
     ammo: 80
   - weapon: 3

@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 2669970144435597243}
   - component: {fileID: 4572861748109541567}
   m_Layer: 5
-  m_Name: Crosshair
+  m_Name: Weapon Crosshair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -752,14 +752,14 @@ RectTransform:
   m_GameObject: {fileID: 2927317231156426025}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2298, y: 1.2298, z: 1.2298}
+  m_LocalScale: {x: 0.88292426, y: 0.88292426, z: 0.88292426}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2908555910536389578}
+  m_Father: {fileID: 7659225596049674166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 201.96448, y: 107.024445}
+  m_AnchoredPosition: {x: 121.40861, y: 82.57475}
   m_SizeDelta: {x: 216.0387, y: 93.0156}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1348383905603522374
@@ -1133,7 +1133,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.3928714, y: 1.3928714, z: 1.3928714}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8889369579883237771}
+  - {fileID: 5996405418805581008}
   m_Father: {fileID: 2908555910536389578}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1294,8 +1296,6 @@ RectTransform:
   - {fileID: 952443995422868294}
   - {fileID: 7349755196075937040}
   - {fileID: 3268903419134607657}
-  - {fileID: 8889369579883237771}
-  - {fileID: 5996405418805581008}
   - {fileID: 3214824682317427355}
   - {fileID: 2551925743351342073}
   m_Father: {fileID: 0}
@@ -1382,6 +1382,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHealthBar: {fileID: 3548688728996239045}
   miniMap: {fileID: 8492395288981980766}
+  weaponCrosshair: {fileID: 4572861748109541567}
+  scopeCrosshair: {fileID: 6047656574967570559}
   ammoText: {fileID: 300583493016992991}
   magAmmoText: {fileID: 4310404385873186252}
   gunAmmoText: {fileID: 3205611706537426844}
@@ -2244,17 +2246,17 @@ RectTransform:
   m_GameObject: {fileID: 8595000786554975216}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2298, y: 1.2298, z: 1.2298}
+  m_LocalScale: {x: 0.88292426, y: 0.88292426, z: 0.88292426}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2148169353595320967}
   - {fileID: 3669437251787415937}
   - {fileID: 5969426024086482107}
-  m_Father: {fileID: 2908555910536389578}
+  m_Father: {fileID: 7659225596049674166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 209.80005, y: 141.70001}
+  m_AnchoredPosition: {x: 127.034096, y: 107.469795}
   m_SizeDelta: {x: 125.09204, y: 29.088898}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4434829704447564332

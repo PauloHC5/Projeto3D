@@ -9,6 +9,8 @@ public class HUD : MonoBehaviour
 {
     [SerializeField] private Slider playerHealthBar;
     [SerializeField] private Image miniMap;
+    [SerializeField] private Image weaponCrosshair;
+    [SerializeField] private Image scopeCrosshair;
 
     [Header("Weapon Text Properties")]
     [SerializeField] private TextMeshProUGUI ammoText;
@@ -22,6 +24,8 @@ public class HUD : MonoBehaviour
     private readonly Vector3 selectedScale = Vector3.one * 1.5f;
     private Coroutine[] scaleWeaponSlotsCoroutines;
     private float scaleDuration = 0.2f;
+    private Image[] allImages;
+    private TextMeshProUGUI[] allTexts;
 
     private void Awake()
     {
@@ -31,7 +35,9 @@ public class HUD : MonoBehaviour
     void Start()
     {       
         // Initialize ammo display
-        UpdateAmmoDisplay();        
+        UpdateAmmoDisplay();
+        allImages = GetComponentsInChildren<Image>(true);
+        allTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
     }
     
     void Update()
@@ -49,6 +55,66 @@ public class HUD : MonoBehaviour
         }
     }
 
+    public void ScopeEvent(bool scopeEnable)
+    {
+        if (scopeCrosshair == null || weaponCrosshair == null)
+        {
+            Debug.LogWarning("Scope or weapon crosshair is not assigned in the inspector.");
+            return;
+        }
+
+        if (!scopeEnable)
+        {
+            scopeCrosshair.gameObject.SetActive(false);
+            weaponCrosshair.gameObject.SetActive(true);
+
+            // Reset all images in this game object and its children to full alpha            
+            foreach (Image img in allImages)
+            {
+                if (img != scopeCrosshair && img != weaponCrosshair)
+                {
+                    Color color = img.color;
+                    color.a = 1f; // Set alpha to 100%
+                    img.color = color;
+                }
+            }
+
+            // Reset all text components in this game object and its children to full alpha
+            foreach (TextMeshProUGUI text in allTexts)
+            {
+                Color color = text.color;
+                color.a = 1f; // Set alpha to 100%
+                text.color = color;
+            }
+
+        }
+        else
+        {
+            scopeCrosshair.gameObject.SetActive(true);
+            weaponCrosshair.gameObject.SetActive(false);
+
+            // Get all images in this game object and its children and set their alpha to 10%
+            Image[] images = GetComponentsInChildren<Image>(true);
+            foreach (Image img in images)
+            {
+                if (img != scopeCrosshair && img != weaponCrosshair)
+                {
+                    Color color = img.color;
+                    color.a = 0.1f; // Set alpha to 20%
+                    img.color = color;
+                }
+            }
+
+            // Get all text components in this game object and its children and set their alpha to 10%            
+            foreach (TextMeshProUGUI text in allTexts)
+            {
+                Color color = text.color;
+                color.a = 0.1f; // Set alpha to 10%
+                text.color = color;
+            }
+        }
+    }
+
     private void UpdateAmmoDisplay()
     {
         if(ammoText == null || magAmmoText == null || gunAmmoText == null || meleeText == null)
@@ -57,10 +123,7 @@ public class HUD : MonoBehaviour
             return;
         }
 
-        PlayerCharacterCombatController player = GameManager.Instance.Player.GetComponent<PlayerCharacterCombatController>();
-        var equippedGun = player.EquippedWeapon as Gun;
-        var dualWieldGun = player.EquippedWeapon as DualWieldGun;
-        var weaponSelected = player.WeaponSelected;
+        PlayerCharacterCombatController player = GameManager.Instance.Player.GetComponent<PlayerCharacterCombatController>();        
 
         if (player.WeaponSelected != WeaponTypes.Melee)
         {
@@ -70,18 +133,16 @@ public class HUD : MonoBehaviour
             var magAmmo = 0;
             var totalAmmo = 0;
 
-            if (dualWieldGun)
+            var equippedGun = player.EquippedWeapon as IEquippedGun;
+
+            if (equippedGun != null)
             {
-                magAmmo = dualWieldGun.MagAmmo;
-            }
-            else
-            {
-                if(equippedGun) magAmmo = equippedGun.MagAmmo;
+                // If the equipped weapon is a gun, get its mag ammo
+                magAmmo = equippedGun.MagAmmo;
             }
 
 
-            if(equippedGun) totalAmmo = player.WeaponAmmo[equippedGun.WeaponType];
-            else totalAmmo = player.WeaponAmmo[WeaponTypes.Shotgun];
+            totalAmmo = player.WeaponAmmo[player.WeaponSelected];            
 
             if (magAmmoText != null)
             {

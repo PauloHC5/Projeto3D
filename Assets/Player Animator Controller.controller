@@ -241,6 +241,18 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 710, y: 310, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 1976449574359271934}
+--- !u!114 &-6708970906934852167
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 362b65dead6b6e440895595ed2ad4a4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1101 &-6619832971350176019
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -299,9 +311,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.45454544
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 3
@@ -507,8 +519,14 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: ShootL
+    m_ConditionEvent: UseWeapon
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Toggle
+    m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: WeaponIndex
+    m_EventTreshold: 2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5388615697203446506}
   m_Solo: 0
@@ -618,6 +636,7 @@ AnimatorState:
   - {fileID: 3613589405378318777}
   m_StateMachineBehaviours:
   - {fileID: 5487490216443394662}
+  - {fileID: 7699206774945017155}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -685,8 +704,8 @@ AnimatorTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 6
-    m_ConditionEvent: ToggleAttack
+  - m_ConditionMode: 1
+    m_ConditionEvent: Toggle
     m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8042045173682890208}
@@ -720,9 +739,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
-  m_TransitionOffset: 0
-  m_ExitTime: 0.8076923
+  m_TransitionDuration: 0.20610726
+  m_TransitionOffset: 0.010555363
+  m_ExitTime: 0.8943668
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 2
@@ -742,9 +761,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.5
+  m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 3
@@ -912,7 +931,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Reload
+    m_ConditionEvent: AutoReload
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2059861530464034905}
@@ -1002,7 +1021,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3789782005048879612}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -6708970906934852167}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1011,8 +1031,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -623603649343465320, guid: 858a0435dc6ecfb48bc7336bb7f5111e,
-    type: 3}
+  m_Motion: {fileID: 7400000, guid: 859cc96d70a586c4eb43c275f281bff5, type: 2}
   m_Tag: Reload
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -1202,12 +1221,6 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: ToggleAttack
-    m_Type: 3
-    m_DefaultFloat: 0
-    m_DefaultInt: 1
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
   - m_Name: WeaponIndex
     m_Type: 3
     m_DefaultFloat: 0
@@ -1232,13 +1245,19 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: Gun Ammo
-    m_Type: 3
+  - m_Name: CanReload
+    m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: CanReload
+  - m_Name: Toggle
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: AutoReload
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -1272,7 +1291,7 @@ AnimatorController:
   - serializedVersion: 5
     m_Name: Shoot Right Hand Layer
     m_StateMachine: {fileID: 251060390493623317}
-    m_Mask: {fileID: 31900000, guid: 1ac1608f209ab4542b4c716b9388f194, type: 2}
+    m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
@@ -1417,8 +1436,8 @@ AnimatorTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 6
-    m_ConditionEvent: ToggleAttack
+  - m_ConditionMode: 2
+    m_ConditionEvent: Toggle
     m_EventTreshold: 2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1598059760942708272}
@@ -1739,9 +1758,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.1057728
+  m_TransitionDuration: 0.08845538
   m_TransitionOffset: 0
-  m_ExitTime: 0.735568
+  m_ExitTime: 0.87937903
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -1778,8 +1797,14 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: ShootR
+    m_ConditionEvent: UseWeapon
     m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: Toggle
+    m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: WeaponIndex
+    m_EventTreshold: 2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4702861430074694052}
   m_Solo: 0
@@ -1887,8 +1912,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 3
-    m_ConditionEvent: Gun Ammo
+  - m_ConditionMode: 1
+    m_ConditionEvent: AutoReload
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2059861530464034905}
@@ -1898,7 +1923,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.375
+  m_ExitTime: 0.54
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -1918,6 +1943,7 @@ AnimatorState:
   - {fileID: 2966541228339526656}
   m_StateMachineBehaviours:
   - {fileID: -5627335730906228753}
+  - {fileID: 5576698894789754366}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1943,6 +1969,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ab97d5d94791ea4aa92f3fa97e3cbad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5576698894789754366
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b679b1bf01310ca45aac890b322c8c1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1107 &5641288338022861814
@@ -2017,7 +2055,7 @@ AnimatorStateTransition:
   m_ExitTime: 0.7669099
   m_HasExitTime: 1
   m_HasFixedDuration: 1
-  m_InterruptionSource: 3
+  m_InterruptionSource: 2
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
 --- !u!1102 &6724443535057014863
@@ -2117,9 +2155,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0
+  m_TransitionDuration: 0.45
   m_TransitionOffset: 0
-  m_ExitTime: 0.83000004
+  m_ExitTime: 0.43
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 2
@@ -2157,6 +2195,18 @@ BlendTree:
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0
+--- !u!114 &7699206774945017155
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf49601caa7d0748804449e01203a42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1101 &7703747414693436857
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -2225,9 +2275,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0
-  m_TransitionOffset: 0.18
-  m_ExitTime: 0.9456522
+  m_TransitionDuration: 0.39229774
+  m_TransitionOffset: 0
+  m_ExitTime: 0.94565225
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
