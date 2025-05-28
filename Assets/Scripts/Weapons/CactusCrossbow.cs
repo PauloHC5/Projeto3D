@@ -10,18 +10,25 @@ public class CactusCrossbow : ProjectileGun, ISecondaryAction
     [SerializeField] private float scopeZoom = 30f;
     [SerializeField] private float scopeSpeed = 5f;    
     
+    private Transform originalFireSocket;
+    
     private CrossbowSpikes crossbowSpikes = new CrossbowSpikes();
 
     public static event Action<float, float> AimEvent;    
 
     private void Start()
-    {
-        Camera playerCamera = GameObject.FindFirstObjectByType<Camera>();        
+    {        
+        originalFireSocket = fireSocket; // Store the original projectile spawn point        
     }
 
     private void Update()
     {
-        crossbowSpikes.OnUpdate(gunAnimator, magAmmo); // Update crossbow spikes animation based on ammo count
+        crossbowSpikes.OnUpdate(gunAnimator, magAmmo); // Update crossbow spikes animation based on ammo count        
+
+        if (Camera.main.GetComponent<MouseLook>().ZoomIn)
+            fireSocket = Camera.main.transform;
+        else
+            fireSocket = originalFireSocket; // Reset to original spawn point when not zoomed in        
     }
 
     public override void Fire()
@@ -43,7 +50,7 @@ public class CactusCrossbow : ProjectileGun, ISecondaryAction
     }            
 
     public void Perform()
-    {                        
+    {                                
         AimEvent?.Invoke(scopeZoom, scopeSpeed);
     }        
 }

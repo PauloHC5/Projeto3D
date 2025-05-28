@@ -36,7 +36,9 @@ public class MouseLook : MonoBehaviour
 
     private PlayerInputActions playerControls;
     private Vector2 MouseInput;
-    private Coroutine zoomCoroutine;    
+    private Coroutine zoomCoroutine;        
+
+    public bool ZoomIn => zoomIn;
 
     private void Awake()
     {

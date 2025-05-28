@@ -51,7 +51,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
     private PlayerCharacterAnimationsController playerCharacterAnimationsController;
     private MouseLook mouseLook;
-
+    
 
     public WeaponTypes WeaponSelected => weaponSelected;
     public int WeaponsInventoryCount => weaponsInventory.Count;
@@ -203,11 +203,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     }        
 
     public void PerformPrimaryAction()
-    {
-        bool playerIsRaisingAnyWeapon = playerCombatStates == PlayerCombatStates.RAISING;
-        if (playerIsRaisingAnyWeapon) return; // If the player is raising any weapon, do nothing
-
-
+    {        
         // Check if the equipped weapon implements the IEquippedGun interface
         if (equippedWeapon is IEquippedGun equippedGun && ConditionsToFire(equippedGun))
         {            
@@ -290,7 +286,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         weaponsInventory[2] = shotguns;
 
         equippedWeapon = shotguns;
-        playerGunAmmo[WeaponTypes.Shotgun] -= 4;
+        playerGunAmmo[WeaponTypes.Shotgun] -= 2;
     }
 
     private void OnEnable()

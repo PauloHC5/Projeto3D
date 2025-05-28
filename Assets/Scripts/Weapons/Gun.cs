@@ -35,7 +35,8 @@ public class Gun : Weapon, IEquippedGun
     public int MagAmmo { get => magAmmo;
         set
         {
-           magAmmo = Mathf.Clamp(value, 0, magCapacity); // Ensure magAmmo does not exceed magCapacity or go below 0           
+           magAmmo = Mathf.Clamp(value, 0, magCapacity); // Ensure magAmmo does not exceed magCapacity or go below 0
+           canFire = magAmmo > 0;                                                         
         }   
     }
     
@@ -92,8 +93,10 @@ public class Gun : Weapon, IEquippedGun
     protected IEnumerator ShootDelay()
     {
         canFire = false;
+        Debug.Log(canFire);
         yield return new WaitForSeconds(FireRate);
         canFire = true;
+        Debug.Log(canFire);
     }      
 }
 

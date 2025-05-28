@@ -3,8 +3,7 @@ using UnityEngine;
 public class ProjectileGun : Gun
 {
     [Header("Projectile Gun Properties")]
-    [SerializeField] private GameObject projectile;
-    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private GameObject projectile;    
     [SerializeField] private float projectileForce = 10f;
 
     public override void Fire()
@@ -16,9 +15,9 @@ public class ProjectileGun : Gun
 
     protected void ShootProjectile()
     {
-        if (projectile == null || spawnPoint == null)
+        if (projectile == null || fireSocket == null)
         {
-            Debug.LogWarning("FlareProjectile or FlareSpawnPoint is not set.");
+            Debug.LogWarning("FlareProjectile or FireSocket is not set.");
             return;
         }
 
@@ -26,7 +25,7 @@ public class ProjectileGun : Gun
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
         // Instantiate the flare projectile at the spawn point
-        GameObject spawnedProjectile = Instantiate(projectile, spawnPoint.position, Quaternion.LookRotation(ray.direction));
+        GameObject spawnedProjectile = Instantiate(projectile, fireSocket.position, Quaternion.LookRotation(ray.direction));
 
         // Apply force to the flare projectile
         spawnedProjectile.GetComponent<Rigidbody>().AddForce(ray.direction * projectileForce, ForceMode.Impulse);

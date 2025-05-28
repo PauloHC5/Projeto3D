@@ -1323,7 +1323,7 @@ MonoBehaviour:
   playerMeshRoot: {fileID: 586123004645549830}
   playerMeshSway: {fileID: 5835229652152186125}
   cameraPos: {fileID: 1790979581169680410}
-  impulseForce: 3
+  impulseDecay: 50
   isCrouching: 0
   crouchSpeed: 1
   crouchHeight: 0.5
@@ -1372,7 +1372,7 @@ MonoBehaviour:
   - weapon: 1
     ammo: 10
   - weapon: 2
-    ammo: 80
+    ammo: 10
   - weapon: 3
     ammo: 300
 --- !u!1 &5042317255202969701
