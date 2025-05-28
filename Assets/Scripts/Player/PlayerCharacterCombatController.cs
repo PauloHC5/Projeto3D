@@ -222,6 +222,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private bool ConditionsToFire(IEquippedGun equippedGun) =>
         playerCombatStates != PlayerCombatStates.RELOADING &&        
+        playerCombatStates != PlayerCombatStates.RAISING &&        
         equippedGun.CanFire &&
         equippedGun.MagAmmo > 0;
 
@@ -263,10 +264,11 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void PerformSecondaryAction()
     {   
-        if(equippedWeapon is DualWieldGunManager dualWieldGun && dualWieldGun.CanFire && dualWieldGun.MagAmmo > 0)
+        if(equippedWeapon is DualWieldGunManager dualWieldGun && ConditionsToFire(dualWieldGun))
         {
             dualWieldGun.FireBoth();
-            playerCharacterAnimationsController.PlayReload();
+            playerCharacterAnimationsController.PlayFireBoth();
+            GetComponent<PlayerCharacterMovementController>().ApplyImpulse(20f); // Apply backward impulse from camera when firing both guns
             return;
         }
 

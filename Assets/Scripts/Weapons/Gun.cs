@@ -69,6 +69,14 @@ public class Gun : Weapon, IEquippedGun
         StartCoroutine(ShootDelay());
     }
 
+    public void DoubleRecoil()
+        {
+        if (cameraRecoil)
+        {
+            cameraRecoil.RecoilFire(recoilX * 2, recoilY * 2, recoilZ * 2, snappiness, returnSpeed);
+        }        
+    }
+
     public virtual void PerformReload()
     {
         if(!CanReload())

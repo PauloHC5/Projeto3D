@@ -55,7 +55,7 @@ public class DualWieldMeleeManager : IWeapon, IEquippedMelee
     }    
 }
 
-public class DualWieldGunManager : IWeapon, IEquippedGun, ISecondaryAction
+public class DualWieldGunManager : IWeapon, IEquippedGun
 {
     public Gun RightGun { get; private set; }
     public Gun LeftGun { get; private set; }
@@ -95,6 +95,8 @@ public class DualWieldGunManager : IWeapon, IEquippedGun, ISecondaryAction
 
     public void Fire()
     {
+        if (!CanFire || MagAmmo == 0) return;
+
         toggleFire = !toggleFire;
 
         if (toggleFire)
@@ -111,7 +113,13 @@ public class DualWieldGunManager : IWeapon, IEquippedGun, ISecondaryAction
 
     public void FireBoth()
     {
-        RightGun.Fire();
+        if (MagAmmo == 0) return;
+
+        RightGun.DoubleRecoil();
+
+        RightGun.Fire();        
+        RightGun.Fire();        
+        LeftGun.Fire();
         LeftGun.Fire();
     }
 
@@ -131,10 +139,5 @@ public class DualWieldGunManager : IWeapon, IEquippedGun, ISecondaryAction
     {
         RightGun.DisableWeapon();
         LeftGun.DisableWeapon();        
-    }
-
-    public void Perform()
-    {
-        FireBoth();
-    }
+    }    
 }

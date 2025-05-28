@@ -8,10 +8,10 @@ public class PlayerCharacterAnimationsController
     private readonly int UseWeaponTrigger = Animator.StringToHash("UseWeapon");
     private readonly int RaiseWeaponTrigger = Animator.StringToHash("RaiseWeapon");
     private readonly int WeaponIndex = Animator.StringToHash("WeaponIndex");
-    private readonly int ReloadTrigger = Animator.StringToHash("Reload");        
-    private readonly int GunAmmo = Animator.StringToHash("Gun Ammo");       
+    private readonly int ReloadTrigger = Animator.StringToHash("Reload");                 
     private readonly int Toggle = Animator.StringToHash("Toggle");
     private readonly int AutoReload = Animator.StringToHash("AutoReload");
+    private readonly int FireBoth = Animator.StringToHash("FireBoth");
 
     public PlayerCharacterAnimationsController(Animator animator)
     {
@@ -28,7 +28,7 @@ public class PlayerCharacterAnimationsController
     {
         playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(playerVelocityMagnitude, 0f, playerMaxSpeed));        
     }    
-
+        
     public void PlaySwitchToWeapon(WeaponTypes weapon)
     {                                          
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
@@ -38,7 +38,12 @@ public class PlayerCharacterAnimationsController
     public void PlayUseWeapon()
     {        
         playerAnimator.SetTrigger(UseWeaponTrigger);                
-    }           
+    }
+
+    public void PlayFireBoth()
+    {
+        playerAnimator.SetTrigger(FireBoth);
+    }
 
     public void PlayReload()
     {
