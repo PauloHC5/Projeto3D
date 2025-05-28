@@ -53,8 +53,7 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
                 break;
             case PlayerCombatStates.ATTACKING:                
                 break;
-            case PlayerCombatStates.FIRING:                
-                animator.SetBool(CanReload, false);
+            case PlayerCombatStates.FIRING:                                
                 break;
             case PlayerCombatStates.DUALWIELDFIRING:                
                 animator.SetBool(CanReload, false);
@@ -74,25 +73,23 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         }
 
         if(playerCharacterCombatController && stateInfo.IsTag("Reload")) playerCharacterCombatController.PlayerCombatStates = PlayerCombatStates.RELOADING;
+
+        if(animator.GetLayerWeight(FireLeftHandLayerIndex) == 1f || animator.GetLayerWeight(FireRightHandLayerIndex) == 1f)
+        {
+            animator.SetBool(CanReload, false);
+        }
+        else animator.SetBool(CanReload, true);
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {   
-        bool isExitingFromDualWieldFiring = playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING;
-        bool BothShootLayersInactive = animator.GetLayerWeight(FireLeftHandLayerIndex) == 0f && animator.GetLayerWeight(FireRightHandLayerIndex) == 0f;
+        bool isExitingFromDualWieldFiring = playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.DUALWIELDFIRING;        
 
         if (isExitingFromDualWieldFiring)
-        {
-            //if(playerCharacterCombatController.PlayerCombatStates != PlayerCombatStates.RELOADING) playerCharacterCombatController.PlayerCombatStates = PlayerCombatStates.DEFAULT;
-            playerCharacterCombatController.PlayerCombatStates = PlayerCombatStates.DEFAULT;
-            animator.SetBool(CanReload, true);
-
-        }        
-        else
-        {
-            animator.SetBool(CanReload, true);
-        }
+        {            
+            playerCharacterCombatController.PlayerCombatStates = PlayerCombatStates.DEFAULT;            
+        }                
 
         if(stateInfo.IsTag("Reload")) playerCharacterCombatController.PlayerCombatStates = PlayerCombatStates.DEFAULT;        
     }

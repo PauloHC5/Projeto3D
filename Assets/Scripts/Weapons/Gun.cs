@@ -35,8 +35,7 @@ public class Gun : Weapon, IEquippedGun
     public int MagAmmo { get => magAmmo;
         set
         {
-           magAmmo = Mathf.Clamp(value, 0, magCapacity); // Ensure magAmmo does not exceed magCapacity or go below 0
-           canFire = magAmmo > 0; // Update canFire based on magAmmo
+           magAmmo = Mathf.Clamp(value, 0, magCapacity); // Ensure magAmmo does not exceed magCapacity or go below 0           
         }   
     }
     
@@ -59,7 +58,7 @@ public class Gun : Weapon, IEquippedGun
 
     public virtual void Fire()
     {
-        if (!canFire) return;
+        if (!canFire || magAmmo == 0) return;
 
         if (gunAnimator) gunAnimator.SetTrigger(FireTrigger);
         else Debug.LogWarning("Gun animator not found.");
@@ -86,7 +85,7 @@ public class Gun : Weapon, IEquippedGun
     {
         canFire = false;
         yield return new WaitForSeconds(FireRate);
-        canFire = magAmmo > 0;
+        canFire = true;
     }      
 }
 

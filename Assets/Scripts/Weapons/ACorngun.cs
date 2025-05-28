@@ -7,13 +7,7 @@ public class ACorngun : ProjectileGun
     public override void Fire()
     {        
         base.Fire();
-        magAmmo--;
-
-        if (magAmmo <= 0)
-        {
-            //PerformReload();
-            canFire = false;
-        }
+        magAmmo--;        
     }
 
     public override void PerformReload()

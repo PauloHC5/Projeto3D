@@ -1309,8 +1309,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f69d2f64b58782b42a38a3b608b3df29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 2.48
-  jumpForce: 0.5
+  walkSpeed: 4
+  jumpForce: 1.5
   acceleration: 15
   deceleration: 50
   groundCheck: {fileID: 9180909906419331081}
@@ -1318,7 +1318,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 8
-  gravity: -5.86
+  gravity: -11.57
   characterController: {fileID: 4646708541106787938}
   playerMeshRoot: {fileID: 586123004645549830}
   playerMeshSway: {fileID: 5835229652152186125}

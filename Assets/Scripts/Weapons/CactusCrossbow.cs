@@ -26,7 +26,7 @@ public class CactusCrossbow : ProjectileGun, ISecondaryAction
 
     public override void Fire()
     {               
-        if(!canFire) return; // Prevent firing if cannot fire
+        if(!canFire || magAmmo == 0) return;
 
         StartCoroutine(FireBurst());        
         magAmmo -= 3;

@@ -55,14 +55,14 @@ public class DualWieldMeleeManager : IWeapon, IEquippedMelee
     }    
 }
 
-public class DualWieldGunManager : IWeapon, IEquippedGun
+public class DualWieldGunManager : IWeapon, IEquippedGun, ISecondaryAction
 {
     public Gun RightGun { get; private set; }
     public Gun LeftGun { get; private set; }
 
     public int MagAmmo => RightGun.MagAmmo + LeftGun.MagAmmo;
 
-    public bool CanFire => RightGun.CanFire && LeftGun.CanFire;
+    public bool CanFire => (RightGun.CanFire && LeftGun.CanFire) && (RightGun.MagAmmo > 0 || LeftGun.MagAmmo > 0);        
 
     public int MagCapacity => RightGun.MagCapacity + LeftGun.MagCapacity;
 
@@ -131,5 +131,10 @@ public class DualWieldGunManager : IWeapon, IEquippedGun
     {
         RightGun.DisableWeapon();
         LeftGun.DisableWeapon();        
+    }
+
+    public void Perform()
+    {
+        FireBoth();
     }
 }

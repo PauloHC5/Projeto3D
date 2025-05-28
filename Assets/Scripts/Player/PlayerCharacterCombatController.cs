@@ -212,8 +212,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         if (equippedWeapon is IEquippedGun equippedGun && ConditionsToFire(equippedGun))
         {            
             equippedGun.Fire();
-            playerCharacterAnimationsController.PlayUseWeapon();
-            Debug.Log($"Firing weapon");
+            playerCharacterAnimationsController.PlayUseWeapon();            
         }
         else if (equippedWeapon is IEquippedMelee equippedMelee)
         {
@@ -223,7 +222,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private bool ConditionsToFire(IEquippedGun equippedGun) =>
         playerCombatStates != PlayerCombatStates.RELOADING &&        
-        equippedGun.CanFire;
+        equippedGun.CanFire &&
+        equippedGun.MagAmmo > 0;
 
     private Transform GetSocketTransform(WeaponSocket weaponSocketToAttach)
     {
@@ -239,7 +239,13 @@ public class PlayerCharacterCombatController : MonoBehaviour
             if(mouseLook) mouseLook.ZoomOut(); // Zoom out the camera if the player is reloading a gun
         }
     }
-        
+
+    private bool ConditionsToReload(IEquippedGun equippedGun) =>
+        equippedGun.CanReload() &&
+        playerGunAmmo[weaponSelected] > 0 &&
+        playerCombatStates != PlayerCombatStates.RELOADING &&
+        playerCombatStates != PlayerCombatStates.FIRING;        
+
     public void Reload()
     {        
         IEquippedGun equippedGun = (IEquippedGun)equippedWeapon;
@@ -252,17 +258,18 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
         equippedGun.MagAmmo += ammoAmountToReload; // Set the mag ammo to the ammo to reload
         playerGunAmmo[weaponSelected] -= ammoAmountToReload; // Subtract the ammo from the player ammo
-    }   
-
-    private bool ConditionsToReload(IEquippedGun equippedGun) => 
-        equippedGun.CanReload() &&
-        playerGunAmmo[weaponSelected] > 0 &&
-        playerCombatStates != PlayerCombatStates.RELOADING &&
-        playerCombatStates != PlayerCombatStates.FIRING;        
+    }            
         
 
     public void PerformSecondaryAction()
-    {               
+    {   
+        if(equippedWeapon is DualWieldGunManager dualWieldGun && dualWieldGun.CanFire && dualWieldGun.MagAmmo > 0)
+        {
+            dualWieldGun.FireBoth();
+            playerCharacterAnimationsController.PlayReload();
+            return;
+        }
+
         if (equippedWeapon is ISecondaryAction equippedGun) equippedGun.Perform();
     }    
 
@@ -274,9 +281,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     }
 
     private void RetrieveNewShotguns()
-    {
-        //Weapon ShotgunsSpawned = InitializeDualWieldGun(weaponsSet[2]); // Assuming Shotgun is at index 2
-        
+    {                
         IWeapon shotguns = new DualWieldGunManager(weaponsSet[2] as BananaShotgun, rightHandSocket, leftHandSocket, playerCharacterAnimationsController);
         shotguns.EnableWeapon();
 
