@@ -10,6 +10,7 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 100f;    
     [SerializeField] private Transform cameraRot;
     [SerializeField] private GameObject scopeVolume;
+    
 
     [Header("Player Mesh Properties")]
     [SerializeField] private Transform player;
@@ -20,8 +21,7 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private float maxPullBack = -0.5f; // How far back to pull
     [SerializeField] private float pullSpeed = 5f;      // How fast to interpolate
     [Range(-2f, 2f)]
-    [SerializeField] private float maxPushForward = 0.5f; // How far to push forward
-    [SerializeField] private float pushSpeed = 5f;      // How fast to interpolate
+    [SerializeField] private float maxPushForward = 0.5f; // How far to push forward    
 
     private Vector3 playerMeshDefaultLocalPos;    
 
@@ -36,7 +36,9 @@ public class MouseLook : MonoBehaviour
 
     private PlayerInputActions playerControls;
     private Vector2 MouseInput;
-    private Coroutine zoomCoroutine;    
+    private Coroutine zoomCoroutine;        
+
+    public bool ZoomIn => zoomIn;
 
     private void Awake()
     {
@@ -106,13 +108,15 @@ public class MouseLook : MonoBehaviour
 
         if(zoomIn)
         {
-            scopeVolume.SetActive(true);
+            scopeVolume.SetActive(true);            
             playerCameras[1].enabled = false;
+            GameManager.Instance.Hud.ScopeEvent(true);
         }
         else
         {
-            scopeVolume.SetActive(false);
+            scopeVolume.SetActive(false);            
             playerCameras[1].enabled = true;
+            GameManager.Instance.Hud.ScopeEvent(false);
         }
 
         if (zoomCoroutine != null)
@@ -151,6 +155,7 @@ public class MouseLook : MonoBehaviour
 
         zoomIn = false;
         scopeVolume.SetActive(false);
+        GameManager.Instance.Hud.ScopeEvent(false);
         playerCameras[1].enabled = true;
 
         if (zoomCoroutine != null)
@@ -163,16 +168,15 @@ public class MouseLook : MonoBehaviour
     private void OnEnable()
     {
         playerControls.Enable();
-        Crossbow.AimEvent += PerformAim;      
-        PlayerCharacterCombatController.onReload += ZoomOut;
+        CactusCrossbow.AimEvent += PerformAim;              
         PlayerCharacterCombatController.onSwitchToWeapon += ZoomOut;
     }
 
     private void OnDisable()
     {
         playerControls.Disable();
-        Crossbow.AimEvent -= PerformAim;
-        PlayerCharacterCombatController.onReload -= ZoomOut;
+        CactusCrossbow.AimEvent -= PerformAim;
+        AnimationTriggerEvents.onReload -= ZoomOut;
         PlayerCharacterCombatController.onSwitchToWeapon -= ZoomOut;
     }
 }

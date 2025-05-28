@@ -5,7 +5,7 @@ public class AnimationTriggerEvents : MonoBehaviour
 {
     public static event Action onDropShotgun;   
     public static event Action onReTrieveNewShotguns;
-    public static event Action onFinishReload;
+    public static event Action onReload;    
 
     public void DropShotgun()
     {
@@ -17,8 +17,8 @@ public class AnimationTriggerEvents : MonoBehaviour
         onReTrieveNewShotguns?.Invoke();
     }
 
-    public void FinishReload()
-    {
-        onFinishReload?.Invoke();
-    }
+    public void Reload()
+    {        
+        onReload?.Invoke();
+    }   
 }

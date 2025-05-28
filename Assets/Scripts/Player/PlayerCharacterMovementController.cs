@@ -31,7 +31,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
     [SerializeField] private Transform playerMeshRoot;
     [SerializeField] private Transform playerMeshSway;
     [SerializeField] private Transform cameraPos;
-    [SerializeField] private float impulseForce = 5f; // Impulse force to apply to the player
+    [SerializeField] private float impulseDecay = 5f; // You can tweak this value for how quickly the impulse fades
 
 
     [Header("Crouch")]
@@ -83,6 +83,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
     private float decelerationTime = 0f; // New field to track deceleration time
 
     private PlayerMovementStates playerMovementStates = PlayerMovementStates.DEFAULT;    
+    private Vector3 impulseVelocity = Vector3.zero;    
 
     public PlayerMovementStates PlayerMovementStates => playerMovementStates;
 
@@ -155,7 +156,16 @@ public class PlayerCharacterMovementController : MonoBehaviour
             movementVelocity = Vector3.MoveTowards(movementVelocity, Vector3.zero, currentDeceleration * Time.deltaTime);
         }
 
-        MoveCharacter(movementVelocity, gravityVelocity);        
+        // Add impulse velocity
+        Vector3 totalVelocity = movementVelocity + impulseVelocity;
+
+        MoveCharacter(totalVelocity, gravityVelocity);
+
+        // Decay impulse velocity over time
+        if (impulseVelocity.sqrMagnitude > 0.001f)
+            impulseVelocity = Vector3.MoveTowards(impulseVelocity, Vector3.zero, impulseDecay * Time.deltaTime);
+        else
+            impulseVelocity = Vector3.zero;
 
         Sway(playerLookInput);
         SwayRotation(playerLookInput);
@@ -349,13 +359,6 @@ public class PlayerCharacterMovementController : MonoBehaviour
         MoveCharacter(movementVelocity, gravityVelocity);
     }
 
-    private void ApplyImpulse()
-    {
-        // Apply impulse to the player in the backward direction
-        Vector3 impulseDirection = -Camera.main.transform.forward; // Backward direction
-        gravityVelocity += impulseDirection * impulseForce; // Apply impulse force        
-    }
-
     private void MoveCharacter(Vector3 movement, Vector3 gravity)
     {
         characterController.Move((movement + gravity) * Time.deltaTime);
@@ -373,13 +376,15 @@ public class PlayerCharacterMovementController : MonoBehaviour
         return Physics.CheckSphere(spherePosition, characterController.radius, obstacleMask);
     }
 
-    private void OnEnable()
+    /// <summary>
+    /// Applies an impulse movement to the character in the opposite direction that the main camera is looking,
+    /// considering its rotation. Uses the impulseForce value as the magnitude.
+    /// </summary>
+    public void ApplyImpulse(float impulseForce)
     {
-        PlayerCharacterCombatController.applyImpulse += ApplyImpulse;
-    }
-
-    private void OnDisable()
-    {
-        PlayerCharacterCombatController.applyImpulse -= ApplyImpulse;
+        if (Camera.main == null) return;
+        Vector3 opposite = -Camera.main.transform.forward;
+        if (opposite.sqrMagnitude > 0.0001f)
+            impulseVelocity += opposite.normalized * impulseForce;
     }
 }

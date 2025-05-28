@@ -6,6 +6,14 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _Instance;
 
+    [Header("UI Properties")]
+    [SerializeField] private HUD hud;
+    public HUD Hud
+    {
+        get { return hud; }        
+    }
+
+    [Header("Enemy Spawning Properties")]
     [SerializeField] private List<Enemy> enemies = new List<Enemy>();
     [SerializeField] private int maxEnemies = 10;
     [SerializeField] private float timeToSpawn = 1f;
@@ -16,6 +24,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        if(hud == null)
+            hud = GameObject.FindAnyObjectByType<HUD>();
+
         InvokeRepeating(nameof(SpawnEnemy), timeToSpawn, spawnInterval);
 
         // Find all spawn points in the scene by tag

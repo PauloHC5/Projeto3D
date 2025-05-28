@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 201259700404876066}
   serializedVersion: 2
   m_LocalRotation: {x: 0.8467974, y: -0.000000063409146, z: -0.0000001009459, w: 0.53191555}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -290,7 +290,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2584276354103174426}
-  - component: {fileID: 7646214553458913523}
+  - component: {fileID: 9184081368244243887}
   m_Layer: 7
   m_Name: Corngun
   m_TagString: Untagged
@@ -320,7 +320,7 @@ Transform:
   - {fileID: 1729148229857485247}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7646214553458913523
+--- !u!114 &9184081368244243887
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -329,29 +329,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 2076845817486309928}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfad3912ccd0b3846a3c87a230c0af9b, type: 3}
+  m_Script: {fileID: 11500000, guid: 63065b1677773da42b4f255945aac900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 1
   socketToAttach: 0
   fireRate: 1.25
-  gunRange: 100
-  shootImpulse: 10
-  maxAmmo: 1
+  magCapacity: 1
   magAmmo: 1
   recoilX: -9.5
-  recoilY: -0.73
-  recoilZ: -0.23
+  recoilY: 0.73
+  recoilZ: 0.35
   snappiness: 3
   returnSpeed: 1.5
   fireSocket: {fileID: 1729148229857485247}
   muzzleFlash: {fileID: 0}
-  impactVFX: {fileID: 0}
-  DebugRaycast: 0
-  flareProjectile: {fileID: 7392494035453153853, guid: 0a87dd43d1d759148bab6cbfab6cb510,
+  projectile: {fileID: 7392494035453153853, guid: 0a87dd43d1d759148bab6cbfab6cb510,
     type: 3}
-  flareSpawnPoint: {fileID: 1729148229857485247}
-  FlareForce: 20
+  spawnPoint: {fileID: 1729148229857485247}
+  projectileForce: 20
 --- !u!1 &2901351047078527544
 GameObject:
   m_ObjectHideFlags: 0

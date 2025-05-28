@@ -2494,25 +2494,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 2
   socketToAttach: 0
-  fireRate: 0.75
-  gunRange: 4.4
-  shootImpulse: 25
-  maxAmmo: 2
+  fireRate: 0.25
+  magCapacity: 2
   magAmmo: 2
-  recoilX: -30.2
+  recoilX: -15.1
   recoilY: 12.29
   recoilZ: 0.35
-  snappiness: 10
-  returnSpeed: 2.6
+  snappiness: 5
+  returnSpeed: 2.65
   fireSocket: {fileID: 7309336431696816505}
   muzzleFlash: {fileID: 0}
-  impactVFX: {fileID: 0}
-  DebugRaycast: 1
   damage: 50
+  gunRange: 4.4
   shootLayer:
     serializedVersion: 2
     m_Bits: 521
-  damageCapsuleRadius: 0.5
+  shootImpactImpulse: 10
+  DebugRaycast: 1
+  impactVFX: {fileID: 0}
+  shootRadius: 0.5
   throwForce: 10
   burstRange: 2.5
   pelletsPerShot: 8
