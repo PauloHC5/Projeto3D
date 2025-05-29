@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
         //DontDestroyOnLoad(gameObject);
 
         // Find the player character controller in the scene
-        Player = Object.FindFirstObjectByType<PlayerCharacterController>();                
+        Player = Object.FindFirstObjectByType<PlayerCharacterController>();                          
     }    
 
     private void Update()
@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
         // Check if the 'Escape' key is pressed
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            QuitApplication();
+            
         }   
         
         if (enemiesInScene.Count >= maxEnemies)
@@ -90,16 +90,10 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    private void QuitApplication()
-    {
-        // Quit the application
-        Application.Quit();
-    }
-
     [RuntimeInitializeOnLoadMethod]
     private static void OnRuntimeInitialize()
     {
-        _Instance = null;
+        _Instance = null;        
         Debug.Log("GameManager has been reset.");
     }
 

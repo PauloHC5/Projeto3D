@@ -21,10 +21,11 @@ public class PlayerCharacterController : MonoBehaviour
     protected bool rmbPressed = false;                       
 
     public bool LmbPressed { get { return lmbPressed; } }
-    public bool RmbPressed { get { return rmbPressed; } }    
+    public bool RmbPressed { get { return rmbPressed; } }
 
-    private int MouseScroll;
-    private PlayerInputActions playerControls;
+    public static PlayerInputActions PlayerControls;
+
+    private int MouseScroll;    
     private Vector2 playerMovementInput;
     private Vector2 playerLookInput;
 
@@ -36,6 +37,8 @@ public class PlayerCharacterController : MonoBehaviour
 
 private void Awake()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+
         InitializePlayerControls();                
 
         playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
@@ -45,32 +48,45 @@ private void Awake()
 
     private void InitializePlayerControls()
     {
-        playerControls = new PlayerInputActions();
+        PlayerControls = new PlayerInputActions();
 
-        playerControls.Player.PrimaryAction.started += ctx => lmbPressed = true;
-        playerControls.Player.PrimaryAction.canceled += ctx => lmbPressed = false;
+        PlayerControls.Player.PrimaryAction.started += ctx => lmbPressed = true;
+        PlayerControls.Player.PrimaryAction.canceled += ctx => lmbPressed = false;
 
-        playerControls.Player.SecondaryAction.started += ctx => rmbPressed = true;
-        playerControls.Player.SecondaryAction.canceled += ctx => rmbPressed = false;
+        PlayerControls.Player.SecondaryAction.started += ctx => rmbPressed = true;
+        PlayerControls.Player.SecondaryAction.canceled += ctx => rmbPressed = false;
 
-        playerControls.Player.SecondaryAction.performed += ctx => PerformSecondaryAction();
-        playerControls.Player.Jump.performed += ctx => PerformJump();
-        playerControls.Player.Reload.performed += ctx => PerformReload();
-        playerControls.Player.Crouch.performed += ctx => Crouch();
+        PlayerControls.Player.SecondaryAction.performed += ctx => PerformSecondaryAction();
+        PlayerControls.Player.Jump.performed += ctx => PerformJump();
+        PlayerControls.Player.Reload.performed += ctx => PerformReload();
+        PlayerControls.Player.Crouch.performed += ctx => Crouch();
+
+        PlayerControls.Player.Pause.performed += ctx =>
+        {            
+            PauseManager.Instance.PauseGame();            
+        };
+
+        PlayerControls.UI.Unpause.performed += ctx =>
+        {
+            if (PauseManager.Instance.IsPaused)
+            {
+                PauseManager.Instance.ResumeGame();
+            }
+        };
 
         // Assign the SwitchToWeapon method to the respective input action
-        if(ConditionToSwitchWeapon())
+        if (ConditionToSwitchWeapon())
         {
-            playerControls.Player.Weapon1.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Melee);
-            playerControls.Player.Weapon2.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Pistol);
-            playerControls.Player.Weapon3.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Shotgun);
-            playerControls.Player.Weapon4.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Crossbow);
+            PlayerControls.Player.Weapon1.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Melee);
+            PlayerControls.Player.Weapon2.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Pistol);
+            PlayerControls.Player.Weapon3.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Shotgun);
+            PlayerControls.Player.Weapon4.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Crossbow);
         }        
         //playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(4);
 
         // Assign the HandleMouseScroll method to the respective input actions
-        playerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };
-        playerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };        
+        PlayerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };
+        PlayerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };        
     }        
 
     void Update()
@@ -124,8 +140,8 @@ private void Awake()
         if (lmbPressed) PerformPrimaryAction();
         if (rmbPressed && playerCharacterCombatController.WeaponSelected == WeaponTypes.Shotgun) PerformSecondaryAction();
         
-        playerMovementInput = playerControls.Player.Move.ReadValue<Vector2>();
-        playerLookInput = playerControls.Player.Look.ReadValue<Vector2>();
+        playerMovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
+        playerLookInput = PlayerControls.Player.Look.ReadValue<Vector2>();
     }           
 
     private void PerformPrimaryAction()
@@ -157,12 +173,12 @@ private void Awake()
 
     private void OnEnable()
     {
-        playerControls.Enable();        
+        PlayerControls.Enable();        
     }
 
     private void OnDisable()
     {
-        playerControls.Disable();
+        PlayerControls.Disable();
     }
 
 }

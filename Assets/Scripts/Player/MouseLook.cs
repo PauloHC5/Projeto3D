@@ -46,9 +46,7 @@ public class MouseLook : MonoBehaviour
     }
         
     void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-
+    {        
         playerCameras = GetComponentsInChildren<Camera>();
 
         if (playerCameras[0] != null)
