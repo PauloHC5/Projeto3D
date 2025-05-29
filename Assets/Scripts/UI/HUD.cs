@@ -7,8 +7,7 @@ using System.Collections;
 
 public class HUD : MonoBehaviour
 {
-    [SerializeField] private Slider playerHealthBar;
-    [SerializeField] private Image miniMap;
+    [SerializeField] private Slider playerHealthBar;    
     [SerializeField] private Image weaponCrosshair;
     [SerializeField] private Image scopeCrosshair;
 
@@ -46,13 +45,7 @@ public class HUD : MonoBehaviour
         else Debug.LogWarning("Player Health Bar is not assigned in the inspector.");
 
         // Update ammo display every frame
-        UpdateAmmoDisplay();
-
-        if(miniMap)
-        {
-            // Rotate the mini map according to the player's rotation
-            miniMap.transform.rotation = Quaternion.Euler(0, 0, GameManager.Instance.Player.transform.eulerAngles.y);
-        }
+        UpdateAmmoDisplay();        
     }
 
     public void ScopeEvent(bool scopeEnable)
