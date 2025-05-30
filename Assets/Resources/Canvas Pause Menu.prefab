@@ -923,7 +923,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6893980244779515007}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7349297910530899310}
+        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
+        m_MethodName: ResumeGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3423690547877913142
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,10 +1418,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 9093913607357675508}
   m_HandleRect: {fileID: 7782377810356592970}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: 1
+  m_MaxValue: 50
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 25
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1644,7 +1656,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2442816360155804285}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7349297910530899310}
+        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
+        m_MethodName: QuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4984261635874651710
 GameObject:
   m_ObjectHideFlags: 0
@@ -1940,10 +1964,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 2438479580763056022}
   m_HandleRect: {fileID: 7621309933262777653}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: 1
+  m_MaxValue: 50
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 25
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2257,6 +2281,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 5857966158892988940}
+  buttons:
+  - {fileID: 2551108428697330430}
+  - {fileID: 3892415608529465686}
+  mouseSensitivitySlider: {fileID: 6490181697965593729}
 --- !u!1 &7003143685807328529
 GameObject:
   m_ObjectHideFlags: 0
@@ -2452,10 +2480,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 6207760038170817789}
   m_HandleRect: {fileID: 2354527042438382903}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: 1
+  m_MaxValue: 50
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 25
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

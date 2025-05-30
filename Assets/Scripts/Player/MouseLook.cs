@@ -7,7 +7,8 @@ using UnityEngine.InputSystem;
 public class MouseLook : MonoBehaviour
 {
     [Header("Camera Properties")]
-    [SerializeField] private float mouseSensitivity = 100f;    
+    [Range(1f, 50f)]
+    [SerializeField] private float mouseSensitivity;    
     [SerializeField] private Transform cameraRot;
     [SerializeField] private GameObject scopeVolume;
     
@@ -73,7 +74,9 @@ public class MouseLook : MonoBehaviour
             UpdatePlayerMeshPushAndPull();
             player.Rotate(Vector3.up * yRotation);
             playerMesh.localRotation = Quaternion.Euler(xRotation + xRotationDeltaPlayerMesh, playerMesh.localRotation.y, playerMesh.localRotation.z);            
-        }        
+        }      
+        
+        if(PauseManager.Instance != null) mouseSensitivity = PauseManager.Instance.MouseSensitivitySlider.value; // Update the slider value in the pause menu
     }
 
     private void UpdatePlayerMeshPushAndPull()

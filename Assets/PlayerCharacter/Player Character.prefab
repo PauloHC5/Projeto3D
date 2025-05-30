@@ -591,7 +591,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 034e21556af5ccb49b9848ec7ca35cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 20
+  mouseSensitivity: 25
   cameraRot: {fileID: 1790979581169680410}
   scopeVolume: {fileID: 7092716412571113679}
   player: {fileID: 2075349027788936261}

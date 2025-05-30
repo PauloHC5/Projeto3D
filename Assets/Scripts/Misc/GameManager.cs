@@ -66,16 +66,10 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         // Check if the 'P' key is pressed
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.F9))
         {
             ReloadScene();
-        }
-
-        // Check if the 'Escape' key is pressed
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            
-        }   
+        }           
         
         if (enemiesInScene.Count >= maxEnemies)
         {
