@@ -948,6 +948,7 @@ GameObject:
   - component: {fileID: 8122996652545325878}
   - component: {fileID: 8983802302185713661}
   - component: {fileID: 6877453082540241136}
+  - component: {fileID: 2434909476105940481}
   m_Layer: 5
   m_Name: Carnivorous Crosshair
   m_TagString: Untagged
@@ -972,7 +973,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0, y: 6.013}
-  m_SizeDelta: {x: 215.864, y: 195.326}
+  m_SizeDelta: {x: 215.864, y: 133.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8983802302185713661
 CanvasRenderer:
@@ -1012,6 +1013,28 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &2434909476105940481
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3047397448794230535}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1474896177e15104a81a38ee3750d9bd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3564381408272854016
 GameObject:
   m_ObjectHideFlags: 0
