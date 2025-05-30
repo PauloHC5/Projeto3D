@@ -22,6 +22,7 @@ public class CarnivovrousPlant : Weapon
         if (animator != null)
         {
             animator.SetTrigger("Attack");
+            GameManager.Instance?.Hud?.Bite();
         }
         else
         {

@@ -8,7 +8,7 @@ using System.Collections;
 public class HUD : MonoBehaviour
 {
     [SerializeField] private Slider playerHealthBar;    
-    [SerializeField] private Image weaponCrosshair;
+    [SerializeField] private Image[] weaponCrosshairs = new Image[4];
     [SerializeField] private Image scopeCrosshair;
 
     [Header("Weapon Text Properties")]
@@ -25,6 +25,7 @@ public class HUD : MonoBehaviour
     private float scaleDuration = 0.2f;
     private Image[] allImages;
     private TextMeshProUGUI[] allTexts;
+    private int CrosshairIndex;
 
     private void Awake()
     {
@@ -48,9 +49,43 @@ public class HUD : MonoBehaviour
         UpdateAmmoDisplay();        
     }
 
+    private void UpdateCrosshair()
+    {
+        PlayerCharacterCombatController player = GameManager.Instance.Player.GetComponent<PlayerCharacterCombatController>();
+        if (player == null || weaponCrosshairs.Length == 0)
+        {
+            Debug.LogWarning("Player or weapon crosshair is not assigned in the inspector.");
+            return;
+        }
+
+        CrosshairIndex = (int)player.WeaponSelected; // get the current weapon index from the player character combat controller
+
+        // Ensure the index is within bounds
+        if (CrosshairIndex < 0 || CrosshairIndex >= weaponCrosshairs.Length)
+        {
+            Debug.LogWarning("Crosshair index is out of bounds.");
+            return;
+        }
+
+        // Set the active crosshair based on the current weapon
+        for (int i = 0; i < weaponCrosshairs.Length; i++) // loop through all crosshairs
+        {
+            // Check if the crosshair is assigned in the inspector
+            if (weaponCrosshairs[i] == null)
+            {
+                Debug.LogWarning($"Weapon crosshair at index {i} is not assigned in the inspector.");
+                continue; // Skip to the next iteration if the crosshair is not assigned
+            }
+
+            // Set the active state of each crosshair based on the current weapon index
+            // If the index matches, set it active; otherwise, set it inactive
+            weaponCrosshairs[i].gameObject.SetActive(i == CrosshairIndex);
+        }
+    }
+
     public void ScopeEvent(bool scopeEnable)
     {
-        if (scopeCrosshair == null || weaponCrosshair == null)
+        if (scopeCrosshair == null || weaponCrosshairs == null)
         {
             Debug.LogWarning("Scope or weapon crosshair is not assigned in the inspector.");
             return;
@@ -59,12 +94,21 @@ public class HUD : MonoBehaviour
         if (!scopeEnable)
         {
             scopeCrosshair.gameObject.SetActive(false);
-            weaponCrosshair.gameObject.SetActive(true);
+
+            // Check if index is within bounds before accessing the array
+            if (CrosshairIndex < 0 || CrosshairIndex >= weaponCrosshairs.Length)
+            {
+                Debug.LogWarning("Crosshair index is out of bounds.");
+            }
+            else
+            {                
+                weaponCrosshairs[CrosshairIndex].gameObject.SetActive(true);
+            }
 
             // Reset all images in this game object and its children to full alpha            
             foreach (Image img in allImages)
             {
-                if (img != scopeCrosshair && img != weaponCrosshair)
+                if (img != scopeCrosshair) // Ignore the scope crosshair image
                 {
                     Color color = img.color;
                     color.a = 1f; // Set alpha to 100%
@@ -84,13 +128,23 @@ public class HUD : MonoBehaviour
         else
         {
             scopeCrosshair.gameObject.SetActive(true);
-            weaponCrosshair.gameObject.SetActive(false);
+
+            // Check if index is within bounds before accessing the array
+            if (CrosshairIndex < 0 || CrosshairIndex >= weaponCrosshairs.Length)
+            {
+                Debug.LogWarning("Crosshair index is out of bounds.");                
+            }
+            else
+            {                
+                weaponCrosshairs[CrosshairIndex].gameObject.SetActive(false);
+            }
+            
 
             // Get all images in this game object and its children and set their alpha to 10%
             Image[] images = GetComponentsInChildren<Image>(true);
             foreach (Image img in images)
             {
-                if (img != scopeCrosshair && img != weaponCrosshair)
+                if (img != scopeCrosshair)
                 {
                     Color color = img.color;
                     color.a = 0.1f; // Set alpha to 20%
@@ -105,6 +159,16 @@ public class HUD : MonoBehaviour
                 color.a = 0.1f; // Set alpha to 10%
                 text.color = color;
             }
+        }
+    }
+
+    public void Bite()
+    {
+        int BiteTrigger = Animator.StringToHash("Bite");
+
+        if (CrosshairIndex == (int)WeaponTypes.Melee)
+        {
+            weaponCrosshairs[CrosshairIndex].GetComponent<Animator>().SetTrigger(BiteTrigger);
         }
     }
 
@@ -225,11 +289,13 @@ public class HUD : MonoBehaviour
     private void OnEnable()
     {
         PlayerCharacterCombatController.onSwitchToWeapon += UpdateWeaponSlots;
+        PlayerCharacterCombatController.onSwitchToWeapon += UpdateCrosshair; // Update crosshair when switching weapons
     }
 
     private void OnDisable()
     {
         PlayerCharacterCombatController.onSwitchToWeapon -= UpdateWeaponSlots;
+        PlayerCharacterCombatController.onSwitchToWeapon -= UpdateCrosshair; // Remove the event listener when disabled
     }
 
 }

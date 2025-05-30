@@ -218,7 +218,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private bool ConditionsToFire(IEquippedGun equippedGun) =>
         playerCombatStates != PlayerCombatStates.RELOADING &&        
-        playerCombatStates != PlayerCombatStates.RAISING &&        
+        playerCombatStates != PlayerCombatStates.RAISING &&
+        playerCombatStates != PlayerCombatStates.FIRING &&
         equippedGun.CanFire &&
         equippedGun.MagAmmo > 0;
 

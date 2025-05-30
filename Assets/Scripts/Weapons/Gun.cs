@@ -35,8 +35,8 @@ public class Gun : Weapon, IEquippedGun
     public int MagAmmo { get => magAmmo;
         set
         {
-           magAmmo = Mathf.Clamp(value, 0, magCapacity); // Ensure magAmmo does not exceed magCapacity or go below 0
-           canFire = magAmmo > 0;                                                         
+           magAmmo = Mathf.Clamp(value, 0, magCapacity); // Ensure magAmmo does not exceed magCapacity or go below 0                                                                 
+           canFire = magAmmo > 0; // Update canFire based on magAmmo
         }   
     }
     
@@ -97,7 +97,12 @@ public class Gun : Weapon, IEquippedGun
         yield return new WaitForSeconds(FireRate);
         canFire = true;
         Debug.Log(canFire);
-    }      
+    }
+
+    private void OnEnable()
+    {
+        canFire = magAmmo > 0; // Reset canFire when the gun is enabled
+    }
 }
 
 public interface ISecondaryAction

@@ -106,7 +106,7 @@ private void Awake()
             return; // No need to scroll if only one weapon
 
         // Get the current weapon index
-        int currentIndex = 0;
+        int currentIndex = (int)playerCharacterCombatController.WeaponSelected;
 
         // Calculate new index based on scroll direction
         int newIndex = currentIndex + MouseScroll;
@@ -116,6 +116,8 @@ private void Awake()
             newIndex = 3;
         else if (newIndex >= inventoryCount)
             newIndex = 0;
+
+        currentIndex = newIndex;
 
         // Switch weapon
         switch (currentIndex)
