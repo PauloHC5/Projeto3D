@@ -334,10 +334,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 1
   socketToAttach: 0
-  fireRate: 1.25
-  magCapacity: 1
-  magAmmo: 1
-  recoilX: -9.5
+  fireRate: 0.25
+  magCapacity: 10
+  magAmmo: 10
+  recoilX: -4.65
   recoilY: 0.73
   recoilZ: 0.35
   snappiness: 3
@@ -346,8 +346,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 0}
   projectile: {fileID: 7392494035453153853, guid: 0a87dd43d1d759148bab6cbfab6cb510,
     type: 3}
-  spawnPoint: {fileID: 1729148229857485247}
-  projectileForce: 20
+  projectileForce: 40
 --- !u!1 &2901351047078527544
 GameObject:
   m_ObjectHideFlags: 0

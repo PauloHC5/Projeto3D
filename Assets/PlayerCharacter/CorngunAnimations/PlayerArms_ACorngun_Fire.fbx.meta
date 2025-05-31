@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 25603b977b2f6e0499af3bc7a0ba58e7
+guid: 128278067289c6a4fbfdf933346c4ff9
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -31,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: PlayerArms_Corngun_SuperFire
+      name: PlayerArms_ACorngun_Fire
       takeName: Scene
       internalID: -623603649343465320
       firstFrame: 1
-      lastFrame: 23
+      lastFrame: 20
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

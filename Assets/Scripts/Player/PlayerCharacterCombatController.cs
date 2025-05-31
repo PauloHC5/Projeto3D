@@ -256,8 +256,28 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
         equippedGun.MagAmmo += ammoAmountToReload; // Set the mag ammo to the ammo to reload
         playerGunAmmo[weaponSelected] -= ammoAmountToReload; // Subtract the ammo from the player ammo
-    }            
-        
+    }
+    
+    public void ChargeWeapon(bool buttomPressed)
+    {
+        var equippedGun = equippedWeapon as IEquippedGun;
+
+        if (ConditionsToCharge(equippedGun) && equippedWeapon is IChargeable chargeableWeapon)
+        {
+            chargeableWeapon.PerformCharge(buttomPressed);
+            playerCharacterAnimationsController.ChargeWeapon(buttomPressed);
+        }        
+    }
+
+    private bool ConditionsToCharge(IEquippedGun equippedGun) =>
+        equippedGun != null &&
+        equippedGun is IChargeable &&
+        equippedGun.CanFire &&
+        equippedGun.MagAmmo > 0 &&
+        playerCombatStates != PlayerCombatStates.RELOADING &&
+        playerCombatStates != PlayerCombatStates.ATTACKING &&
+        playerCombatStates != PlayerCombatStates.RAISING;
+
 
     public void PerformSecondaryAction()
     {   
@@ -267,7 +287,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             playerCharacterAnimationsController.PlayFireBoth();
             GetComponent<PlayerCharacterMovementController>().ApplyImpulse(20f); // Apply backward impulse from camera when firing both guns
             return;
-        }
+        }        
 
         if (equippedWeapon is ISecondaryAction equippedGun) equippedGun.Perform();
     }    

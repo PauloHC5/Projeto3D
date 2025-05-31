@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         // Check if the 'P' key is pressed
-        if (Input.GetKeyDown(KeyCode.F9))
+        if (Input.GetKeyDown(KeyCode.F12))
         {
             ReloadScene();
         }           

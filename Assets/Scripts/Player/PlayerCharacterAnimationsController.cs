@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerCharacterAnimationsController
@@ -12,6 +13,7 @@ public class PlayerCharacterAnimationsController
     private readonly int Toggle = Animator.StringToHash("Toggle");
     private readonly int AutoReload = Animator.StringToHash("AutoReload");
     private readonly int FireBoth = Animator.StringToHash("FireBoth");
+    private readonly int Charge = Animator.StringToHash("Charge");
 
     public PlayerCharacterAnimationsController(Animator animator)
     {
@@ -20,7 +22,7 @@ public class PlayerCharacterAnimationsController
 
     public void CheckAutoReload(int gunMagAmmo, int gunMagCapacity, int playerAmmo)
     {
-        bool autoReloadCondition = gunMagAmmo < gunMagCapacity && playerAmmo > 0;
+        bool autoReloadCondition = gunMagAmmo == 0 && playerAmmo > 0;
         playerAnimator.SetBool(AutoReload, autoReloadCondition);
     }
 
@@ -53,5 +55,10 @@ public class PlayerCharacterAnimationsController
     public void WeaponAltternation(bool toggle)
     {
         playerAnimator.SetBool(Toggle, toggle);
+    }
+
+    internal void ChargeWeapon(bool buttomPressed)
+    {
+        playerAnimator.SetBool(Charge, buttomPressed);
     }
 }

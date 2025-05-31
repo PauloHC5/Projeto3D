@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class Projectile : MonoBehaviour
 {
     [SerializeField] protected int damage = 10;
+    [SerializeField] protected float timeToDestroy = 5f;
+
     protected Rigidbody rb;    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -16,7 +18,7 @@ public class Projectile : MonoBehaviour
 
     protected IEnumerator DestroyAfterTime()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(timeToDestroy);
         Destroy(gameObject);
     }
 

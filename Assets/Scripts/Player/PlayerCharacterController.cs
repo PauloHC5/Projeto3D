@@ -141,6 +141,8 @@ private void Awake()
     {
         if (lmbPressed) PerformPrimaryAction();
         if (rmbPressed && playerCharacterCombatController.WeaponSelected == WeaponTypes.Shotgun) PerformSecondaryAction();
+
+        playerCharacterCombatController.ChargeWeapon(rmbPressed);
         
         playerMovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
         playerLookInput = PlayerControls.Player.Look.ReadValue<Vector2>();

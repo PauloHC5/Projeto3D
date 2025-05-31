@@ -28,3 +28,10 @@ public interface IEquippedGun
 
     bool CanReload();
 }
+
+public interface IChargeable
+{
+    public void PerformCharge(bool buttomPressed);
+
+    public void PerformSuperFire();
+}

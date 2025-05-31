@@ -92,11 +92,9 @@ public class Gun : Weapon, IEquippedGun
 
     protected IEnumerator ShootDelay()
     {
-        canFire = false;
-        Debug.Log(canFire);
+        canFire = false;        
         yield return new WaitForSeconds(FireRate);
-        canFire = true;
-        Debug.Log(canFire);
+        canFire = true;        
     }
 
     private void OnEnable()
