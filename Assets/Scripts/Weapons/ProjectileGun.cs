@@ -4,7 +4,9 @@ public class ProjectileGun : Gun
 {
     [Header("Projectile Gun Properties")]
     [SerializeField] private GameObject projectile;    
-    [SerializeField] private float projectileForce = 10f;
+    [SerializeField] protected float projectileForce = 10f;
+
+    protected GameObject spawnedProjectile;
 
     public override void Fire()
     {        
@@ -25,7 +27,7 @@ public class ProjectileGun : Gun
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
         // Instantiate the flare projectile at the spawn point
-        GameObject spawnedProjectile = Instantiate(projectile, fireSocket.position, Quaternion.LookRotation(ray.direction));
+        spawnedProjectile = Instantiate(projectile, fireSocket.position, Quaternion.LookRotation(ray.direction));
 
         // Apply force to the flare projectile
         spawnedProjectile.GetComponent<Rigidbody>().AddForce(ray.direction * projectileForce, ForceMode.Impulse);

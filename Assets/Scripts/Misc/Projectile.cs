@@ -7,6 +7,12 @@ public class Projectile : MonoBehaviour
     [SerializeField] protected int damage = 10;
     [SerializeField] protected float timeToDestroy = 5f;
 
+    public int Damage
+    {
+        get { return damage; }
+        set { damage = value; }
+    }
+
     protected Rigidbody rb;    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

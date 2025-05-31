@@ -346,7 +346,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 0}
   projectile: {fileID: 7392494035453153853, guid: 0a87dd43d1d759148bab6cbfab6cb510,
     type: 3}
-  projectileForce: 40
+  projectileForce: 20
 --- !u!1 &2901351047078527544
 GameObject:
   m_ObjectHideFlags: 0

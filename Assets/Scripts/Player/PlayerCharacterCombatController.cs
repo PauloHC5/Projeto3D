@@ -19,6 +19,7 @@ public enum PlayerCombatStates
     ATTACKING,
     FIRING,
     DUALWIELDFIRING,
+    CHARGING,
 
     DEFAULT
 }
@@ -220,6 +221,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         playerCombatStates != PlayerCombatStates.RELOADING &&        
         playerCombatStates != PlayerCombatStates.RAISING &&
         playerCombatStates != PlayerCombatStates.FIRING &&
+        playerCombatStates != PlayerCombatStates.CHARGING &&
         equippedGun.CanFire &&
         equippedGun.MagAmmo > 0;
 
@@ -281,7 +283,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void PerformSecondaryAction()
     {   
-        if(equippedWeapon is DualWieldGunManager dualWieldGun && ConditionsToFire(dualWieldGun))
+        if(equippedWeapon is DualWieldGunManager dualWieldGun && ConditionsToSuperFire(dualWieldGun))
         {
             dualWieldGun.FireBoth();
             playerCharacterAnimationsController.PlayFireBoth();
@@ -290,7 +292,15 @@ public class PlayerCharacterCombatController : MonoBehaviour
         }        
 
         if (equippedWeapon is ISecondaryAction equippedGun) equippedGun.Perform();
-    }    
+    }
+
+    private bool ConditionsToSuperFire(IEquippedGun equippedGun) =>
+        playerCombatStates != PlayerCombatStates.RELOADING &&
+        playerCombatStates != PlayerCombatStates.RAISING &&
+        playerCombatStates != PlayerCombatStates.FIRING &&
+        playerCombatStates != PlayerCombatStates.CHARGING &&
+        equippedGun.CanFire &&
+        equippedGun.MagAmmo == equippedGun.MagCapacity;
 
     private void DropShotgun()
     {        

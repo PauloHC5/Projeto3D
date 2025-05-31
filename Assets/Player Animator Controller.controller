@@ -375,10 +375,10 @@ AnimatorStateMachine:
     m_Position: {x: 440, y: 100, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: 1451366978645145080}
-    m_Position: {x: 600, y: -50, z: 0}
+    m_Position: {x: 600, y: -100, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: 6744016768414039887}
-    m_Position: {x: 800, y: -240, z: 0}
+    m_Position: {x: 600, y: -240, z: 0}
   m_AnyStateTransitions:
   - {fileID: 4593446250423841411}
   - {fileID: 1289809183363444268}
@@ -1222,8 +1222,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -623603649343465320, guid: 5594360030cd7ee47ae16670b4679549,
-    type: 3}
+  m_Motion: {fileID: 7400000, guid: 6bdccfdb1ebadc247a2d5db1ffe82c81, type: 2}
   m_Tag: RaiseWeapon
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -1730,7 +1729,7 @@ AnimatorState:
   m_TimeParameterActive: 0
   m_Motion: {fileID: -623603649343465320, guid: 2c7a3e67e8f7ae94b8e1f252f5305f1c,
     type: 3}
-  m_Tag: 
+  m_Tag: Charging
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
@@ -1909,9 +1908,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.275113
+  m_TransitionDuration: 0.11934078
   m_TransitionOffset: 0
-  m_ExitTime: 0.79
+  m_ExitTime: 0.8800001
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 2
@@ -2436,7 +2435,7 @@ AnimatorState:
   m_TimeParameterActive: 0
   m_Motion: {fileID: -623603649343465320, guid: e9cb1167feeaa3d448dacc2f4b60267e,
     type: 3}
-  m_Tag: 
+  m_Tag: Charging
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 

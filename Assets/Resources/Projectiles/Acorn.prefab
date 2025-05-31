@@ -11,17 +11,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 071ee2a305d9f2f45a7b463cd3d6de39,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5127
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 071ee2a305d9f2f45a7b463cd3d6de39,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5127
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 071ee2a305d9f2f45a7b463cd3d6de39,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5127
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 071ee2a305d9f2f45a7b463cd3d6de39,
         type: 3}
@@ -231,5 +231,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 934723459f09926428b4f7270a303116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 50
+  damage: 23
   timeToDestroy: 3

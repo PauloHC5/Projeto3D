@@ -2497,7 +2497,7 @@ MonoBehaviour:
   fireRate: 0.25
   magCapacity: 2
   magAmmo: 2
-  recoilX: -15.1
+  recoilX: -39.4
   recoilY: 12.29
   recoilZ: 0.35
   snappiness: 5
