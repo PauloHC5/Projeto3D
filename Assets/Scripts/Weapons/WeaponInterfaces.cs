@@ -6,7 +6,7 @@ public interface IWeapon
 
     public void EnableWeapon();
 
-    public void DisableWeapon();
+    public void DisableWeapon();    
 }
 
 public interface IEquippedMelee
@@ -27,11 +27,12 @@ public interface IEquippedGun
     bool CanFire { get; }
 
     bool CanReload();
+    void Reload(ref int playerGunAmmo);
 }
 
 public interface IChargeable
 {
     public void PerformCharge(bool buttomPressed);
 
-    public void PerformSuperFire();
+    public void PerformSuperFire();    
 }

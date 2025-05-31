@@ -4608,6 +4608,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: weaponAmmoList.Array.data[3].ammo
+      value: 336
+      objectReference: {fileID: 0}
     - target: {fileID: 3495299973754289782, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y

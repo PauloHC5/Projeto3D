@@ -139,5 +139,11 @@ public class DualWieldGunManager : IWeapon, IEquippedGun
     {
         RightGun.DisableWeapon();
         LeftGun.DisableWeapon();        
-    }    
+    }
+
+    public void Reload(ref int playerGunAmmo)
+    {
+        // Shotgun ammo corresponds to each shotguns that player can retrieve to equip, that is 2        
+        playerGunAmmo -= 2;
+    }
 }

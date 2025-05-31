@@ -244,22 +244,17 @@ public class PlayerCharacterCombatController : MonoBehaviour
         equippedGun.CanReload() &&
         playerGunAmmo[weaponSelected] > 0 &&
         playerCombatStates != PlayerCombatStates.RELOADING &&
-        playerCombatStates != PlayerCombatStates.FIRING;        
+        playerCombatStates != PlayerCombatStates.FIRING;
 
     public void Reload()
-    {        
+    {
         IEquippedGun equippedGun = (IEquippedGun)equippedWeapon;
 
-        int ammoAmountToReload = equippedGun.MagCapacity - equippedGun.MagAmmo; // Calculate the ammo to reload
-        if (playerGunAmmo[weaponSelected] < ammoAmountToReload) // If the ammo to reload is greater than the player ammo
-        {
-            ammoAmountToReload = playerGunAmmo[weaponSelected]; // Set the ammo to reload to the player ammo
-        }
-
-        equippedGun.MagAmmo += ammoAmountToReload; // Set the mag ammo to the ammo to reload
-        playerGunAmmo[weaponSelected] -= ammoAmountToReload; // Subtract the ammo from the player ammo
+        int gunSelectedAmmo = playerGunAmmo[weaponSelected];
+        equippedGun.Reload(ref gunSelectedAmmo);
+        playerGunAmmo[weaponSelected] = gunSelectedAmmo; // Update the player's gun ammo after reloading
     }
-    
+       
     public void ChargeWeapon(bool buttomPressed)
     {
         var equippedGun = equippedWeapon as IEquippedGun;
@@ -275,7 +270,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         equippedGun != null &&
         equippedGun is IChargeable &&
         equippedGun.CanFire &&
-        equippedGun.MagAmmo > 0 &&
+        equippedGun.MagAmmo == equippedGun.MagCapacity &&
         playerCombatStates != PlayerCombatStates.RELOADING &&
         playerCombatStates != PlayerCombatStates.ATTACKING &&
         playerCombatStates != PlayerCombatStates.RAISING;
@@ -311,13 +306,15 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private void RetrieveNewShotguns()
     {                
-        IWeapon shotguns = new DualWieldGunManager(weaponsSet[2] as BananaShotgun, rightHandSocket, leftHandSocket, playerCharacterAnimationsController);
+        DualWieldGunManager shotguns = new DualWieldGunManager(weaponsSet[2] as BananaShotgun, rightHandSocket, leftHandSocket, playerCharacterAnimationsController);
         shotguns.EnableWeapon();
 
         weaponsInventory[2] = shotguns;
 
         equippedWeapon = shotguns;
-        playerGunAmmo[WeaponTypes.Shotgun] -= 2;
+        var playerShotgunsAmmo = playerGunAmmo[WeaponTypes.Shotgun];
+        shotguns.Reload(ref playerShotgunsAmmo);
+        playerGunAmmo[WeaponTypes.Shotgun] = playerShotgunsAmmo;
     }
 
     private void OnEnable()

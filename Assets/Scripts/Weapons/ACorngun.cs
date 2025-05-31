@@ -15,7 +15,17 @@ public class ACorngun : ProjectileGun, IChargeable
     {
         base.PerformReload();
     }
-    
+
+    public override void Reload(ref int playerGunAmmo)
+    {        
+        if (playerGunAmmo > 0) // If the ammo to reload is greater than the player ammo
+        {
+            MagAmmo += 10; // Set the mag ammo to the ammo to reload
+            playerGunAmmo -= 1; // Subtract the ammo from the player ammo
+            canFire = magAmmo > 0;
+        }                
+    }
+
     public void PerformCharge(bool buttomPressed)
     {
         gunAnimator.SetBool(Charge, buttomPressed);
@@ -31,5 +41,5 @@ public class ACorngun : ProjectileGun, IChargeable
             spawnedProjectile.GetComponent<Projectile>().Damage = 100; // Set damage to 100 for super fire
         }
         magAmmo = 0;
-    }
+    }    
 }

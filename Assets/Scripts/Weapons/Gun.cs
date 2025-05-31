@@ -90,6 +90,20 @@ public class Gun : Weapon, IEquippedGun
         else Debug.LogWarning("Gun animator not found.");        
     }
 
+    public virtual void Reload(ref int playerGunAmmo)
+    {        
+        int ammoAmountToReload = MagCapacity - MagAmmo; // Calculate the ammo to reload
+        if (playerGunAmmo < ammoAmountToReload) // If the ammo to reload is greater than the player ammo
+        {
+            ammoAmountToReload = playerGunAmmo; // Set the ammo to reload to the player ammo
+        }
+
+        MagAmmo += ammoAmountToReload; // Set the mag ammo to the ammo to reload
+        playerGunAmmo -= ammoAmountToReload; // Subtract the ammo from the player ammo
+
+        canFire = magAmmo > 0;
+    }
+
     protected IEnumerator ShootDelay()
     {
         canFire = false;        
