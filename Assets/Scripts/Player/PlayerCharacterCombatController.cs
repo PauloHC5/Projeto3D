@@ -315,7 +315,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         var playerShotgunsAmmo = playerGunAmmo[WeaponTypes.Shotgun];
         shotguns.Reload(ref playerShotgunsAmmo);
         playerGunAmmo[WeaponTypes.Shotgun] = playerShotgunsAmmo;
-    }
+    }    
 
     private void OnEnable()
     {

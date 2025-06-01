@@ -34,9 +34,8 @@ public class HUD : MonoBehaviour
     private Color[] crosshairsOriginalColors = new Color[4];
 
     private void Awake()
-    {
-        scaleWeaponSlotsCoroutines = new Coroutine[weaponSlots.Count];
-        playerCharacterCombatController = GameManager.Instance.Player.GetComponent<PlayerCharacterCombatController>();
+    {        
+        scaleWeaponSlotsCoroutines = new Coroutine[weaponSlots.Count];        
 
         // Initialize crosshairs original colors
         for (int i = 0; i < weaponCrosshairs.Length; i++)
@@ -53,15 +52,22 @@ public class HUD : MonoBehaviour
     }
 
     void Start()
-    {       
+    {
+        if (playerCharacterCombatController == null)
+            playerCharacterCombatController = GameManager.Instance?.Player?.GetComponent<PlayerCharacterCombatController>();
+
         // Initialize ammo display
         UpdateAmmoDisplay();
+        UpdateCrosshair();
         allImages = GetComponentsInChildren<Image>(true);
         allTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
     }
     
     void Update()
     {
+        if(playerCharacterCombatController == null)
+            playerCharacterCombatController = GameManager.Instance?.Player?.GetComponent<PlayerCharacterCombatController>();
+
         if (playerHealthBar) playerHealthBar.value = GameManager.Instance.Player.GetComponent<PlayerCharacter>().Health / 100.0f;
         else Debug.LogWarning("Player Health Bar is not assigned in the inspector.");
 
@@ -243,7 +249,13 @@ public class HUD : MonoBehaviour
 
     private void UpdateAmmoDisplay()
     {
-        if(ammoText == null || magAmmoText == null || gunAmmoText == null || meleeText == null)
+        if(playerCharacterCombatController == null)
+        {
+            Debug.LogWarning("PlayerCharacterCombatController is not assigned in the inspector.");
+            return;
+        }
+
+        if (ammoText == null || magAmmoText == null || gunAmmoText == null || meleeText == null)
         {
             Debug.LogWarning("One or more ammo text fields are not assigned in the inspector.");
             return;
@@ -257,7 +269,7 @@ public class HUD : MonoBehaviour
             var magAmmo = 0;
             var totalAmmo = 0;
 
-            var equippedGun = playerCharacterCombatController.EquippedWeapon as IEquippedGun;
+            var equippedGun = playerCharacterCombatController?.EquippedWeapon as IEquippedGun;
 
             if (equippedGun != null)
             {

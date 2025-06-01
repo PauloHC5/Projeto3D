@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class CarnivovrousPlant : Weapon
@@ -36,6 +37,7 @@ public class CarnivovrousPlant : Weapon
             animator.SetTrigger("Attack");
             GameManager.Instance?.Hud?.Bite();
             if(GameManager.Instance.Hud.EnemyOnRange) StartCoroutine(AttackRoutine());
+            Debug.Log("Attack");
         }
         else
         {
@@ -71,10 +73,40 @@ public class CarnivovrousPlant : Weapon
             StopCoroutine(ChewingRoutine());
             StartCoroutine(ChewingRoutine());
         }
+    }    
+
+    public override void DisableWeapon()
+    {
+        var childObjects = GetComponentsInChildren<Transform>(true);
+
+        if (childObjects == null || childObjects.Length == 0)
+        {
+            Debug.LogWarning("No child objects found to disable.");
+            return;
+        }        
+
+        foreach (Transform obj in childObjects)
+        {
+            if (obj.gameObject == gameObject) continue; // Skip the parent object itself
+            obj.gameObject.SetActive(false); // Disable all child objects
+        }
     }
 
-    private void OnEnable()
+    public override void EnableWeapon()
     {
+        var childObjects = GetComponentsInChildren<Transform>(true);
+
+        if (childObjects == null || childObjects.Length == 0)
+        {
+            Debug.LogWarning("No child objects found to enable.");
+            return;
+        }
+
+        foreach (Transform obj in childObjects)
+        {
+            obj.gameObject.SetActive(true); // Enable all child objects
+        }
+
         transform.localScale = originalScale; // Reset scale when enabled
     }
 

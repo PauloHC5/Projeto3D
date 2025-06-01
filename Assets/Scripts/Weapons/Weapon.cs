@@ -24,12 +24,12 @@ public class Weapon : MonoBehaviour, IWeapon
         return 0; // Default range, can be overridden by derived classes
     }
 
-    public void DisableWeapon()
+    public virtual void DisableWeapon()
     {
         gameObject.SetActive(false);
     }
 
-    public void EnableWeapon()
+    public virtual void EnableWeapon()
     {
         gameObject.SetActive(true);
     }
