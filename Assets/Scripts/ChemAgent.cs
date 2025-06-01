@@ -29,6 +29,7 @@ public class ChemAgent : Enemy
     {
         gunParticle.Stop();
         animator.SetBool(Fire, false);
+        if (SoundManager.instance.AmbienceSource.isPlaying) SoundManager.StopSoundInLoop(SoundType.CHEMAGENT);
 
         base.Die(damageType);                
     }
