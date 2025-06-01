@@ -17,6 +17,13 @@ public class Weapon : MonoBehaviour, IWeapon
         get { return weaponType; }
     }
 
+    public float WeaponRange => GetWeaponRange();
+
+    protected virtual float GetWeaponRange()
+    {
+        return 0; // Default range, can be overridden by derived classes
+    }
+
     public void DisableWeapon()
     {
         gameObject.SetActive(false);

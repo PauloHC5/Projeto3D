@@ -13,7 +13,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float deathImpulse = 20.0f; 
     [SerializeField] private float stunHitImpulse = 10.0f;
     [SerializeField] private float stunDuration = 0.5f;
-    [SerializeField] private bool canStun = true;
+    [SerializeField] private bool canStun = true;    
+    [SerializeField] private GameObject enemyEatenMesh;
 
     [Header("Range Detector Properties")]
     [SerializeField] private float detectionRadius = 5.0f; // Radius of the detection zone
@@ -60,8 +61,11 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));   
-        animator.SetBool(IsDead, isDead);
+        if(animator)
+        {
+            animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));
+            animator.SetBool(IsDead, isDead);
+        }        
     }
 
     // funtion to take damage
@@ -112,7 +116,20 @@ public class Enemy : MonoBehaviour
         behaviorGraph.enabled = false;
         agent.enabled = false;        
         rb.isKinematic = false;
-        animator.SetInteger(WeaponIndex, (int)damageType);        
+        animator.SetInteger(WeaponIndex, (int)damageType);
+
+        if (damageType == WeaponTypes.Melee)
+        {
+            if(enemyEatenMesh == null)
+            {
+                Debug.LogWarning("Enemy eaten mesh has not been assigned.");
+                return;
+            }            
+            
+            GameObject eatenMeshInstance = Instantiate(enemyEatenMesh, transform.position, this.transform.rotation);
+            
+            Destroy(gameObject);
+        }
 
         if (enemyDeadCollider) enemyDeadCollider.enabled = true;
 
@@ -120,7 +137,7 @@ public class Enemy : MonoBehaviour
         {
             agent.velocity = Vector3.zero;
             ApplyImpulse(deathImpulse);
-        }
+        }        
     }
 
     private IEnumerator StunReact()

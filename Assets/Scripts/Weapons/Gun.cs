@@ -12,11 +12,11 @@ public class Gun : Weapon, IEquippedGun
     [SerializeField] protected int magAmmo = 40;
 
     [Header("Recoil Properties")]
-    [SerializeField] private float recoilX = -2f;
-    [SerializeField] private float recoilY = 2f;
-    [SerializeField] private float recoilZ = 0.35f;
-    [SerializeField] private float snappiness = 6f;
-    [SerializeField] private float returnSpeed = 2f;
+    [SerializeField] protected float recoilX = -2f;
+    [SerializeField] protected float recoilY = 2f;
+    [SerializeField] protected float recoilZ = 0.35f;
+    [SerializeField] protected float snappiness = 6f;
+    [SerializeField] protected float returnSpeed = 2f;
 
     [Header("Gun Components")]
     [SerializeField] protected Transform fireSocket;
@@ -44,8 +44,7 @@ public class Gun : Weapon, IEquippedGun
 
     public bool CanFire => canFire;
 
-    public bool CanReload() => magAmmo < magCapacity;
-
+    public bool CanReload() => magAmmo < magCapacity;        
 
     protected virtual void Awake()
     {        

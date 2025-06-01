@@ -8,6 +8,11 @@ public class ProjectileGun : Gun
 
     protected GameObject spawnedProjectile;
 
+    protected override float GetWeaponRange()
+    {
+        return projectileForce > 0 ? Mathf.RoundToInt(projectileForce * 10) : 0; // Example range calculation based on projectile force
+    }
+
     public override void Fire()
     {        
         base.Fire();

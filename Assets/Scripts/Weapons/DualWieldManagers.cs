@@ -8,6 +8,10 @@ public class DualWieldMeleeManager : IWeapon, IEquippedMelee
 
     public WeaponTypes WeaponType => WeaponTypes.Melee;
 
+    public bool CanAttack => LeftCarnivorousPlant.CanAttack || RightCarnivorousPlant.CanAttack;
+
+    public float WeaponRange => RightCarnivorousPlant.WeaponRange; // Assuming both plants have the same range
+
     private bool toggleAttack = false;
 
     PlayerCharacterAnimationsController playerAnimationsController;
@@ -27,19 +31,32 @@ public class DualWieldMeleeManager : IWeapon, IEquippedMelee
     }
 
     public void Attack()
-    {
-        toggleAttack = !toggleAttack;
-        if (toggleAttack)
+    {        
+        if(RightCarnivorousPlant.CanAttack && LeftCarnivorousPlant.CanAttack)
+        {            
+            toggleAttack = !toggleAttack;
+
+            if (toggleAttack) // if toggle is true, attack with right plant
+            {
+                RightCarnivorousPlant.Attack();
+            }
+            else // if toggle is false, attack with left plant
+            {
+                LeftCarnivorousPlant.Attack();
+            }
+        }
+        else if (RightCarnivorousPlant.CanAttack && !LeftCarnivorousPlant.CanAttack)
         {
+            toggleAttack = true; // Ensure toggle is true if only right plant can attack
             RightCarnivorousPlant.Attack();
         }
-        else
+        else if (LeftCarnivorousPlant.CanAttack && !RightCarnivorousPlant.CanAttack)
         {
+            toggleAttack = false; // Ensure toggle is false if only left plant can attack
             LeftCarnivorousPlant.Attack();
-        }
+        }        
 
         playerAnimationsController.WeaponAltternation(toggleAttack);
-
     }
 
     public void EnableWeapon()
@@ -66,7 +83,7 @@ public class DualWieldGunManager : IWeapon, IEquippedGun
 
     public int MagCapacity => RightGun.MagCapacity + LeftGun.MagCapacity;
 
-    public WeaponTypes WeaponType => WeaponTypes.Shotgun;
+    public WeaponTypes WeaponType => WeaponTypes.Shotgun;    
 
     private bool toggleFire = false;
     public bool ToggleFire => toggleFire;
@@ -77,6 +94,8 @@ public class DualWieldGunManager : IWeapon, IEquippedGun
             RightGun.MagAmmo = value / 2;
         } 
     }
+
+    public float WeaponRange => RightGun.WeaponRange;
 
     PlayerCharacterAnimationsController playerAnimationsController;
 

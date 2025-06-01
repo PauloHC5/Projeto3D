@@ -6,11 +6,15 @@ public interface IWeapon
 
     public void EnableWeapon();
 
-    public void DisableWeapon();    
+    public void DisableWeapon();
+
+    float WeaponRange { get; }
 }
 
 public interface IEquippedMelee
 {
+    public bool CanAttack { get; }
+
     public void Attack();
 }
 
@@ -18,7 +22,7 @@ public interface IEquippedGun
 {
     int MagAmmo { get; set; }
 
-    int MagCapacity { get; }
+    int MagCapacity { get; }    
 
     void Fire();
 

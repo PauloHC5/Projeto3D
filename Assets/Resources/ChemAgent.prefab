@@ -357,6 +357,8 @@ MonoBehaviour:
   stunHitImpulse: 5.17
   stunDuration: 0.5
   canStun: 0
+  enemyEatenMesh: {fileID: 3276582908525501526, guid: 7063d418e09ffbd41aab8a34560c7c66,
+    type: 3}
   detectionRadius: 8.59
   detectionLayer:
     serializedVersion: 2
@@ -378,7 +380,7 @@ GameObject:
   - component: {fileID: 3259341249199294510}
   m_Layer: 0
   m_Name: EnemyDeadCollider
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

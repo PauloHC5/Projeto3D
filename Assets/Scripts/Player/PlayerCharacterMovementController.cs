@@ -67,6 +67,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
     private bool isGrounded;    
     private bool hasAppliedCrouchImpulse = false;
     private PlayerCharacterAnimationsController playerCharacterAnimationsController;
+    private PlayerCharacterCombatController playerCharacterCombatController;
 
     private float standingHeight; // Default height of the character controller
     private float standingRadius; // Default radius of the character controller        
@@ -96,6 +97,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
         IntializeMovement();
 
         playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
+        playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
     }
 
     private void IntializeMovement()
@@ -114,6 +116,10 @@ public class PlayerCharacterMovementController : MonoBehaviour
     private void Update()
     {
         ApplyGravity();        
+
+        if(playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.CHARGING)
+            maxSpeed = crouchSpeed; // Reduce speed while charging
+        else maxSpeed = isCrouching ? crouchSpeed : walkSpeed; // Set speed based on crouching state
     }
 
     public void HandleMovement(Vector3 playerMovementInput, Vector2 playerLookInput)

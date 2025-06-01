@@ -26,10 +26,30 @@ public class HUD : MonoBehaviour
     private Image[] allImages;
     private TextMeshProUGUI[] allTexts;
     private int CrosshairIndex;
+    private PlayerCharacterCombatController playerCharacterCombatController;
+    private bool enemyOnRange = false;
+
+    public bool EnemyOnRange => enemyOnRange;
+
+    private Color[] crosshairsOriginalColors = new Color[4];
 
     private void Awake()
     {
         scaleWeaponSlotsCoroutines = new Coroutine[weaponSlots.Count];
+        playerCharacterCombatController = GameManager.Instance.Player.GetComponent<PlayerCharacterCombatController>();
+
+        // Initialize crosshairs original colors
+        for (int i = 0; i < weaponCrosshairs.Length; i++)
+        {
+            if (weaponCrosshairs[i] != null)
+            {
+                crosshairsOriginalColors[i] = weaponCrosshairs[i].color;
+            }
+            else
+            {
+                Debug.LogWarning($"Weapon crosshair at index {i} is not assigned in the inspector.");
+            }
+        }
     }
 
     void Start()
@@ -46,19 +66,20 @@ public class HUD : MonoBehaviour
         else Debug.LogWarning("Player Health Bar is not assigned in the inspector.");
 
         // Update ammo display every frame
-        UpdateAmmoDisplay();        
+        UpdateAmmoDisplay();
+
+        DetectIfEnemyIsOnRange();
     }
 
     private void UpdateCrosshair()
-    {
-        PlayerCharacterCombatController player = GameManager.Instance.Player.GetComponent<PlayerCharacterCombatController>();
-        if (player == null || weaponCrosshairs.Length == 0)
+    {        
+        if (playerCharacterCombatController == null || weaponCrosshairs.Length == 0)
         {
             Debug.LogWarning("Player or weapon crosshair is not assigned in the inspector.");
             return;
         }
 
-        CrosshairIndex = (int)player.WeaponSelected; // get the current weapon index from the player character combat controller
+        CrosshairIndex = (int)playerCharacterCombatController.WeaponSelected; // get the current weapon index from the player character combat controller
 
         // Ensure the index is within bounds
         if (CrosshairIndex < 0 || CrosshairIndex >= weaponCrosshairs.Length)
@@ -82,6 +103,54 @@ public class HUD : MonoBehaviour
             weaponCrosshairs[i].gameObject.SetActive(i == CrosshairIndex);
         }
     }
+
+    private void DetectIfEnemyIsOnRange()
+    {        
+        if (playerCharacterCombatController?.EquippedWeapon != null)
+        {
+            // Deproject a ray from the center of the screen to check if an enemy is in range
+            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, playerCharacterCombatController.EquippedWeapon.WeaponRange)) // Adjust the distance as needed
+            {
+                if (hit.collider.CompareTag("Enemy"))
+                {
+                    // If an enemy is detected, change the crosshair color to red
+                    if (CrosshairIndex >= 0 && CrosshairIndex < weaponCrosshairs.Length)
+                    {
+                        weaponCrosshairs[CrosshairIndex].color = Color.red;
+                        enemyOnRange = true; // Set the flag to true if an enemy is detected
+                    }
+                }
+                else
+                {
+                    // If no enemy is detected, reset the crosshair color to its original color
+                    if (CrosshairIndex >= 0 && CrosshairIndex < weaponCrosshairs.Length)
+                    {
+                        weaponCrosshairs[CrosshairIndex].color = crosshairsOriginalColors[CrosshairIndex];
+                        enemyOnRange = false; // Set the flag to false if no enemy is detected
+                    }
+                }
+            }
+            else
+            {
+                // If no enemy is detected, reset the crosshair color to its original color
+                if (CrosshairIndex >= 0 && CrosshairIndex < weaponCrosshairs.Length)
+                {
+                    weaponCrosshairs[CrosshairIndex].color = crosshairsOriginalColors[CrosshairIndex];
+                    enemyOnRange = false; // Set the flag to false if no enemy is detected
+                }
+            }
+
+            // Draw a debug ray in the scene view for visualization
+            if (Debug.isDebugBuild) // Only draw the debug ray in debug builds
+            {
+                Debug.DrawRay(ray.origin, ray.direction * playerCharacterCombatController.EquippedWeapon.WeaponRange, Color.green);
+            }
+        }
+    }
+
+    
 
     public void ScopeEvent(bool scopeEnable)
     {
@@ -178,11 +247,9 @@ public class HUD : MonoBehaviour
         {
             Debug.LogWarning("One or more ammo text fields are not assigned in the inspector.");
             return;
-        }
+        }        
 
-        PlayerCharacterCombatController player = GameManager.Instance.Player.GetComponent<PlayerCharacterCombatController>();        
-
-        if (player.WeaponSelected != WeaponTypes.Melee)
+        if (playerCharacterCombatController.WeaponSelected != WeaponTypes.Melee)
         {
             meleeText.gameObject.SetActive(false);
             ammoText.gameObject.SetActive(true);
@@ -190,7 +257,7 @@ public class HUD : MonoBehaviour
             var magAmmo = 0;
             var totalAmmo = 0;
 
-            var equippedGun = player.EquippedWeapon as IEquippedGun;
+            var equippedGun = playerCharacterCombatController.EquippedWeapon as IEquippedGun;
 
             if (equippedGun != null)
             {
@@ -199,7 +266,7 @@ public class HUD : MonoBehaviour
             }
 
 
-            totalAmmo = player.WeaponAmmo[player.WeaponSelected];            
+            totalAmmo = playerCharacterCombatController.WeaponAmmo[playerCharacterCombatController.WeaponSelected];            
 
             if (magAmmoText != null)
             {

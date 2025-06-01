@@ -1,20 +1,32 @@
+using System.Collections;
 using UnityEngine;
 
 public class CarnivovrousPlant : Weapon
 {
     [Header("Carnivovrous Plant Properties")]
     [SerializeField] private int damage = 25;
-    
-    
-    private Collider hitCollider;
+    [SerializeField] private int chewingDuration = 10;
+    [SerializeField] private float duration = 0.3f; // Duration for the scale-up effect
 
+    private bool canAttack = true;
+    public bool CanAttack => canAttack;
+
+    private Collider hitCollider;
     private Animator animator;
+    private Vector3 originalScale;
+
+    private int Chewing = Animator.StringToHash("Chewing");
+
+    override protected float GetWeaponRange()
+    {
+        return 1.5f;
+    }
 
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
-
         hitCollider = GetComponent<Collider>();
+        originalScale = transform.localScale;        
     }
 
     public void Attack()
@@ -23,6 +35,7 @@ public class CarnivovrousPlant : Weapon
         {
             animator.SetTrigger("Attack");
             GameManager.Instance?.Hud?.Bite();
+            if(GameManager.Instance.Hud.EnemyOnRange) StartCoroutine(AttackRoutine());
         }
         else
         {
@@ -46,16 +59,7 @@ public class CarnivovrousPlant : Weapon
     public void DisableCollision()
     {
         hitCollider.enabled = false;
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            collision.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);
-            Debug.Log("Hit enemy with carnivorous plant");
-        }
-    }
+    }    
 
     private void OnTriggerEnter(Collider other)
     {
@@ -63,7 +67,42 @@ public class CarnivovrousPlant : Weapon
         {
             other.GetComponent<Enemy>().TakeDamage(damage, weaponType);
             hitCollider.enabled = false; // Disable the collider after hitting
-            Debug.Log("Hit enemy with carnivorous plant");
+            
+            StopCoroutine(ChewingRoutine());
+            StartCoroutine(ChewingRoutine());
         }
+    }
+
+    private void OnEnable()
+    {
+        transform.localScale = originalScale; // Reset scale when enabled
+    }
+
+    private IEnumerator AttackRoutine()
+    {
+        StartCoroutine(ScaleUpCoroutine(originalScale * 2f)); // Scale up during attack
+        yield return new WaitForSeconds(duration); // Wait for the duration of the attack
+        StartCoroutine(ScaleUpCoroutine(originalScale)); // Scale back down after attack
+    }
+
+    private IEnumerator ScaleUpCoroutine(Vector3 scaleDesired)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, scaleDesired, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.localScale = scaleDesired; // Ensure final scale is set
+    }
+
+    private IEnumerator ChewingRoutine()
+    {
+        canAttack = false;
+        animator.SetBool(Chewing, true);
+        yield return new WaitForSeconds(chewingDuration);
+        canAttack = true;
+        animator.SetBool(Chewing, false);
     }
 }

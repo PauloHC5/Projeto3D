@@ -12,6 +12,11 @@ public class RaycastGun : Gun
     [Header("Raycast Gun VFX")]
     [SerializeField] protected ParticleSystem impactVFX;
 
+    protected override float GetWeaponRange()
+    {
+        return gunRange;
+    }
+
     public override void Fire()
     {
         base.Fire();

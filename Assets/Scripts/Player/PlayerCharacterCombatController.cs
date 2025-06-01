@@ -56,7 +56,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public WeaponTypes WeaponSelected => weaponSelected;
     public int WeaponsInventoryCount => weaponsInventory.Count;
-    public object EquippedWeapon => equippedWeapon;
+    public IWeapon EquippedWeapon => equippedWeapon;
     public Dictionary<WeaponTypes, Int32> WeaponAmmo
     {
         get => playerGunAmmo;
@@ -211,7 +211,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             equippedGun.Fire();
             playerCharacterAnimationsController.PlayUseWeapon();            
         }
-        else if (equippedWeapon is IEquippedMelee equippedMelee)
+        else if (equippedWeapon is IEquippedMelee equippedMelee && equippedMelee.CanAttack)
         {
             equippedMelee.Attack();            
         }
