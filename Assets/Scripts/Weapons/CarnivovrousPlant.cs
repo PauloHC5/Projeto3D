@@ -30,6 +30,11 @@ public class CarnivovrousPlant : Weapon
         originalScale = transform.localScale;        
     }
 
+    private void Update()
+    {
+        animator.SetBool(Chewing, !CanAttack);
+    }
+
     public void Attack()
     {
         if (animator != null)
@@ -131,10 +136,8 @@ public class CarnivovrousPlant : Weapon
 
     private IEnumerator ChewingRoutine()
     {
-        canAttack = false;
-        animator.SetBool(Chewing, true);
+        canAttack = false;        
         yield return new WaitForSeconds(chewingDuration);
-        canAttack = true;
-        animator.SetBool(Chewing, false);
+        canAttack = true;        
     }
 }
