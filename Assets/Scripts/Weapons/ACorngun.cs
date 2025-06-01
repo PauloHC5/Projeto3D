@@ -23,6 +23,7 @@ public class ACorngun : ProjectileGun, IChargeable
         base.Fire();        
         spawnedProjectile.transform.localScale = Vector3.one; // Reset the size of the projectile after firing
         magAmmo--;
+        SoundManager.PlayShootSound(weaponType, 0.5f); // Play the attack sound
     }
 
     public override void PerformReload()

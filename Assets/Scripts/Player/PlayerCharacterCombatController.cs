@@ -49,7 +49,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private IWeapon equippedWeapon;
     private List<IWeapon> weaponsInventory = new List<IWeapon>();
     private Dictionary<WeaponTypes, Int32> playerGunAmmo;
-    private PlayerCombatStates playerCombatStates = PlayerCombatStates.DEFAULT;
+    private PlayerCombatStates playerCombatStates = PlayerCombatStates.RAISING;
     private PlayerCharacterAnimationsController playerCharacterAnimationsController;
     private MouseLook mouseLook;
     

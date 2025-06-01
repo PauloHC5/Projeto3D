@@ -35,7 +35,7 @@ public class MouseLook : MonoBehaviour
     private float xRotation = 0f;
     private float yRotation = 0f;    
 
-    private PlayerInputActions playerControls;
+    
     private Vector2 MouseInput;
     private Coroutine zoomCoroutine;        
 
@@ -43,7 +43,7 @@ public class MouseLook : MonoBehaviour
 
     private void Awake()
     {
-        playerControls = new PlayerInputActions();        
+        
     }
         
     void Start()
@@ -60,7 +60,7 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MouseInput = playerControls.Player.Look.ReadValue<Vector2>();        
+        MouseInput = PlayerCharacterController.PlayerControls.Player.Look.ReadValue<Vector2>();        
 
         xRotation -= MouseInput.y * mouseSensitivity * Time.deltaTime;
         yRotation = MouseInput.x * mouseSensitivity * Time.deltaTime;
@@ -167,15 +167,13 @@ public class MouseLook : MonoBehaviour
     }
 
     private void OnEnable()
-    {
-        playerControls.Enable();
+    {        
         CactusCrossbow.AimEvent += PerformAim;              
         PlayerCharacterCombatController.onSwitchToWeapon += ZoomOut;
     }
 
     private void OnDisable()
-    {
-        playerControls.Disable();
+    {        
         CactusCrossbow.AimEvent -= PerformAim;
         AnimationTriggerEvents.onReload -= ZoomOut;
         PlayerCharacterCombatController.onSwitchToWeapon -= ZoomOut;

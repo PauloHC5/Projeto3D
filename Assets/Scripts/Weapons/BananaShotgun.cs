@@ -36,7 +36,8 @@ public class BananaShotgun : RaycastGun
         base.ShootCapsuleCast(shootRadius);
         base.Fire();
         StartCoroutine(BurstFire());
-        magAmmo--;        
+        magAmmo--;
+        SoundManager.PlayShootSound(weaponType, 0.5f); // Play the attack sound
     }
 
     public override void PerformReload()

@@ -63,6 +63,9 @@ public class PauseManager : MonoBehaviour
         PlayerCharacterController.PlayerControls.Player.Disable();
         Cursor.lockState = CursorLockMode.None;
         GameManager.Instance.Hud.gameObject.SetActive(false);
+        SoundManager.instance.SfxSource.Pause();
+        SoundManager.instance.AmbienceSource.Pause();
+        SoundManager.instance.MusicSource.Pause();
 
         // unfocus the game window to prevent input
         if (UnityEngine.EventSystems.EventSystem.current != null)
@@ -82,6 +85,9 @@ public class PauseManager : MonoBehaviour
         PlayerCharacterController.PlayerControls.Player.Enable();
         Cursor.lockState = CursorLockMode.Locked;
         GameManager.Instance.Hud.gameObject.SetActive(true);
+        SoundManager.instance.SfxSource.UnPause();
+        SoundManager.instance.AmbienceSource.UnPause();
+        SoundManager.instance.MusicSource.UnPause();
 
         // refocus the game window to allow input
         if (UnityEngine.EventSystems.EventSystem.current != null)

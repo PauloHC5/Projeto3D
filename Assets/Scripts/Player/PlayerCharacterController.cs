@@ -30,8 +30,7 @@ public class PlayerCharacterController : MonoBehaviour
     private Vector2 playerLookInput;
 
     private PlayerCharacterMovementController playerCharacterMovementController;
-    private PlayerCharacterCombatController playerCharacterCombatController;
-    private PlayerCharacterAnimationsController playerCharacterAnimationsController;
+    private PlayerCharacterCombatController playerCharacterCombatController;    
 
     private bool ConditionToSwitchWeapon() => !lmbPressed && playerCharacterCombatController?.PlayerCombatStates != PlayerCombatStates.ATTACKING;   
 
@@ -42,8 +41,7 @@ private void Awake()
         InitializePlayerControls();                
 
         playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
-        playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
-        playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
+        playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();        
     }
 
     private void InitializePlayerControls()
@@ -93,6 +91,8 @@ private void Awake()
     {
         HandleInput();
         playerCharacterMovementController.HandleMovement(playerMovementInput, playerLookInput);        
+
+        if(Input.GetKeyDown(KeyCode.T)) SoundManager.PlayRandomSound(SoundType.SHOOT, 0.5f); // Test sound effect
     }
 
     private void HandleMouseScroll()

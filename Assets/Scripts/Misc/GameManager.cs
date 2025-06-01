@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -23,6 +24,16 @@ public class GameManager : MonoBehaviour
     private List<GameObject> enemiesInScene = new List<GameObject>();
     private GameObject[] spawnPoints;
 
+    // Awake is called when the script instance is being loaded
+    private void Awake()
+    {
+        // Make this instance persistent across scenes
+        //DontDestroyOnLoad(gameObject);
+
+        // Find the player character controller in the scene
+        Player = Object.FindFirstObjectByType<PlayerCharacterController>();
+    }
+
     private void Start()
     {
         if(hud == null)
@@ -37,6 +48,15 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning("No enemy spawn points found in the scene.");
         }
+
+        StartCoroutine(StartGame());
+    }
+
+    private IEnumerator StartGame()
+    {
+        PlayerCharacterController.PlayerControls.Disable(); // Disable player controls at the start
+        yield return new WaitForSeconds(1f); // Wait for 1 second before enabling controls
+        PlayerCharacterController.PlayerControls.Enable(); // Enable player controls after the wait
     }
 
     // Static instance of GameManager which allows it to be accessed by any other script
@@ -52,17 +72,7 @@ public class GameManager : MonoBehaviour
         }        
     }
 
-    public PlayerCharacterController Player { get; private set; }
-
-    // Awake is called when the script instance is being loaded
-    private void Awake()
-    {        
-        // Make this instance persistent across scenes
-        //DontDestroyOnLoad(gameObject);
-
-        // Find the player character controller in the scene
-        Player = Object.FindFirstObjectByType<PlayerCharacterController>();                          
-    }    
+    public PlayerCharacterController Player { get; private set; }            
 
     private void Update()
     {
