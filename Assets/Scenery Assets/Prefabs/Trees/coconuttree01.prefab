@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7069393960992409426
+--- !u!1 &8565024558758220804
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,11 +8,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7983942352365805207}
-  - component: {fileID: 8472052562450500380}
-  - component: {fileID: 2612581708354400833}
-  - component: {fileID: 3848375086298632209}
-  - component: {fileID: 8291725253276003446}
+  - component: {fileID: 956793926366795627}
+  - component: {fileID: 2790202761819250055}
+  - component: {fileID: 4739760466687731476}
+  - component: {fileID: 8932859354729366717}
   m_Layer: 0
   m_Name: coconuttree01
   m_TagString: Untagged
@@ -20,36 +19,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7983942352365805207
+--- !u!4 &956793926366795627
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7069393960992409426}
+  m_GameObject: {fileID: 8565024558758220804}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.00000008146034, y: -0, z: 0, w: 1}
   m_LocalPosition: {x: 0.0000000018626451, y: 0, z: 0}
-  m_LocalScale: {x: 142.75906, y: 142.75906, z: 142.75906}
+  m_LocalScale: {x: 1.4275906, y: 1.4275906, z: 1.4275906}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &8472052562450500380
+--- !u!33 &2790202761819250055
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7069393960992409426}
-  m_Mesh: {fileID: 8406049958470738490, guid: 8f58f1d7c60ec5249a1069d5d44aa9fe, type: 3}
---- !u!23 &2612581708354400833
+  m_GameObject: {fileID: 8565024558758220804}
+  m_Mesh: {fileID: 8406049958470738490, guid: ebc1277a1762aa54d9c00340a4d21398, type: 3}
+--- !u!23 &4739760466687731476
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7069393960992409426}
+  m_GameObject: {fileID: 8565024558758220804}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -66,9 +65,9 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9c5ee1e6ba1cc46448449979cbd0ed56, type: 2}
-  - {fileID: 2100000, guid: f87f1a8e53acb3044a0c0ccc764b8fa0, type: 2}
-  - {fileID: 2100000, guid: cd1c84eab0759a64880d2194032d9e7d, type: 2}
+  - {fileID: 2100000, guid: e9cf6ae6d5214bf47991389643660b03, type: 2}
+  - {fileID: 2100000, guid: 23801055dd426a845aebee07c9a200d1, type: 2}
+  - {fileID: 2100000, guid: 4c80269e53dc02040a56505ab300b27a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -90,13 +89,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &3848375086298632209
+--- !u!136 &8932859354729366717
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7069393960992409426}
+  m_GameObject: {fileID: 8565024558758220804}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -109,31 +108,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.0015211729
-  m_Height: 0.03673095
-  m_Direction: 2
-  m_Center: {x: 0, y: -0.00017218826, z: 0.0179047}
---- !u!114 &8291725253276003446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7069393960992409426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1674016628, guid: b04c77e0938d27643b3f69f2dd39ce77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _render: 1
-  _overrideRendering: 0
-  _renderDistance: 0
-  _overrideRenderDistance: 0
-  _renderShadows: 1
-  _overrideRenderShadows: 0
-  _shadowDistance: 0
-  _overrideShadowDistance: 0
-  _densityInDistance: 0.125
-  _overrideDensityInDistance: 0
-  _densityInDistanceFalloff: {x: 0.08, y: 0.0075}
-  _overrideDensityInDistanceFalloff: 0
+  m_Radius: 0.2405465
+  m_Height: 10.53013
+  m_Direction: 1
+  m_Center: {x: 0, y: 5.19593, z: -2.978262e-14}

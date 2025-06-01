@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8f58f1d7c60ec5249a1069d5d44aa9fe
+guid: ebc1277a1762aa54d9c00340a4d21398
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,37 +8,37 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Coco.002
-    second: {fileID: 2100000, guid: 9c5ee1e6ba1cc46448449979cbd0ed56, type: 2}
+    second: {fileID: 2100000, guid: e9cf6ae6d5214bf47991389643660b03, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Folha.001
-    second: {fileID: 2100000, guid: cd1c84eab0759a64880d2194032d9e7d, type: 2}
+    second: {fileID: 2100000, guid: 4c80269e53dc02040a56505ab300b27a, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Tronco
-    second: {fileID: 2100000, guid: f87f1a8e53acb3044a0c0ccc764b8fa0, type: 2}
+    second: {fileID: 2100000, guid: 23801055dd426a845aebee07c9a200d1, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: bark_coconut_tree_diffuse1k
-    second: {fileID: 2800000, guid: 2fb08c2d660e4b9448d30e646ea99346, type: 3}
+    second: {fileID: 2800000, guid: 21c3d2f10b4b7a74eb91694491f748a5, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: bark_coconut_tree_normal1k
-    second: {fileID: 2800000, guid: 63a5b109609dd7f42b6be27f0c553ab8, type: 3}
+    second: {fileID: 2800000, guid: 6b19290dfb2292a44aea49c8ae928b88, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: leaves_coconut_tree
-    second: {fileID: 2800000, guid: d04080550320e394db03a67c2204cf43, type: 3}
+    second: {fileID: 2800000, guid: 56d4e830f5dee404ab0a810746c6a8a4, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: leaves_coconut_tree_normal
-    second: {fileID: 2800000, guid: 108942ed3474fed4e92188503ea85617, type: 3}
+    second: {fileID: 2800000, guid: 60863feb791bd4d4b9ab457bc9a1674a, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -85,7 +85,7 @@ ModelImporter:
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
-    bakeAxisConversion: 0
+    bakeAxisConversion: 1
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4

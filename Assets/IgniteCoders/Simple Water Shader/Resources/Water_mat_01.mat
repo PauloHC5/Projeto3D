@@ -34,7 +34,7 @@ Material:
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
-  m_LockedProperties: 
+  m_LockedProperties: Vector1_6f56a0970372485390c6587863c2374e
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -79,9 +79,9 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - Color_36218622185947c6a5ae36366d8e21d8: {r: 0.009834462, g: 0.039211277, b: 0.122641504,
+    - Color_36218622185947c6a5ae36366d8e21d8: {r: 0.13616945, g: 0.14462383, b: 0.33962262,
         a: 0.9607843}
-    - Color_93e06cd551a5449091bcde90b46765a0: {r: 0.12726949, g: 0.40765223, b: 0.49056602,
+    - Color_93e06cd551a5449091bcde90b46765a0: {r: 0.17132434, g: 0.41849253, b: 0.6603774,
         a: 0.22745098}
     - Vector2_4351ac2be1d74054986ec5378db9d578: {r: 10, g: 10, b: 0, a: 0}
   m_BuildTextureStacks: []
