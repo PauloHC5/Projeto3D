@@ -8,22 +8,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.001
-    second: {fileID: 2100000, guid: 7a29c80d808f0ae4e9ec13326a56be86, type: 2}
+    second: {fileID: 2100000, guid: 29d0f9ccf54291649a8f9a22b26cba17, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: oak_leaf
     second: {fileID: 2100000, guid: e91be01557e35ef4eaed12a8a22f4bae, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: bark_pine_tree_diffuse1k
-    second: {fileID: 2800000, guid: a06409a8ae3f4154582dbd776595a3c7, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: bark_tree_normal1k
-    second: {fileID: 2800000, guid: 6c0423ff1aeb88440b16195571569530, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
