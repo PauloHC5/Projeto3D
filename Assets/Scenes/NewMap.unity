@@ -4129,6 +4129,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1030986922889913290, guid: 828ae085d5740f447919301ad6520ff4,
+        type: 3}
+      propertyPath: soundList.Array.data[8].name
+      value: SUPERSHOOT
+      objectReference: {fileID: 0}
+    - target: {fileID: 1030986922889913290, guid: 828ae085d5740f447919301ad6520ff4,
+        type: 3}
+      propertyPath: soundList.Array.data[8].sounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1030986922889913290, guid: 828ae085d5740f447919301ad6520ff4,
+        type: 3}
+      propertyPath: 'soundList.Array.data[8].sounds.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: eab19471ef1fa89458a22150d4a2f01f, type: 3}
     - target: {fileID: 3054894548737047353, guid: 828ae085d5740f447919301ad6520ff4,
         type: 3}
       propertyPath: m_LocalPosition.x

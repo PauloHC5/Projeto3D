@@ -11,7 +11,7 @@ public enum SoundType
     CHEMAGENT,
     DEATH,
     PICKUP,
-    OPENDOOR,
+    SUPERSHOOT,
     CLOSEDOOR,    
     MENUCLICK,
     MENUHOVER,

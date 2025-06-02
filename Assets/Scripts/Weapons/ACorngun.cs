@@ -60,9 +60,10 @@ public class ACorngun : ProjectileGun, IChargeable
         if (spawnedProjectile)
         {
             spawnedProjectile.transform.localScale *= 3f; // Double the size of the projectile for super fire
-            spawnedProjectile.GetComponent<Projectile>().Damage = 100; // Set damage to 100 for super fire
+            spawnedProjectile.GetComponent<Projectile>().Damage = 200; // Set damage to 100 for super fire
         }
         magAmmo = 0;
+        SoundManager.PlayRandomSound(SoundType.SUPERSHOOT, 0.5f); // Play the super fire sound
 
         // Reset recoil values after firing
         recoilX = originalRecoilX;
