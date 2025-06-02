@@ -30,33 +30,45 @@ public class GameManager : MonoBehaviour
         // Make this instance persistent across scenes
         //DontDestroyOnLoad(gameObject);
 
+        if (_Instance == null)
+        {
+            _Instance = Object.FindFirstObjectByType<GameManager>();
+        }
+        else if (_Instance != this)
+        {
+            Destroy(gameObject); // Ensure only one instance exists
+            return;
+        }
+
         // Find the player character controller in the scene
         Player = Object.FindFirstObjectByType<PlayerCharacterController>();
-    }
 
-    private void Start()
-    {
-        if(hud == null)
-            hud = GameObject.FindAnyObjectByType<HUD>();
-
-        InvokeRepeating(nameof(SpawnEnemy), timeToSpawn, spawnInterval);
+        if (hud == null)
+            hud = GameObject.FindAnyObjectByType<HUD>();        
 
         // Find all spawn points in the scene by tag
         spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
-
-        if(spawnPoints.Length == 0)
-        {
+        if (spawnPoints.Length == 0)
             Debug.LogWarning("No enemy spawn points found in the scene.");
-        }
+    }    
 
-        StartCoroutine(StartGame());
+    private void Start()
+    {       
+        Time.timeScale = 0f;
+
+        PlayerCharacterController.PlayerControls.UI.Enable();
+        PlayerCharacterController.PlayerControls.Player.Disable();
+        Cursor.lockState = CursorLockMode.None;
     }
 
-    private IEnumerator StartGame()
-    {
-        PlayerCharacterController.PlayerControls.Disable(); // Disable player controls at the start
-        yield return new WaitForSeconds(1f); // Wait for 1 second before enabling controls
-        PlayerCharacterController.PlayerControls.Enable(); // Enable player controls after the wait
+    private IEnumerator StartGameRoutine()
+    {        
+        yield return new WaitForSeconds(1f); // Wait for 1 second before enabling controls        
+        PlayerCharacterController.PlayerControls.UI.Disable();
+        PlayerCharacterController.PlayerControls.Player.Enable();
+        hud.gameObject.SetActive(true);
+        Cursor.lockState = CursorLockMode.Locked;
+        InvokeRepeating(nameof(SpawnEnemy), timeToSpawn, spawnInterval);
     }
 
     // Static instance of GameManager which allows it to be accessed by any other script
@@ -86,6 +98,17 @@ public class GameManager : MonoBehaviour
         {
             CancelInvoke(nameof(SpawnEnemy));
         }
+    }
+
+    public static void StartGame()
+    {
+        if (_Instance == null)
+        {
+            _Instance = Object.FindFirstObjectByType<GameManager>();
+        }
+
+        Time.timeScale = 1f; // Resume time scale
+        _Instance.StartCoroutine(_Instance.StartGameRoutine());
     }
 
     private void ReloadScene()
