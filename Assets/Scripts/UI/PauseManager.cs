@@ -10,9 +10,11 @@ public class PauseManager : MonoBehaviour
 
     [Header("Pause Menu Properties")]
     [SerializeField] private GameObject pauseMenuUI;
-    [SerializeField] private GameObject[] buttons = new GameObject[9];
+    [SerializeField] private GameObject[] buttons = new GameObject[9];    
 
     [SerializeField] private Slider mouseSensitivitySlider;
+    [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Slider musicSlider;
 
     public Slider MouseSensitivitySlider
     {
@@ -49,7 +51,17 @@ public class PauseManager : MonoBehaviour
             Debug.Log("PauseManager instance is null. Please ensure it is assigned in the scene.");
 
         MouseOverResumeButton();
-        
+
+        if(SoundManager.instance != null)
+        {
+            SoundManager.instance.SfxSource.volume = sfxSlider.value;
+            SoundManager.instance.AmbienceSource.volume = sfxSlider.value;
+            SoundManager.instance.MusicSource.volume = musicSlider.value;
+        }
+        else
+        {
+            Debug.LogWarning("SoundManager instance is null. Cannot adjust sound volumes.");
+        }
     }
 
     public void PauseGame()
