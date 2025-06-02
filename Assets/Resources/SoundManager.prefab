@@ -244,7 +244,7 @@ MonoBehaviour:
   soundList:
   - name: SHOOT
     sounds:
-    - {fileID: 8300000, guid: ec8f850895933654ca05b9846f2169c3, type: 3}
+    - {fileID: 8300000, guid: cc409787a301264489671b7d3782f2dc, type: 3}
     - {fileID: 8300000, guid: 00865ce462058a346bfba9b99ae6f60f, type: 3}
     - {fileID: 8300000, guid: ec8f850895933654ca05b9846f2169c3, type: 3}
     - {fileID: 8300000, guid: ed4d418387a7fce4b9ee58dfa58e550b, type: 3}
