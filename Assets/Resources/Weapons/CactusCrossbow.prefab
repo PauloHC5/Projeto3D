@@ -74,7 +74,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2040004578819789876}
   - component: {fileID: 6929866756360690590}
-  - component: {fileID: 3598272361076968280}
   - component: {fileID: 2076281458974519284}
   m_Layer: 7
   m_Name: Camera
@@ -149,14 +148,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &3598272361076968280
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867255091728560688}
-  m_Enabled: 1
 --- !u!114 &2076281458974519284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1946,7 +1937,6 @@ MonoBehaviour:
   muzzleFlash: {fileID: 0}
   projectile: {fileID: 5969348226918421055, guid: 5c4a490cd8edef34581c9f20f0473aa6,
     type: 3}
-  projetileSpawnPoint: {fileID: 0}
   projectileForce: 120
   intervalBetweenShots: 0.07
   scopeZoom: 30

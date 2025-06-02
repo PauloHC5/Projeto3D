@@ -362,7 +362,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 7893021641000602698}
-    m_Position: {x: 300, y: -200, z: 0}
+    m_Position: {x: 290, y: -200, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: 5641288338022861814}
@@ -2552,7 +2552,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 0}
-  m_Tag: 
+  m_Tag: RaiseWeapon
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 

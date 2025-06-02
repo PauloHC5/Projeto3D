@@ -10,9 +10,11 @@ public class PauseManager : MonoBehaviour
 
     [Header("Pause Menu Properties")]
     [SerializeField] private GameObject pauseMenuUI;
-    [SerializeField] private GameObject[] buttons = new GameObject[9];
+    [SerializeField] private GameObject[] buttons = new GameObject[9];    
 
     [SerializeField] private Slider mouseSensitivitySlider;
+    [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Slider musicSlider;
 
     public Slider MouseSensitivitySlider
     {
@@ -49,7 +51,17 @@ public class PauseManager : MonoBehaviour
             Debug.Log("PauseManager instance is null. Please ensure it is assigned in the scene.");
 
         MouseOverResumeButton();
-        
+
+        if(SoundManager.instance != null)
+        {
+            SoundManager.instance.SfxSource.volume = sfxSlider.value;
+            SoundManager.instance.AmbienceSource.volume = sfxSlider.value;
+            SoundManager.instance.MusicSource.volume = musicSlider.value;
+        }
+        else
+        {
+            Debug.LogWarning("SoundManager instance is null. Cannot adjust sound volumes.");
+        }
     }
 
     public void PauseGame()
@@ -63,6 +75,9 @@ public class PauseManager : MonoBehaviour
         PlayerCharacterController.PlayerControls.Player.Disable();
         Cursor.lockState = CursorLockMode.None;
         GameManager.Instance.Hud.gameObject.SetActive(false);
+        SoundManager.instance.SfxSource.Pause();
+        SoundManager.instance.AmbienceSource.Pause();
+        SoundManager.instance.MusicSource.Pause();
 
         // unfocus the game window to prevent input
         if (UnityEngine.EventSystems.EventSystem.current != null)
@@ -82,6 +97,9 @@ public class PauseManager : MonoBehaviour
         PlayerCharacterController.PlayerControls.Player.Enable();
         Cursor.lockState = CursorLockMode.Locked;
         GameManager.Instance.Hud.gameObject.SetActive(true);
+        SoundManager.instance.SfxSource.UnPause();
+        SoundManager.instance.AmbienceSource.UnPause();
+        SoundManager.instance.MusicSource.UnPause();
 
         // refocus the game window to allow input
         if (UnityEngine.EventSystems.EventSystem.current != null)

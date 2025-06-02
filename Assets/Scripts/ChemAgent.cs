@@ -15,11 +15,13 @@ public class ChemAgent : Enemy
 
         if (animator.GetBool(Fire))
         {
-            if (!gunParticle.isPlaying) gunParticle.Play();                            
+            if (!gunParticle.isPlaying) gunParticle.Play();
+            if (!SoundManager.instance.AmbienceSource.isPlaying && !PauseManager.Instance.IsPaused) SoundManager.PlaySoundInLoop(SoundType.CHEMAGENT, 0.5f);
         }
         else
         {
-            if (gunParticle.isPlaying) gunParticle.Stop();            
+            if (gunParticle.isPlaying) gunParticle.Stop();
+            if (SoundManager.instance.AmbienceSource.isPlaying) SoundManager.StopSoundInLoop(SoundType.CHEMAGENT);
         }
     }
 
@@ -27,6 +29,7 @@ public class ChemAgent : Enemy
     {
         gunParticle.Stop();
         animator.SetBool(Fire, false);
+        if (SoundManager.instance.AmbienceSource.isPlaying) SoundManager.StopSoundInLoop(SoundType.CHEMAGENT);
 
         base.Die(damageType);                
     }

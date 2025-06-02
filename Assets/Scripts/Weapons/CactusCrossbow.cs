@@ -37,6 +37,7 @@ public class CactusCrossbow : ProjectileGun, ISecondaryAction
 
         StartCoroutine(FireBurst());        
         magAmmo -= 3;
+        SoundManager.PlayShootSound(weaponType, 0.5f); // Play the attack sound
     }
     private IEnumerator FireBurst()
     {
