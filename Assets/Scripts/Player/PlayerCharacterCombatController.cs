@@ -204,16 +204,24 @@ public class PlayerCharacterCombatController : MonoBehaviour
     }        
 
     public void PerformPrimaryAction()
-    {        
+    {
         // Check if the equipped weapon implements the IEquippedGun interface
         if (equippedWeapon is IEquippedGun equippedGun && ConditionsToFire(equippedGun))
-        {            
-            equippedGun.Fire();
-            playerCharacterAnimationsController.PlayUseWeapon();            
+        {
+            if (equippedGun.MagAmmo > 0)
+            {
+                equippedGun.Fire();
+                playerCharacterAnimationsController.PlayUseWeapon();
+            }
+            else
+            {
+                PerformReload(); // If the weapon has no ammo, perform a reload
+            }
+            Debug.Log(equippedGun.MagAmmo);
         }
         else if (equippedWeapon is IEquippedMelee equippedMelee && equippedMelee.CanAttack)
         {
-            equippedMelee.Attack();            
+            equippedMelee.Attack();
         }
     }
 
@@ -222,8 +230,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         playerCombatStates != PlayerCombatStates.RAISING &&
         playerCombatStates != PlayerCombatStates.FIRING &&
         playerCombatStates != PlayerCombatStates.CHARGING &&
-        equippedGun.CanFire &&
-        equippedGun.MagAmmo > 0;
+        equippedGun.CanFire;
 
     private Transform GetSocketTransform(WeaponSocket weaponSocketToAttach)
     {
