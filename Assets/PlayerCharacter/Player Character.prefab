@@ -876,7 +876,7 @@ Transform:
   m_Children:
   - {fileID: 8803219471767102900}
   m_Father: {fileID: 5490197579916750568}
-  m_LocalEulerAnglesHint: {x: -89.98021, y: 1.0133345e-30, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98021, y: 8.592991e-31, z: 0}
 --- !u!95 &2352808732092941608
 Animator:
   serializedVersion: 7
@@ -1297,6 +1297,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+  regenerationWaitTime: 5
+  regenerationRate: 10
 --- !u!114 &5645082565342579536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1370,9 +1372,9 @@ MonoBehaviour:
   - weapon: 0
     ammo: 0
   - weapon: 1
-    ammo: 10
+    ammo: 50
   - weapon: 2
-    ammo: 10
+    ammo: 80
   - weapon: 3
     ammo: 336
 --- !u!1 &5042317255202969701

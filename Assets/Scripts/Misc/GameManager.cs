@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Properties")]
     [SerializeField] private HUD hud;
+    [SerializeField] private PauseManager pauseManager;
+    [SerializeField] private EndGameManager endGameManager;
     public HUD Hud
     {
         get { return hud; }        
@@ -23,6 +25,8 @@ public class GameManager : MonoBehaviour
 
     private List<GameObject> enemiesInScene = new List<GameObject>();
     private GameObject[] spawnPoints;
+
+    public PlayerCharacterController Player { get; private set; }
 
     // Awake is called when the script instance is being loaded
     private void Awake()
@@ -44,7 +48,13 @@ public class GameManager : MonoBehaviour
         Player = Object.FindFirstObjectByType<PlayerCharacterController>();
 
         if (hud == null)
-            hud = GameObject.FindAnyObjectByType<HUD>();        
+            hud = GameObject.FindAnyObjectByType<HUD>(FindObjectsInactive.Include);
+
+        if (pauseManager == null)
+            pauseManager = GameObject.FindAnyObjectByType<PauseManager>(FindObjectsInactive.Include);
+
+        if (endGameManager == null)
+            endGameManager = GameObject.FindAnyObjectByType<EndGameManager>(FindObjectsInactive.Include);
 
         // Find all spawn points in the scene by tag
         spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
@@ -56,9 +66,11 @@ public class GameManager : MonoBehaviour
     {       
         Time.timeScale = 0f;
 
+        TutorialManager.Instance.gameObject.SetActive(true); // Show the tutorial manager UI
         PlayerCharacterController.PlayerControls.UI.Enable();
         PlayerCharacterController.PlayerControls.Player.Disable();
         Cursor.lockState = CursorLockMode.None;
+
     }
 
     private IEnumerator StartGameRoutine()
@@ -83,8 +95,7 @@ public class GameManager : MonoBehaviour
             return _Instance;
         }        
     }
-
-    public PlayerCharacterController Player { get; private set; }            
+      
 
     private void Update()
     {
@@ -109,9 +120,26 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 1f; // Resume time scale
         _Instance.StartCoroutine(_Instance.StartGameRoutine());
+        SoundManager.PlayMusic(); // Play the gameplay music
     }
 
-    private void ReloadScene()
+    public static void GameOver()
+    {
+        if (_Instance == null)
+        {
+            _Instance = Object.FindFirstObjectByType<GameManager>();
+        }
+        
+        Destroy(_Instance.hud.gameObject);
+        _Instance.hud = null; // Clear the HUD reference
+        _Instance.pauseManager.gameObject.SetActive(false); // Hide the pause manager UI
+        _Instance.endGameManager.gameObject.SetActive(true); // Show the end game manager UI
+        PlayerCharacterController.PlayerControls.UI.Disable();
+        PlayerCharacterController.PlayerControls.Player.Enable();
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public static void ReloadScene()
     {
         _Instance = null;
         // Reload the current scene

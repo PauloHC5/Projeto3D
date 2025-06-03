@@ -17,13 +17,13 @@ public class TutorialManager : MonoBehaviour
 
     public int currentTutorialIndex = 0;
 
-    private void Start()
+    private void Awake()
     {
         if (Instance == null)
         {
             Instance = UnityEngine.Object.FindFirstObjectByType<TutorialManager>();
         }
-    }
+    }    
 
     private void Update()
     {

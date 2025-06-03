@@ -15,7 +15,8 @@ public enum SoundType
     CLOSEDOOR,    
     MENUCLICK,
     MENUHOVER,
-    ITEMPICKUP,    
+    ITEMPICKUP,
+    MUSIC,
 }
 
 [RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), ExecuteInEditMode]
@@ -96,6 +97,18 @@ public class SoundManager : MonoBehaviour
     public static void PlayShootSound(WeaponTypes weaponType, float volume = 1)
     {
         instance.sfxSource.PlayOneShot(instance.soundList[(int)SoundType.SHOOT].Sounds[(int)weaponType], volume);
+    }
+
+    public static void PlayMusic()
+    {
+        instance.musicSource.Stop();
+        instance.musicSource.clip = instance.soundList[(int)SoundType.MUSIC].Sounds[0]; // Assuming the first clip is the main music
+        instance.musicSource.loop = true;
+        instance.musicSource.volume = 0.5f; // Set a default volume for music
+        if (!instance.musicSource.isPlaying)
+        {
+            instance.musicSource.Play();
+        }
     }
 
 #if UNITY_EDITOR

@@ -41,7 +41,7 @@ public class CarnivovrousPlant : Weapon
         {
             animator.SetTrigger("Attack");
             GameManager.Instance?.Hud?.Bite();
-            if(GameManager.Instance.Hud.EnemyOnRange) StartCoroutine(AttackRoutine());
+            if(GameManager.Instance && GameManager.Instance.Hud.EnemyOnRange) StartCoroutine(AttackRoutine());
             SoundManager.PlayShootSound(weaponType, 1.0f); // Play the attack sound
         }
         else

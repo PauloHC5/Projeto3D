@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float stunDuration = 0.5f;
     [SerializeField] private bool canStun = true;    
     [SerializeField] private GameObject enemyEatenMesh;
+    [SerializeField] protected Collider damageCollider;
 
     [Header("Range Detector Properties")]
     [SerializeField] private float detectionRadius = 5.0f; // Radius of the detection zone
@@ -46,6 +47,7 @@ public class Enemy : MonoBehaviour
     private const float fullLayerWeight = 1.0f; // Full layer weight for the reaction layer    
 
     public GameObject DetectedTarget { get; set; } // The detected target within the detection zone
+    public int Damage => damage;
 
     private void Awake()
     {

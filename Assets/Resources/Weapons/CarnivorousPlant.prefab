@@ -209,7 +209,7 @@ MonoBehaviour:
   weaponType: 0
   socketToAttach: 0
   damage: 500
-  chewingDuration: 60
+  chewingDuration: 20
   duration: 0.4
 --- !u!135 &3994713568038292647
 SphereCollider:

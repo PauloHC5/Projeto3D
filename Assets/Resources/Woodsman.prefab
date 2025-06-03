@@ -1098,6 +1098,7 @@ MonoBehaviour:
   canStun: 1
   enemyEatenMesh: {fileID: 1456413288852863847, guid: 7a2564625bed5d847832a61965498f8e,
     type: 3}
+  damageCollider: {fileID: 0}
   detectionRadius: 5.24
   detectionLayer:
     serializedVersion: 2
@@ -1555,6 +1556,75 @@ Transform:
   - {fileID: 1928535863757646962}
   m_Father: {fileID: 3847683331558855239}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5428241070078013627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7667193347019353604}
+  - component: {fileID: 7856553038345849390}
+  - component: {fileID: 113871061806424216}
+  m_Layer: 0
+  m_Name: Damage Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7667193347019353604
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5428241070078013627}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.0892309, y: 1.2447467, z: 1.304}
+  m_LocalScale: {x: 1.6744616, y: 1.6744616, z: 1.6744616}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 809790979462632455}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &7856553038345849390
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5428241070078013627}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.48
+  m_Height: 2.35
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.12662607, z: 0}
+--- !u!114 &113871061806424216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5428241070078013627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a552e73b5abf40f4f8b92f917d814ceb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 6076036143720261335}
 --- !u!1 &5571317834957787428
 GameObject:
   m_ObjectHideFlags: 0
@@ -2208,6 +2278,7 @@ Transform:
   m_Children:
   - {fileID: 7918079321560195966}
   - {fileID: 4312462252584168831}
+  - {fileID: 7667193347019353604}
   m_Father: {fileID: 5380157350571352226}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6805512287490337902
