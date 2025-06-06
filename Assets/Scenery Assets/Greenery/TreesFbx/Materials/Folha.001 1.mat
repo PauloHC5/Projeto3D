@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: folha.001 1
+  m_Name: Folha.001 1
   m_Shader: {fileID: 4800000, guid: f4f895c85d3740549a7ab6681fb6c8fc, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
