@@ -264,8 +264,9 @@ MonoBehaviour:
     sounds: []
   - name: PICKUP
     sounds: []
-  - name: OPENDOOR
-    sounds: []
+  - name: SUPERSHOOT
+    sounds:
+    - {fileID: 8300000, guid: eab19471ef1fa89458a22150d4a2f01f, type: 3}
   - name: CLOSEDOOR
     sounds: []
   - name: MENUCLICK
@@ -274,6 +275,9 @@ MonoBehaviour:
     sounds: []
   - name: ITEMPICKUP
     sounds: []
+  - name: MUSIC
+    sounds:
+    - {fileID: 8300000, guid: a15568477ff585f42b33bfa1939d66c1, type: 3}
 --- !u!82 &2870294330529407798
 AudioSource:
   m_ObjectHideFlags: 0
