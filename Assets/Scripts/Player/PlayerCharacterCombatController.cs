@@ -216,8 +216,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             else
             {
                 PerformReload(); // If the weapon has no ammo, perform a reload
-            }
-            Debug.Log(equippedGun.MagAmmo);
+            }            
         }
         else if (equippedWeapon is IEquippedMelee equippedMelee && equippedMelee.CanAttack)
         {
