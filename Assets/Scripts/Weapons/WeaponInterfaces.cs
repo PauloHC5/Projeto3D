@@ -31,6 +31,9 @@ public interface IEquippedGun
     bool CanFire { get; }
 
     bool CanReload();
+
+    AmmoTypes AmmoType { get; }
+
     void Reload(ref int playerGunAmmo);
 }
 

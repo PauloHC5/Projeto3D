@@ -88,6 +88,8 @@ public class DualWieldGunManager : IWeapon, IEquippedGun
     private bool toggleFire = false;
     public bool ToggleFire => toggleFire;
 
+    public AmmoTypes AmmoType => RightGun.AmmoType; // Assuming both guns have the same ammo type
+
     int IEquippedGun.MagAmmo { get => RightGun.MagAmmo + LeftGun.MagAmmo;
         set 
         {

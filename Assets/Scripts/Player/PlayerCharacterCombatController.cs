@@ -5,13 +5,6 @@ using System;
 using UnityEngine.InputSystem;
 using System.Collections;
 
-[Serializable]
-public struct WeaponAmmoPair
-{
-    public WeaponTypes weapon;
-    public Int32 ammo;
-}
-
 public enum PlayerCombatStates
 {
     RAISING,
@@ -30,44 +23,36 @@ public enum WeaponSocket
     LeftHandSocket    
 }
 
+[RequireComponent(typeof(PlayerGunAmmoInitializer))]
 public class PlayerCharacterCombatController : MonoBehaviour
 {    
     [SerializeField] private WeaponTypes weaponSelected;    
     [SerializeField] private Weapon[] weaponsSet = new Weapon[5];
     [SerializeField] private Transform rightHandSocket, leftHandSocket;    
-   
-    [SerializeField]
-    private List<WeaponAmmoPair> weaponAmmoList = new List<WeaponAmmoPair>
-    {
-        new WeaponAmmoPair { weapon = WeaponTypes.Melee, ammo = 0 },
-        new WeaponAmmoPair { weapon = WeaponTypes.Pistol, ammo = 50 },
-        new WeaponAmmoPair { weapon = WeaponTypes.Shotgun, ammo = 20 },
-        new WeaponAmmoPair { weapon = WeaponTypes.Smg, ammo = 300 },
-        new WeaponAmmoPair { weapon = WeaponTypes.Crossbow, ammo = 150 }
-    };
 
     private IWeapon equippedWeapon;
     private List<IWeapon> weaponsInventory = new List<IWeapon>();
-    private Dictionary<WeaponTypes, Int32> playerGunAmmo;
+    private Dictionary<AmmoTypes, Int32> playerGunAmmos;
     private PlayerCombatStates playerCombatStates = PlayerCombatStates.RAISING;
     private PlayerCharacterAnimationsController playerCharacterAnimationsController;
     private MouseLook mouseLook;
-    
+    private PlayerGunAmmoInitializer playerGunAmmoComponent;
+
 
     public WeaponTypes WeaponSelected => weaponSelected;
     public int WeaponsInventoryCount => weaponsInventory.Count;
     public IWeapon EquippedWeapon => equippedWeapon;
-    public Dictionary<WeaponTypes, Int32> WeaponAmmo
+    public Dictionary<AmmoTypes, Int32> WeaponAmmo
     {
-        get => playerGunAmmo;
+        get => playerGunAmmos;
 
         set
         {
             // set only of value is greater than 0
             foreach (var pair in value)
             {
-                if (pair.Value >= 0) playerGunAmmo[pair.Key] = pair.Value;
-                if(pair.Value < 0) playerGunAmmo[pair.Key] = 0;
+                if (pair.Value >= 0) playerGunAmmos[pair.Key] = pair.Value;
+                if(pair.Value < 0) playerGunAmmos[pair.Key] = 0;
             }
         }
     }
@@ -84,6 +69,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
         mouseLook = GetComponentInChildren<MouseLook>();
+        playerGunAmmoComponent = GetComponent<PlayerGunAmmoInitializer>();
 
         InitializeWeapons();
         InitializeWeaponAmmo();        
@@ -105,13 +91,12 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private void Update()
     {
         // if k button is pressed, add 3 to playerWeaponAmmo[weaponSelected]
-        if (Keyboard.current.kKey.wasPressedThisFrame) playerGunAmmo[weaponSelected] += 3;
+        if (equippedWeapon is IEquippedGun equippedGun)
+        {            
+            if (Keyboard.current.kKey.wasPressedThisFrame) playerGunAmmos[equippedGun.AmmoType] += 3;
 
-        playerCharacterAnimationsController.CheckAutoReload(
-            equippedWeapon is IEquippedGun equippedGun ? equippedGun.MagAmmo : 0,
-            equippedWeapon is IEquippedGun gun ? gun.MagCapacity : 0,
-            playerGunAmmo[weaponSelected]
-        );
+            playerCharacterAnimationsController.CheckAutoReload(equippedGun.MagAmmo, equippedGun.MagCapacity, playerGunAmmos[equippedGun.AmmoType]);
+        }                
     }
 
     private void InitializeWeapons()
@@ -162,7 +147,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private void InitializeWeaponAmmo()
     {
-        playerGunAmmo = weaponAmmoList.ToDictionary(pair => pair.weapon, pair => pair.ammo);
+        playerGunAmmos = playerGunAmmoComponent.WeaponAmmoList.ToDictionary(pair => pair.ammoType, pair => pair.AmmoAmount);
     }        
 
     public virtual void SwitchToWeapon(WeaponTypes weaponToSwitch)
@@ -248,17 +233,18 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private bool ConditionsToReload(IEquippedGun equippedGun) =>
         equippedGun.CanReload() &&
-        playerGunAmmo[weaponSelected] > 0 &&
+        playerGunAmmos[equippedGun.AmmoType] > 0 &&
         playerCombatStates != PlayerCombatStates.RELOADING &&
         playerCombatStates != PlayerCombatStates.FIRING;
 
     public void Reload()
-    {
-        IEquippedGun equippedGun = (IEquippedGun)equippedWeapon;
-
-        int gunSelectedAmmo = playerGunAmmo[weaponSelected];
-        equippedGun.Reload(ref gunSelectedAmmo);
-        playerGunAmmo[weaponSelected] = gunSelectedAmmo; // Update the player's gun ammo after reloading
+    {        
+        if(equippedWeapon is IEquippedGun equippedGun)
+        {
+            int equippedGunAmmo = playerGunAmmos[equippedGun.AmmoType];
+            equippedGun.Reload(ref equippedGunAmmo);
+            playerGunAmmos[equippedGun.AmmoType] = equippedGunAmmo;
+        }
     }
        
     public void ChargeWeapon(bool buttomPressed)
@@ -318,9 +304,9 @@ public class PlayerCharacterCombatController : MonoBehaviour
         weaponsInventory[2] = shotguns;
 
         equippedWeapon = shotguns;
-        var playerShotgunsAmmo = playerGunAmmo[WeaponTypes.Shotgun];
+        var playerShotgunsAmmo = playerGunAmmos[shotguns.AmmoType];
         shotguns.Reload(ref playerShotgunsAmmo);
-        playerGunAmmo[WeaponTypes.Shotgun] = playerShotgunsAmmo;
+        playerGunAmmos[shotguns.AmmoType] = playerShotgunsAmmo;
     }    
 
     private void OnEnable()

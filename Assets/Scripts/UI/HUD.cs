@@ -261,15 +261,13 @@ public class HUD : MonoBehaviour
             return;
         }        
 
-        if (playerCharacterCombatController.WeaponSelected != WeaponTypes.Melee)
+        if (playerCharacterCombatController.EquippedWeapon is IEquippedGun equippedGun)
         {
             meleeText.gameObject.SetActive(false);
             ammoText.gameObject.SetActive(true);
 
             var magAmmo = 0;
-            var totalAmmo = 0;
-
-            var equippedGun = playerCharacterCombatController?.EquippedWeapon as IEquippedGun;
+            var totalAmmo = 0;            
 
             if (equippedGun != null)
             {
@@ -278,7 +276,7 @@ public class HUD : MonoBehaviour
             }
 
 
-            totalAmmo = playerCharacterCombatController.WeaponAmmo[playerCharacterCombatController.WeaponSelected];            
+            totalAmmo = playerCharacterCombatController.WeaponAmmo[equippedGun.AmmoType];            
 
             if (magAmmoText != null)
             {

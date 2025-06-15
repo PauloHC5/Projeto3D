@@ -10,6 +10,7 @@ public class Gun : Weapon, IEquippedGun
     [SerializeField] protected float fireRate = 0.5f;    
     [SerializeField] protected int magCapacity = 40;
     [SerializeField] protected int magAmmo = 40;
+    [SerializeField] protected AmmoTypes ammoType;
 
     [Header("Recoil Properties")]
     [SerializeField] protected float recoilX = -2f;
@@ -44,7 +45,9 @@ public class Gun : Weapon, IEquippedGun
 
     public bool CanFire => canFire;
 
-    public bool CanReload() => magAmmo < magCapacity;        
+    public bool CanReload() => magAmmo < magCapacity;
+
+    public AmmoTypes AmmoType => ammoType;
 
     protected virtual void Awake()
     {        

@@ -1186,6 +1186,7 @@ GameObject:
   - component: {fileID: 2716941723819670036}
   - component: {fileID: 5645082565342579536}
   - component: {fileID: 3164638836893852914}
+  - component: {fileID: 6145791903528973525}
   m_Layer: 0
   m_Name: Player Character
   m_TagString: Player
@@ -1367,15 +1368,29 @@ MonoBehaviour:
   - {fileID: 4709857358180033657, guid: cac6572748ee7e14cb6cb7f8ce128c81, type: 3}
   rightHandSocket: {fileID: 2860071523350465062}
   leftHandSocket: {fileID: 7072074740685791458}
-  weaponAmmoList:
-  - weapon: 0
-    ammo: 0
-  - weapon: 1
-    ammo: 50
-  - weapon: 2
-    ammo: 80
-  - weapon: 3
-    ammo: 336
+--- !u!114 &6145791903528973525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4791302133543716961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9559c3c9743b4d9419f83c0e9c5b5e9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunsAmmo:
+  - ammoType: 0
+    ammoAmount: 50
+  - ammoType: 1
+    ammoAmount: 80
+  - ammoType: 2
+    ammoAmount: 300
+  - ammoType: 3
+    ammoAmount: 0
+  - ammoType: 4
+    ammoAmount: 0
 --- !u!1 &5042317255202969701
 GameObject:
   m_ObjectHideFlags: 0

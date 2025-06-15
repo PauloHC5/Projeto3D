@@ -1928,6 +1928,7 @@ MonoBehaviour:
   fireRate: 0.58
   magCapacity: 36
   magAmmo: 36
+  ammoType: 2
   recoilX: -2
   recoilY: 2
   recoilZ: 0.65
