@@ -39,7 +39,8 @@ public class PlayerCharacterMovementController : MonoBehaviour
     [SerializeField] private float crouchSpeed = 4f;
     [SerializeField] private float crouchHeight = 1f;
     [SerializeField] private float crouchRadius = 0.3f;    
-    [SerializeField] private float crouchSmooth = 10f;
+    [SerializeField] private float crouchSmooth = 10f; // Smoothness of the crouch transition
+    [SerializeField] private float crouchJumpImpulse = 1f; // Impulse applied when crouching and jumping
     [SerializeField] private float crouchCameraHeight;
     [SerializeField] private float crouchMeshRootHeight;
     [SerializeField] private float crouchGroundCheckHeight;
@@ -119,7 +120,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
 
         if(playerCharacterCombatController?.PlayerCombatStates == PlayerCombatStates.CHARGING)
             maxSpeed = crouchSpeed; // Reduce speed while charging
-        else maxSpeed = isCrouching ? crouchSpeed : walkSpeed; // Set speed based on crouching state
+        else maxSpeed = playerMovementStates == PlayerMovementStates.CROUCH || playerMovementStates == PlayerMovementStates.CROUCHING ? crouchSpeed : walkSpeed; // Set speed based on crouching state
     }
 
     public void HandleMovement(Vector3 playerMovementInput, Vector2 playerLookInput)
@@ -251,6 +252,11 @@ public class PlayerCharacterMovementController : MonoBehaviour
 
     private IEnumerator CrouchingRoutine()
     {
+        if (isGrounded)
+        {
+            hasAppliedCrouchImpulse = false;
+        }
+
         if (isCrouching)
         {
             playerMovementStates = PlayerMovementStates.CROUCHING;
@@ -258,7 +264,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
             // Add impulse to the player when crouching and jumping
             if (!isGrounded && !hasAppliedCrouchImpulse)
             {
-                gravityVelocity.y = Mathf.Sqrt(1f * -2f * gravity);
+                gravityVelocity.y = Mathf.Sqrt(crouchJumpImpulse * -2f * gravity);
                 hasAppliedCrouchImpulse = true;
             }
 
@@ -286,7 +292,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
         else
         {           
             if(!isGrounded) yield break;
-
+            
             playerMovementStates = PlayerMovementStates.GETTINGUP;
 
             while (Mathf.Abs(characterController.height - standingHeight) > 0.01f)
@@ -309,12 +315,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
             }
 
             playerMovementStates = PlayerMovementStates.STANDING;
-        }
-
-        if (isGrounded)
-        {
-            hasAppliedCrouchImpulse = false;
-        }
+        }        
     }
 
     private bool IsObstacleAbove()
