@@ -30,18 +30,16 @@ public class PlayerCharacterController : MonoBehaviour
     private Vector2 playerLookInput;
 
     private PlayerCharacterMovementController playerCharacterMovementController;
-    private PlayerCharacterCombatController playerCharacterCombatController;    
-
-    private bool ConditionToSwitchWeapon() => !lmbPressed && playerCharacterCombatController?.PlayerCombatStates != PlayerCombatStates.ATTACKING;   
+    private PlayerCharacterCombatController playerCharacterCombatController;           
 
 private void Awake()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-
-        InitializePlayerControls();                
+        Cursor.lockState = CursorLockMode.Locked;                        
 
         playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
-        playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();        
+        playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
+
+        InitializePlayerControls();
     }
 
     private void InitializePlayerControls()
@@ -85,7 +83,9 @@ private void Awake()
         // Assign the HandleMouseScroll method to the respective input actions
         PlayerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };
         PlayerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };        
-    }        
+    }
+    
+    private bool ConditionToSwitchWeapon() => playerCharacterCombatController && !lmbPressed && playerCharacterCombatController.PlayerCombatStates != PlayerCombatStates.ATTACKING;
 
     void Update()
     {
@@ -97,7 +97,7 @@ private void Awake()
 
     private void HandleMouseScroll()
     {
-        if (lmbPressed || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING)
+        if (!playerCharacterCombatController || lmbPressed || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING)
             return;        
 
         int inventoryCount = playerCharacterCombatController.WeaponsInventoryCount;
@@ -140,9 +140,9 @@ private void Awake()
     private void HandleInput()
     {
         if (lmbPressed) PerformPrimaryAction();
-        if (rmbPressed && playerCharacterCombatController.WeaponSelected == WeaponTypes.Shotgun) PerformSecondaryAction();
+        //if (rmbPressed) PerformSecondaryAction();
 
-        playerCharacterCombatController.ChargeWeapon(rmbPressed);
+        playerCharacterCombatController?.ChargeWeapon(rmbPressed);
         
         playerMovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
         playerLookInput = PlayerControls.Player.Look.ReadValue<Vector2>();
@@ -150,14 +150,20 @@ private void Awake()
 
     private void PerformPrimaryAction()
     {
-        if (playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RAISING) return;                
+        if(playerCharacterCombatController)
+        {
+            if (playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RAISING) return;
 
-        playerCharacterCombatController.PerformPrimaryAction();
+            playerCharacterCombatController.PerformPrimaryAction();
+        }        
     }    
 
     private void PerformSecondaryAction()
     {        
-        playerCharacterCombatController.PerformSecondaryAction();
+        if(playerCharacterCombatController)
+        {
+            playerCharacterCombatController.PerformSecondaryAction();
+        }        
     }
 
     private void PerformReload()

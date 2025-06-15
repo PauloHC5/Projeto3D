@@ -12,6 +12,7 @@ public class HUD : MonoBehaviour
     [SerializeField] private Image scopeCrosshair;
 
     [Header("Weapon Text Properties")]
+    [SerializeField] private Image ammoPanel;
     [SerializeField] private TextMeshProUGUI ammoText;
     [SerializeField] private TextMeshProUGUI magAmmoText;
     [SerializeField] private TextMeshProUGUI gunAmmoText;
@@ -59,6 +60,7 @@ public class HUD : MonoBehaviour
         // Initialize ammo display
         UpdateAmmoDisplay();
         UpdateCrosshair();
+        UpdateWeaponSlots();
         allImages = GetComponentsInChildren<Image>(true);
         allTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
     }
@@ -78,36 +80,51 @@ public class HUD : MonoBehaviour
     }
 
     private void UpdateCrosshair()
-    {        
-        if (playerCharacterCombatController == null || weaponCrosshairs.Length == 0)
+    {               
+        if(playerCharacterCombatController)
         {
-            Debug.LogWarning("Player or weapon crosshair is not assigned in the inspector.");
-            return;
-        }
-
-        CrosshairIndex = (int)playerCharacterCombatController.WeaponSelected; // get the current weapon index from the player character combat controller
-
-        // Ensure the index is within bounds
-        if (CrosshairIndex < 0 || CrosshairIndex >= weaponCrosshairs.Length)
-        {
-            Debug.LogWarning("Crosshair index is out of bounds.");
-            return;
-        }
-
-        // Set the active crosshair based on the current weapon
-        for (int i = 0; i < weaponCrosshairs.Length; i++) // loop through all crosshairs
-        {
-            // Check if the crosshair is assigned in the inspector
-            if (weaponCrosshairs[i] == null)
+            if (weaponCrosshairs.Length == 0)
             {
-                Debug.LogWarning($"Weapon crosshair at index {i} is not assigned in the inspector.");
-                continue; // Skip to the next iteration if the crosshair is not assigned
+                Debug.LogWarning("Weapon crosshair is not assigned in the inspector.");
+                return;
             }
 
-            // Set the active state of each crosshair based on the current weapon index
-            // If the index matches, set it active; otherwise, set it inactive
-            weaponCrosshairs[i].gameObject.SetActive(i == CrosshairIndex);
+            CrosshairIndex = (int)playerCharacterCombatController.WeaponSelected; // get the current weapon index from the player character combat controller
+
+            // Ensure the index is within bounds
+            if (CrosshairIndex < 0 || CrosshairIndex >= weaponCrosshairs.Length)
+            {
+                Debug.LogWarning("Crosshair index is out of bounds.");
+                return;
+            }
+
+            // Set the active crosshair based on the current weapon
+            for (int i = 0; i < weaponCrosshairs.Length; i++) // loop through all crosshairs
+            {
+                // Check if the crosshair is assigned in the inspector
+                if (weaponCrosshairs[i] == null)
+                {
+                    Debug.LogWarning($"Weapon crosshair at index {i} is not assigned in the inspector.");
+                    continue; // Skip to the next iteration if the crosshair is not assigned
+                }
+
+                // Set the active state of each crosshair based on the current weapon index
+                // If the index matches, set it active; otherwise, set it inactive
+                weaponCrosshairs[i].gameObject.SetActive(i == CrosshairIndex);
+            }
         }
+        else
+        {
+           if(weaponCrosshairs.Length > 0)
+            {
+                for (int i = 0; i < weaponCrosshairs.Length; i++) // loop through all crosshairs and disable them                
+                {                    
+                    weaponCrosshairs[i]?.gameObject.SetActive(false);
+                }
+            }
+        }
+
+
     }
 
     private void DetectIfEnemyIsOnRange()
@@ -249,54 +266,61 @@ public class HUD : MonoBehaviour
 
     private void UpdateAmmoDisplay()
     {
-        if(playerCharacterCombatController == null)
-        {
-            Debug.LogWarning("PlayerCharacterCombatController is not assigned in the inspector.");
-            return;
-        }
+        if(ammoPanel == null) Debug.LogWarning("Ammo Panel is not assigned in the inspector.");
 
         if (ammoText == null || magAmmoText == null || gunAmmoText == null || meleeText == null)
         {
             Debug.LogWarning("One or more ammo text fields are not assigned in the inspector.");
             return;
         }        
-
-        if (playerCharacterCombatController.EquippedWeapon is IEquippedGun equippedGun)
+        
+        if (playerCharacterCombatController)
         {
-            meleeText.gameObject.SetActive(false);
-            ammoText.gameObject.SetActive(true);
+            ammoPanel.gameObject.SetActive(true);
 
-            var magAmmo = 0;
-            var totalAmmo = 0;            
-
-            if (equippedGun != null)
+            if (playerCharacterCombatController.EquippedWeapon is IEquippedGun equippedGun)
             {
-                // If the equipped weapon is a gun, get its mag ammo
-                magAmmo = equippedGun.MagAmmo;
+                meleeText.gameObject.SetActive(false);
+                ammoText.gameObject.SetActive(true);
+
+                var magAmmo = 0;
+                var totalAmmo = 0;
+
+                if (equippedGun != null)
+                {
+                    // If the equipped weapon is a gun, get its mag ammo
+                    magAmmo = equippedGun.MagAmmo;
+                }
+
+
+                totalAmmo = playerCharacterCombatController.WeaponAmmo[equippedGun.AmmoType];
+
+                if (magAmmoText != null)
+                {
+                    magAmmoText.text = $"{magAmmo}";
+                }
+                else Debug.LogWarning("Mag Ammo Text is not assigned in the inspector.");
+
+                if (ammoText != null)
+                {
+                    gunAmmoText.text = $"{totalAmmo}";
+                }
+                else Debug.LogWarning("Ammo Text is not assigned in the inspector.");
+
             }
-
-
-            totalAmmo = playerCharacterCombatController.WeaponAmmo[equippedGun.AmmoType];            
-
-            if (magAmmoText != null)
+            else
             {
-                magAmmoText.text = $"{magAmmo}";
+                meleeText.gameObject.SetActive(true);
+                ammoText.gameObject.SetActive(false);
             }
-            else Debug.LogWarning("Mag Ammo Text is not assigned in the inspector.");
-
-            if(ammoText != null)
-            {
-                gunAmmoText.text = $"{totalAmmo}";
-            }
-            else Debug.LogWarning("Ammo Text is not assigned in the inspector.");
-
         }
         else
         {
-            meleeText.gameObject.SetActive(true);            
+            ammoPanel.gameObject.SetActive(false);
+            meleeText.gameObject.SetActive(false);
             ammoText.gameObject.SetActive(false);
-
         }
+            
     }
 
     private void UpdateWeaponSlots()
@@ -307,17 +331,32 @@ public class HUD : MonoBehaviour
             return;
         }
 
-        WeaponTypes weaponType = GameManager.Instance.Player.GetComponent<PlayerCharacterCombatController>().WeaponSelected;
-
-        ChangeWeaponSlotsColor(weaponType);        
-
-        for (int i = 0; i < weaponSlots.Count; i++)
+        if(playerCharacterCombatController)
         {
-            Vector3 target = (i == (int)weaponType) ? selectedScale : normalScale;            
+            foreach(var weaponSlot in weaponSlots)
+            {
+                if(weaponSlot != null) weaponSlot.gameObject.SetActive(true);                
+            }
 
-            if (scaleWeaponSlotsCoroutines[i] != null)
-                StopCoroutine(scaleWeaponSlotsCoroutines[i]);
-            scaleWeaponSlotsCoroutines[i] = StartCoroutine(ScaleWeponSlotsRoutine(weaponSlots[i], target));
+            WeaponTypes weaponType = playerCharacterCombatController.WeaponSelected;
+
+            ChangeWeaponSlotsColor(weaponType);
+
+            for (int i = 0; i < weaponSlots.Count; i++)
+            {
+                Vector3 target = (i == (int)weaponType) ? selectedScale : normalScale;
+
+                if (scaleWeaponSlotsCoroutines[i] != null)
+                    StopCoroutine(scaleWeaponSlotsCoroutines[i]);
+                scaleWeaponSlotsCoroutines[i] = StartCoroutine(ScaleWeponSlotsRoutine(weaponSlots[i], target));
+            }
+        }
+        else
+        {
+            foreach (var weaponSlot in weaponSlots)
+            {
+                if (weaponSlot != null) weaponSlot.gameObject.SetActive(false);
+            }
         }
     }
 

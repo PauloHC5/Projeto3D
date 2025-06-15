@@ -1701,6 +1701,7 @@ MonoBehaviour:
   - {fileID: 449709083084896546}
   - {fileID: 4572861748109541567}
   scopeCrosshair: {fileID: 6047656574967570559}
+  ammoPanel: {fileID: 6300860229429965017}
   ammoText: {fileID: 300583493016992991}
   magAmmoText: {fileID: 4310404385873186252}
   gunAmmoText: {fileID: 3205611706537426844}
@@ -2314,6 +2315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08e85eb05e50504192aabada588d713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  seconds: 5
 --- !u!1 &8478762166305429213
 GameObject:
   m_ObjectHideFlags: 0

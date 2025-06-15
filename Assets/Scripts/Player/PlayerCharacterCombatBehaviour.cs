@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerCharacterBehaviour : StateMachineBehaviour
+public class PlayerCharacterCombatBehaviour : StateMachineBehaviour
 {
     private static PlayerCharacterCombatController playerCharacterCombatController;    
 
@@ -29,6 +29,11 @@ public class PlayerCharacterBehaviour : StateMachineBehaviour
         if (playerCharacterCombatController == null)
         {            
             playerCharacterCombatController = animator.GetComponentInParent<PlayerCharacterCombatController>();
+            if (playerCharacterCombatController == null)
+            {
+                Debug.LogWarning("PlayerCharacterCombatController not found in parent. Ensure it is attached to the player character if you want the PlayerCharacterCombatBehaviour works.");
+                return;
+            }
         }                
 
         PlayerCombatStates newCombatState = FindCombatState(stateInfo);

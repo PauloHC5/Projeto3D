@@ -117,7 +117,7 @@ public class PlayerCharacterMovementController : MonoBehaviour
     {
         ApplyGravity();        
 
-        if(playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.CHARGING)
+        if(playerCharacterCombatController?.PlayerCombatStates == PlayerCombatStates.CHARGING)
             maxSpeed = crouchSpeed; // Reduce speed while charging
         else maxSpeed = isCrouching ? crouchSpeed : walkSpeed; // Set speed based on crouching state
     }
