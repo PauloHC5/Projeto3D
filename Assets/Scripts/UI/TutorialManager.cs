@@ -1,6 +1,25 @@
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Video;
+
+public enum WeaponTutorialType
+{
+    CARNIVOROUSPLANT,
+    ACORN,
+    BANANASHOTGUN,
+    CACTUSCROSSBOW
+}
+
+[Serializable]
+public struct VideoFile
+{
+    public string fileName;
+    public WeaponTutorialType weaponTutorialType;
+}
 
 public class TutorialManager : MonoBehaviour
 {
@@ -9,28 +28,41 @@ public class TutorialManager : MonoBehaviour
     [Header("Tutorial Properties")]
     [SerializeField] public VideoPlayer videoPlayer;
 
-    [SerializeField] public VideoClip[] videoClips;
+    [SerializeField] public List<VideoFile> videosFileNames;
 
     [SerializeField] public GameObject[] weaponsTexts;
 
     [SerializeField] public GameObject nextButtom, prevButtom, exitButtom;
 
-    public int currentTutorialIndex = 0;
+    private WeaponTutorialType currentWeaponTutorial;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = UnityEngine.Object.FindFirstObjectByType<TutorialManager>();
-        }
+        }        
+    }
+
+    private void Start()
+    {
+        PlayTutorial(WeaponTutorialType.CARNIVOROUSPLANT);
     }    
 
-    private void Update()
+    public void PlayTutorial(WeaponTutorialType weaponTutorial)
     {
-        switch (currentTutorialIndex)
+        if (videoPlayer == null)
         {
-            case 0:
-                videoPlayer.clip = videoClips[0];
+            Debug.LogError("VideoPlayer is not assigned in the TutorialManager.");
+            return;
+        }
+
+        switch (weaponTutorial)
+        {
+            case WeaponTutorialType.CARNIVOROUSPLANT:
+                
+                PlayWeaponVideoTutorial(WeaponTutorialType.CARNIVOROUSPLANT);
+
                 weaponsTexts[0].SetActive(true);
                 weaponsTexts[1].SetActive(false);
                 weaponsTexts[2].SetActive(false);
@@ -40,8 +72,10 @@ public class TutorialManager : MonoBehaviour
                 exitButtom.SetActive(false);
                 break;
 
-            case 1:
-                videoPlayer.clip = videoClips[1];
+            case WeaponTutorialType.ACORN:
+                
+                PlayWeaponVideoTutorial(WeaponTutorialType.ACORN);
+
                 weaponsTexts[0].SetActive(false);
                 weaponsTexts[1].SetActive(true);
                 weaponsTexts[2].SetActive(false);
@@ -50,9 +84,11 @@ public class TutorialManager : MonoBehaviour
                 prevButtom.SetActive(true);
                 exitButtom.SetActive(false);
                 break;
-            
-            case 2:
-                videoPlayer.clip = videoClips[2];
+
+            case WeaponTutorialType.BANANASHOTGUN:
+                
+                PlayWeaponVideoTutorial(WeaponTutorialType.BANANASHOTGUN);
+
                 weaponsTexts[0].SetActive(false);
                 weaponsTexts[1].SetActive(false);
                 weaponsTexts[2].SetActive(true);
@@ -62,8 +98,10 @@ public class TutorialManager : MonoBehaviour
                 exitButtom.SetActive(false);
                 break;
 
-            case 3:
-                videoPlayer.clip = videoClips[3];
+            case WeaponTutorialType.CACTUSCROSSBOW:
+                
+                PlayWeaponVideoTutorial(WeaponTutorialType.CACTUSCROSSBOW);
+
                 weaponsTexts[0].SetActive(false);
                 weaponsTexts[1].SetActive(false);
                 weaponsTexts[2].SetActive(false);
@@ -71,34 +109,51 @@ public class TutorialManager : MonoBehaviour
                 nextButtom.SetActive(false);
                 prevButtom.SetActive(true);
                 exitButtom.SetActive(true);
-                break; 
+                break;
+        }
+    }
+
+    private void PlayWeaponVideoTutorial(WeaponTutorialType weaponTutorial)
+    {
+        string videoFileName = videosFileNames.FirstOrDefault(v => v.weaponTutorialType == weaponTutorial).fileName;
+
+        if (string.IsNullOrEmpty(videoFileName))
+        {
+            Debug.LogError($"Video file name not found for weapon tutorial: {weaponTutorial} \n Please check in your inspector if you assigned the name correctly");
+            return;
         }
 
+        string videoPath = System.IO.Path.Combine(Application.streamingAssetsPath, videoFileName);        
+
+        Debug.Log("Video Path: " + videoPath);
+        videoPlayer.url = videoPath;
+        videoPlayer.Play();
     }
 
     public void NextTutorial()
     {
-        if (currentTutorialIndex < videoClips.Length - 1)
+        currentWeaponTutorial++;
+        if (currentWeaponTutorial > WeaponTutorialType.CACTUSCROSSBOW)
         {
-            currentTutorialIndex++;
-            videoPlayer.Play();
+            currentWeaponTutorial = WeaponTutorialType.CARNIVOROUSPLANT; // Loop back to the first tutorial
         }
+        PlayTutorial(currentWeaponTutorial);
     }
 
     public void PreviousTutorial()
     {
-        if (currentTutorialIndex > 0)
+        currentWeaponTutorial--;
+        if (currentWeaponTutorial < WeaponTutorialType.CARNIVOROUSPLANT)
         {
-            currentTutorialIndex--;
-            videoPlayer.Play();
+            currentWeaponTutorial = WeaponTutorialType.CACTUSCROSSBOW; // Loop back to the last tutorial
         }
+        PlayTutorial(currentWeaponTutorial);
     }
 
     public void ExitTutorial()
     {
         gameObject.SetActive(false);
-        videoPlayer.Stop();
-        currentTutorialIndex = 0;
+        videoPlayer.Stop();        
         GameManager.StartGame();
     }
 }

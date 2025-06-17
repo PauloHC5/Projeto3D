@@ -1740,11 +1740,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   videoPlayer: {fileID: 7297814497881925546}
-  videoClips:
-  - {fileID: 32900000, guid: 8b1560116a305b0488332985f6a6688a, type: 3}
-  - {fileID: 32900000, guid: a07e98d8f6b52f84ca0c6949d8839564, type: 3}
-  - {fileID: 32900000, guid: f61a2b50aded1cd4bb08a70cefaa6f02, type: 3}
-  - {fileID: 32900000, guid: 15d1463448a53e7419a465091b2c73dd, type: 3}
+  videosFileNames:
+  - fileName: CarnivorousPlantTutorial.mp4
+    weaponTutorialType: 0
+  - fileName: AcornGunTutorial.mp4
+    weaponTutorialType: 1
+  - fileName: BananaGunTutorial.mp4
+    weaponTutorialType: 2
+  - fileName: CactusCrossbowTutorial.mp4
+    weaponTutorialType: 3
   weaponsTexts:
   - {fileID: 865616928607571245}
   - {fileID: 2842609893171230492}
@@ -1753,7 +1757,6 @@ MonoBehaviour:
   nextButtom: {fileID: 663463699866563370}
   prevButtom: {fileID: 3595593215609110509}
   exitButtom: {fileID: 2789716490519848836}
-  currentTutorialIndex: 0
 --- !u!1 &4806952968649478835
 GameObject:
   m_ObjectHideFlags: 0
@@ -2746,7 +2749,7 @@ GameObject:
   - component: {fileID: 1453655103863665340}
   - component: {fileID: 7297814497881925546}
   m_Layer: 0
-  m_Name: VideoRenderer
+  m_Name: VideoPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2785,7 +2788,7 @@ VideoPlayer:
   m_TargetMaterialProperty: <noninit>
   m_RenderMode: 2
   m_AspectRatio: 2
-  m_DataSource: 0
+  m_DataSource: 1
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
@@ -2797,10 +2800,10 @@ VideoPlayer:
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
   m_Looping: 1
-  m_WaitForFirstFrame: 1
+  m_WaitForFirstFrame: 0
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
 --- !u!1 &6966259444240763341
