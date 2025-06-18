@@ -129,6 +129,12 @@ public class GameManager : MonoBehaviour
         {
             _Instance = Object.FindFirstObjectByType<GameManager>();
         }
+
+        if(_Instance.endGameManager == null)
+        {
+            Debug.LogError("There is no EndGameManager in the scene!");
+            return;
+        }
         
         Destroy(_Instance.hud.gameObject);
         _Instance.hud = null; // Clear the HUD reference
