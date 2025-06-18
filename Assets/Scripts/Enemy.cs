@@ -32,7 +32,8 @@ public class Enemy : MonoBehaviour
     protected Animator animator;
     private Collider enemyCollider;
     private Rigidbody rb;
-    
+    protected AudioSource _audioSource;
+
     protected int IsDead = Animator.StringToHash("IsDead");
     protected int Velocity = Animator.StringToHash("Velocity");
     private int React = Animator.StringToHash("React");
@@ -56,6 +57,9 @@ public class Enemy : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         enemyCollider = GetComponent<Collider>();
         rb = GetComponent<Rigidbody>();
+        _audioSource = GetComponent<AudioSource>();
+        if (_audioSource == null)
+            Debug.LogWarning("ChemAgent: AudioSource component is missing. Please add one for sound effects.");
 
         behaviorGraph.BlackboardReference.SetVariableValue("Speed", agent.speed);
         behaviorGraph.BlackboardReference.SetVariableValue("EnemyAnimator", animator);

@@ -18,26 +18,26 @@ public class CactusCrossbow : ProjectileGun, ISecondaryAction
 
     private void Start()
     {        
-        originalFireSocket = fireSocket; // Store the original projectile spawn point        
+        originalFireSocket = _fireSocket; // Store the original projectile spawn point        
     }
 
     private void Update()
     {
-        crossbowSpikes.OnUpdate(gunAnimator, magAmmo); // Update crossbow spikes animation based on ammo count        
+        crossbowSpikes.OnUpdate(gunAnimator, _magAmmo); // Update crossbow spikes animation based on ammo count        
 
         if (Camera.main.GetComponent<MouseLook>().ZoomIn)
-            fireSocket = Camera.main.transform;
+            _fireSocket = Camera.main.transform;
         else
-            fireSocket = originalFireSocket; // Reset to original spawn point when not zoomed in        
+            _fireSocket = originalFireSocket; // Reset to original spawn point when not zoomed in        
     }
 
     public override void Fire()
     {               
-        if(!canFire || magAmmo == 0) return;
+        if(!_canFire || _magAmmo == 0) return;
 
         StartCoroutine(FireBurst());        
-        magAmmo -= 3;
-        SoundManager.PlayShootSound(weaponType, 0.5f); // Play the attack sound
+        _magAmmo -= 3;
+        SoundManager.PlayShootSound(_weaponType, _gunAudioSource); // Play the attack sound
     }
     private IEnumerator FireBurst()
     {

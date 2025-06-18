@@ -90,9 +90,7 @@ private void Awake()
     void Update()
     {
         HandleInput();
-        playerCharacterMovementController.HandleMovement(playerMovementInput, playerLookInput);        
-
-        if(Input.GetKeyDown(KeyCode.T)) SoundManager.PlayRandomSound(SoundType.SHOOT, 0.5f); // Test sound effect
+        playerCharacterMovementController.HandleMovement(playerMovementInput, playerLookInput);                
     }
 
     private void HandleMouseScroll()

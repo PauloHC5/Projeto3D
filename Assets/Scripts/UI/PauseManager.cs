@@ -1,6 +1,7 @@
 using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.UI;
+using System; // <-- Add this for Action
 
 public class PauseManager : MonoBehaviour
 {
@@ -27,12 +28,18 @@ public class PauseManager : MonoBehaviour
         {
             if (_Instance == null)
             {
-                _Instance = Object.FindFirstObjectByType<PauseManager>();
+                _Instance = UnityEngine.Object.FindFirstObjectByType<PauseManager>();
             }
 
             return _Instance;
         }
     }
+
+    // Action event to be invoked when PauseGame is called
+    public static event Action OnPauseGame;
+
+    // Action event to be invoked when ResumeGame is called
+    public static event Action OnResumeGame;
 
     private void Start()
     {
@@ -52,20 +59,15 @@ public class PauseManager : MonoBehaviour
 
         MouseOverResumeButton();
 
-        if(SoundManager.instance != null)
-        {
-            SoundManager.instance.SfxSource.volume = sfxSlider.value;
-            SoundManager.instance.AmbienceSource.volume = sfxSlider.value;
-            SoundManager.instance.MusicSource.volume = musicSlider.value;
-        }
-        else
-        {
-            Debug.LogWarning("SoundManager instance is null. Cannot adjust sound volumes.");
-        }
+        SoundManager.MusicVolume = musicSlider.value;
+        SoundManager.SfxVolume = sfxSlider.value;        
     }
 
     public void PauseGame()
     {
+        // Invoke the event before pausing
+        OnPauseGame?.Invoke();
+
         pauseMenuUI.SetActive(true);
 
         IsPaused = true;
@@ -74,10 +76,7 @@ public class PauseManager : MonoBehaviour
         PlayerCharacterController.PlayerControls.UI.Enable();
         PlayerCharacterController.PlayerControls.Player.Disable();
         Cursor.lockState = CursorLockMode.None;
-        GameManager.Instance.Hud.gameObject.SetActive(false);
-        SoundManager.instance.SfxSource.Pause();
-        SoundManager.instance.AmbienceSource.Pause();
-        SoundManager.instance.MusicSource.Pause();
+        GameManager.Instance.Hud.gameObject.SetActive(false);        
 
         // unfocus the game window to prevent input
         if (UnityEngine.EventSystems.EventSystem.current != null)
@@ -88,6 +87,9 @@ public class PauseManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        // Invoke the event before resuming
+        OnResumeGame?.Invoke();
+
         pauseMenuUI.SetActive(false);
 
         IsPaused = false;
@@ -96,10 +98,7 @@ public class PauseManager : MonoBehaviour
         PlayerCharacterController.PlayerControls.UI.Disable();
         PlayerCharacterController.PlayerControls.Player.Enable();
         Cursor.lockState = CursorLockMode.Locked;
-        GameManager.Instance.Hud.gameObject.SetActive(true);
-        SoundManager.instance.SfxSource.UnPause();
-        SoundManager.instance.AmbienceSource.UnPause();
-        SoundManager.instance.MusicSource.UnPause();
+        GameManager.Instance.Hud.gameObject.SetActive(true);        
 
         // refocus the game window to allow input
         if (UnityEngine.EventSystems.EventSystem.current != null)

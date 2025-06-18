@@ -25,13 +25,13 @@ public class RaycastGun : Gun
     protected virtual void ShootRaycast()
     {
         Ray ray;
-        if (fireSocket == null)
+        if (_fireSocket == null)
         {
             ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         }
         else
         {
-            ray = new Ray(fireSocket.position, Camera.main.transform.forward);
+            ray = new Ray(_fireSocket.position, Camera.main.transform.forward);
         }
 
         float rayDistance = gunRange == default ? this.gunRange : gunRange;
@@ -41,7 +41,7 @@ public class RaycastGun : Gun
         {
             if (hit.collider.gameObject.GetComponent<Enemy>())
             {
-                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);
+                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage, _weaponType);
             }
 
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));
@@ -69,7 +69,7 @@ public class RaycastGun : Gun
         {
             if (hitCollider.gameObject.GetComponent<Enemy>())
             {
-                hitCollider.gameObject.GetComponent<Enemy>().TakeDamage(damage, weaponType);
+                hitCollider.gameObject.GetComponent<Enemy>().TakeDamage(damage, _weaponType);
             }
         }
     }

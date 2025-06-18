@@ -28,7 +28,7 @@ public class BananaShotgun : RaycastGun
 
     private void Update()
     {
-        gunAnimator.SetInteger(magAmmoHash, magAmmo);
+        gunAnimator.SetInteger(magAmmoHash, _magAmmo);
     }
 
     public override void Fire()
@@ -36,8 +36,8 @@ public class BananaShotgun : RaycastGun
         base.ShootCapsuleCast(shootRadius);
         base.Fire();
         StartCoroutine(BurstFire());
-        magAmmo--;
-        SoundManager.PlayShootSound(weaponType, 0.5f); // Play the attack sound
+        _magAmmo--;
+        SoundManager.PlayShootSound(_weaponType, _gunAudioSource); // Play the attack sound
     }
 
     public override void PerformReload()
@@ -79,12 +79,12 @@ public class BananaShotgun : RaycastGun
 
     private void BurstRaycast(LayerMask shootLayer, float burstRange)
     {
-        Vector3 direction = fireSocket.forward;
+        Vector3 direction = _fireSocket.forward;
         direction.x += Random.Range(-spreadAngle, spreadAngle);
         direction.y += Random.Range(-spreadAngle, spreadAngle);        
 
         RaycastHit hit;
-        if (Physics.Raycast(fireSocket.position, direction, out hit, burstRange, shootLayer))
+        if (Physics.Raycast(_fireSocket.position, direction, out hit, burstRange, shootLayer))
         {            
             if (impactVFX != null)
             {
@@ -100,7 +100,7 @@ public class BananaShotgun : RaycastGun
 
         if (DebugRaycast)
         {
-            Debug.DrawRay(fireSocket.position, direction * burstRange, Color.red, 5f);
+            Debug.DrawRay(_fireSocket.position, direction * burstRange, Color.red, 5f);
         }        
     }
 

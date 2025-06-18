@@ -22,7 +22,7 @@ public class ProjectileGun : Gun
 
     protected void ShootProjectile()
     {
-        if (projectile == null || fireSocket == null)
+        if (projectile == null || _fireSocket == null)
         {
             Debug.LogWarning("FlareProjectile or FireSocket is not set.");
             return;
@@ -32,7 +32,7 @@ public class ProjectileGun : Gun
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
         // Instantiate the flare projectile at the spawn point
-        spawnedProjectile = Instantiate(projectile, fireSocket.position, Quaternion.LookRotation(ray.direction));
+        spawnedProjectile = Instantiate(projectile, _fireSocket.position, Quaternion.LookRotation(ray.direction));
 
         // Apply force to the flare projectile
         spawnedProjectile.GetComponent<Rigidbody>().AddForce(ray.direction * projectileForce, ForceMode.Impulse);

@@ -3,28 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Gun : Weapon, IEquippedGun
 {
 
     [Header("Gun Properties")]
-    [SerializeField] protected float fireRate = 0.5f;    
-    [SerializeField] protected int magCapacity = 40;
-    [SerializeField] protected int magAmmo = 40;
-    [SerializeField] protected AmmoTypes ammoType;
+    [SerializeField] protected float _fireRate = 0.5f;    
+    [SerializeField] protected int _magCapacity = 40;
+    [SerializeField] protected int _magAmmo = 40;
+    [SerializeField] protected AmmoTypes _ammoType;    
 
     [Header("Recoil Properties")]
-    [SerializeField] protected float recoilX = -2f;
-    [SerializeField] protected float recoilY = 2f;
-    [SerializeField] protected float recoilZ = 0.35f;
-    [SerializeField] protected float snappiness = 6f;
-    [SerializeField] protected float returnSpeed = 2f;
+    [SerializeField] protected float _recoilX = -2f;
+    [SerializeField] protected float _recoilY = 2f;
+    [SerializeField] protected float _recoilZ = 0.35f;
+    [SerializeField] protected float _snappiness = 6f;
+    [SerializeField] protected float _returnSpeed = 2f;
 
     [Header("Gun Components")]
-    [SerializeField] protected Transform fireSocket;
-    [SerializeField] protected ParticleSystem muzzleFlash;    
+    [SerializeField] protected Transform _fireSocket;
+    [SerializeField] protected ParticleSystem _muzzleFlash;    
     
-    protected bool canFire = true;    
-    private CameraRecoil cameraRecoil;
+    protected bool _canFire = true;
+    protected AudioSource _gunAudioSource; // Audio source for gun sounds
+    private CameraRecoil _cameraRecoil;
 
     // Animator properties
     protected Animator gunAnimator;
@@ -32,51 +34,54 @@ public class Gun : Weapon, IEquippedGun
     private readonly int ReloadTrigger = Animator.StringToHash("Reload");
 
     // Getters and Setters    
-    public float FireRate { get { return fireRate; } }            
-    public int MagAmmo { get => magAmmo;
+    public float FireRate { get { return _fireRate; } }            
+    public int MagAmmo { get => _magAmmo;
         set
         {
-           magAmmo = Mathf.Clamp(value, 0, magCapacity); // Ensure magAmmo does not exceed magCapacity or go below 0                                                                 
-           canFire = magAmmo > 0; // Update canFire based on magAmmo
+           _magAmmo = Mathf.Clamp(value, 0, _magCapacity); // Ensure magAmmo does not exceed magCapacity or go below 0                                                                 
+           _canFire = _magAmmo > 0; // Update canFire based on magAmmo
         }   
     }
     
-    public int MagCapacity => magCapacity;
+    public int MagCapacity => _magCapacity;
 
-    public bool CanFire => canFire;
+    public bool CanFire => _canFire;
 
-    public bool CanReload() => magAmmo < magCapacity;
+    public bool CanReload() => _magAmmo < _magCapacity;
 
-    public AmmoTypes AmmoType => ammoType;
+    public AmmoTypes AmmoType => _ammoType;
 
     protected virtual void Awake()
     {        
         gunAnimator = GetComponent<Animator>();
         if (gunAnimator == null) gunAnimator = GetComponentInChildren<Animator>();
         
-        magAmmo = magAmmo > magCapacity ? magAmmo = magCapacity : magAmmo; // Clamp magAmmo to maxAmmo                
+        _magAmmo = _magAmmo > _magCapacity ? _magAmmo = _magCapacity : _magAmmo; // Clamp magAmmo to maxAmmo                
 
-        cameraRecoil = Camera.main.GetComponentInParent<CameraRecoil>();             
+        _cameraRecoil = Camera.main.GetComponentInParent<CameraRecoil>(); 
+        
+        _gunAudioSource = GetComponent<AudioSource>();
+        _gunAudioSource.playOnAwake = false;
     }
 
     public virtual void Fire()
     {
-        if (!canFire || magAmmo == 0) return;
+        if (!_canFire || _magAmmo == 0) return;
 
         if (gunAnimator) gunAnimator.SetTrigger(FireTrigger);
         else Debug.LogWarning("Gun animator not found.");
 
-        if (muzzleFlash) muzzleFlash.Play();        
-        if (cameraRecoil) cameraRecoil.RecoilFire(recoilX, recoilY, recoilZ, snappiness, returnSpeed);        
+        if (_muzzleFlash) _muzzleFlash.Play();        
+        if (_cameraRecoil) _cameraRecoil.RecoilFire(_recoilX, _recoilY, _recoilZ, _snappiness, _returnSpeed);        
 
         StartCoroutine(ShootDelay());
     }
 
     public void DoubleRecoil()
         {
-        if (cameraRecoil)
+        if (_cameraRecoil)
         {
-            cameraRecoil.RecoilFire(recoilX * 2, recoilY * 2, recoilZ * 2, snappiness, returnSpeed);
+            _cameraRecoil.RecoilFire(_recoilX * 2, _recoilY * 2, _recoilZ * 2, _snappiness, _returnSpeed);
         }        
     }
 
@@ -103,19 +108,19 @@ public class Gun : Weapon, IEquippedGun
         MagAmmo += ammoAmountToReload; // Set the mag ammo to the ammo to reload
         playerGunAmmo -= ammoAmountToReload; // Subtract the ammo from the player ammo
 
-        canFire = magAmmo > 0;
+        _canFire = _magAmmo > 0;
     }
 
     protected IEnumerator ShootDelay()
     {
-        canFire = false;        
+        _canFire = false;        
         yield return new WaitForSeconds(FireRate);
-        canFire = true;        
+        _canFire = true;        
     }
 
     private void OnEnable()
     {
-        canFire = magAmmo > 0; // Reset canFire when the gun is enabled
+        _canFire = _magAmmo > 0; // Reset canFire when the gun is enabled
     }
 }
 

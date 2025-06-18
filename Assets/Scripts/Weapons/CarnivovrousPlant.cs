@@ -2,19 +2,21 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class CarnivovrousPlant : Weapon
 {
     [Header("Carnivovrous Plant Properties")]
-    [SerializeField] private int damage = 25;
-    [SerializeField] private int chewingDuration = 10;
-    [SerializeField] private float duration = 0.3f; // Duration for the scale-up effect
+    [SerializeField] private int _damage = 25;
+    [SerializeField] private int _chewingDuration = 10;
+    [SerializeField] private float _duration = 0.3f; // Duration for the scale-up effect
 
-    private bool canAttack = true;
-    public bool CanAttack => canAttack;
+    private bool _canAttack = true;
+    public bool CanAttack => _canAttack;
 
-    private Collider hitCollider;
-    private Animator animator;
-    private Vector3 originalScale;
+    private Collider _hitCollider;
+    private Animator _animator;
+    private Vector3 _originalScale;
+    private AudioSource _audioSource;
 
     private int Chewing = Animator.StringToHash("Chewing");
 
@@ -25,24 +27,27 @@ public class CarnivovrousPlant : Weapon
 
     private void Awake()
     {
-        animator = GetComponentInChildren<Animator>();
-        hitCollider = GetComponent<Collider>();
-        originalScale = transform.localScale;        
+        _animator = GetComponentInChildren<Animator>();
+        _hitCollider = GetComponent<Collider>();
+        _originalScale = transform.localScale;
+        _audioSource = GetComponent<AudioSource>();
+
+        _audioSource.playOnAwake = false;
     }
 
     private void Update()
     {
-        animator.SetBool(Chewing, !CanAttack);
+        _animator.SetBool(Chewing, !CanAttack);
     }
 
     public void Attack()
     {
-        if (animator != null)
+        if (_animator != null)
         {
-            animator.SetTrigger("Attack");
+            _animator.SetTrigger("Attack");
             GameManager.Instance?.Hud?.Bite();
             if(GameManager.Instance && GameManager.Instance.Hud.EnemyOnRange) StartCoroutine(AttackRoutine());
-            SoundManager.PlayShootSound(weaponType, 1.0f); // Play the attack sound
+            SoundManager.PlayShootSound(_weaponType, _audioSource); // Play the attack sound
         }
         else
         {
@@ -55,25 +60,25 @@ public class CarnivovrousPlant : Weapon
 
     public void PlayRaise(string trigger)
     {
-        animator.SetTrigger(trigger);
+        _animator.SetTrigger(trigger);
     }
 
     public void EnableCollision()
     {
-        hitCollider.enabled = true;
+        _hitCollider.enabled = true;
     }
 
     public void DisableCollision()
     {
-        hitCollider.enabled = false;
+        _hitCollider.enabled = false;
     }    
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            other.GetComponent<Enemy>().TakeDamage(damage, weaponType);
-            hitCollider.enabled = false; // Disable the collider after hitting
+            other.GetComponent<Enemy>().TakeDamage(_damage, _weaponType);
+            _hitCollider.enabled = false; // Disable the collider after hitting
             
             StopCoroutine(ChewingRoutine());
             StartCoroutine(ChewingRoutine());
@@ -112,22 +117,22 @@ public class CarnivovrousPlant : Weapon
             obj.gameObject.SetActive(true); // Enable all child objects
         }
 
-        transform.localScale = originalScale; // Reset scale when enabled
+        transform.localScale = _originalScale; // Reset scale when enabled
     }
 
     private IEnumerator AttackRoutine()
     {
-        StartCoroutine(ScaleUpCoroutine(originalScale * 2f)); // Scale up during attack
-        yield return new WaitForSeconds(duration); // Wait for the duration of the attack
-        StartCoroutine(ScaleUpCoroutine(originalScale)); // Scale back down after attack
+        StartCoroutine(ScaleUpCoroutine(_originalScale * 2f)); // Scale up during attack
+        yield return new WaitForSeconds(_duration); // Wait for the duration of the attack
+        StartCoroutine(ScaleUpCoroutine(_originalScale)); // Scale back down after attack
     }
 
     private IEnumerator ScaleUpCoroutine(Vector3 scaleDesired)
     {
         float elapsed = 0f;
-        while (elapsed < duration)
+        while (elapsed < _duration)
         {
-            transform.localScale = Vector3.Lerp(transform.localScale, scaleDesired, elapsed / duration);
+            transform.localScale = Vector3.Lerp(transform.localScale, scaleDesired, elapsed / _duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
@@ -136,8 +141,8 @@ public class CarnivovrousPlant : Weapon
 
     private IEnumerator ChewingRoutine()
     {
-        canAttack = false;        
-        yield return new WaitForSeconds(chewingDuration);
-        canAttack = true;        
+        _canAttack = false;        
+        yield return new WaitForSeconds(_chewingDuration);
+        _canAttack = true;        
     }
 }

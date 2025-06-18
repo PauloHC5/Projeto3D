@@ -5,16 +5,16 @@ using UnityEngine;
 public class Weapon : MonoBehaviour, IWeapon
 {
     [Header("Weapon Properties")]
-    [SerializeField] protected WeaponTypes weaponType;
-    [SerializeField] protected WeaponSocket socketToAttach;
+    [SerializeField] protected WeaponTypes _weaponType;
+    [SerializeField] protected WeaponSocket _socketToAttach;
 
     public WeaponSocket GetSocketToAttach { 
-        get { return socketToAttach; }         
+        get { return _socketToAttach; }         
     }
 
     public WeaponTypes WeaponType
     {
-        get { return weaponType; }
+        get { return _weaponType; }
     }
 
     public float WeaponRange => GetWeaponRange();

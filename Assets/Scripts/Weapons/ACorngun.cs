@@ -10,11 +10,11 @@ public class ACorngun : ProjectileGun, IChargeable
     private void Start()
     {
         originalProjectileForce = projectileForce; // Store the original projectile force        
-        originalRecoilX = recoilX; // Store the original recoil X value
-        originalRecoilY = recoilY; // Store the original recoil Y value
-        originalRecoilZ = recoilZ; // Store the original recoil Z value
-        originalSnappiness = snappiness; // Store the original snappiness value
-        originalReturnSpeed = returnSpeed; // Store the original return speed value
+        originalRecoilX = _recoilX; // Store the original recoil X value
+        originalRecoilY = _recoilY; // Store the original recoil Y value
+        originalRecoilZ = _recoilZ; // Store the original recoil Z value
+        originalSnappiness = _snappiness; // Store the original snappiness value
+        originalReturnSpeed = _returnSpeed; // Store the original return speed value
     }
 
     public override void Fire()
@@ -22,8 +22,8 @@ public class ACorngun : ProjectileGun, IChargeable
         projectileForce = originalProjectileForce; // Reset projectile force to original value after firing
         base.Fire();        
         spawnedProjectile.transform.localScale = Vector3.one; // Reset the size of the projectile after firing
-        magAmmo--;
-        SoundManager.PlayShootSound(weaponType, 0.5f); // Play the attack sound
+        _magAmmo--;
+        SoundManager.PlayShootSound(_weaponType, _gunAudioSource); // Play the attack sound
     }
 
     public override void PerformReload()
@@ -37,7 +37,7 @@ public class ACorngun : ProjectileGun, IChargeable
         {
             MagAmmo += 10; // Set the mag ammo to the ammo to reload
             playerGunAmmo -= 1; // Subtract the ammo from the player ammo
-            canFire = magAmmo > 0;
+            _canFire = _magAmmo > 0;
         }
     }
 
@@ -49,11 +49,11 @@ public class ACorngun : ProjectileGun, IChargeable
     public void PerformSuperFire()
     {
         // Increase the projectile force and recoil values for super fire
-        recoilX *= 8f; // Increase the recoil X for super fire
-        recoilY *= 5f; // Increase the recoil Y for super fire
-        recoilZ *= 5f; // Increase the recoil Z for super fire
-        snappiness *= 2f; // Increase snappiness for super fire
-        returnSpeed /= 2f; // Increase return speed for super fire
+        _recoilX *= 8f; // Increase the recoil X for super fire
+        _recoilY *= 5f; // Increase the recoil Y for super fire
+        _recoilZ *= 5f; // Increase the recoil Z for super fire
+        _snappiness *= 2f; // Increase snappiness for super fire
+        _returnSpeed /= 2f; // Increase return speed for super fire
         projectileForce *= 2f; // Increase the force for super fire
 
         base.Fire();        
@@ -62,14 +62,14 @@ public class ACorngun : ProjectileGun, IChargeable
             spawnedProjectile.transform.localScale *= 3f; // Double the size of the projectile for super fire
             spawnedProjectile.GetComponent<Projectile>().Damage = 200; // Set damage to 100 for super fire
         }
-        magAmmo = 0;
-        SoundManager.PlayRandomSound(SoundType.SUPERSHOOT, 0.5f); // Play the super fire sound
+        _magAmmo = 0;
+        SoundManager.PlayRandomSFX(WorldSfxType.SUPERSHOOT, _gunAudioSource); // Play the super fire sound
 
         // Reset recoil values after firing
-        recoilX = originalRecoilX;
-        recoilY = originalRecoilY;
-        recoilZ = originalRecoilZ;
-        snappiness = originalSnappiness;
-        returnSpeed = originalReturnSpeed;
+        _recoilX = originalRecoilX;
+        _recoilY = originalRecoilY;
+        _recoilZ = originalRecoilZ;
+        _snappiness = originalSnappiness;
+        _returnSpeed = originalReturnSpeed;
     }
 }

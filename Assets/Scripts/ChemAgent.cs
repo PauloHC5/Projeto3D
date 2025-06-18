@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class ChemAgent : Enemy
+public class ChemAgent : Enemy    
 {
     [Header("Chem Agent Properties")]
-    [SerializeField] private ParticleSystem gunParticle;
+    [SerializeField] private ParticleSystem gunParticle;    
 
     private readonly int Fire = Animator.StringToHash("Fire");
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -17,21 +17,21 @@ public class ChemAgent : Enemy
         {
             if (!gunParticle.isPlaying) gunParticle.Play();
             if(damageCollider) damageCollider.enabled = true;
-            if (!SoundManager.instance.AmbienceSource.isPlaying && !PauseManager.Instance.IsPaused) SoundManager.PlaySoundInLoop(SoundType.CHEMAGENT, 0.5f);
+
+            if(_audioSource) SoundManager.PlayRandomSFX(WorldSfxType.CHEMAGENT_GAS, _audioSource, true);
         }
         else
         {
             if (gunParticle.isPlaying) gunParticle.Stop();
-            if (damageCollider) damageCollider.enabled = false;
-            if (SoundManager.instance.AmbienceSource.isPlaying) SoundManager.StopSoundInLoop(SoundType.CHEMAGENT);
+            if (damageCollider) damageCollider.enabled = false;            
+            if(_audioSource) _audioSource.Stop();
         }
     }
 
     protected override void Die(WeaponTypes damageType)
     {
         gunParticle.Stop();
-        animator.SetBool(Fire, false);
-        if (SoundManager.instance.AmbienceSource.isPlaying) SoundManager.StopSoundInLoop(SoundType.CHEMAGENT);
+        animator.SetBool(Fire, false);        
 
         base.Die(damageType);                
     }

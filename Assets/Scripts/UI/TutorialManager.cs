@@ -47,6 +47,7 @@ public class TutorialManager : MonoBehaviour
     private void Start()
     {
         PlayTutorial(WeaponTutorialType.CARNIVOROUSPLANT);
+        SoundManager.PlayMusic(MusicType.AMBIENCE, false);
     }    
 
     public void PlayTutorial(WeaponTutorialType weaponTutorial)
