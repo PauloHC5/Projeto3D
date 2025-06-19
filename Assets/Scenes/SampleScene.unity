@@ -12399,20 +12399,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas HUD
       objectReference: {fileID: 0}
-    - target: {fileID: 4786193690358142423, guid: f83b67d7958c43944bdb25770d826b37,
+    - target: {fileID: 8027765614621184505, guid: f83b67d7958c43944bdb25770d826b37,
         type: 3}
-      propertyPath: m_IsActive
+      propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8027765614621184505, guid: f83b67d7958c43944bdb25770d826b37,
         type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8027765614621184505, guid: f83b67d7958c43944bdb25770d826b37,
-        type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

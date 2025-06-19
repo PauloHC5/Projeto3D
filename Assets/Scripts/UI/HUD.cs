@@ -235,8 +235,8 @@ public class HUD : MonoBehaviour
             // Get all images in this game object and its children and set their alpha to 10%
             Image[] images = GetComponentsInChildren<Image>(true);
             foreach (Image img in images)
-            {
-                if (img != scopeCrosshair)
+            {                
+                if (img != scopeCrosshair.GetComponentsInChildren<Image>().Any<Image>())
                 {
                     Color color = img.color;
                     color.a = 0.1f; // Set alpha to 20%

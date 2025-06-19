@@ -111,7 +111,7 @@ public class MouseLook : MonoBehaviour
         {
             scopeVolume.SetActive(true);            
             playerCameras[1].enabled = false;
-            GameManager.Instance.Hud.ScopeEvent(true);
+            GameManager.Instance.Hud.ScopeEvent(true);            
         }
         else
         {
@@ -132,7 +132,7 @@ public class MouseLook : MonoBehaviour
         float elapsedTime = 0;
         float startFoV = playerCameras[0].fieldOfView;
         float targetFoV = zoomIn ? zoomFoV : defaultFoV;
-        float localscopeSpeed = zoomIn ? zoomSpeed : zoomSpeed * 3;
+        float localscopeSpeed = zoomIn ? zoomSpeed : zoomSpeed * 3;        
 
         while (Mathf.Abs(playerCameras[0].fieldOfView - targetFoV) > 0.01f)
         {
