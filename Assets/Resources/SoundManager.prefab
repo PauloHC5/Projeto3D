@@ -340,11 +340,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _musics:
   - _name: MENU
-    _music: {fileID: 0}
+    _music: {fileID: 8300000, guid: 3f1162df3ee141145814f16762192c20, type: 3}
   - _name: BATTLE
     _music: {fileID: 8300000, guid: a15568477ff585f42b33bfa1939d66c1, type: 3}
   - _name: AMBIENCE
-    _music: {fileID: 8300000, guid: f4896d5f3d413bc48b74719ce69a51e7, type: 3}
+    _music: {fileID: 8300000, guid: 398ddfe15882d4345b162c544926123d, type: 3}
   - _name: VICTORY
     _music: {fileID: 0}
   - _name: DEFEAT

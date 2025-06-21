@@ -47,7 +47,8 @@ public class TutorialManager : MonoBehaviour
     private void Start()
     {
         PlayTutorial(WeaponTutorialType.CARNIVOROUSPLANT);
-        SoundManager.PlayMusic(MusicType.AMBIENCE, false);
+
+        if(SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
     }    
 
     public void PlayTutorial(WeaponTutorialType weaponTutorial)
@@ -125,8 +126,7 @@ public class TutorialManager : MonoBehaviour
         }
 
         string videoPath = System.IO.Path.Combine(Application.streamingAssetsPath, videoFileName);        
-
-        Debug.Log("Video Path: " + videoPath);
+        
         videoPlayer.url = videoPath;
         videoPlayer.Play();
     }

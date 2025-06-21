@@ -32,6 +32,8 @@ public enum MusicType
     AMBIENCE,    
     VICTORY,
     DEFEAT,
+
+    DEFAULT, // Default music type for fallback
 }
 
 [Serializable]
@@ -55,6 +57,9 @@ public class SoundManager : MonoBehaviour
     private AudioSource _globalSfxSource;
     
     private float _sfxVolume = 1f;
+    
+    private static MusicType _currentMusicType = MusicType.DEFAULT; // Default music type to avoid null reference issues
+    public static MusicType CurrentMusicType => _currentMusicType;
 
     private static SoundManager _instance; // Do not use directly in the functions, use Instance property instead
     private static SoundManager Instance
@@ -63,13 +68,29 @@ public class SoundManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = UnityEngine.Object.FindFirstObjectByType<SoundManager>();
+                var soundManagers = FindObjectsByType<SoundManager>(FindObjectsSortMode.None);                
+                _instance = soundManagers.Length != 0 ? soundManagers[0] : null;
+
                 if (_instance == null)
                 {
                     Debug.LogError("SoundManager instance not found in the scene. Please ensure it is added to a GameObject.");
                 }
 
-                if(_instance._musicSource == null || _instance._ambienceSource == null || _instance._globalSfxSource)
+                if (soundManagers.Length > 1)
+                {
+                    foreach (var mgr in soundManagers)
+                    {
+                        if (mgr != _instance)
+                        {
+                            Destroy(mgr.gameObject);
+                        }
+                    }
+                }
+
+                // Make this SoundManager persist across scene loads
+                DontDestroyOnLoad(_instance.gameObject);
+
+                if (_instance._musicSource == null || _instance._ambienceSource == null || _instance._globalSfxSource)
                 {
                     var audioSources = _instance.GetComponents<AudioSource>();
                     if (audioSources.Length < 3)
@@ -102,10 +123,10 @@ public class SoundManager : MonoBehaviour
             Instance._globalSfxSource.volume = Mathf.Clamp(value, 0f, 1f);
             Instance._sfxVolume = Mathf.Clamp(value, 0f, 1f); 
         } 
-    }
+    }         
 
     void Start()
-    {
+    {        
         if (_instance == null)
         {
             _instance = UnityEngine.Object.FindFirstObjectByType<SoundManager>();
@@ -122,6 +143,14 @@ public class SoundManager : MonoBehaviour
             _instance._ambienceSource = audioSources[0];
             _instance._musicSource = audioSources[1];
             _instance._globalSfxSource = audioSources[2];
+        }
+    }
+
+    private void Update()
+    {
+        if(!Instance._musicSource.isPlaying)
+        {
+            _currentMusicType = MusicType.DEFAULT; // Reset to default if no music is playing
         }
     }
 
@@ -201,9 +230,12 @@ public class SoundManager : MonoBehaviour
         AudioClip musicClip = Instance._musics[(int)musicType].Sounds;
         if (musicClip != null)
         {
+            Instance._musicSource.enabled = true;
             Instance._musicSource.clip = musicClip;
             Instance._musicSource.loop = loopMusic;
             Instance._musicSource.Play();
+
+            _currentMusicType = musicType;
         }
         else
         {

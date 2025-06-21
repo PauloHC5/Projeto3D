@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 1f; // Resume time scale
         _Instance.StartCoroutine(_Instance.StartGameRoutine());
-        SoundManager.PlayMusic(MusicType.BATTLE, false); // Play the gameplay music
+        SoundManager.PlayMusic(MusicType.BATTLE, true); // Play the gameplay music
     }
 
     public static void GameOver()
