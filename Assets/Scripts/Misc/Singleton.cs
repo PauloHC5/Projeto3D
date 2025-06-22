@@ -8,7 +8,13 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
         get
         {
-            if(_instance == null)
+            if (!Application.isPlaying)
+            {
+                Debug.LogWarning($"{typeof(T).Name} singleton accessed in edit mode. Returning null.");
+                return null;
+            }
+
+            if (_instance == null)
             {
                 // Find any existing instances of the singleton in the scene
                 var foundInstances = FindObjectsByType<T>(FindObjectsSortMode.None);
@@ -29,11 +35,42 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
                 }
 
                 // Make this instance persist across scene loads
-                DontDestroyOnLoad(_instance.gameObject);
+                if (Application.isPlaying)
+                {
+                    DontDestroyOnLoad(_instance.gameObject);
+                }
             }
 
             return _instance;
         }
+    }
+
+    private void Awake()
+    {
+        if (!Application.isPlaying)
+            return;
+
+        if (_instance == null)
+        {
+            _instance = (T)this;
+            if (Application.isPlaying)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject); // Prevent duplicates
+        }
+
+        /*
+         if(_instance != null && _instance != this)
+        {
+            // If an instance already exists, destroy this one
+            Destroy(gameObject);
+            return;
+        }
+        */
     }
 
     private void OnApplicationQuit()

@@ -92,10 +92,13 @@ public class SoundManager : Singleton<SoundManager>
 
     private void Update()
     {
-        if(Instance._musicSource && !Instance._musicSource.isPlaying)
+        if (Application.isPlaying)
         {
-            _currentMusicType = MusicType.DEFAULT; // Reset to default if no music is playing
-        }
+            if (Instance._musicSource && !Instance._musicSource.isPlaying)
+            {
+                _currentMusicType = MusicType.DEFAULT; // Reset to default if no music is playing
+            }
+        }        
     }
 
     private void EnsureAudioSourcesInitialized()
@@ -246,50 +249,49 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
-#if UNITY_EDITOR
     private void OnEnable()
-    {        
+    {
+#if UNITY_EDITOR
+        // Editor-only array resizing and naming
         string[] names = Enum.GetNames(typeof(MusicType));
         Array.Resize(ref _musics, names.Length);
         for (int i = 0; i < names.Length; i++)
-        {
             _musics[i]._name = names[i];
-        }
 
         names = Enum.GetNames(typeof(AmbienceSoundType));
         Array.Resize(ref _ambienceSounds, names.Length);
         for (int i = 0; i < names.Length; i++)
-        {
             _ambienceSounds[i]._name = names[i];
-        }
 
         names = Enum.GetNames(typeof(GlobalSfxTypes));
         Array.Resize(ref _globalSoundEffects, names.Length);
         for (int i = 0; i < names.Length; i++)
-        {
             _globalSoundEffects[i]._name = names[i];
-        }
 
         names = Enum.GetNames(typeof(WorldSfxType));
         Array.Resize(ref _worldSoundEffects, names.Length);
         for (int i = 0; i < names.Length; i++)
-        {
             _worldSoundEffects[i]._name = names[i];
-        }
+#endif        
 
-        GameManager.OnPauseGame += OnPauseGame;
-        GameManager.OnResumeGame += OnResumeGame;
+        if (Application.isPlaying)
+        {
+            GameManager.OnPauseGame += OnPauseGame;
+            GameManager.OnResumeGame += OnResumeGame;
+        }        
     }
-#endif                
 
     private void OnDisable()
     {
-        GameManager.OnPauseGame -= OnPauseGame;
-        GameManager.OnResumeGame -= OnResumeGame;
+        if (Application.isPlaying)
+        {
+            GameManager.OnPauseGame -= OnPauseGame;
+            GameManager.OnResumeGame -= OnResumeGame;
+        }        
     }
 
     private void OnPauseGame()
-    {        
+    {       
         Instance._ambienceSource.Pause();
         Instance._musicSource.Pause();
     }
