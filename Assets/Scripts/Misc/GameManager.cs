@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,16 +7,47 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager _Instance;
+    private static GameManager _instance;
+    private static GameManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                // Find any GameManager objects in the scene
+                var foundInstances = FindObjectsByType<GameManager>(FindObjectsSortMode.None);
+                _instance = foundInstances.Length > 0 ? foundInstances[0] : null;
+
+                if (_instance == null)
+                {
+                    Debug.LogError("GameManager instance not found in the scene. Please ensure there is a GameManager object.");
+                }
+
+                // If there are another GameManager instances, destroy them
+                if(foundInstances.Length > 1)
+                {
+                    for (int i = 1; i < foundInstances.Length; i++)
+                    {
+                        Destroy(foundInstances[i].gameObject);
+                    }
+                }
+
+                // Make this SoundManager persist across scene loads
+                DontDestroyOnLoad(_instance.gameObject);
+            }
+            return _instance;
+        }
+    }
 
     [Header("UI Properties")]
-    [SerializeField] private HUD hud;
-    [SerializeField] private PauseManager pauseManager;
-    [SerializeField] private EndGameManager endGameManager;
-    public HUD Hud
+    //[SerializeField] private HUD hud;
+    
+    /*[SerializeField] private PauseManager pauseManager;
+    [SerializeField] private EndGameManager endGameManager;*/
+    /*public HUD Hud
     {
         get { return hud; }        
-    }
+    }*/
 
     [Header("Enemy Spawning Properties")]
     [SerializeField] private List<Enemy> enemies = new List<Enemy>();
@@ -26,35 +58,30 @@ public class GameManager : MonoBehaviour
     private List<GameObject> enemiesInScene = new List<GameObject>();
     private GameObject[] spawnPoints;
 
-    public PlayerCharacterController Player { get; private set; }
+    public static PlayerCharacterController Player { get; private set; }
+
+    public static bool IsPaused { get; private set; } = false;
+
+    // Action event to be invoked when PauseGame is called
+    public static event Action OnPauseGame;
+
+    // Action event to be invoked when ResumeGame is called
+    public static event Action OnResumeGame;
 
     // Awake is called when the script instance is being loaded
     private void Awake()
     {
-        // Make this instance persistent across scenes
-        //DontDestroyOnLoad(gameObject);
-
-        if (_Instance == null)
-        {
-            _Instance = Object.FindFirstObjectByType<GameManager>();
-        }
-        else if (_Instance != this)
-        {
-            Destroy(gameObject); // Ensure only one instance exists
-            return;
-        }
-
         // Find the player character controller in the scene
-        Player = Object.FindFirstObjectByType<PlayerCharacterController>();
+        Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();
 
-        if (hud == null)
-            hud = GameObject.FindAnyObjectByType<HUD>(FindObjectsInactive.Include);
+        /*if (hud == null)
+            hud = GameObject.FindAnyObjectByType<HUD>(FindObjectsInactive.Include);*/
 
-        if (pauseManager == null)
+        /*if (pauseManager == null)
             pauseManager = GameObject.FindAnyObjectByType<PauseManager>(FindObjectsInactive.Include);
 
         if (endGameManager == null)
-            endGameManager = GameObject.FindAnyObjectByType<EndGameManager>(FindObjectsInactive.Include);
+            endGameManager = GameObject.FindAnyObjectByType<EndGameManager>(FindObjectsInactive.Include);*/
 
         // Find all spawn points in the scene by tag
         spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
@@ -66,7 +93,10 @@ public class GameManager : MonoBehaviour
     {       
         Time.timeScale = 0f;
 
-        TutorialManager.Instance.gameObject.SetActive(true); // Show the tutorial manager UI
+        if (SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
+
+        TutorialManager.StartTutorial();
+        HUDManager.Disable();
         PlayerCharacterController.PlayerControls.UI.Enable();
         PlayerCharacterController.PlayerControls.Player.Disable();
         Cursor.lockState = CursorLockMode.None;
@@ -78,23 +108,10 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f); // Wait for 1 second before enabling controls        
         PlayerCharacterController.PlayerControls.UI.Disable();
         PlayerCharacterController.PlayerControls.Player.Enable();
-        hud.gameObject.SetActive(true);
+        HUDManager.Enable();
         Cursor.lockState = CursorLockMode.Locked;
         InvokeRepeating(nameof(SpawnEnemy), timeToSpawn, spawnInterval);
-    }
-
-    // Static instance of GameManager which allows it to be accessed by any other script
-    public static GameManager Instance {
-        get
-        {
-            if(_Instance == null)
-            {
-                _Instance = Object.FindFirstObjectByType<GameManager>();                
-            }
-
-            return _Instance;
-        }        
-    }
+    }        
       
 
     private void Update()
@@ -112,34 +129,43 @@ public class GameManager : MonoBehaviour
     }
 
     public static void StartGame()
-    {
-        if (_Instance == null)
-        {
-            _Instance = Object.FindFirstObjectByType<GameManager>();
-        }
-
+    {        
         Time.timeScale = 1f; // Resume time scale
-        _Instance.StartCoroutine(_Instance.StartGameRoutine());
+        Instance.StartCoroutine(_instance.StartGameRoutine());
         SoundManager.PlayMusic(MusicType.BATTLE, true); // Play the gameplay music
     }
 
-    public static void GameOver()
+    public static void PauseGame()
     {
-        if (_Instance == null)
-        {
-            _Instance = Object.FindFirstObjectByType<GameManager>();
-        }
+        Time.timeScale = 0f;
+        IsPaused = true;
+        PlayerCharacterController.PlayerControls.UI.Enable();
+        PlayerCharacterController.PlayerControls.Player.Disable();
+        Cursor.lockState = CursorLockMode.None;
 
-        if(_Instance.endGameManager == null)
-        {
-            Debug.LogError("There is no EndGameManager in the scene!");
-            return;
-        }
-        
-        Destroy(_Instance.hud.gameObject);
-        _Instance.hud = null; // Clear the HUD reference
-        _Instance.pauseManager.gameObject.SetActive(false); // Hide the pause manager UI
-        _Instance.endGameManager.gameObject.SetActive(true); // Show the end game manager UI
+        // Invoke pause event
+        OnPauseGame?.Invoke();
+    }
+
+    public static void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        IsPaused = false;
+        PlayerCharacterController.PlayerControls.UI.Disable();
+        PlayerCharacterController.PlayerControls.Player.Enable();
+        Cursor.lockState = CursorLockMode.Locked;
+        // Invoke resume event
+        OnResumeGame?.Invoke();
+    }
+
+    public static void GameOver()
+    {                        
+        HUDManager.Disable();
+        /*
+        _instance.hud = null; // Clear the HUD reference
+        _instance.pauseManager.gameObject.SetActive(false); // Hide the pause manager UI
+        _instance.endGameManager.gameObject.SetActive(true); // Show the end game manager UI
+        */
         PlayerCharacterController.PlayerControls.UI.Disable();
         PlayerCharacterController.PlayerControls.Player.Enable();
         Cursor.lockState = CursorLockMode.None;
@@ -147,7 +173,7 @@ public class GameManager : MonoBehaviour
 
     public static void ReloadScene()
     {
-        _Instance = null;
+        _instance = null;
         // Reload the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -155,7 +181,7 @@ public class GameManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod]
     private static void OnRuntimeInitialize()
     {
-        _Instance = null;        
+        _instance = null;        
         Debug.Log("GameManager has been reset.");
     }
 
@@ -171,10 +197,10 @@ public class GameManager : MonoBehaviour
         if (spawnPoints != null && spawnPoints.Length > 0)
         {
             // Get a random spawn point from the list
-            Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform;
+            Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)].transform;
 
             // Get a random enemy from the list
-            Enemy enemy = enemies[Random.Range(0, enemies.Count)];
+            Enemy enemy = enemies[UnityEngine.Random.Range(0, enemies.Count)];
 
             // Instantiate the enemy at the spawn point
             Enemy enemySpawned = Instantiate(enemy, spawnPoint.position, Quaternion.identity);
@@ -184,9 +210,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    internal void EnemyDied(Enemy enemy)
+    public static void EnemyDied(Enemy enemy)
     {
         // Remove the enemy from the list of enemies in the scene
-        enemiesInScene.Remove(enemy.gameObject);
+        Instance.enemiesInScene.Remove(enemy.gameObject);
     }    
 }

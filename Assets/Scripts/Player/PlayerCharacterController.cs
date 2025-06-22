@@ -59,14 +59,14 @@ private void Awake()
 
         PlayerControls.Player.Pause.performed += ctx =>
         {            
-            PauseManager.Instance.PauseGame();            
+            GameManager.PauseGame();            
         };
 
         PlayerControls.UI.Unpause.performed += ctx =>
         {
-            if (PauseManager.Instance.IsPaused)
+            if (GameManager.IsPaused)
             {
-                PauseManager.Instance.ResumeGame();
+                GameManager.ResumeGame();
             }
         };
 

@@ -23,9 +23,38 @@ public struct VideoFile
 
 public class TutorialManager : MonoBehaviour
 {
-    public static TutorialManager Instance;
+    private static TutorialManager _instance;
+    public static TutorialManager Instance
+    {
+        get
+        {
+            if(_instance == null)
+            {
+                // Find any TutorialManager objects in the scene
+                var foundInstances = FindObjectsByType<TutorialManager>(FindObjectsSortMode.None);
+                _instance = foundInstances.Length > 0 ? foundInstances[0] : null;
+
+                if(_instance == null)
+                {
+                    Debug.LogError("TutorialManager instance not found in the scene. Please ensure there is a TutorialManager object.");
+                }
+
+                // If there are multiple TutorialManager instances, destroy them
+                if (foundInstances.Length > 1)
+                {
+                    for (int i = 1; i < foundInstances.Length; i++)
+                    {
+                        Destroy(foundInstances[i].gameObject);
+                    }
+                }
+            }
+            return _instance;
+        }
+    }
 
     [Header("Tutorial Properties")]
+    [SerializeField] private GameObject _canvasTutorial;
+
     [SerializeField] public VideoPlayer videoPlayer;
 
     [SerializeField] public List<VideoFile> videosFileNames;
@@ -33,23 +62,24 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] public GameObject[] weaponsTexts;
 
     [SerializeField] public GameObject nextButtom, prevButtom, exitButtom;
-
+    
     private WeaponTutorialType currentWeaponTutorial;
 
     private void Awake()
     {
-        if (Instance == null)
+        if(_canvasTutorial == null) Debug.LogError("CanvasTutorial is not assigned in the TutorialManager.");
+
+        if(_canvasTutorial.activeSelf)
         {
-            Instance = UnityEngine.Object.FindFirstObjectByType<TutorialManager>();
-        }        
-    }
-
-    private void Start()
-    {
-        PlayTutorial(WeaponTutorialType.CARNIVOROUSPLANT);
-
-        if(SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
+            _canvasTutorial.SetActive(false);
+        }
     }    
+
+    public static void StartTutorial()
+    {
+        Instance._canvasTutorial.SetActive(true);
+        Instance.PlayTutorial(WeaponTutorialType.CARNIVOROUSPLANT);
+    }
 
     public void PlayTutorial(WeaponTutorialType weaponTutorial)
     {
@@ -63,7 +93,7 @@ public class TutorialManager : MonoBehaviour
         {
             case WeaponTutorialType.CARNIVOROUSPLANT:
                 
-                PlayWeaponVideoTutorial(WeaponTutorialType.CARNIVOROUSPLANT);
+                PlayWeaponVideoTutorial(WeaponTutorialType.CARNIVOROUSPLANT);   
 
                 weaponsTexts[0].SetActive(true);
                 weaponsTexts[1].SetActive(false);

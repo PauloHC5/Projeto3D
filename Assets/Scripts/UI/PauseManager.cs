@@ -1,16 +1,43 @@
 using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.UI;
-using System; // <-- Add this for Action
+using System;
+using Unity.VisualScripting; // <-- Add this for Action
 
 public class PauseManager : MonoBehaviour
 {
-    public static PauseManager _Instance { get; set; }
+    private static PauseManager _instance;
+    public static PauseManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                // Find all PauseManager objects in the scene
+                var foundInstances = FindObjectsByType<PauseManager>(FindObjectsSortMode.None);
+                _instance = foundInstances.Length > 0 ? foundInstances[0] : null;
 
-    public bool IsPaused { get; private set; } = false;
+                if (_instance == null)
+                {
+                    Debug.LogError("    ");
+                }
+
+                // If there are multiple PauseManager instances, destroy them
+                if (foundInstances.Length > 1)
+                {
+                    for (int i = 1; i < foundInstances.Length; i++)
+                    {
+                        Destroy(foundInstances[i].gameObject);
+                    }
+                }
+            }
+
+            return _instance;
+        }
+    }    
 
     [Header("Pause Menu Properties")]
-    [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject _canvasPauseMenu;
     [SerializeField] private GameObject[] buttons = new GameObject[9];    
 
     [SerializeField] private Slider mouseSensitivitySlider;
@@ -20,36 +47,16 @@ public class PauseManager : MonoBehaviour
     public Slider MouseSensitivitySlider
     {
         get { return mouseSensitivitySlider; }        
-    }
-
-    public static PauseManager Instance
-    {
-        get
-        {
-            if (_Instance == null)
-            {
-                _Instance = UnityEngine.Object.FindFirstObjectByType<PauseManager>();
-            }
-
-            return _Instance;
-        }
-    }
-
-    // Action event to be invoked when PauseGame is called
-    public static event Action OnPauseGame;
-
-    // Action event to be invoked when ResumeGame is called
-    public static event Action OnResumeGame;
+    }            
 
     private void Start()
     {
-        if (pauseMenuUI == null)
+        if (_canvasPauseMenu == null)
         {
             Debug.LogError("Pause Menu UI is not assigned in the inspector.");
             return;
         }
-        pauseMenuUI.SetActive(false);
-        _Instance = this; // Ensure the instance is set
+        _canvasPauseMenu.SetActive(false);        
     }
 
     private void Update()
@@ -63,20 +70,11 @@ public class PauseManager : MonoBehaviour
         SoundManager.SfxVolume = sfxSlider.value;        
     }
 
-    public void PauseGame()
-    {
-        // Invoke the event before pausing
-        OnPauseGame?.Invoke();
-
-        pauseMenuUI.SetActive(true);
-
-        IsPaused = true;
-        Time.timeScale = 0f;
-
-        PlayerCharacterController.PlayerControls.UI.Enable();
-        PlayerCharacterController.PlayerControls.Player.Disable();
-        Cursor.lockState = CursorLockMode.None;
-        GameManager.Instance.Hud.gameObject.SetActive(false);        
+    private void PauseGame()
+    {        
+        _canvasPauseMenu.SetActive(true);                
+        
+        Cursor.lockState = CursorLockMode.None;                
 
         // unfocus the game window to prevent input
         if (UnityEngine.EventSystems.EventSystem.current != null)
@@ -85,20 +83,13 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    public void ResumeGame()
-    {
-        // Invoke the event before resuming
-        OnResumeGame?.Invoke();
-
-        pauseMenuUI.SetActive(false);
-
-        IsPaused = false;
-        Time.timeScale = 1f;
+    private void ResumeGame()
+    {        
+        _canvasPauseMenu.SetActive(false);                
 
         PlayerCharacterController.PlayerControls.UI.Disable();
         PlayerCharacterController.PlayerControls.Player.Enable();
-        Cursor.lockState = CursorLockMode.Locked;
-        GameManager.Instance.Hud.gameObject.SetActive(true);        
+        Cursor.lockState = CursorLockMode.Locked;                  
 
         // refocus the game window to allow input
         if (UnityEngine.EventSystems.EventSystem.current != null)
@@ -165,14 +156,28 @@ public class PauseManager : MonoBehaviour
         return RectTransformUtility.RectangleContainsScreenPoint(
             rectTransform,
             mousePosition,            
-            GetComponent<UnityEngine.Canvas>().worldCamera
+            _canvasPauseMenu.GetComponent<UnityEngine.Canvas>().worldCamera
         );
+    }
+
+    private void OnEnable()
+    {
+        // Subscribe to the pause and resume events
+        GameManager.OnPauseGame += PauseGame;
+        GameManager.OnResumeGame += ResumeGame;
+    }
+
+    private void OnDisable()
+    {
+        // Unsubscribe from the pause and resume events
+        GameManager.OnPauseGame -= PauseGame;
+        GameManager.OnResumeGame -= ResumeGame;
     }
 
     [RuntimeInitializeOnLoadMethod]
     private static void OnRuntimeInitialize()
     {
-        _Instance = null;
+        _instance = null;
         Debug.Log("Pause Manager has been reset.");
     }
 }

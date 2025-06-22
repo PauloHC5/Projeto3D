@@ -5,8 +5,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 
-public class HUD : MonoBehaviour
+public class HUDManager : MonoBehaviour
 {
+    private static HUDManager _instance;
+    public static HUDManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                // Find any HUD objects in the scene
+                var foundInstances = FindObjectsByType<HUDManager>(FindObjectsSortMode.None);
+                _instance = foundInstances.Length > 0 ? foundInstances[0] : null;
+
+                if(_instance == null)
+                {
+                    Debug.LogError("HUD instance not found in the scene. Please ensure there is a HUD object.");
+                }
+
+                // If there are multiple HUD instances, destroy them
+                if (foundInstances.Length > 1)
+                {
+                    for (int i = 1; i < foundInstances.Length; i++)
+                    {
+                        Destroy(foundInstances[i].gameObject);
+                    }
+                }
+            }
+
+            return _instance;
+        }
+    }
+
+    [SerializeField] private GameObject _canvasHud;
+
     [SerializeField] private Slider playerHealthBar;    
     [SerializeField] private Image[] weaponCrosshairs = new Image[4];
     [SerializeField] private Image scopeCrosshair;
@@ -28,9 +60,9 @@ public class HUD : MonoBehaviour
     private TextMeshProUGUI[] allTexts;
     private int CrosshairIndex;
     private PlayerCharacterCombatController playerCharacterCombatController;
-    private bool enemyOnRange = false;
+    private static bool enemyOnRange = false;
 
-    public bool EnemyOnRange => enemyOnRange;
+    public static bool EnemyOnRange => enemyOnRange;
 
     private Color[] crosshairsOriginalColors = new Color[4];
 
@@ -55,7 +87,7 @@ public class HUD : MonoBehaviour
     void Start()
     {
         if (playerCharacterCombatController == null)
-            playerCharacterCombatController = GameManager.Instance?.Player?.GetComponent<PlayerCharacterCombatController>();
+            playerCharacterCombatController = GameManager.Player?.GetComponent<PlayerCharacterCombatController>();
 
         // Initialize ammo display
         UpdateAmmoDisplay();
@@ -68,15 +100,25 @@ public class HUD : MonoBehaviour
     void Update()
     {
         if(playerCharacterCombatController == null)
-            playerCharacterCombatController = GameManager.Instance?.Player?.GetComponent<PlayerCharacterCombatController>();
+            playerCharacterCombatController = GameManager.Player?.GetComponent<PlayerCharacterCombatController>();
 
-        if (playerHealthBar) playerHealthBar.value = GameManager.Instance.Player.GetComponent<PlayerCharacter>().Health / 100.0f;
+        if (playerHealthBar) playerHealthBar.value = GameManager.Player.GetComponent<PlayerCharacter>().Health / 100.0f;
         else Debug.LogWarning("Player Health Bar is not assigned in the inspector.");
 
         // Update ammo display every frame
         UpdateAmmoDisplay();
 
         DetectIfEnemyIsOnRange();
+    }
+
+    public static void Enable()
+    {
+        Instance._canvasHud.SetActive(true);
+    }
+
+    public static void Disable()
+    {
+        Instance._canvasHud.SetActive(false);
     }
 
     private void UpdateCrosshair()
@@ -175,9 +217,9 @@ public class HUD : MonoBehaviour
 
     
 
-    public void ScopeEvent(bool scopeEnable)
+    public static void ScopeEvent(bool scopeEnable)
     {
-        if (scopeCrosshair == null || weaponCrosshairs == null)
+        if (Instance.scopeCrosshair == null || Instance.weaponCrosshairs == null)
         {
             Debug.LogWarning("Scope or weapon crosshair is not assigned in the inspector.");
             return;
@@ -185,22 +227,22 @@ public class HUD : MonoBehaviour
 
         if (!scopeEnable)
         {
-            scopeCrosshair.gameObject.SetActive(false);
+            Instance.scopeCrosshair.gameObject.SetActive(false);
 
             // Check if index is within bounds before accessing the array
-            if (CrosshairIndex < 0 || CrosshairIndex >= weaponCrosshairs.Length)
+            if (Instance.CrosshairIndex < 0 || Instance.CrosshairIndex >= Instance.weaponCrosshairs.Length)
             {
                 Debug.LogWarning("Crosshair index is out of bounds.");
             }
             else
             {                
-                weaponCrosshairs[CrosshairIndex].gameObject.SetActive(true);
+                Instance.weaponCrosshairs[Instance.CrosshairIndex].gameObject.SetActive(true);
             }
 
             // Reset all images in this game object and its children to full alpha            
-            foreach (Image img in allImages)
+            foreach (Image img in Instance.allImages)
             {
-                if (img != scopeCrosshair) // Ignore the scope crosshair image
+                if (img != Instance.scopeCrosshair) // Ignore the scope crosshair image
                 {
                     Color color = img.color;
                     color.a = 1f; // Set alpha to 100%
@@ -209,7 +251,7 @@ public class HUD : MonoBehaviour
             }
 
             // Reset all text components in this game object and its children to full alpha
-            foreach (TextMeshProUGUI text in allTexts)
+            foreach (TextMeshProUGUI text in Instance.allTexts)
             {
                 Color color = text.color;
                 color.a = 1f; // Set alpha to 100%
@@ -219,24 +261,24 @@ public class HUD : MonoBehaviour
         }
         else
         {
-            scopeCrosshair.gameObject.SetActive(true);
+            Instance.scopeCrosshair.gameObject.SetActive(true);
 
             // Check if index is within bounds before accessing the array
-            if (CrosshairIndex < 0 || CrosshairIndex >= weaponCrosshairs.Length)
+            if (Instance.CrosshairIndex < 0 || Instance.CrosshairIndex >= Instance.weaponCrosshairs.Length)
             {
                 Debug.LogWarning("Crosshair index is out of bounds.");                
             }
             else
             {                
-                weaponCrosshairs[CrosshairIndex].gameObject.SetActive(false);
+                Instance.weaponCrosshairs[Instance.CrosshairIndex].gameObject.SetActive(false);
             }
             
 
             // Get all images in this game object and its children and set their alpha to 10%
-            Image[] images = GetComponentsInChildren<Image>(true);
+            Image[] images = Instance.GetComponentsInChildren<Image>(true);
             foreach (Image img in images)
             {                
-                if (img != scopeCrosshair.GetComponentsInChildren<Image>().Any<Image>())
+                if (img != Instance.scopeCrosshair.GetComponentsInChildren<Image>().Any<Image>())
                 {
                     Color color = img.color;
                     color.a = 0.1f; // Set alpha to 20%
@@ -245,7 +287,7 @@ public class HUD : MonoBehaviour
             }
 
             // Get all text components in this game object and its children and set their alpha to 10%            
-            foreach (TextMeshProUGUI text in allTexts)
+            foreach (TextMeshProUGUI text in Instance.allTexts)
             {
                 Color color = text.color;
                 color.a = 0.1f; // Set alpha to 10%
@@ -254,13 +296,13 @@ public class HUD : MonoBehaviour
         }
     }
 
-    public void Bite()
+    public static void Bite()
     {
         int BiteTrigger = Animator.StringToHash("Bite");
 
-        if (CrosshairIndex == (int)WeaponTypes.Melee)
+        if (Instance.CrosshairIndex == (int)WeaponTypes.Melee)
         {
-            weaponCrosshairs[CrosshairIndex].GetComponent<Animator>().SetTrigger(BiteTrigger);
+            Instance.weaponCrosshairs[Instance.CrosshairIndex].GetComponent<Animator>().SetTrigger(BiteTrigger);
         }
     }
 
@@ -406,12 +448,18 @@ public class HUD : MonoBehaviour
     {
         PlayerCharacterCombatController.onSwitchToWeapon += UpdateWeaponSlots;
         PlayerCharacterCombatController.onSwitchToWeapon += UpdateCrosshair; // Update crosshair when switching weapons
+
+        GameManager.OnPauseGame += Disable; // Disable HUD when the game is paused
+        GameManager.OnResumeGame += Enable; // Enable HUD when the game is resumed
     }
 
     private void OnDisable()
     {
         PlayerCharacterCombatController.onSwitchToWeapon -= UpdateWeaponSlots;
         PlayerCharacterCombatController.onSwitchToWeapon -= UpdateCrosshair; // Remove the event listener when disabled
+
+        GameManager.OnPauseGame -= Disable; // Remove the event listener when disabled
+        GameManager.OnResumeGame -= Enable; // Remove the event listener when disabled
     }
 
 }

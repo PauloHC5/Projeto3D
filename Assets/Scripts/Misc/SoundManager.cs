@@ -68,14 +68,16 @@ public class SoundManager : MonoBehaviour
         {
             if (_instance == null)
             {
+                // Find all SoundManager instances in the scene
                 var soundManagers = FindObjectsByType<SoundManager>(FindObjectsSortMode.None);                
-                _instance = soundManagers.Length != 0 ? soundManagers[0] : null;
+                _instance = soundManagers.Length != 0 ? soundManagers[0] : null; // Get the first instance found
 
                 if (_instance == null)
                 {
                     Debug.LogError("SoundManager instance not found in the scene. Please ensure it is added to a GameObject.");
                 }
 
+                // If there are another SoundManager instances, destroy the others
                 if (soundManagers.Length > 1)
                 {
                     foreach (var mgr in soundManagers)
@@ -309,15 +311,15 @@ public class SoundManager : MonoBehaviour
             _worldSoundEffects[i]._name = names[i];
         }
 
-        PauseManager.OnPauseGame += OnPauseGame;
-        PauseManager.OnResumeGame += OnResumeGame;
+        GameManager.OnPauseGame += OnPauseGame;
+        GameManager.OnResumeGame += OnResumeGame;
     }
 #endif                
 
     private void OnDisable()
     {
-        PauseManager.OnPauseGame -= OnPauseGame;
-        PauseManager.OnResumeGame -= OnResumeGame;
+        GameManager.OnPauseGame -= OnPauseGame;
+        GameManager.OnResumeGame -= OnResumeGame;
     }
 
     private void OnPauseGame()
@@ -344,6 +346,13 @@ public class SoundManager : MonoBehaviour
         // Clean up the instance when the application quits
         if (_instance != null)
             _instance = null;        
+    }
+
+    [RuntimeInitializeOnLoadMethod]
+    private static void OnRuntimeInitialize()
+    {
+        _instance = null;
+        Debug.Log("SoundManager has been reset.");
     }
 }
 

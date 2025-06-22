@@ -110,14 +110,14 @@ public class MouseLook : MonoBehaviour
         if(zoomIn)
         {
             scopeVolume.SetActive(true);            
-            playerCameras[1].enabled = false;
-            GameManager.Instance.Hud.ScopeEvent(true);            
+            playerCameras[1].enabled = false;            
+            HUDManager.ScopeEvent(true); // Notify the HUD that the scope is active
         }
         else
         {
             scopeVolume.SetActive(false);            
             playerCameras[1].enabled = true;
-            GameManager.Instance.Hud.ScopeEvent(false);
+            HUDManager.ScopeEvent(false); // Notify the HUD that the scope is inactive
         }
 
         if (zoomCoroutine != null)
@@ -156,7 +156,7 @@ public class MouseLook : MonoBehaviour
 
         zoomIn = false;
         scopeVolume.SetActive(false);
-        GameManager.Instance.Hud.ScopeEvent(false);
+        HUDManager.ScopeEvent(false); // Notify the HUD that the scope is inactive
         playerCameras[1].enabled = true;
 
         if (zoomCoroutine != null)
