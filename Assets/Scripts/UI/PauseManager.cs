@@ -37,7 +37,7 @@ public class PauseManager : Singleton<PauseManager>
         SoundManager.SfxVolume = sfxSlider.value;        
     }
 
-    private void PauseGame()
+    private void OnPauseGame()
     {        
         _canvasPauseMenu.SetActive(true);                
         
@@ -50,7 +50,7 @@ public class PauseManager : Singleton<PauseManager>
         }
     }
 
-    private void ResumeGame()
+    private void OnResumeGame()
     {        
         _canvasPauseMenu.SetActive(false);                
 
@@ -63,6 +63,11 @@ public class PauseManager : Singleton<PauseManager>
         {
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
         }
+    }
+
+    public void ResumeGame()
+    {        
+        GameManager.ResumeGame();
     }
 
     public void QuitGame()
@@ -130,14 +135,14 @@ public class PauseManager : Singleton<PauseManager>
     private void OnEnable()
     {
         // Subscribe to the pause and resume events
-        GameManager.OnPauseGame += PauseGame;
-        GameManager.OnResumeGame += ResumeGame;
+        GameManager.OnPauseGame += OnPauseGame;
+        GameManager.OnResumeGame += OnResumeGame;
     }
 
     private void OnDisable()
     {
         // Unsubscribe from the pause and resume events
-        GameManager.OnPauseGame -= PauseGame;
-        GameManager.OnResumeGame -= ResumeGame;
+        GameManager.OnPauseGame -= OnPauseGame;
+        GameManager.OnResumeGame -= OnResumeGame;
     }
 }
