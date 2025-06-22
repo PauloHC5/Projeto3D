@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b1ae96df803e944588d6d90e75ee108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shouldPersistBetweenScenes: 0
   enemies:
   - {fileID: 6076036143720261335, guid: 21b3b941d463e4a41bfb64ecaa0b65ff, type: 3}
   - {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9, type: 3}

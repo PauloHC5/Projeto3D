@@ -338,6 +338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7486ee18b8f738c48bdc24a7d0c13048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shouldPersistBetweenScenes: 1
   _musics:
   - _name: MENU
     _music: {fileID: 8300000, guid: 3f1162df3ee141145814f16762192c20, type: 3}

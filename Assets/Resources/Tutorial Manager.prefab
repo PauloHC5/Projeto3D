@@ -3640,6 +3640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 970db15d107f656498bcb67ca8f4c00b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shouldPersistBetweenScenes: 0
   _canvasTutorial: {fileID: 3144685616539783398}
   videoPlayer: {fileID: 6407359725059340051}
   videosFileNames:

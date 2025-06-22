@@ -1625,6 +1625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6124b89130f95a498b85ae7445de4dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shouldPersistBetweenScenes: 0
   _canvasPauseMenu: {fileID: 3336820504534269566}
   buttons:
   - {fileID: 4588344488089912513}
