@@ -5,38 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 
-public class HUDManager : MonoBehaviour
-{
-    private static HUDManager _instance;
-    public static HUDManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                // Find any HUD objects in the scene
-                var foundInstances = FindObjectsByType<HUDManager>(FindObjectsSortMode.None);
-                _instance = foundInstances.Length > 0 ? foundInstances[0] : null;
-
-                if(_instance == null)
-                {
-                    Debug.LogError("HUD instance not found in the scene. Please ensure there is a HUD object.");
-                }
-
-                // If there are multiple HUD instances, destroy them
-                if (foundInstances.Length > 1)
-                {
-                    for (int i = 1; i < foundInstances.Length; i++)
-                    {
-                        Destroy(foundInstances[i].gameObject);
-                    }
-                }
-            }
-
-            return _instance;
-        }
-    }
-
+public class HUDManager : Singleton<HUDManager>
+{    
     [SerializeField] private GameObject _canvasHud;
 
     [SerializeField] private Slider playerHealthBar;    

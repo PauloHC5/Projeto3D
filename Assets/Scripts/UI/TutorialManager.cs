@@ -21,36 +21,8 @@ public struct VideoFile
     public WeaponTutorialType weaponTutorialType;
 }
 
-public class TutorialManager : MonoBehaviour
-{
-    private static TutorialManager _instance;
-    public static TutorialManager Instance
-    {
-        get
-        {
-            if(_instance == null)
-            {
-                // Find any TutorialManager objects in the scene
-                var foundInstances = FindObjectsByType<TutorialManager>(FindObjectsSortMode.None);
-                _instance = foundInstances.Length > 0 ? foundInstances[0] : null;
-
-                if(_instance == null)
-                {
-                    Debug.LogError("TutorialManager instance not found in the scene. Please ensure there is a TutorialManager object.");
-                }
-
-                // If there are multiple TutorialManager instances, destroy them
-                if (foundInstances.Length > 1)
-                {
-                    for (int i = 1; i < foundInstances.Length; i++)
-                    {
-                        Destroy(foundInstances[i].gameObject);
-                    }
-                }
-            }
-            return _instance;
-        }
-    }
+public class TutorialManager : Singleton<TutorialManager>   
+{    
 
     [Header("Tutorial Properties")]
     [SerializeField] private GameObject _canvasTutorial;

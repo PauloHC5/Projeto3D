@@ -76,7 +76,7 @@ public class MouseLook : MonoBehaviour
             playerMesh.localRotation = Quaternion.Euler(xRotation + xRotationDeltaPlayerMesh, playerMesh.localRotation.y, playerMesh.localRotation.z);            
         }      
         
-        if(PauseManager.Instance != null) mouseSensitivity = PauseManager.Instance.MouseSensitivitySlider.value; // Update the slider value in the pause menu
+        mouseSensitivity = PauseManager.MouseSensitivitySlider.value; // Update the slider value in the pause menu
     }
 
     private void UpdatePlayerMeshPushAndPull()

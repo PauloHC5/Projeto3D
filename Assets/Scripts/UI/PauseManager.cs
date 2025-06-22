@@ -1,41 +1,8 @@
-using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using Unity.VisualScripting; // <-- Add this for Action
 
-public class PauseManager : MonoBehaviour
-{
-    private static PauseManager _instance;
-    public static PauseManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                // Find all PauseManager objects in the scene
-                var foundInstances = FindObjectsByType<PauseManager>(FindObjectsSortMode.None);
-                _instance = foundInstances.Length > 0 ? foundInstances[0] : null;
-
-                if (_instance == null)
-                {
-                    Debug.LogError("    ");
-                }
-
-                // If there are multiple PauseManager instances, destroy them
-                if (foundInstances.Length > 1)
-                {
-                    for (int i = 1; i < foundInstances.Length; i++)
-                    {
-                        Destroy(foundInstances[i].gameObject);
-                    }
-                }
-            }
-
-            return _instance;
-        }
-    }    
-
+public class PauseManager : Singleton<PauseManager>
+{       
     [Header("Pause Menu Properties")]
     [SerializeField] private GameObject _canvasPauseMenu;
     [SerializeField] private GameObject[] buttons = new GameObject[9];    
@@ -44,9 +11,9 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private Slider sfxSlider;
     [SerializeField] private Slider musicSlider;
 
-    public Slider MouseSensitivitySlider
+    public static Slider MouseSensitivitySlider
     {
-        get { return mouseSensitivitySlider; }        
+        get { return Instance.mouseSensitivitySlider; }        
     }            
 
     private void Start()
@@ -172,12 +139,5 @@ public class PauseManager : MonoBehaviour
         // Unsubscribe from the pause and resume events
         GameManager.OnPauseGame -= PauseGame;
         GameManager.OnResumeGame -= ResumeGame;
-    }
-
-    [RuntimeInitializeOnLoadMethod]
-    private static void OnRuntimeInitialize()
-    {
-        _instance = null;
-        Debug.Log("Pause Manager has been reset.");
     }
 }

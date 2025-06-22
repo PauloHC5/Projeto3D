@@ -349,6 +349,8 @@ MonoBehaviour:
     _music: {fileID: 0}
   - _name: DEFEAT
     _music: {fileID: 0}
+  - _name: DEFAULT
+    _music: {fileID: 0}
   _ambienceSounds:
   - _name: WIND
     _sounds: []

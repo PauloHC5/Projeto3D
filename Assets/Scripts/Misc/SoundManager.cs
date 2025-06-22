@@ -47,117 +47,77 @@ public enum AmbienceSoundType
 }
 
 [RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), ExecuteInEditMode]
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
 {            
     [SerializeField] private MusicClip[] _musics;
     [SerializeField] private SoundClip[] _ambienceSounds, _globalSoundEffects, _worldSoundEffects;    
     
-    private AudioSource _ambienceSource;
-    private AudioSource _musicSource;    
-    private AudioSource _globalSfxSource;
+    private AudioSource _ambienceSource, _musicSource, _globalSfxSource;    
     
     private float _sfxVolume = 1f;
     
     private static MusicType _currentMusicType = MusicType.DEFAULT; // Default music type to avoid null reference issues
     public static MusicType CurrentMusicType => _currentMusicType;
 
-    private static SoundManager _instance; // Do not use directly in the functions, use Instance property instead
-    private static SoundManager Instance
+    public static float MusicVolume
     {
         get
         {
-            if (_instance == null)
-            {
-                // Find all SoundManager instances in the scene
-                var soundManagers = FindObjectsByType<SoundManager>(FindObjectsSortMode.None);                
-                _instance = soundManagers.Length != 0 ? soundManagers[0] : null; // Get the first instance found
-
-                if (_instance == null)
-                {
-                    Debug.LogError("SoundManager instance not found in the scene. Please ensure it is added to a GameObject.");
-                }
-
-                // If there are another SoundManager instances, destroy the others
-                if (soundManagers.Length > 1)
-                {
-                    foreach (var mgr in soundManagers)
-                    {
-                        if (mgr != _instance)
-                        {
-                            Destroy(mgr.gameObject);
-                        }
-                    }
-                }
-
-                // Make this SoundManager persist across scene loads
-                DontDestroyOnLoad(_instance.gameObject);
-
-                if (_instance._musicSource == null || _instance._ambienceSource == null || _instance._globalSfxSource)
-                {
-                    var audioSources = _instance.GetComponents<AudioSource>();
-                    if (audioSources.Length < 3)
-                    {
-                        Debug.LogError("SoundManager requires at least three AudioSources.");                        
-                    }
-
-                    _instance._ambienceSource = audioSources[0];
-                    _instance._musicSource = audioSources[1];
-                    _instance._globalSfxSource = audioSources[2];
-                }
-                
-            }
-            return _instance;
+            Instance.EnsureAudioSourcesInitialized();
+            return Instance._musicSource.volume;
         }
-    }
-
-    public static float MusicVolume
-    {
-        get { return Instance._musicSource.volume; }
-        set { Instance._musicSource.volume = Mathf.Clamp(value, 0f, 1f); }
+        set
+        {
+            Instance.EnsureAudioSourcesInitialized();
+            Instance._musicSource.volume = Mathf.Clamp(value, 0f, 1f);
+        }
     }
 
     public static float SfxVolume
     {
-        get { return Instance._sfxVolume; }
+        get 
+        {
+            Instance.EnsureAudioSourcesInitialized();
+            return Instance._sfxVolume;
+        }
         set 
         {
+            Instance.EnsureAudioSourcesInitialized();
+
             Instance._ambienceSource.volume = Mathf.Clamp(value, 0f, 1f);
             Instance._globalSfxSource.volume = Mathf.Clamp(value, 0f, 1f);
             Instance._sfxVolume = Mathf.Clamp(value, 0f, 1f); 
         } 
-    }         
-
-    void Start()
-    {        
-        if (_instance == null)
-        {
-            _instance = UnityEngine.Object.FindFirstObjectByType<SoundManager>();
-        }
-
-        if (_instance._musicSource == null || _instance._ambienceSource == null || _instance._globalSfxSource == null)
-        {
-            var audioSources = _instance.GetComponents<AudioSource>();
-            if (audioSources.Length < 3)
-            {
-                Debug.LogError("SoundManager requires at least three AudioSources.");
-            }
-
-            _instance._ambienceSource = audioSources[0];
-            _instance._musicSource = audioSources[1];
-            _instance._globalSfxSource = audioSources[2];
-        }
-    }
+    }    
 
     private void Update()
     {
-        if(!Instance._musicSource.isPlaying)
+        if(Instance._musicSource && !Instance._musicSource.isPlaying)
         {
             _currentMusicType = MusicType.DEFAULT; // Reset to default if no music is playing
         }
     }
 
+    private void EnsureAudioSourcesInitialized()
+    {
+        if (_musicSource == null || _ambienceSource == null || _globalSfxSource == null)
+        {
+            var audioSources = GetComponents<AudioSource>();
+            if (audioSources.Length < 3)
+            {
+                Debug.LogError("SoundManager requires at least three AudioSources.");
+                return;
+            }
+            _ambienceSource = audioSources[0];
+            _musicSource = audioSources[1];
+            _globalSfxSource = audioSources[2];
+        }        
+    }
+
     public static void PlayRandomSFX(WorldSfxType sfxType, AudioSource sfxSource, bool loop = false)
-    {        
+    {
+        Instance.EnsureAudioSourcesInitialized();
+
         AudioClip[] clips = Instance._worldSoundEffects[(int)sfxType].Sounds;
         // Check if index is within bounds
         if (clips == null || clips.Length == 0)
@@ -189,7 +149,9 @@ public class SoundManager : MonoBehaviour
     }
 
     public static void PlayRandomSFX(GlobalSfxTypes sfxType)
-    {        
+    {
+        Instance.EnsureAudioSourcesInitialized();
+
         AudioClip[] clips = Instance._globalSoundEffects[(int)sfxType].Sounds;
 
         // Check if index is within bounds
@@ -212,6 +174,8 @@ public class SoundManager : MonoBehaviour
 
     public static void PlayShootSound(WeaponTypes weaponType, AudioSource audioSource)
     {
+        Instance.EnsureAudioSourcesInitialized();
+
         var shootSound = Instance._worldSoundEffects[(int)WorldSfxType.SHOOT].Sounds[(int)weaponType];
 
         if(shootSound != null) {
@@ -225,7 +189,9 @@ public class SoundManager : MonoBehaviour
     }    
 
     public static void PlayMusic(MusicType musicType, bool loopMusic = true)
-    {                
+    {
+        Instance.EnsureAudioSourcesInitialized();
+
         if (Instance._musicSource.isPlaying)
             Instance._musicSource.Stop();
 
@@ -341,19 +307,8 @@ public class SoundManager : MonoBehaviour
         {
             _ambienceSource.Stop();
             _ambienceSource.clip = null; // Clear the clip to avoid memory leaks
-        }
-
-        // Clean up the instance when the application quits
-        if (_instance != null)
-            _instance = null;        
-    }
-
-    [RuntimeInitializeOnLoadMethod]
-    private static void OnRuntimeInitialize()
-    {
-        _instance = null;
-        Debug.Log("SoundManager has been reset.");
-    }
+        }               
+    }    
 }
 
 

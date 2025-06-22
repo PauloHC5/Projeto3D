@@ -5,50 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
-{
-    private static GameManager _instance;
-    private static GameManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                // Find any GameManager objects in the scene
-                var foundInstances = FindObjectsByType<GameManager>(FindObjectsSortMode.None);
-                _instance = foundInstances.Length > 0 ? foundInstances[0] : null;
-
-                if (_instance == null)
-                {
-                    Debug.LogError("GameManager instance not found in the scene. Please ensure there is a GameManager object.");
-                }
-
-                // If there are another GameManager instances, destroy them
-                if(foundInstances.Length > 1)
-                {
-                    for (int i = 1; i < foundInstances.Length; i++)
-                    {
-                        Destroy(foundInstances[i].gameObject);
-                    }
-                }
-
-                // Make this SoundManager persist across scene loads
-                DontDestroyOnLoad(_instance.gameObject);
-            }
-            return _instance;
-        }
-    }
-
-    [Header("UI Properties")]
-    //[SerializeField] private HUD hud;
-    
-    /*[SerializeField] private PauseManager pauseManager;
-    [SerializeField] private EndGameManager endGameManager;*/
-    /*public HUD Hud
-    {
-        get { return hud; }        
-    }*/
-
+public class GameManager : Singleton<GameManager>   
+{                   
     [Header("Enemy Spawning Properties")]
     [SerializeField] private List<Enemy> enemies = new List<Enemy>();
     [SerializeField] private int maxEnemies = 10;
@@ -72,16 +30,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         // Find the player character controller in the scene
-        Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();
-
-        /*if (hud == null)
-            hud = GameObject.FindAnyObjectByType<HUD>(FindObjectsInactive.Include);*/
-
-        /*if (pauseManager == null)
-            pauseManager = GameObject.FindAnyObjectByType<PauseManager>(FindObjectsInactive.Include);
-
-        if (endGameManager == null)
-            endGameManager = GameObject.FindAnyObjectByType<EndGameManager>(FindObjectsInactive.Include);*/
+        Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();        
 
         // Find all spawn points in the scene by tag
         spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
@@ -93,7 +42,7 @@ public class GameManager : MonoBehaviour
     {       
         Time.timeScale = 0f;
 
-        if (SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
+        //if (SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
 
         TutorialManager.StartTutorial();
         HUDManager.Disable();
@@ -131,7 +80,7 @@ public class GameManager : MonoBehaviour
     public static void StartGame()
     {        
         Time.timeScale = 1f; // Resume time scale
-        Instance.StartCoroutine(_instance.StartGameRoutine());
+        Instance.StartCoroutine(Instance.StartGameRoutine());
         SoundManager.PlayMusic(MusicType.BATTLE, true); // Play the gameplay music
     }
 
@@ -172,18 +121,10 @@ public class GameManager : MonoBehaviour
     }
 
     public static void ReloadScene()
-    {
-        _instance = null;
+    {        
         // Reload the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    [RuntimeInitializeOnLoadMethod]
-    private static void OnRuntimeInitialize()
-    {
-        _instance = null;        
-        Debug.Log("GameManager has been reset.");
-    }
+    }    
 
     private void SpawnEnemy()
     {
