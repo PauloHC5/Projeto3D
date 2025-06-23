@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shouldPersistBetweenScenes: 0
+  _canvasGameOver: {fileID: 4479818352807064268, guid: 88f01673783c5a442b7c63e36a781874,
+    type: 3}
   enemies:
   - {fileID: 6076036143720261335, guid: 21b3b941d463e4a41bfb64ecaa0b65ff, type: 3}
   - {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9, type: 3}

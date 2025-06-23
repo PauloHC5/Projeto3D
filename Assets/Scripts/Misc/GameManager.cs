@@ -6,7 +6,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>   
-{                   
+{
+    [SerializeField] private GameObject _canvasGameOver;
+
     [Header("Enemy Spawning Properties")]
     [SerializeField] private List<Enemy> enemies = new List<Enemy>();
     [SerializeField] private int maxEnemies = 10;
@@ -42,7 +44,7 @@ public class GameManager : Singleton<GameManager>
     {       
         Time.timeScale = 0f;
 
-        //if (SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
+        if (SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
 
         TutorialManager.StartTutorial();
         HUDManager.Disable();
@@ -110,11 +112,16 @@ public class GameManager : Singleton<GameManager>
     public static void GameOver()
     {                        
         HUDManager.Disable();
-        /*
-        _instance.hud = null; // Clear the HUD reference
-        _instance.pauseManager.gameObject.SetActive(false); // Hide the pause manager UI
-        _instance.endGameManager.gameObject.SetActive(true); // Show the end game manager UI
-        */
+        // Spawn endgame canvas
+        if (Instance._canvasGameOver != null)
+        {
+            Instantiate(Instance._canvasGameOver, Vector3.zero, Quaternion.identity);
+        }
+        else
+        {
+            Debug.LogError("Endgame canvas is not assigned in the GameManager.");
+        }
+
         PlayerCharacterController.PlayerControls.UI.Disable();
         PlayerCharacterController.PlayerControls.Player.Enable();
         Cursor.lockState = CursorLockMode.None;
@@ -124,7 +131,18 @@ public class GameManager : Singleton<GameManager>
     {        
         // Reload the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }    
+    }
+
+    public static void QuitGame()
+    {
+        Debug.Log("Quitting game...");
+        Application.Quit();
+
+        // If running in the editor, stop playing
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+    }
 
     private void SpawnEnemy()
     {
