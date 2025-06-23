@@ -60,8 +60,7 @@ public class GameManager : Singleton<GameManager>
 
         // Wait until cutscene is finished
         yield return StartCoroutine(CutsceneManager.StartCutscene(CutsceneType.INTRO));
-
-        Cursor.visible = true;
+        
         Cursor.lockState = CursorLockMode.None;
 
         PlayerCharacterController.PlayerControls.UI.Enable();

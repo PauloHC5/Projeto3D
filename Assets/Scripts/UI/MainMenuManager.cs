@@ -33,8 +33,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         {
             SoundManager.PlayMusic(MusicType.AMBIENCE, true);
             _fade.FadeOut();
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;            
             _gameStarted = true;
             _starGameTxt.SetActive(false); // Hide the "Start Game" text
         }
