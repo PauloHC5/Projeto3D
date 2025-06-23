@@ -68,12 +68,8 @@ public class HUDManager : Singleton<HUDManager>
     }
     
     void Update()
-    {
-        if(playerCharacterCombatController == null)
-            playerCharacterCombatController = GameManager.Player?.GetComponent<PlayerCharacterCombatController>();
-
-        if (playerHealthBar) playerHealthBar.value = GameManager.Player.GetComponent<PlayerCharacter>().Health / 100.0f;
-        else Debug.LogWarning("Player Health Bar is not assigned in the inspector.");
+    {        
+        if (GameManager.Player && playerHealthBar) playerHealthBar.value = GameManager.Player.GetComponent<PlayerCharacter>().Health / 100.0f;        
 
         // Update ammo display every frame
         UpdateAmmoDisplay();
