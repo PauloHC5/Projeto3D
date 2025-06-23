@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class GameManager : Singleton<GameManager>   
 {
@@ -21,6 +22,8 @@ public class GameManager : Singleton<GameManager>
     public static PlayerCharacterController Player { get; private set; }
 
     public static bool IsPaused { get; private set; } = false;
+
+    public static bool alreadyPlayedIntroCutscene = false; // Flag to check if the intro cutscene has already been played
 
     // Action event to be invoked when PauseGame is called
     public static event Action OnPauseGame;
@@ -45,22 +48,37 @@ public class GameManager : Singleton<GameManager>
         StartCoroutine(PreparationRoutine());        
     }
 
-    private IEnumerator PreparationRoutine()
+    private void Update()
     {
-        Time.timeScale = 0f;
+        // Check if the 'P' key is pressed
+        if (Input.GetKeyDown(KeyCode.F12))
+        {
+            ReloadScene();
+        }
 
+        if (enemiesInScene.Count >= maxEnemies)
+        {
+            CancelInvoke(nameof(SpawnEnemy));
+        }
+    }
+
+    private IEnumerator PreparationRoutine()
+    {        
         HUDManager.Disable();
         PlayerCharacterController.PlayerControls.UI.Disable();
         PlayerCharacterController.PlayerControls.Player.Disable();
+        Player.GetComponent<PlayerCharacterCombatController>().enabled = false;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;        
 
         if (SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
 
-        // Wait until cutscene is finished
-        yield return StartCoroutine(CutsceneManager.StartCutscene(CutsceneType.INTRO));
-        
+        if (!alreadyPlayedIntroCutscene)
+        {
+            alreadyPlayedIntroCutscene = true; // Set the flag to true after playing the cutscene
+            yield return StartCoroutine(CutsceneManager.StartCutscene(CutsceneType.INTRO)); // Play and wait until cutscene is finished
+        }        
+
         Cursor.lockState = CursorLockMode.None;
 
         PlayerCharacterController.PlayerControls.UI.Enable();
@@ -68,37 +86,23 @@ public class GameManager : Singleton<GameManager>
         TutorialManager.StartTutorial();
     }
 
+    public static void StartGame()
+    {
+        Time.timeScale = 1f; // Resume time scale
+        Instance.StartCoroutine(Instance.StartGameRoutine());
+        SoundManager.PlayMusic(MusicType.BATTLE, true); // Play the gameplay music
+    }
+
     private IEnumerator StartGameRoutine()
-    {        
+    {
+        Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
         yield return new WaitForSeconds(1f); // Wait for 1 second before enabling controls        
         PlayerCharacterController.PlayerControls.UI.Disable();
         PlayerCharacterController.PlayerControls.Player.Enable();
         HUDManager.Enable();
         Cursor.lockState = CursorLockMode.Locked;
         InvokeRepeating(nameof(SpawnEnemy), timeToSpawn, spawnInterval);
-    }        
-      
-
-    private void Update()
-    {
-        // Check if the 'P' key is pressed
-        if (Input.GetKeyDown(KeyCode.F12))
-        {
-            ReloadScene();
-        }           
-        
-        if (enemiesInScene.Count >= maxEnemies)
-        {
-            CancelInvoke(nameof(SpawnEnemy));
-        }
-    }
-
-    public static void StartGame()
-    {        
-        Time.timeScale = 1f; // Resume time scale
-        Instance.StartCoroutine(Instance.StartGameRoutine());
-        SoundManager.PlayMusic(MusicType.BATTLE, true); // Play the gameplay music
-    }
+    }                    
 
     public static void PauseGame()
     {
@@ -187,5 +191,11 @@ public class GameManager : Singleton<GameManager>
     {
         // Remove the enemy from the list of enemies in the scene
         Instance.enemiesInScene.Remove(enemy.gameObject);
-    }    
+    }
+
+    [RuntimeInitializeOnLoadMethod]
+    private static void OnRuntimeInitialize()
+    {
+        alreadyPlayedIntroCutscene = false; // Reset the flag when the game starts
+    }
 }
