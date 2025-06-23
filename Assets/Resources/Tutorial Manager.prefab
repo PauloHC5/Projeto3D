@@ -904,7 +904,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2833865602737878682
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3643,6 +3643,7 @@ MonoBehaviour:
   _shouldPersistBetweenScenes: 0
   _canvasTutorial: {fileID: 3144685616539783398}
   videoPlayer: {fileID: 6407359725059340051}
+  renderTexture: {fileID: 8400000, guid: 41c355d6bf60769488dbd47a94e8c7c7, type: 2}
   videosFileNames:
   - fileName: CarnivorousPlantTutorial.mp4
     weaponTutorialType: 0

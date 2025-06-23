@@ -28,6 +28,7 @@ public class TutorialManager : Singleton<TutorialManager>
     [SerializeField] private GameObject _canvasTutorial;
 
     [SerializeField] public VideoPlayer videoPlayer;
+    [SerializeField] public RenderTexture renderTexture;
 
     [SerializeField] public List<VideoFile> videosFileNames;
 
@@ -124,11 +125,17 @@ public class TutorialManager : Singleton<TutorialManager>
         if (string.IsNullOrEmpty(videoFileName))
         {
             Debug.LogError($"Video file name not found for weapon tutorial: {weaponTutorial} \n Please check in your inspector if you assigned the name correctly");
-            return;
+            return; 
         }
 
-        string videoPath = System.IO.Path.Combine(Application.streamingAssetsPath, videoFileName);        
-        
+        string videoPath = System.IO.Path.Combine(Application.streamingAssetsPath, videoFileName);
+
+        // Reset (clear) the render texture before playing the video
+        RenderTexture activeRT = RenderTexture.active;
+        RenderTexture.active = Instance.renderTexture;
+        GL.Clear(true, true, Color.black);
+        RenderTexture.active = activeRT;
+
         videoPlayer.url = videoPath;
         videoPlayer.Play();
     }

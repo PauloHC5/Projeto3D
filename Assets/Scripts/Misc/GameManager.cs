@@ -42,16 +42,31 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {       
+        StartCoroutine(PreparationRoutine());        
+    }
+
+    private IEnumerator PreparationRoutine()
+    {
         Time.timeScale = 0f;
+
+        HUDManager.Disable();
+        PlayerCharacterController.PlayerControls.UI.Disable();
+        PlayerCharacterController.PlayerControls.Player.Disable();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         if (SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
 
-        TutorialManager.StartTutorial();
-        HUDManager.Disable();
-        PlayerCharacterController.PlayerControls.UI.Enable();
-        PlayerCharacterController.PlayerControls.Player.Disable();
+        // Wait until cutscene is finished
+        yield return StartCoroutine(CutsceneManager.StartCutscene(CutsceneType.INTRO));
+
+        Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
+        PlayerCharacterController.PlayerControls.UI.Enable();
+
+        TutorialManager.StartTutorial();
     }
 
     private IEnumerator StartGameRoutine()

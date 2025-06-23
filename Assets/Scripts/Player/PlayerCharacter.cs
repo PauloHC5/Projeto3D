@@ -33,10 +33,7 @@ public class PlayerCharacter : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Player has died.");
-        // Implement player death logic here, such as playing a death animation, showing a game over screen, etc.
-        // For example:
-        // animator.SetTrigger("Die");
+        Debug.Log("Player has died.");                        
         GameManager.GameOver();
 
         Camera.main.transform.SetParent(null); // Unparent the camera from the player character

@@ -1,12 +1,19 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenuManager : Singleton<MainMenuManager>
-{
-    [SerializeField] private FadeBehaviour _fade;
+{    
+    private FadeBehaviour _fade;
+    private GameObject _starGameTxt;
+    private bool _gameStarted = false;
 
+    private void Awake()
+    {
+        _fade = GetComponentInChildren<FadeBehaviour>(true);        
+        _starGameTxt = GetComponentInChildren<TextMeshProUGUI>(true).gameObject;
+    }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         SoundManager.PlayMusic(MusicType.MENU, true);
@@ -22,10 +29,14 @@ public class MainMenuManager : Singleton<MainMenuManager>
         }
 
         // Check if the "Start Game" button is pressed
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) && !_gameStarted)
         {
             SoundManager.PlayMusic(MusicType.AMBIENCE, true);
             _fade.FadeOut();
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            _gameStarted = true;
+            _starGameTxt.SetActive(false); // Hide the "Start Game" text
         }
     }
 
@@ -45,8 +56,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     }
 
     private void HandleFadeOutComplete()
-    {
-        // e.g., load the next scene
+    {        
         StartGame();
     }
 
