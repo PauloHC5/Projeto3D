@@ -72,9 +72,7 @@ public class PauseManager : Singleton<PauseManager>
 
     public void QuitGame()
     {
-        // Save any necessary game state here before quitting
-        Debug.Log("Quitting game...");
-        Application.Quit();
+        GameManager.QuitGame();
     }
 
     private void MouseOverResumeButton()
