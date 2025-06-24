@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>   
 {
     [SerializeField] private GameObject _canvasGameOver;
+    [SerializeField] private bool _skipTutorial = false;
 
     [Header("Enemy Spawning Properties")]
     [SerializeField] private List<Enemy> enemies = new List<Enemy>();
@@ -43,7 +44,10 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {       
-        StartCoroutine(PreparationRoutine());        
+        if (!_skipTutorial)                           
+            StartCoroutine(PreparationRoutine());
+        else
+            StartGame();
     }
 
     private void Update()
