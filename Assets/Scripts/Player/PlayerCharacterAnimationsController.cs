@@ -15,7 +15,7 @@ public class PlayerCharacterAnimationsController
     private readonly int AutoReload = Animator.StringToHash("AutoReload");
     private readonly int FireBoth = Animator.StringToHash("FireBoth");
     private readonly int Charge = Animator.StringToHash("Charge");
-    private readonly int CheckGunTrigger = Animator.StringToHash("CheckGun");
+    private readonly int InspectWeaponTrigger = Animator.StringToHash("InspectWeapon");
 
     private Dictionary<WeaponTypes, bool> _weaponChecked = new Dictionary<WeaponTypes, bool>
     {
@@ -51,7 +51,7 @@ public class PlayerCharacterAnimationsController
         else
         {
             _weaponChecked[weapon] = true; // Mark the weapon as checked after the first use
-            playerAnimator.SetTrigger(CheckGunTrigger);  
+            playerAnimator.SetTrigger(InspectWeaponTrigger);  
             Debug.Log($"Weapon {weapon} checked for the first time.");
         }            
     }    

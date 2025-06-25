@@ -253,7 +253,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerArms_ACorngun_Check
+  m_Name: PlayerArms_ACorngun_Inspect
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -269,7 +269,7 @@ AnimatorState:
   m_TimeParameterActive: 0
   m_Motion: {fileID: -623603649343465320, guid: 76afb067cf60f9747ada65a4fe40b478,
     type: 3}
-  m_Tag: CheckingWeapon
+  m_Tag: InspectingWeapon
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
@@ -1370,7 +1370,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: CheckGun
+    m_ConditionEvent: InspectWeapon
     m_EventTreshold: 0
   - m_ConditionMode: 6
     m_ConditionEvent: WeaponIndex
@@ -1458,7 +1458,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: CheckGun
+  - m_Name: InspectWeapon
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -1893,7 +1893,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: CheckGun
+    m_ConditionEvent: InspectWeapon
     m_EventTreshold: 0
   - m_ConditionMode: 6
     m_ConditionEvent: WeaponIndex
@@ -1973,7 +1973,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: CheckGun
+    m_ConditionEvent: InspectWeapon
     m_EventTreshold: 0
   - m_ConditionMode: 6
     m_ConditionEvent: WeaponIndex
@@ -2519,7 +2519,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: CheckGun
+    m_ConditionEvent: InspectWeapon
     m_EventTreshold: 0
   - m_ConditionMode: 6
     m_ConditionEvent: WeaponIndex

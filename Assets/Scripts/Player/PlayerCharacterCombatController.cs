@@ -13,7 +13,7 @@ public enum PlayerCombatStates
     FIRING,
     DUALWIELDFIRING,
     CHARGING,
-    CHECKINGWEAPON,
+    INSPECTINGWEAPON,
 
     DEFAULT
 }
@@ -161,7 +161,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private bool ConditionToSwitchWeapon(WeaponTypes weaponToSwitch) =>
         !PlayerCharacterController.PrimaryActionButtonPressed &&
         PlayerCombatStates != PlayerCombatStates.ATTACKING &&
-        PlayerCombatStates != PlayerCombatStates.CHECKINGWEAPON &&
+        PlayerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
         PlayerCombatStates != PlayerCombatStates.FIRING &&
         PlayerCombatStates != PlayerCombatStates.ATTACKING &&
         weaponToSwitch != weaponSelected;
@@ -234,7 +234,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         playerCombatStates != PlayerCombatStates.RAISING &&
         playerCombatStates != PlayerCombatStates.FIRING &&
         playerCombatStates != PlayerCombatStates.CHARGING &&
-        playerCombatStates != PlayerCombatStates.CHECKINGWEAPON &&
+        playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
         equippedGun.CanFire;
 
     private Transform GetSocketTransform(WeaponSocket weaponSocketToAttach)
@@ -256,7 +256,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         equippedGun.CanReload() &&
         playerGunAmmo[equippedGun.AmmoType] > 0 &&
         playerCombatStates != PlayerCombatStates.RELOADING &&
-        playerCombatStates != PlayerCombatStates.CHECKINGWEAPON &&
+        playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
         playerCombatStates != PlayerCombatStates.FIRING;
 
     public void Reload()
@@ -288,7 +288,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         playerCombatStates != PlayerCombatStates.RELOADING &&
         playerCombatStates != PlayerCombatStates.ATTACKING &&
         playerCombatStates != PlayerCombatStates.RAISING &&
-        playerCombatStates != PlayerCombatStates.CHECKINGWEAPON;
+        playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON;
 
 
     public void PerformSecondaryAction()
@@ -309,7 +309,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         playerCombatStates != PlayerCombatStates.RAISING &&
         playerCombatStates != PlayerCombatStates.FIRING &&
         playerCombatStates != PlayerCombatStates.CHARGING &&
-        playerCombatStates != PlayerCombatStates.CHECKINGWEAPON &&
+        playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
         equippedGun.CanFire &&
         equippedGun.MagAmmo == equippedGun.MagCapacity;
 
