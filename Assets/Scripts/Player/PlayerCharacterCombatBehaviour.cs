@@ -20,6 +20,7 @@ public class PlayerCharacterCombatBehaviour : StateMachineBehaviour
         if (stateInfo.IsTag("FireR") || stateInfo.IsTag("FireL")) return PlayerCombatStates.DUALWIELDFIRING;        
         if (stateInfo.IsTag("Reload")) return PlayerCombatStates.RELOADING;
         if(stateInfo.IsTag("Charging")) return PlayerCombatStates.CHARGING;
+        if(stateInfo.IsTag("CheckingWeapon")) return PlayerCombatStates.CHECKINGWEAPON;
         return PlayerCombatStates.DEFAULT;
     }
 

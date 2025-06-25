@@ -13,6 +13,7 @@ public enum PlayerCombatStates
     FIRING,
     DUALWIELDFIRING,
     CHARGING,
+    CHECKINGWEAPON,
 
     DEFAULT
 }
@@ -32,7 +33,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private IWeapon equippedWeapon;
     private List<IWeapon> weaponsInventory = new List<IWeapon>();
-    private Dictionary<AmmoTypes, Int32> playerGunAmmos;
+    private Dictionary<AmmoTypes, Int32> playerGunAmmo;
     private PlayerCombatStates playerCombatStates = PlayerCombatStates.RAISING;
     private PlayerCharacterAnimationsController playerCharacterAnimationsController;
     private MouseLook mouseLook;
@@ -42,17 +43,17 @@ public class PlayerCharacterCombatController : MonoBehaviour
     public WeaponTypes WeaponSelected => weaponSelected;
     public int WeaponsInventoryCount => weaponsInventory.Count;
     public IWeapon EquippedWeapon => equippedWeapon;
-    public Dictionary<AmmoTypes, Int32> WeaponAmmo
+    public Dictionary<AmmoTypes, Int32> PlayerGunsAmmo
     {
-        get => playerGunAmmos;
+        get => playerGunAmmo;
 
         set
         {
             // set only of value is greater than 0
             foreach (var pair in value)
             {
-                if (pair.Value >= 0) playerGunAmmos[pair.Key] = pair.Value;
-                if(pair.Value < 0) playerGunAmmos[pair.Key] = 0;
+                if (pair.Value >= 0) playerGunAmmo[pair.Key] = pair.Value;
+                if(pair.Value < 0) playerGunAmmo[pair.Key] = 0;
             }
         }
     }
@@ -80,7 +81,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         // Switch to the first weapon in the inventory
         if (weaponsInventory.Count > 0)
         {
-            SwitchToWeapon(0);            
+            RaiseWeapon(weaponSelected);
         }
         else
         {
@@ -93,9 +94,9 @@ public class PlayerCharacterCombatController : MonoBehaviour
         // if k button is pressed, add 3 to playerWeaponAmmo[weaponSelected]
         if (equippedWeapon is IEquippedGun equippedGun)
         {            
-            if (Keyboard.current.kKey.wasPressedThisFrame) playerGunAmmos[equippedGun.AmmoType] += 3;
+            if (Keyboard.current.kKey.wasPressedThisFrame) playerGunAmmo[equippedGun.AmmoType] += 3;
 
-            playerCharacterAnimationsController.CheckAutoReload(equippedGun.MagAmmo, equippedGun.MagCapacity, playerGunAmmos[equippedGun.AmmoType]);
+            playerCharacterAnimationsController.CheckAutoReload(equippedGun.MagAmmo, equippedGun.MagCapacity, playerGunAmmo[equippedGun.AmmoType]);
         }                
     }
 
@@ -147,12 +148,29 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private void InitializeWeaponAmmo()
     {
-        playerGunAmmos = playerGunAmmoComponent.WeaponAmmoList.ToDictionary(pair => pair.ammoType, pair => pair.AmmoAmount);
+        playerGunAmmo = playerGunAmmoComponent.WeaponAmmoList.ToDictionary(pair => pair.ammoType, pair => pair.AmmoAmount);
     }        
 
-    public virtual void SwitchToWeapon(WeaponTypes weaponToSwitch)
-    {                        
-        if(equippedWeapon != null) equippedWeapon.DisableWeapon(); // Disable the currently equipped weapon
+    public void SwitchToWeapon(WeaponTypes weaponToSwitch)
+    {
+        if (!ConditionToSwitchWeapon(weaponToSwitch)) return;      
+        
+        RaiseWeapon(weaponToSwitch);
+    }
+
+    private bool ConditionToSwitchWeapon(WeaponTypes weaponToSwitch) =>
+        !PlayerCharacterController.PrimaryActionButtonPressed &&
+        PlayerCombatStates != PlayerCombatStates.ATTACKING &&
+        PlayerCombatStates != PlayerCombatStates.CHECKINGWEAPON &&
+        PlayerCombatStates != PlayerCombatStates.FIRING &&
+        PlayerCombatStates != PlayerCombatStates.ATTACKING &&
+        weaponToSwitch != weaponSelected;
+
+    private void RaiseWeapon(WeaponTypes weaponToSwitch)
+    {
+        if (equippedWeapon != null) equippedWeapon.DisableWeapon(); // Disable the currently equipped weapon
+
+        Debug.Log($"Switching to weapon: {weaponToSwitch}");
 
         switch (weaponToSwitch)
         {
@@ -167,7 +185,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             case WeaponTypes.Shotgun:
                 // Find which weapon in the inventory is a shotgun
                 equippedWeapon = weaponsInventory.Find(w => w?.WeaponType == WeaponTypes.Shotgun);
-                if (equippedWeapon == null) RetrieveNewShotguns();                
+                if (equippedWeapon == null) RetrieveNewShotguns();
                 break;
             case WeaponTypes.Crossbow:
                 // Find which weapon in the inventory is a crossbow
@@ -177,8 +195,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
             default:
                 Debug.LogWarning($"Weapon {weaponToSwitch} not found or its not supported.");
                 return; // If the weapon type is not supported, do nothing
-        }        
-                
+        }
+
         weaponSelected = equippedWeapon.WeaponType; // Set the weapon selected to the equipped weapon type
 
         equippedWeapon.EnableWeapon(); // Enable the equipped weapon                
@@ -186,7 +204,9 @@ public class PlayerCharacterCombatController : MonoBehaviour
         playerCharacterAnimationsController.PlaySwitchToWeapon(weaponSelected); // Play the switch to weapon animation
 
         onSwitchToWeapon?.Invoke();
-    }        
+    }
+
+    
 
     public void PerformPrimaryAction()
     {
@@ -214,6 +234,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         playerCombatStates != PlayerCombatStates.RAISING &&
         playerCombatStates != PlayerCombatStates.FIRING &&
         playerCombatStates != PlayerCombatStates.CHARGING &&
+        playerCombatStates != PlayerCombatStates.CHECKINGWEAPON &&
         equippedGun.CanFire;
 
     private Transform GetSocketTransform(WeaponSocket weaponSocketToAttach)
@@ -233,17 +254,18 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private bool ConditionsToReload(IEquippedGun equippedGun) =>
         equippedGun.CanReload() &&
-        playerGunAmmos[equippedGun.AmmoType] > 0 &&
+        playerGunAmmo[equippedGun.AmmoType] > 0 &&
         playerCombatStates != PlayerCombatStates.RELOADING &&
+        playerCombatStates != PlayerCombatStates.CHECKINGWEAPON &&
         playerCombatStates != PlayerCombatStates.FIRING;
 
     public void Reload()
     {        
         if(equippedWeapon is IEquippedGun equippedGun)
         {
-            int equippedGunAmmo = playerGunAmmos[equippedGun.AmmoType];
+            int equippedGunAmmo = playerGunAmmo[equippedGun.AmmoType];
             equippedGun.Reload(ref equippedGunAmmo);
-            playerGunAmmos[equippedGun.AmmoType] = equippedGunAmmo;
+            playerGunAmmo[equippedGun.AmmoType] = equippedGunAmmo;
         }
     }
        
@@ -265,7 +287,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
         equippedGun.MagAmmo == equippedGun.MagCapacity &&
         playerCombatStates != PlayerCombatStates.RELOADING &&
         playerCombatStates != PlayerCombatStates.ATTACKING &&
-        playerCombatStates != PlayerCombatStates.RAISING;
+        playerCombatStates != PlayerCombatStates.RAISING &&
+        playerCombatStates != PlayerCombatStates.CHECKINGWEAPON;
 
 
     public void PerformSecondaryAction()
@@ -286,6 +309,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         playerCombatStates != PlayerCombatStates.RAISING &&
         playerCombatStates != PlayerCombatStates.FIRING &&
         playerCombatStates != PlayerCombatStates.CHARGING &&
+        playerCombatStates != PlayerCombatStates.CHECKINGWEAPON &&
         equippedGun.CanFire &&
         equippedGun.MagAmmo == equippedGun.MagCapacity;
 
@@ -304,9 +328,9 @@ public class PlayerCharacterCombatController : MonoBehaviour
         weaponsInventory[2] = shotguns;
 
         equippedWeapon = shotguns;
-        var playerShotgunsAmmo = playerGunAmmos[shotguns.AmmoType];
+        var playerShotgunsAmmo = playerGunAmmo[shotguns.AmmoType];
         shotguns.Reload(ref playerShotgunsAmmo);
-        playerGunAmmos[shotguns.AmmoType] = playerShotgunsAmmo;
+        playerGunAmmo[shotguns.AmmoType] = playerShotgunsAmmo;
     }    
 
     private void OnEnable()

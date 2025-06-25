@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCharacterAnimationsController
@@ -14,6 +15,16 @@ public class PlayerCharacterAnimationsController
     private readonly int AutoReload = Animator.StringToHash("AutoReload");
     private readonly int FireBoth = Animator.StringToHash("FireBoth");
     private readonly int Charge = Animator.StringToHash("Charge");
+    private readonly int CheckGunTrigger = Animator.StringToHash("CheckGun");
+
+    private Dictionary<WeaponTypes, bool> _weaponChecked = new Dictionary<WeaponTypes, bool>
+    {
+        { WeaponTypes.Melee, false },
+        { WeaponTypes.Pistol, false },
+        { WeaponTypes.Shotgun, false },
+        { WeaponTypes.Crossbow, false },
+        { WeaponTypes.Smg, false }
+    };
 
     public PlayerCharacterAnimationsController(Animator animator)
     {
@@ -32,9 +43,17 @@ public class PlayerCharacterAnimationsController
     }    
         
     public void PlaySwitchToWeapon(WeaponTypes weapon)
-    {                                          
+    {
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
-        playerAnimator.SetTrigger(RaiseWeaponTrigger);        
+
+        if (_weaponChecked[weapon])        
+            playerAnimator.SetTrigger(RaiseWeaponTrigger);        
+        else
+        {
+            _weaponChecked[weapon] = true; // Mark the weapon as checked after the first use
+            playerAnimator.SetTrigger(CheckGunTrigger);  
+            Debug.Log($"Weapon {weapon} checked for the first time.");
+        }            
     }    
 
     public void PlayUseWeapon()

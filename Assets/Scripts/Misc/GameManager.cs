@@ -91,8 +91,7 @@ public class GameManager : Singleton<GameManager>
     public static void StartGame()
     {
         Time.timeScale = 1f; // Resume time scale
-        Instance.StartCoroutine(Instance.StartGameRoutine());
-        SoundManager.PlayMusic(MusicType.BATTLE, true); // Play the gameplay music
+        Instance.StartCoroutine(Instance.StartGameRoutine());        
     }
 
     private IEnumerator StartGameRoutine()
@@ -102,8 +101,7 @@ public class GameManager : Singleton<GameManager>
         PlayerCharacterController.PlayerControls.UI.Disable();
         PlayerCharacterController.PlayerControls.Player.Enable();
         HUDManager.Enable();
-        Cursor.lockState = CursorLockMode.Locked;
-        InvokeRepeating(nameof(SpawnEnemy), timeToSpawn, spawnInterval);
+        Cursor.lockState = CursorLockMode.Locked;        
     }                    
 
     public static void PauseGame()
