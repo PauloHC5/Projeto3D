@@ -301,7 +301,7 @@ public class HUDManager : Singleton<HUDManager>
                 }
 
 
-                totalAmmo = playerCharacterCombatController.WeaponAmmo[equippedGun.AmmoType];
+                totalAmmo = playerCharacterCombatController.PlayerGunsAmmo[equippedGun.AmmoType];
 
                 if (magAmmoText != null)
                 {
