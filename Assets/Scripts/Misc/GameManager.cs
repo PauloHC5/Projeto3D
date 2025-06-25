@@ -45,7 +45,7 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {       
         if (!_skipTutorial)                           
-            StartCoroutine(PreparationRoutine());
+            StartCoroutine(IntroductionRoutine());
         else
             StartGame();
     }
@@ -64,12 +64,9 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    private IEnumerator PreparationRoutine()
-    {        
-        HUDManager.Disable();
-        PlayerCharacterController.PlayerControls.UI.Disable();
-        PlayerCharacterController.PlayerControls.Player.Disable();
-        Player.GetComponent<PlayerCharacterCombatController>().enabled = false;
+    private IEnumerator IntroductionRoutine()
+    {
+        DisablePlayer();
 
         Cursor.lockState = CursorLockMode.Locked;        
 
@@ -79,30 +76,35 @@ public class GameManager : Singleton<GameManager>
         {
             alreadyPlayedIntroCutscene = true; // Set the flag to true after playing the cutscene
             yield return StartCoroutine(CutsceneManager.StartCutscene(CutsceneType.INTRO)); // Play and wait until cutscene is finished
-        }        
+        }                
 
-        Cursor.lockState = CursorLockMode.None;
+        EnablePlayer();
+    }
 
-        PlayerCharacterController.PlayerControls.UI.Enable();
+    private void DisablePlayer()
+    {
+        HUDManager.Disable();
+        PlayerCharacterController.PlayerControls.UI.Disable();
+        PlayerCharacterController.PlayerControls.Player.Disable();
+        Player.GetComponent<PlayerCharacterCombatController>().enabled = false;
+    }
 
-        TutorialManager.StartTutorial();
+    private void EnablePlayer()
+    {
+        HUDManager.Enable();
+        PlayerCharacterController.PlayerControls.UI.Disable();
+        PlayerCharacterController.PlayerControls.Player.Enable();
+        Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
     }
 
     public static void StartGame()
     {
-        Time.timeScale = 1f; // Resume time scale
-        Instance.StartCoroutine(Instance.StartGameRoutine());        
-    }
+        Time.timeScale = 1f; // Resume time scale     
 
-    private IEnumerator StartGameRoutine()
-    {
-        Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
-        yield return new WaitForSeconds(1f); // Wait for 1 second before enabling controls        
-        PlayerCharacterController.PlayerControls.UI.Disable();
-        PlayerCharacterController.PlayerControls.Player.Enable();
-        HUDManager.Enable();
-        Cursor.lockState = CursorLockMode.Locked;        
-    }                    
+        Instance.EnablePlayer();
+
+        Cursor.lockState = CursorLockMode.Locked;
+    }    
 
     public static void PauseGame()
     {
