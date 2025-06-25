@@ -17,11 +17,8 @@ public enum WeaponTypes
 
 public class PlayerCharacterController : MonoBehaviour
 {                             
-    protected bool lmbPressed = false;
-    protected bool rmbPressed = false;                       
-
-    public bool LmbPressed { get { return lmbPressed; } }
-    public bool RmbPressed { get { return rmbPressed; } }
+    public static bool PrimaryActionButtonPressed = false;
+    public static bool SecondaryActionButtonPressed = false;                           
 
     public static PlayerInputActions PlayerControls;
 
@@ -46,11 +43,11 @@ private void Awake()
     {
         PlayerControls = new PlayerInputActions();
 
-        PlayerControls.Player.PrimaryAction.started += ctx => lmbPressed = true;
-        PlayerControls.Player.PrimaryAction.canceled += ctx => lmbPressed = false;
+        PlayerControls.Player.PrimaryAction.started += ctx => PrimaryActionButtonPressed = true;
+        PlayerControls.Player.PrimaryAction.canceled += ctx => PrimaryActionButtonPressed = false;
 
-        PlayerControls.Player.SecondaryAction.started += ctx => rmbPressed = true;
-        PlayerControls.Player.SecondaryAction.canceled += ctx => rmbPressed = false;
+        PlayerControls.Player.SecondaryAction.started += ctx => SecondaryActionButtonPressed = true;
+        PlayerControls.Player.SecondaryAction.canceled += ctx => SecondaryActionButtonPressed = false;
 
         PlayerControls.Player.SecondaryAction.performed += ctx => PerformSecondaryAction();
         PlayerControls.Player.Jump.performed += ctx => PerformJump();
@@ -70,22 +67,17 @@ private void Awake()
             }
         };
 
-        // Assign the SwitchToWeapon method to the respective input action
-        if (ConditionToSwitchWeapon())
-        {
-            PlayerControls.Player.Weapon1.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Melee);
-            PlayerControls.Player.Weapon2.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Pistol);
-            PlayerControls.Player.Weapon3.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Shotgun);
-            PlayerControls.Player.Weapon4.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Crossbow);
-        }        
-        //playerControls.Player.Weapon5.performed += ctx => SwitchToWeapon(4);
+        // Assign the SwitchToWeapon method to the respective input action        
+        PlayerControls.Player.Weapon1.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Melee);
+        PlayerControls.Player.Weapon2.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Pistol);
+        PlayerControls.Player.Weapon3.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Shotgun);
+        PlayerControls.Player.Weapon4.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Crossbow);
+                        
 
         // Assign the HandleMouseScroll method to the respective input actions
         PlayerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };
         PlayerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };        
-    }
-    
-    private bool ConditionToSwitchWeapon() => playerCharacterCombatController && !lmbPressed && playerCharacterCombatController.PlayerCombatStates != PlayerCombatStates.ATTACKING;
+    }        
 
     void Update()
     {
@@ -94,10 +86,7 @@ private void Awake()
     }
 
     private void HandleMouseScroll()
-    {
-        if (!playerCharacterCombatController || lmbPressed || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING)
-            return;        
-
+    {          
         int inventoryCount = playerCharacterCombatController.WeaponsInventoryCount;
 
         if (inventoryCount <= 1)
@@ -137,10 +126,10 @@ private void Awake()
 
     private void HandleInput()
     {
-        if (lmbPressed) PerformPrimaryAction();
+        if (PrimaryActionButtonPressed) PerformPrimaryAction();
         //if (rmbPressed) PerformSecondaryAction();
 
-        playerCharacterCombatController?.ChargeWeapon(rmbPressed);
+        playerCharacterCombatController?.ChargeWeapon(SecondaryActionButtonPressed);
         
         playerMovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
         playerLookInput = PlayerControls.Player.Look.ReadValue<Vector2>();
