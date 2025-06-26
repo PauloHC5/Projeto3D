@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 public enum WeaponTutorialType
 {
     CARNIVOROUSPLANT,
-    ACORN,
+    ACORN,  
     BANANASHOTGUN,
-    CACTUSCROSSBOW
+    CACTUSCROSSBOW,
+
+    NONE // Default value, used when no tutorial is selected
 }
 
 [Serializable]
@@ -21,106 +24,115 @@ public struct VideoFile
     public WeaponTutorialType weaponTutorialType;
 }
 
+[Serializable]
+public struct WeaponTextTutorial
+{
+    [HideInInspector] public string name;
+    public WeaponTutorialType tutorialType;
+    public GameObject textGameObject;
+}
+
+[ExecuteInEditMode]
 public class TutorialManager : Singleton<TutorialManager>   
 {    
 
     [Header("Tutorial Properties")]
-    [SerializeField] private GameObject _canvasTutorial;
+    [SerializeField] private GameObject _canvasTutorial;    
 
-    [SerializeField] public VideoPlayer videoPlayer;
-    [SerializeField] public RenderTexture renderTexture;
+    [SerializeField] private VideoFile[] _videosFileNames;
 
-    [SerializeField] public List<VideoFile> videosFileNames;
+    [SerializeField] private WeaponTextTutorial[] _weaponsTexts;
 
-    [SerializeField] public GameObject[] weaponsTexts;
+    [SerializeField] private GameObject _closeButtom;
 
-    [SerializeField] public GameObject nextButtom, prevButtom, exitButtom;
-    
+    private VideoPlayer _videoPlayer;
+    private RenderTexture _renderTexture;
+
     private WeaponTutorialType currentWeaponTutorial;
 
-    private void Awake()
-    {
-        if(_canvasTutorial == null) Debug.LogError("CanvasTutorial is not assigned in the TutorialManager.");
 
-        if(_canvasTutorial.activeSelf)
-        {
-            _canvasTutorial.SetActive(false);
-        }
-    }    
-
-    public static void StartTutorial()
+    private void Start()
     {
-        Instance._canvasTutorial.SetActive(true);
-        Instance.PlayTutorial(WeaponTutorialType.CARNIVOROUSPLANT);
+        if(Application.isPlaying)
+        {            
+            if (_canvasTutorial == null) Debug.LogError("CanvasTutorial is not assigned in the TutorialManager.");
+
+            if (_canvasTutorial.activeSelf)
+            {
+                _canvasTutorial.SetActive(false);
+            }
+
+            _videoPlayer = _canvasTutorial.GetComponentInChildren<VideoPlayer>(true);
+            if (_videoPlayer == null)
+            {
+                Debug.LogError("VideoPlayer component not found in the TutorialManager's canvas.");
+                return;
+            }
+
+            _renderTexture = _canvasTutorial.GetComponentInChildren<RawImage>(true).texture as RenderTexture;
+            if (_renderTexture == null)
+            {
+                Debug.LogError("RenderTexture component not found in the TutorialManager's canvas.");
+                return;
+            }
+        }        
     }
 
-    public void PlayTutorial(WeaponTutorialType weaponTutorial)
+#if UNITY_EDITOR
+    private void OnEnable()
     {
-        if (videoPlayer == null)
+        var names = Enum.GetNames(typeof(WeaponTutorialType));
+
+        Array.Resize(ref _videosFileNames, names.Length);
+        for (int i = 0; i < _videosFileNames.Length; i++)
+        {
+            if (i < names.Length)
+            {
+                _videosFileNames[i].weaponTutorialType = (WeaponTutorialType)i;                
+            }
+            else
+            {
+                Debug.LogWarning($"VideoFile at index {i} does not have a corresponding WeaponTutorialType. Please check your configuration.");
+            }
+        }
+
+
+        Array.Resize(ref _weaponsTexts, names.Length);
+        for (int i = 0; i < _weaponsTexts.Length; i++)
+        {
+            if (i < names.Length)
+            {
+                _weaponsTexts[i].name = names[i];
+                _weaponsTexts[i].tutorialType = (WeaponTutorialType)i;
+            }
+            else
+            {
+                Debug.LogWarning($"WeaponTextTutorial at index {i} does not have a corresponding WeaponTutorialType. Please check your configuration.");
+            }
+        }
+    }
+#endif
+
+
+    public static void PlayTutorial(WeaponTutorialType weaponTutorial)
+    {
+        if (Instance._videoPlayer == null)
         {
             Debug.LogError("VideoPlayer is not assigned in the TutorialManager.");
             return;
         }
 
-        switch (weaponTutorial)
-        {
-            case WeaponTutorialType.CARNIVOROUSPLANT:
-                
-                PlayWeaponVideoTutorial(WeaponTutorialType.CARNIVOROUSPLANT);   
+        Instance._canvasTutorial.SetActive(true);
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
+        Time.timeScale = 0f;
 
-                weaponsTexts[0].SetActive(true);
-                weaponsTexts[1].SetActive(false);
-                weaponsTexts[2].SetActive(false);
-                weaponsTexts[3].SetActive(false);
-                nextButtom.SetActive(true);
-                prevButtom.SetActive(false);
-                exitButtom.SetActive(false);
-                break;
-
-            case WeaponTutorialType.ACORN:
-                
-                PlayWeaponVideoTutorial(WeaponTutorialType.ACORN);
-
-                weaponsTexts[0].SetActive(false);
-                weaponsTexts[1].SetActive(true);
-                weaponsTexts[2].SetActive(false);
-                weaponsTexts[3].SetActive(false);
-                nextButtom.SetActive(true);
-                prevButtom.SetActive(true);
-                exitButtom.SetActive(false);
-                break;
-
-            case WeaponTutorialType.BANANASHOTGUN:
-                
-                PlayWeaponVideoTutorial(WeaponTutorialType.BANANASHOTGUN);
-
-                weaponsTexts[0].SetActive(false);
-                weaponsTexts[1].SetActive(false);
-                weaponsTexts[2].SetActive(true);
-                weaponsTexts[3].SetActive(false);
-                nextButtom.SetActive(true);
-                prevButtom.SetActive(true);
-                exitButtom.SetActive(false);
-                break;
-
-            case WeaponTutorialType.CACTUSCROSSBOW:
-                
-                PlayWeaponVideoTutorial(WeaponTutorialType.CACTUSCROSSBOW);
-
-                weaponsTexts[0].SetActive(false);
-                weaponsTexts[1].SetActive(false);
-                weaponsTexts[2].SetActive(false);
-                weaponsTexts[3].SetActive(true);
-                nextButtom.SetActive(false);
-                prevButtom.SetActive(true);
-                exitButtom.SetActive(true);
-                break;
-        }
+        Instance.PlayWeaponVideoTutorial(weaponTutorial);
+        Instance.ShowWeaponTutorialText(weaponTutorial);        
     }
 
     private void PlayWeaponVideoTutorial(WeaponTutorialType weaponTutorial)
     {
-        string videoFileName = videosFileNames.FirstOrDefault(v => v.weaponTutorialType == weaponTutorial).fileName;
+        string videoFileName = _videosFileNames.FirstOrDefault(v => v.weaponTutorialType == weaponTutorial).fileName;
 
         if (string.IsNullOrEmpty(videoFileName))
         {
@@ -132,12 +144,30 @@ public class TutorialManager : Singleton<TutorialManager>
 
         // Reset (clear) the render texture before playing the video
         RenderTexture activeRT = RenderTexture.active;
-        RenderTexture.active = Instance.renderTexture;
+        RenderTexture.active = Instance._renderTexture;
         GL.Clear(true, true, Color.black);
         RenderTexture.active = activeRT;
 
-        videoPlayer.url = videoPath;
-        videoPlayer.Play();
+        _videoPlayer.url = videoPath;
+        _videoPlayer.Play();
+    }
+
+    private void ShowWeaponTutorialText(WeaponTutorialType weaponTutorialType)
+    {
+        for (int i = 0; i < Instance._weaponsTexts.Length; i++)
+        {
+            if (Instance._weaponsTexts[i].tutorialType == WeaponTutorialType.NONE)
+                continue;
+
+            if (Instance._weaponsTexts[i].tutorialType == weaponTutorialType)
+            {
+                Instance._weaponsTexts[i].textGameObject.SetActive(true);
+            }
+            else
+            {
+                Instance._weaponsTexts[i].textGameObject.SetActive(false);
+            }
+        }
     }
 
     public void NextTutorial()
@@ -163,7 +193,8 @@ public class TutorialManager : Singleton<TutorialManager>
     public void ExitTutorial()
     {
         gameObject.SetActive(false);
-        videoPlayer.Stop();        
-        GameManager.StartGame();
+        _videoPlayer.Stop();
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
+        Time.timeScale = 1f;
     }
 }
