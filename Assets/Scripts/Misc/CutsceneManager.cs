@@ -35,6 +35,20 @@ public class CutsceneManager : Singleton<CutsceneManager>
     [SerializeField] private float _skipSliderHideDelay = 3.0f; // seconds to wait before hiding slider
 
     private float _skipSliderInactivityTimer = 0f;
+    private bool _wantsToSkip = false;
+
+    private void Start()
+    {
+        PlayerCharacterController.PlayerControls.Cutscene.Skip.started += ctx =>
+        {
+            _wantsToSkip = true;
+        };
+
+        PlayerCharacterController.PlayerControls.Cutscene.Skip.canceled += ctx =>
+        {
+            _wantsToSkip = false;
+        };
+    }
 
     private void Update()
     {
@@ -67,7 +81,7 @@ public class CutsceneManager : Singleton<CutsceneManager>
 
     private void HandleSkipCutscene()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (_wantsToSkip)
         {
             // Fill the slider over _skipFillSpeed seconds
             _skipCutsceneSlider.value += (_skipCutsceneSlider.maxValue / _skipFillSpeed) * Time.deltaTime;
@@ -116,5 +130,5 @@ public class CutsceneManager : Singleton<CutsceneManager>
         yield return new WaitUntil(() => !Instance._videoPlayer.isPlaying);
 
         Instance._canvasCutscene.SetActive(false);
-    }
+    }    
 }
