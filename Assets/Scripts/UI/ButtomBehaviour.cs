@@ -3,9 +3,9 @@ using UnityEngine.UI;
 
 public class ButtomBehaviour : MonoBehaviour
 {
-
     private Canvas canvasAttached;
     private Vector3 originalScale;
+    private Image[] buttonImages;
 
     private void Awake()
     {
@@ -15,6 +15,8 @@ public class ButtomBehaviour : MonoBehaviour
         {
             Debug.LogError("No Canvas found in parent hierarchy. Please attach this script to a GameObject that is a child of a Canvas.");
         }
+
+        buttonImages = GetComponentsInChildren<Image>(true);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -34,9 +36,7 @@ public class ButtomBehaviour : MonoBehaviour
 
         if (IsMouseOverResumeButton())
         {
-            // If the mouse is over the resume button, change its color
-            // Get the Image component of the button and change its color
-            var buttonImages = GetComponentsInChildren<UnityEngine.UI.Image>();
+            // If the mouse is over the resume button, change its color                        
             foreach (var image in buttonImages)
             {
                 image.color = Color.yellow; // Change to your desired color
