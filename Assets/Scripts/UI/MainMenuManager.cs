@@ -3,14 +3,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenuManager : Singleton<MainMenuManager>
-{    
-    private FadeBehaviour _fade;
+{        
     private GameObject _starGameTxt;
     private bool _gameStarted = false;
 
     private void Awake()
-    {
-        _fade = GetComponentInChildren<FadeBehaviour>(true);        
+    {        
         _starGameTxt = GetComponentInChildren<TextMeshProUGUI>(true).gameObject;
     }
 
@@ -31,32 +29,18 @@ public class MainMenuManager : Singleton<MainMenuManager>
         // Check if the "Start Game" button is pressed
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) && !_gameStarted)
         {
-            SoundManager.PlayMusic(MusicType.AMBIENCE, true);
-            _fade.FadeOut();
+            SoundManager.PlayMusic(MusicType.AMBIENCE, true);            
             Cursor.lockState = CursorLockMode.Locked;            
             _gameStarted = true;
             _starGameTxt.SetActive(false); // Hide the "Start Game" text
+
+            FadeManager.FadeOut(HandleFadeOutComplete); // Start fade out effect
         }
-    }
-
-    public void StartGame()
-    {
-        SceneManager.LoadScene("NewMap");        
-    }
-
-    private void OnEnable()
-    {
-        _fade.OnFadeOutComplete += HandleFadeOutComplete;
-    }
-
-    private void OnDisable()
-    {
-        _fade.OnFadeOutComplete -= HandleFadeOutComplete;
-    }
+    } 
 
     private void HandleFadeOutComplete()
-    {        
-        StartGame();
+    {
+        SceneManager.LoadScene("NewMap");
     }
 
 }

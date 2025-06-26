@@ -181,7 +181,7 @@ public class TutorialManager : Singleton<TutorialManager>
     }    
 
     public void ExitTutorial()
-    {
+    {        
         _videoPlayer.Stop();
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Time.timeScale = 1f;

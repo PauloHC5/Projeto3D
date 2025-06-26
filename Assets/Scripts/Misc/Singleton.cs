@@ -62,6 +62,13 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
         {
             Destroy(gameObject);
         }
+
+        OnAwake();
+    }
+
+    protected virtual void OnAwake()
+    {
+        // To be override in the child classes
     }
 
     private void OnApplicationQuit()

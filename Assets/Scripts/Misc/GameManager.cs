@@ -78,17 +78,21 @@ public class GameManager : Singleton<GameManager>
             yield return StartCoroutine(CutsceneManager.StartCutscene(CutsceneType.INTRO)); // Play and wait until cutscene is finished
         }                
 
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);          
-        Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
+        StartGame();
+
     }    
 
     public static void StartGame()
     {
         Time.timeScale = 1f; // Resume time scale     
+        FadeManager.FadeIn(() =>
+        {
+            
+        });
 
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
+        Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
 
-        Cursor.lockState = CursorLockMode.Locked;
     }    
 
     public static void PauseGame()
