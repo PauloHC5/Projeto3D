@@ -47,8 +47,15 @@ public class TutorialManager : Singleton<TutorialManager>
 
     private VideoPlayer _videoPlayer;
     private RenderTexture _renderTexture;
+    private WeaponTutorialType _currentWeaponTutorial;
 
-    private WeaponTutorialType currentWeaponTutorial;
+    private static Dictionary<WeaponTutorialType, bool> _tutorialCompleted = new Dictionary<WeaponTutorialType, bool>
+    {
+        { WeaponTutorialType.CARNIVOROUSPLANT, false },
+        { WeaponTutorialType.ACORN, false },
+        { WeaponTutorialType.BANANASHOTGUN, false },
+        { WeaponTutorialType.CACTUSCROSSBOW, false }
+    };
 
 
     private void Start()
@@ -116,6 +123,8 @@ public class TutorialManager : Singleton<TutorialManager>
 
     public static void PlayTutorial(WeaponTutorialType weaponTutorial)
     {
+        if (_tutorialCompleted[weaponTutorial]) return;
+
         if (Instance._videoPlayer == null)
         {
             Debug.LogError("VideoPlayer is not assigned in the TutorialManager.");
@@ -127,7 +136,8 @@ public class TutorialManager : Singleton<TutorialManager>
         Time.timeScale = 0f;
 
         Instance.PlayWeaponVideoTutorial(weaponTutorial);
-        Instance.ShowWeaponTutorialText(weaponTutorial);        
+        Instance.ShowWeaponTutorialText(weaponTutorial);
+        Instance._currentWeaponTutorial = weaponTutorial;
     }
 
     private void PlayWeaponVideoTutorial(WeaponTutorialType weaponTutorial)
@@ -168,33 +178,14 @@ public class TutorialManager : Singleton<TutorialManager>
                 Instance._weaponsTexts[i].textGameObject.SetActive(false);
             }
         }
-    }
-
-    public void NextTutorial()
-    {
-        currentWeaponTutorial++;
-        if (currentWeaponTutorial > WeaponTutorialType.CACTUSCROSSBOW)
-        {
-            currentWeaponTutorial = WeaponTutorialType.CARNIVOROUSPLANT; // Loop back to the first tutorial
-        }
-        PlayTutorial(currentWeaponTutorial);
-    }
-
-    public void PreviousTutorial()
-    {
-        currentWeaponTutorial--;
-        if (currentWeaponTutorial < WeaponTutorialType.CARNIVOROUSPLANT)
-        {
-            currentWeaponTutorial = WeaponTutorialType.CACTUSCROSSBOW; // Loop back to the last tutorial
-        }
-        PlayTutorial(currentWeaponTutorial);
-    }
+    }    
 
     public void ExitTutorial()
     {
-        gameObject.SetActive(false);
         _videoPlayer.Stop();
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Time.timeScale = 1f;
+        _tutorialCompleted[_currentWeaponTutorial] = true; // Mark the tutorial as completed
+        gameObject.SetActive(false);        
     }
 }

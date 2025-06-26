@@ -23,6 +23,8 @@ public class PlayerInspectWeaponBehaviour : StateMachineBehaviour
             _ => WeaponTutorialType.NONE  
         };
 
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
+
         TutorialManager.PlayTutorial(weaponTutorialType);
     }    
 }
