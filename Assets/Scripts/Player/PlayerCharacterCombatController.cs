@@ -177,9 +177,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private void RaiseWeapon(WeaponTypes weaponToSwitch)
     {
-        if (equippedWeapon != null) equippedWeapon.DisableWeapon(); // Disable the currently equipped weapon
-
-        Debug.Log($"Switching to weapon: {weaponToSwitch}");
+        if (equippedWeapon != null) equippedWeapon.DisableWeapon(); // Disable the currently equipped weapon        
 
         switch (weaponToSwitch)
         {
