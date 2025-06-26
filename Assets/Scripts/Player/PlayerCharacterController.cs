@@ -1,19 +1,19 @@
-using System;
-using System.Collections;
-using System.Security.Cryptography;
-using Unity.Behavior;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-
+public enum PlayerControlTypes
+{
+    GAMEPLAY,
+    UI,
+    CUTSCENE
+}
 
 public class PlayerCharacterController : MonoBehaviour
 {                             
     public static bool PrimaryActionButtonPressed = false;
     public static bool SecondaryActionButtonPressed = false;                           
 
-    public static PlayerInputActions PlayerControls;
+    private static PlayerInputActions _playerControls;
+    public static PlayerInputActions PlayerControls => _playerControls;
 
     private int MouseScroll;    
     private Vector2 playerMovementInput;
@@ -34,25 +34,25 @@ private void Awake()
 
     private void InitializePlayerControls()
     {
-        PlayerControls = new PlayerInputActions();
+        _playerControls = new PlayerInputActions();
 
-        PlayerControls.Player.PrimaryAction.started += ctx => PrimaryActionButtonPressed = true;
-        PlayerControls.Player.PrimaryAction.canceled += ctx => PrimaryActionButtonPressed = false;
+        _playerControls.Player.PrimaryAction.started += ctx => PrimaryActionButtonPressed = true;
+        _playerControls.Player.PrimaryAction.canceled += ctx => PrimaryActionButtonPressed = false;
 
-        PlayerControls.Player.SecondaryAction.started += ctx => SecondaryActionButtonPressed = true;
-        PlayerControls.Player.SecondaryAction.canceled += ctx => SecondaryActionButtonPressed = false;
+        _playerControls.Player.SecondaryAction.started += ctx => SecondaryActionButtonPressed = true;
+        _playerControls.Player.SecondaryAction.canceled += ctx => SecondaryActionButtonPressed = false;
 
-        PlayerControls.Player.SecondaryAction.performed += ctx => PerformSecondaryAction();
-        PlayerControls.Player.Jump.performed += ctx => PerformJump();
-        PlayerControls.Player.Reload.performed += ctx => PerformReload();
-        PlayerControls.Player.Crouch.performed += ctx => Crouch();
+        _playerControls.Player.SecondaryAction.performed += ctx => PerformSecondaryAction();
+        _playerControls.Player.Jump.performed += ctx => PerformJump();
+        _playerControls.Player.Reload.performed += ctx => PerformReload();
+        _playerControls.Player.Crouch.performed += ctx => Crouch();
 
-        PlayerControls.Player.Pause.performed += ctx =>
+        _playerControls.Player.Pause.performed += ctx =>
         {            
             GameManager.PauseGame();            
         };
 
-        PlayerControls.UI.Unpause.performed += ctx =>
+        _playerControls.UI.Unpause.performed += ctx =>
         {
             if (GameManager.IsPaused)
             {
@@ -61,15 +61,15 @@ private void Awake()
         };
 
         // Assign the SwitchToWeapon method to the respective input action        
-        PlayerControls.Player.Weapon1.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Melee);
-        PlayerControls.Player.Weapon2.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Pistol);
-        PlayerControls.Player.Weapon3.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Shotgun);
-        PlayerControls.Player.Weapon4.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Crossbow);
+        _playerControls.Player.Weapon1.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Melee);
+        _playerControls.Player.Weapon2.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Pistol);
+        _playerControls.Player.Weapon3.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Shotgun);
+        _playerControls.Player.Weapon4.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Crossbow);
                         
 
         // Assign the HandleMouseScroll method to the respective input actions
-        PlayerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };
-        PlayerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };        
+        _playerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };
+        _playerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };        
     }        
 
     void Update()
@@ -77,6 +77,34 @@ private void Awake()
         HandleInput();
         playerCharacterMovementController.HandleMovement(playerMovementInput, playerLookInput);                
     }
+
+    public static void SwitchPlayerControlType(PlayerControlTypes playerControlTypes)
+    {
+        switch (playerControlTypes)
+        {
+            case PlayerControlTypes.GAMEPLAY:
+                _playerControls.Player.Enable();
+                _playerControls.UI.Disable();
+                _playerControls.Cutscene.Disable();
+                Cursor.lockState = CursorLockMode.Locked;
+                HUDManager.Enable();
+                break;
+            case PlayerControlTypes.UI:
+                _playerControls.Player.Disable();
+                _playerControls.UI.Enable();
+                _playerControls.Cutscene.Disable();
+                Cursor.lockState = CursorLockMode.None;
+                HUDManager.Disable();
+                break;
+            case PlayerControlTypes.CUTSCENE:
+                _playerControls.Player.Disable();
+                _playerControls.UI.Disable();
+                _playerControls.Cutscene.Enable();
+                Cursor.lockState = CursorLockMode.Locked;
+                HUDManager.Disable();
+                break;
+        }
+    }    
 
     private void HandleMouseScroll()
     {          
@@ -124,8 +152,8 @@ private void Awake()
 
         playerCharacterCombatController?.ChargeWeapon(SecondaryActionButtonPressed);
         
-        playerMovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
-        playerLookInput = PlayerControls.Player.Look.ReadValue<Vector2>();
+        playerMovementInput = _playerControls.Player.Move.ReadValue<Vector2>();
+        playerLookInput = _playerControls.Player.Look.ReadValue<Vector2>();
     }           
 
     private void PerformPrimaryAction()
@@ -163,12 +191,12 @@ private void Awake()
 
     private void OnEnable()
     {
-        PlayerControls.Enable();        
+        _playerControls.Enable();        
     }
 
     private void OnDisable()
     {
-        PlayerControls.Disable();
+        _playerControls.Disable();
     }
 
 }

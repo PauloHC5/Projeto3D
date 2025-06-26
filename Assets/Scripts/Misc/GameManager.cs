@@ -65,8 +65,8 @@ public class GameManager : Singleton<GameManager>
     }
 
     private IEnumerator IntroductionRoutine()
-    {
-        DisablePlayer();
+    {                
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.CUTSCENE);
 
         Cursor.lockState = CursorLockMode.Locked;        
 
@@ -78,30 +78,15 @@ public class GameManager : Singleton<GameManager>
             yield return StartCoroutine(CutsceneManager.StartCutscene(CutsceneType.INTRO)); // Play and wait until cutscene is finished
         }                
 
-        EnablePlayer();
-    }
-
-    private void DisablePlayer()
-    {
-        HUDManager.Disable();
-        PlayerCharacterController.PlayerControls.UI.Disable();
-        PlayerCharacterController.PlayerControls.Player.Disable();
-        Player.GetComponent<PlayerCharacterCombatController>().enabled = false;
-    }
-
-    private void EnablePlayer()
-    {
-        HUDManager.Enable();
-        PlayerCharacterController.PlayerControls.UI.Disable();
-        PlayerCharacterController.PlayerControls.Player.Enable();
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);          
         Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
-    }
+    }    
 
     public static void StartGame()
     {
         Time.timeScale = 1f; // Resume time scale     
 
-        Instance.EnablePlayer();
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
 
         Cursor.lockState = CursorLockMode.Locked;
     }    
@@ -110,9 +95,7 @@ public class GameManager : Singleton<GameManager>
     {
         Time.timeScale = 0f;
         IsPaused = true;
-        PlayerCharacterController.PlayerControls.UI.Enable();
-        PlayerCharacterController.PlayerControls.Player.Disable();
-        Cursor.lockState = CursorLockMode.None;
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
 
         // Invoke pause event
         OnPauseGame?.Invoke();
@@ -122,9 +105,9 @@ public class GameManager : Singleton<GameManager>
     {
         Time.timeScale = 1f;
         IsPaused = false;
-        PlayerCharacterController.PlayerControls.UI.Disable();
-        PlayerCharacterController.PlayerControls.Player.Enable();
-        Cursor.lockState = CursorLockMode.Locked;
+        
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
+
         // Invoke resume event
         OnResumeGame?.Invoke();
     }
@@ -142,8 +125,7 @@ public class GameManager : Singleton<GameManager>
             Debug.LogError("Endgame canvas is not assigned in the GameManager.");
         }
 
-        PlayerCharacterController.PlayerControls.UI.Disable();
-        PlayerCharacterController.PlayerControls.Player.Enable();
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
         Cursor.lockState = CursorLockMode.None;
     }
 

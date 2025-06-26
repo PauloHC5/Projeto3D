@@ -54,8 +54,7 @@ public class PauseManager : Singleton<PauseManager>
     {        
         _canvasPauseMenu.SetActive(false);                
 
-        PlayerCharacterController.PlayerControls.UI.Disable();
-        PlayerCharacterController.PlayerControls.Player.Enable();
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Cursor.lockState = CursorLockMode.Locked;                  
 
         // refocus the game window to allow input
