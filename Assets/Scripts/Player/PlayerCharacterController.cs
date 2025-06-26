@@ -6,14 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum WeaponTypes
-{
-    Melee = 0,
-    Pistol = 1,
-    Shotgun = 2,
-    Crossbow = 3,
-    Smg = 4,
-}
+
 
 public class PlayerCharacterController : MonoBehaviour
 {                             

@@ -3,7 +3,16 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using UnityEngine.InputSystem;
-using System.Collections;
+
+
+public enum WeaponTypes
+{
+    Melee = 0,
+    Pistol = 1,
+    Shotgun = 2,
+    Crossbow = 3,
+    Smg = 4,
+}
 
 public enum PlayerCombatStates
 {
