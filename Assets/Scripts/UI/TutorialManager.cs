@@ -188,4 +188,14 @@ public class TutorialManager : Singleton<TutorialManager>
         _tutorialCompleted[_currentWeaponTutorial] = true; // Mark the tutorial as completed
         gameObject.SetActive(false);        
     }
+
+    [RuntimeInitializeOnLoadMethod]
+    private static void ResetTutorialManagerOnInitialize()
+    {
+        // Reset all tutorials to not completed
+        foreach (var key in _tutorialCompleted.Keys.ToList())
+        {
+            _tutorialCompleted[key] = false;
+        }
+    }
 }
