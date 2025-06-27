@@ -3128,7 +3128,7 @@ GameObject:
   - component: {fileID: 87946328}
   - component: {fileID: 87946327}
   - component: {fileID: 87946326}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Arch (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15926,7 +15926,7 @@ GameObject:
   - component: {fileID: 1195442763}
   - component: {fileID: 1195442762}
   - component: {fileID: 1195442761}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Arch (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22439,7 +22439,7 @@ GameObject:
   - component: {fileID: 1730534115}
   - component: {fileID: 1730534114}
   - component: {fileID: 1730534113}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Arch (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
