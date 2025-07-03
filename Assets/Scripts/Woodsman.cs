@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Woodsman : Enemy
 {    
-    protected override void Die(WeaponTypes damageType)
+    protected override void Die(PlayerWeaponTypes damageType)
     {
         base.Die(damageType);
 

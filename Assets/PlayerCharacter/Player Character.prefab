@@ -1186,7 +1186,6 @@ GameObject:
   - component: {fileID: 2716941723819670036}
   - component: {fileID: 5645082565342579536}
   - component: {fileID: 3164638836893852914}
-  - component: {fileID: 6145791903528973525}
   m_Layer: 0
   m_Name: Player Character
   m_TagString: Player
@@ -1331,6 +1330,7 @@ MonoBehaviour:
   crouchHeight: 0.5
   crouchRadius: 0.2
   crouchSmooth: 3
+  crouchJumpImpulse: 1
   crouchCameraHeight: 0.85
   crouchMeshRootHeight: 0.67
   crouchGroundCheckHeight: -0.12
@@ -1355,42 +1355,34 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4791302133543716961}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0eaa92be1072a8d48ba880d899df4c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponSelected: 0
-  weaponsSet:
-  - {fileID: 186649536490876846, guid: b668074fe76b63f43bea7b67044c27e5, type: 3}
-  - {fileID: 9184081368244243887, guid: f309566e5b334dd4b8484ae8263e9713, type: 3}
-  - {fileID: 2297985535481940187, guid: d455c95032e16d743ad1388472a47104, type: 3}
-  - {fileID: 4709857358180033657, guid: cac6572748ee7e14cb6cb7f8ce128c81, type: 3}
-  rightHandSocket: {fileID: 2860071523350465062}
-  leftHandSocket: {fileID: 7072074740685791458}
---- !u!114 &6145791903528973525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4791302133543716961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9559c3c9743b4d9419f83c0e9c5b5e9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gunsAmmo:
-  - ammoType: 0
-    ammoAmount: 50
-  - ammoType: 1
-    ammoAmount: 80
-  - ammoType: 2
-    ammoAmount: 300
-  - ammoType: 3
-    ammoAmount: 0
-  - ammoType: 4
-    ammoAmount: 0
+  _weaponSelected: 1
+  _rightHandSocket: {fileID: 2860071523350465062}
+  _leftHandSocket: {fileID: 7072074740685791458}
+  WeaponsPrefabs:
+  - name: CACTUSSCROSSBOW
+    prefab: {fileID: 4709857358180033657, guid: cac6572748ee7e14cb6cb7f8ce128c81,
+      type: 3}
+  - name: BANANASHOTGUN
+    prefab: {fileID: 2297985535481940187, guid: d455c95032e16d743ad1388472a47104,
+      type: 3}
+  - name: CARNIVOROUSPLANTS
+    prefab: {fileID: 186649536490876846, guid: b668074fe76b63f43bea7b67044c27e5, type: 3}
+  GunsAmmo:
+  - AmmoType: 0
+    AmmoAmount: 40
+  - AmmoType: 1
+    AmmoAmount: 80
+  - AmmoType: 2
+    AmmoAmount: 300
+  - AmmoType: 3
+    AmmoAmount: 0
+  - AmmoType: 4
+    AmmoAmount: 0
 --- !u!1 &5042317255202969701
 GameObject:
   m_ObjectHideFlags: 0

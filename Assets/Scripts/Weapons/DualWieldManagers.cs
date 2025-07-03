@@ -6,7 +6,7 @@ public class DualWieldMeleeManager : IWeapon, IEquippedMelee
     public CarnivovrousPlant RightCarnivorousPlant { get; private set; }
     public CarnivovrousPlant LeftCarnivorousPlant { get; private set; }
 
-    public WeaponTypes WeaponType => WeaponTypes.Melee;
+    public PlayerWeaponTypes WeaponType => PlayerWeaponTypes.CARNIVOROUSPLANTS;
 
     public bool CanAttack => LeftCarnivorousPlant.CanAttack || RightCarnivorousPlant.CanAttack;
 
@@ -83,7 +83,7 @@ public class DualWieldGunManager : IWeapon, IEquippedGun
 
     public int MagCapacity => RightGun.MagCapacity + LeftGun.MagCapacity;
 
-    public WeaponTypes WeaponType => WeaponTypes.Shotgun;    
+    public PlayerWeaponTypes WeaponType => PlayerWeaponTypes.BANANASHOTGUN;    
 
     private bool toggleFire = false;
     public bool ToggleFire => toggleFire;

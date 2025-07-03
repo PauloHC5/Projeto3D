@@ -16,10 +16,10 @@ public class PlayerInspectWeaponBehaviour : StateMachineBehaviour
         //PlayerCharacterController.PlayerControls.Player.Move.Enable();
         var weaponTutorialType = _playerCharacterCombatController.WeaponSelected switch
         {
-            WeaponTypes.Melee => WeaponTutorialType.CARNIVOROUSPLANT,
-            WeaponTypes.Pistol => WeaponTutorialType.ACORN,
-            WeaponTypes.Shotgun => WeaponTutorialType.BANANASHOTGUN,
-            WeaponTypes.Crossbow => WeaponTutorialType.CACTUSCROSSBOW,            
+            PlayerWeaponTypes.CARNIVOROUSPLANTS => WeaponTutorialType.CARNIVOROUSPLANT,
+            PlayerWeaponTypes.ACORNGUN => WeaponTutorialType.ACORN,
+            PlayerWeaponTypes.BANANASHOTGUN => WeaponTutorialType.BANANASHOTGUN,
+            PlayerWeaponTypes.CACTUSSCROSSBOW => WeaponTutorialType.CACTUSCROSSBOW,            
             _ => WeaponTutorialType.NONE  
         };
 

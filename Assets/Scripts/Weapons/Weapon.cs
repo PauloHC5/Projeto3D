@@ -5,14 +5,14 @@ using UnityEngine;
 public class Weapon : MonoBehaviour, IWeapon
 {
     [Header("Weapon Properties")]
-    [SerializeField] protected WeaponTypes _weaponType;
+    [SerializeField] protected PlayerWeaponTypes _weaponType;
     [SerializeField] protected WeaponSocket _socketToAttach;
 
     public WeaponSocket GetSocketToAttach { 
         get { return _socketToAttach; }         
     }
 
-    public WeaponTypes WeaponType
+    public PlayerWeaponTypes WeaponType
     {
         get { return _weaponType; }
     }

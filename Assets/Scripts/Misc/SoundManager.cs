@@ -175,7 +175,7 @@ public class SoundManager : Singleton<SoundManager>
         }
     }    
 
-    public static void PlayShootSound(WeaponTypes weaponType, AudioSource audioSource)
+    public static void PlayShootSound(PlayerWeaponTypes weaponType, AudioSource audioSource)
     {
         Instance.EnsureAudioSourcesInitialized();
 

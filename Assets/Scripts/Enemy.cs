@@ -75,7 +75,7 @@ public class Enemy : MonoBehaviour
     }
 
     // funtion to take damage
-    public void TakeDamage(int damage, WeaponTypes damageType)
+    public void TakeDamage(int damage, PlayerWeaponTypes damageType)
     {
         if(isDead) return; // Ignore damage if already dead
 
@@ -89,7 +89,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            float layerWeight = (damageType == WeaponTypes.Smg || damageType == WeaponTypes.Crossbow) ? mediumLayerWeight : fullLayerWeight;
+            float layerWeight = (damageType == PlayerWeaponTypes.CACTUSSCROSSBOW) ? mediumLayerWeight : fullLayerWeight;
             animator.SetLayerWeight(reactionLayerIndex, layerWeight);
 
             // Trigger the react animation based on the damage type
@@ -97,7 +97,7 @@ public class Enemy : MonoBehaviour
             animator.SetInteger(WeaponIndex, (int)damageType);
 
 
-            if (canStun && damageType == WeaponTypes.Shotgun)
+            if (canStun && damageType == PlayerWeaponTypes.BANANASHOTGUN)
             {
                 if (shotgunStunReactRoutine == null)
                 {
@@ -111,7 +111,7 @@ public class Enemy : MonoBehaviour
         }        
     }   
 
-    protected virtual void Die(WeaponTypes damageType)
+    protected virtual void Die(PlayerWeaponTypes damageType)
     {        
         gameObject.tag = "Untagged"; // Remove the enemy tag to prevent further detection
 
@@ -124,7 +124,7 @@ public class Enemy : MonoBehaviour
         rb.isKinematic = false;
         animator.SetInteger(WeaponIndex, (int)damageType);
 
-        if (damageType == WeaponTypes.Melee)
+        if (damageType == PlayerWeaponTypes.CARNIVOROUSPLANTS)
         {
             if(enemyEatenMesh == null)
             {
@@ -139,7 +139,7 @@ public class Enemy : MonoBehaviour
 
         if (enemyDeadCollider) enemyDeadCollider.enabled = true;
 
-        if (damageType == WeaponTypes.Shotgun)
+        if (damageType == PlayerWeaponTypes.BANANASHOTGUN)
         {
             agent.velocity = Vector3.zero;
             ApplyImpulse(deathImpulse);

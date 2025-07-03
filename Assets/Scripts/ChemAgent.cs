@@ -28,7 +28,7 @@ public class ChemAgent : Enemy
         }
     }
 
-    protected override void Die(WeaponTypes damageType)
+    protected override void Die(PlayerWeaponTypes damageType)
     {
         gunParticle.Stop();
         animator.SetBool(Fire, false);        

@@ -33,7 +33,7 @@ public class Projectile : MonoBehaviour
         Enemy enemy = collision.gameObject.GetComponent<Enemy>();
         if (enemy)
         {
-            enemy.TakeDamage(damage, WeaponTypes.Pistol);
+            enemy.TakeDamage(damage, PlayerWeaponTypes.ACORNGUN);
             Destroy(gameObject);
         }
     }

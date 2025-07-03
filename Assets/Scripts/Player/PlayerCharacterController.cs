@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public enum PlayerControlTypes
@@ -28,7 +29,7 @@ private void Awake()
 
         playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
         playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
-
+        
         InitializePlayerControls();
     }
 
@@ -59,12 +60,12 @@ private void Awake()
                 GameManager.ResumeGame();
             }
         };
-
+    
         // Assign the SwitchToWeapon method to the respective input action        
-        _playerControls.Player.Weapon1.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Melee);
-        _playerControls.Player.Weapon2.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Pistol);
-        _playerControls.Player.Weapon3.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Shotgun);
-        _playerControls.Player.Weapon4.performed += ctx => playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Crossbow);
+        _playerControls.Player.Weapon1.performed += ctx => playerCharacterCombatController.SwitchToWeapon(0);
+        _playerControls.Player.Weapon2.performed += ctx => playerCharacterCombatController.SwitchToWeapon(1);
+        _playerControls.Player.Weapon3.performed += ctx => playerCharacterCombatController.SwitchToWeapon(2);
+        _playerControls.Player.Weapon4.performed += ctx => playerCharacterCombatController.SwitchToWeapon(3);
                         
 
         // Assign the HandleMouseScroll method to the respective input actions
@@ -107,42 +108,27 @@ private void Awake()
     }    
 
     private void HandleMouseScroll()
-    {          
-        int inventoryCount = playerCharacterCombatController.WeaponsInventoryCount;
+    {
+        var ownedWeapons = playerCharacterCombatController.PlayerWeapons.Keys.ToList();
+        int inventoryCount = ownedWeapons.Count;
 
         if (inventoryCount <= 1)
             return; // No need to scroll if only one weapon
 
         // Get the current weapon index
-        int currentIndex = (int)playerCharacterCombatController.WeaponSelected;
+        int currentIndex = ownedWeapons.IndexOf(playerCharacterCombatController.WeaponSelected);
 
         // Calculate new index based on scroll direction
         int newIndex = currentIndex + MouseScroll;
 
         // Wrap around
         if (newIndex < 0)
-            newIndex = 3;
+            newIndex = inventoryCount - 1;
         else if (newIndex >= inventoryCount)
             newIndex = 0;
 
-        currentIndex = newIndex;
-
         // Switch weapon
-        switch (currentIndex)
-        {
-            case 0:
-                playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Melee);
-                break;
-            case 1:
-                playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Pistol);
-                break;
-            case 2:
-                playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Shotgun);
-                break;
-            case 3:
-                playerCharacterCombatController.SwitchToWeapon(WeaponTypes.Crossbow);
-                break;
-        }
+        playerCharacterCombatController.SwitchToWeapon(ownedWeapons[newIndex]);
     }
 
     private void HandleInput()

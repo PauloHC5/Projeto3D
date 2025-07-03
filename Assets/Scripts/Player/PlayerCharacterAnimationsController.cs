@@ -17,13 +17,12 @@ public class PlayerCharacterAnimationsController
     private readonly int Charge = Animator.StringToHash("Charge");
     private readonly int InspectWeaponTrigger = Animator.StringToHash("InspectWeapon");
 
-    private Dictionary<WeaponTypes, bool> _weaponChecked = new Dictionary<WeaponTypes, bool>
+    private Dictionary<PlayerWeaponTypes, bool> _weaponChecked = new Dictionary<PlayerWeaponTypes, bool>
     {
-        { WeaponTypes.Melee, false },
-        { WeaponTypes.Pistol, false },
-        { WeaponTypes.Shotgun, false },
-        { WeaponTypes.Crossbow, false },
-        { WeaponTypes.Smg, false }
+        { PlayerWeaponTypes.CARNIVOROUSPLANTS, false },
+        { PlayerWeaponTypes.ACORNGUN, false },
+        { PlayerWeaponTypes.BANANASHOTGUN, false },
+        { PlayerWeaponTypes.CACTUSSCROSSBOW, false },        
     };
 
     public PlayerCharacterAnimationsController(Animator animator)
@@ -42,7 +41,7 @@ public class PlayerCharacterAnimationsController
         playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(playerVelocityMagnitude, 0f, playerMaxSpeed));        
     }    
         
-    public void PlaySwitchToWeapon(WeaponTypes weapon)
+    public void PlaySwitchToWeapon(PlayerWeaponTypes weapon)
     {
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
 

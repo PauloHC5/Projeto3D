@@ -19,13 +19,12 @@ public class SetTerrainObstacles : MonoBehaviour
 
         lenght = terrain.terrainData.size.z;
         width = terrain.terrainData.size.x;
-        hight = terrain.terrainData.size.y;
-        Debug.Log("Terrain Size is :" + width + " , " + hight + " , " + lenght);
+        hight = terrain.terrainData.size.y;        
 
         int i = 0;
         GameObject parent = new GameObject("Tree_Obstacles");
 
-        Debug.Log("Adding "+Obstacle.Length+" navMeshObstacle Components for Trees");
+        //Debug.Log("Adding "+Obstacle.Length+" navMeshObstacle Components for Trees");
         foreach (TreeInstance tree in Obstacle)
         {
             Vector3 tempPos = new Vector3(tree.position.x * width, tree.position.y * hight, tree.position.z * lenght);
@@ -80,6 +79,6 @@ public class SetTerrainObstacles : MonoBehaviour
             i++;
         }
         parent.transform.position = terrain.GetPosition();
-        if(!isError) Debug.Log("All " + Obstacle.Length + " NavMeshObstacles were succesfully added to your Scene, Horray !");
+        //if(!isError) Debug.Log("All " + Obstacle.Length + " NavMeshObstacles were succesfully added to your Scene, Horray !");
     }
 }

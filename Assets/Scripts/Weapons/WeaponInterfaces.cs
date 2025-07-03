@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IWeapon
 {
-    public WeaponTypes WeaponType { get; }
+    public PlayerWeaponTypes WeaponType { get; }
 
     public void EnableWeapon();
 

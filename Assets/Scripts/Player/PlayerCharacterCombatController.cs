@@ -5,13 +5,12 @@ using System;
 using UnityEngine.InputSystem;
 
 
-public enum WeaponTypes
+public enum PlayerWeaponTypes
 {
-    Melee = 0,
-    Pistol = 1,
-    Shotgun = 2,
-    Crossbow = 3,
-    Smg = 4,
+    CARNIVOROUSPLANTS = 0,
+    ACORNGUN = 1,
+    BANANASHOTGUN = 2,
+    CACTUSSCROSSBOW = 3,    
 }
 
 public enum PlayerCombatStates
@@ -33,64 +32,122 @@ public enum WeaponSocket
     LeftHandSocket    
 }
 
-[RequireComponent(typeof(PlayerGunAmmoInitializer))]
+[Serializable]
+public struct WeaponPrefab
+{
+    [HideInInspector] public string name;
+    public Weapon prefab;
+}
+
+[Serializable]
+public struct GunAmmo
+{
+    public AmmoTypes AmmoType;
+    public int AmmoAmount;    
+}
+
+[Serializable]
+public enum AmmoTypes
+{
+    Acorn,
+    Banana,
+    Spikes,
+    Corn,
+    Coconut,
+}
+
 public class PlayerCharacterCombatController : MonoBehaviour
-{    
-    [SerializeField] private WeaponTypes weaponSelected;    
-    [SerializeField] private Weapon[] weaponsSet = new Weapon[5];
-    [SerializeField] private Transform rightHandSocket, leftHandSocket;    
+{
+    [Space]
+    [SerializeField] private PlayerWeaponTypes _weaponSelected;        
+    [SerializeField] private Transform _rightHandSocket, _leftHandSocket;
 
-    private IWeapon equippedWeapon;
-    private List<IWeapon> weaponsInventory = new List<IWeapon>();
-    private Dictionary<AmmoTypes, Int32> playerGunAmmo;
-    private PlayerCombatStates playerCombatStates = PlayerCombatStates.RAISING;
-    private PlayerCharacterAnimationsController playerCharacterAnimationsController;
-    private MouseLook mouseLook;
-    private PlayerGunAmmoInitializer playerGunAmmoComponent;
+    // Weapon prefabs and ammo amounts for the guns
+    // This section is only visible in the Unity Editor for easy configuration
+    // if you need access player weapons or ammo amounts in runtime, use _playerWeaponsSet and _playerGunAmmo
+    [Header("Weapons Prefabs and Ammo")]
+#if UNITY_EDITOR    
+    [SerializeField] public WeaponPrefab[] WeaponsPrefabs;    
+    [SerializeField] public GunAmmo[] GunsAmmo;
+#endif    
 
+    private IWeapon _equippedWeapon;
+    private Dictionary<PlayerWeaponTypes, IWeapon> _playerWeapons = new();
+    private Dictionary<AmmoTypes, Int32> _playerGunAmmo;
+    private PlayerCombatStates _playerCombatStates = PlayerCombatStates.RAISING;
+    private PlayerCharacterAnimationsController _playerCharacterAnimationsController;
+    private MouseLook mouseLook;    
 
-    public WeaponTypes WeaponSelected => weaponSelected;
-    public int WeaponsInventoryCount => weaponsInventory.Count;
-    public IWeapon EquippedWeapon => equippedWeapon;
-    public Dictionary<AmmoTypes, Int32> PlayerGunsAmmo
+    public PlayerWeaponTypes WeaponSelected => _weaponSelected;
+    public Dictionary<PlayerWeaponTypes, IWeapon> PlayerWeapons => _playerWeapons;    
+
+    public IWeapon EquippedWeapon => _equippedWeapon;
+    public Dictionary<AmmoTypes, Int32> PlayerGunsAmmo => _playerGunAmmo;    
+    public void SetPlayerGunsAmmo(AmmoTypes type, int amount)
     {
-        get => playerGunAmmo;
-
-        set
-        {
-            // set only of value is greater than 0
-            foreach (var pair in value)
-            {
-                if (pair.Value >= 0) playerGunAmmo[pair.Key] = pair.Value;
-                if(pair.Value < 0) playerGunAmmo[pair.Key] = 0;
-            }
-        }
+        _playerGunAmmo[type] = Mathf.Max(0, amount);
     }
+
     public PlayerCombatStates PlayerCombatStates
     {
-        get { return playerCombatStates; }
-        set { playerCombatStates = value; }
+        get { return _playerCombatStates; }
+        set { _playerCombatStates = value; }
     }
-    public PlayerCharacterAnimationsController PlayerCharacterAnimationsController => playerCharacterAnimationsController;
+    public PlayerCharacterAnimationsController PlayerCharacterAnimationsController => _playerCharacterAnimationsController;
 
     public static event Action onSwitchToWeapon;               
 
     private void Awake()
-    {
-        playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
+    {                
+        _playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
         mouseLook = GetComponentInChildren<MouseLook>();
-        playerGunAmmoComponent = GetComponent<PlayerGunAmmoInitializer>();
 
-        InitializeWeapons();
-        InitializeWeaponAmmo();        
+        // Initialize weapons inventory and guns ammo        
+        foreach (var weaponPrefab in WeaponsPrefabs
+            .Select(w => w.prefab)
+            .Where(w => w != null)
+            .Where(w => !_playerWeapons.ContainsKey(w.WeaponType)))
+        {
+            if (weaponPrefab is CarnivovrousPlant carnivorousPlant)
+            {
+                // Use DualWieldMeleeManager for CarnivorousPlant
+                var dualWieldMelee = new DualWieldMeleeManager(
+                    carnivorousPlant,
+                    _rightHandSocket,
+                    _leftHandSocket,
+                    _playerCharacterAnimationsController
+                );
+                _playerWeapons.Add(PlayerWeaponTypes.CARNIVOROUSPLANTS, dualWieldMelee);
+            }
+            else
+            {
+                // Default instantiation for other weapons
+                var instantiatedWeapon = Instantiate(
+                    weaponPrefab,
+                    weaponPrefab.GetSocketToAttach == WeaponSocket.RightHandSocket ? _rightHandSocket : _leftHandSocket
+                );
+                _playerWeapons.Add(instantiatedWeapon.WeaponType, instantiatedWeapon);
+            }
+        }
+
+        Debug.Log($"Player weapons initialized with {_playerWeapons.Count} weapons.");
+        foreach (var weapon in _playerWeapons)
+        {
+            Debug.Log($"Weapon: {weapon.Key}");
+        }
+
+        _playerGunAmmo = GunsAmmo.ToDictionary(g => g.AmmoType, g => g.AmmoAmount); // Initialize playerGunAmmo dictionary with the gunsAmmo array
     }
 
     private void Start()
-    {
+    {           
         // Switch to the first weapon in the inventory
-        if (weaponsInventory.Count > 0)
+        if (_playerWeapons.Count > 0)
         {
-            RaiseWeapon(weaponSelected);
+            /*if (_playerWeapons.ContainsKey(WeaponSelected))
+                RaiseWeapon(_weaponSelected);
+            else*/
+                RaiseWeapon(_playerWeapons.First().Key); // If the selected weapon is not in the inventory, switch to the first weapon in the inventory
         }
         else
         {
@@ -101,189 +158,136 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private void Update()
     {
         // if k button is pressed, add 3 to playerWeaponAmmo[weaponSelected]
-        if (equippedWeapon is IEquippedGun equippedGun)
+        if (_equippedWeapon is IEquippedGun equippedGun)
         {            
-            if (Keyboard.current.kKey.wasPressedThisFrame) playerGunAmmo[equippedGun.AmmoType] += 3;
+            if (Keyboard.current.kKey.wasPressedThisFrame) _playerGunAmmo[equippedGun.AmmoType] += 3;
 
-            playerCharacterAnimationsController.CheckAutoReload(equippedGun.MagAmmo, equippedGun.MagCapacity, playerGunAmmo[equippedGun.AmmoType]);
-        }                
+            _playerCharacterAnimationsController.CheckAutoReload(equippedGun.MagAmmo, equippedGun.MagCapacity, _playerGunAmmo[equippedGun.AmmoType]);
+        }       
+    }                
+
+    public void SwitchToWeapon(PlayerWeaponTypes weaponToSwitch)
+    {
+        if (!ConditionToSwitchWeapon(weaponToSwitch)) return;        
+
+        if(_playerWeapons.ContainsKey(WeaponSelected) && _playerWeapons[weaponToSwitch] != null) RaiseWeapon(weaponToSwitch);                
     }
 
-    private void InitializeWeapons()
+    public void SwitchToWeapon(int index)
     {
-        if (rightHandSocket == null || leftHandSocket == null)
+        if (index < 0 || index >= _playerWeapons.Count)
         {
-            Debug.LogError("Right hand socket or left hand socket is not set.");
-            return;
-        }        
-
-        // Intialize each weapon based on the weapons setted in the inspector
-        foreach (var weapon in weaponsSet)
-        {
-            if(weapon == null) continue; // Skip if the weapon is null
-
-            IWeapon weaponSpawned; // Will hold the spawned weapon
-
-            // If the weapon is a DualWieldGun, it needs to be initialized differently
-            if (weapon is CarnivovrousPlant carnivovrousPlant)
-            {                
-                weaponSpawned = new DualWieldMeleeManager(carnivovrousPlant, rightHandSocket, leftHandSocket, playerCharacterAnimationsController);
-            }
-            else if(weapon is Gun gun && gun.WeaponType == WeaponTypes.Shotgun)
-            {
-                weaponSpawned = new DualWieldGunManager(gun, rightHandSocket, leftHandSocket, playerCharacterAnimationsController);                
-            }
-            else // Proceed with the normal weapon initialization
-            {
-                // Get the socket to attach the weapon
-                Transform socketToAttach = GetSocketTransform(weapon.GetSocketToAttach);
-
-                // Instantiate the weapon and set it as inactive
-                weaponSpawned = Instantiate(weapon, socketToAttach);
-            }
-
-            // disaable the weapon spawned gameobject
-            weaponSpawned.DisableWeapon();
-
-            if (weaponSpawned == null)
-            {
-                Debug.LogError($"Weapon {weapon.name} could not be spawned.");                
-            }
-
-            // add the weapon spawned to the weapons inventory
-            weaponsInventory.Add(weaponSpawned);
+            Debug.LogWarning($"Invalid weapon index: {index}. Cannot switch to weapon.");
+            return; // If the index is out of bounds, do nothing
         }
-    }    
 
-    private void InitializeWeaponAmmo()
-    {
-        playerGunAmmo = playerGunAmmoComponent.WeaponAmmoList.ToDictionary(pair => pair.ammoType, pair => pair.AmmoAmount);
-    }        
-
-    public void SwitchToWeapon(WeaponTypes weaponToSwitch)
-    {
-        if (!ConditionToSwitchWeapon(weaponToSwitch)) return;      
-        
-        RaiseWeapon(weaponToSwitch);
+        var weaponToSwitch = _playerWeapons.Keys.ElementAt(index);
+        if (ConditionToSwitchWeapon(weaponToSwitch))
+        {
+            RaiseWeapon(weaponToSwitch);
+        }
     }
 
-    private bool ConditionToSwitchWeapon(WeaponTypes weaponToSwitch) =>
+    private bool ConditionToSwitchWeapon(PlayerWeaponTypes weaponToSwitch) =>
         !PlayerCharacterController.PrimaryActionButtonPressed &&
         PlayerCombatStates != PlayerCombatStates.ATTACKING &&
         PlayerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
         PlayerCombatStates != PlayerCombatStates.FIRING &&
         PlayerCombatStates != PlayerCombatStates.ATTACKING &&
-        weaponToSwitch != weaponSelected;
+        weaponToSwitch != _weaponSelected;
 
-    private void RaiseWeapon(WeaponTypes weaponToSwitch)
-    {
-        if (equippedWeapon != null) equippedWeapon.DisableWeapon(); // Disable the currently equipped weapon        
-
-        switch (weaponToSwitch)
+    private void RaiseWeapon(PlayerWeaponTypes weaponToSwitch)
+    {        
+        foreach (var weapon in _playerWeapons)
         {
-            case WeaponTypes.Melee:
-                // Find which weapon in the inventory is a melee weapon
-                equippedWeapon = weaponsInventory.Find(w => w.WeaponType == WeaponTypes.Melee);
-                break;
-            case WeaponTypes.Pistol:
-                // Find which weapon in the inventory is a pistol
-                equippedWeapon = weaponsInventory.Find(w => w.WeaponType == WeaponTypes.Pistol);
-                break;
-            case WeaponTypes.Shotgun:
-                // Find which weapon in the inventory is a shotgun
-                equippedWeapon = weaponsInventory.Find(w => w?.WeaponType == WeaponTypes.Shotgun);
-                if (equippedWeapon == null) RetrieveNewShotguns();
-                break;
-            case WeaponTypes.Crossbow:
-                // Find which weapon in the inventory is a crossbow
-                equippedWeapon = weaponsInventory.Find(w => w?.WeaponType == WeaponTypes.Crossbow);
-                break;
-
-            default:
-                Debug.LogWarning($"Weapon {weaponToSwitch} not found or its not supported.");
-                return; // If the weapon type is not supported, do nothing
+            weapon.Value.DisableWeapon();
         }
 
-        weaponSelected = equippedWeapon.WeaponType; // Set the weapon selected to the equipped weapon type
+        _equippedWeapon = _playerWeapons[weaponToSwitch];                
+        if (_equippedWeapon == null)
+        {
+            Debug.LogWarning($"Weapon {weaponToSwitch} not found in the inventory.");
+            return; // If the weapon is not found in the inventory, do nothing
+        }
 
-        equippedWeapon.EnableWeapon(); // Enable the equipped weapon                
+        if (_equippedWeapon.WeaponType == PlayerWeaponTypes.BANANASHOTGUN)
+        {
+            RetrieveNewShotguns();
+        }
 
-        playerCharacterAnimationsController.PlaySwitchToWeapon(weaponSelected); // Play the switch to weapon animation
+        _weaponSelected = _equippedWeapon.WeaponType; // Set the weapon selected to the equipped weapon type
+
+        _equippedWeapon.EnableWeapon(); // Enable the equipped weapon                
+
+        _playerCharacterAnimationsController.PlaySwitchToWeapon(_weaponSelected); // Play the switch to weapon animation
 
         onSwitchToWeapon?.Invoke();
-    }
-
-    
+    }    
 
     public void PerformPrimaryAction()
     {
         // Check if the equipped weapon implements the IEquippedGun interface
-        if (equippedWeapon is IEquippedGun equippedGun && ConditionsToFire(equippedGun))
+        if (_equippedWeapon is IEquippedGun equippedGun && ConditionsToFire(equippedGun))
         {
             if (equippedGun.MagAmmo > 0)
             {
                 equippedGun.Fire();
-                playerCharacterAnimationsController.PlayUseWeapon();
+                _playerCharacterAnimationsController.PlayUseWeapon();
             }
             else
             {
                 PerformReload(); // If the weapon has no ammo, perform a reload
             }            
         }
-        else if (equippedWeapon is IEquippedMelee equippedMelee && equippedMelee.CanAttack)
+        else if (_equippedWeapon is IEquippedMelee equippedMelee && equippedMelee.CanAttack)
         {
             equippedMelee.Attack();
         }
     }
 
     private bool ConditionsToFire(IEquippedGun equippedGun) =>
-        playerCombatStates != PlayerCombatStates.RELOADING &&        
-        playerCombatStates != PlayerCombatStates.RAISING &&
-        playerCombatStates != PlayerCombatStates.FIRING &&
-        playerCombatStates != PlayerCombatStates.CHARGING &&
-        playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
-        equippedGun.CanFire;
-
-    private Transform GetSocketTransform(WeaponSocket weaponSocketToAttach)
-    {
-        return weaponSocketToAttach == WeaponSocket.RightHandSocket ? rightHandSocket : leftHandSocket;
-    }        
+        _playerCombatStates != PlayerCombatStates.RELOADING &&        
+        _playerCombatStates != PlayerCombatStates.RAISING &&
+        _playerCombatStates != PlayerCombatStates.FIRING &&
+        _playerCombatStates != PlayerCombatStates.CHARGING &&
+        _playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
+        equippedGun.CanFire;            
 
     public void PerformReload()
     {
-        if(equippedWeapon is IEquippedGun equippedGun && ConditionsToReload(equippedGun))
+        if(_equippedWeapon is IEquippedGun equippedGun && ConditionsToReload(equippedGun))
         {
             equippedGun.PerformReload();
-            playerCharacterAnimationsController.PlayReload();
+            _playerCharacterAnimationsController.PlayReload();
             if(mouseLook) mouseLook.ZoomOut(); // Zoom out the camera if the player is reloading a gun
         }
     }
 
     private bool ConditionsToReload(IEquippedGun equippedGun) =>
         equippedGun.CanReload() &&
-        playerGunAmmo[equippedGun.AmmoType] > 0 &&
-        playerCombatStates != PlayerCombatStates.RELOADING &&
-        playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
-        playerCombatStates != PlayerCombatStates.FIRING;
+        _playerGunAmmo[equippedGun.AmmoType] > 0 &&
+        _playerCombatStates != PlayerCombatStates.RELOADING &&
+        _playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
+        _playerCombatStates != PlayerCombatStates.FIRING;
 
     public void Reload()
     {        
-        if(equippedWeapon is IEquippedGun equippedGun)
+        if(_equippedWeapon is IEquippedGun equippedGun)
         {
-            int equippedGunAmmo = playerGunAmmo[equippedGun.AmmoType];
+            int equippedGunAmmo = _playerGunAmmo[equippedGun.AmmoType];
             equippedGun.Reload(ref equippedGunAmmo);
-            playerGunAmmo[equippedGun.AmmoType] = equippedGunAmmo;
+            _playerGunAmmo[equippedGun.AmmoType] = equippedGunAmmo;
         }
     }
        
     public void ChargeWeapon(bool buttomPressed)
     {
-        var equippedGun = equippedWeapon as IEquippedGun;
+        var equippedGun = _equippedWeapon as IEquippedGun;
 
-        if (ConditionsToCharge(equippedGun) && equippedWeapon is IChargeable chargeableWeapon)
+        if (ConditionsToCharge(equippedGun) && _equippedWeapon is IChargeable chargeableWeapon)
         {
             chargeableWeapon.PerformCharge(buttomPressed);
-            playerCharacterAnimationsController.ChargeWeapon(buttomPressed);
+            _playerCharacterAnimationsController.ChargeWeapon(buttomPressed);
         }        
     }
 
@@ -292,54 +296,60 @@ public class PlayerCharacterCombatController : MonoBehaviour
         equippedGun is IChargeable &&
         equippedGun.CanFire &&
         equippedGun.MagAmmo == equippedGun.MagCapacity &&
-        playerCombatStates != PlayerCombatStates.RELOADING &&
-        playerCombatStates != PlayerCombatStates.ATTACKING &&
-        playerCombatStates != PlayerCombatStates.RAISING &&
-        playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON;
+        _playerCombatStates != PlayerCombatStates.RELOADING &&
+        _playerCombatStates != PlayerCombatStates.ATTACKING &&
+        _playerCombatStates != PlayerCombatStates.RAISING &&
+        _playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON;
 
 
     public void PerformSecondaryAction()
     {   
-        if(equippedWeapon is DualWieldGunManager dualWieldGun && ConditionsToSuperFire(dualWieldGun))
+        if(_equippedWeapon is DualWieldGunManager dualWieldGun && ConditionsToSuperFire(dualWieldGun))
         {
             dualWieldGun.FireBoth();
-            playerCharacterAnimationsController.PlayFireBoth();
+            _playerCharacterAnimationsController.PlayFireBoth();
             GetComponent<PlayerCharacterMovementController>().ApplyImpulse(20f); // Apply backward impulse from camera when firing both guns
             return;
         }        
 
-        if (equippedWeapon is ISecondaryAction equippedGun) equippedGun.Perform();
+        if (_equippedWeapon is ISecondaryAction equippedGun) equippedGun.Perform();
     }
 
     private bool ConditionsToSuperFire(IEquippedGun equippedGun) =>
-        playerCombatStates != PlayerCombatStates.RELOADING &&
-        playerCombatStates != PlayerCombatStates.RAISING &&
-        playerCombatStates != PlayerCombatStates.FIRING &&
-        playerCombatStates != PlayerCombatStates.CHARGING &&
-        playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
+        _playerCombatStates != PlayerCombatStates.RELOADING &&
+        _playerCombatStates != PlayerCombatStates.RAISING &&
+        _playerCombatStates != PlayerCombatStates.FIRING &&
+        _playerCombatStates != PlayerCombatStates.CHARGING &&
+        _playerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
         equippedGun.CanFire &&
         equippedGun.MagAmmo == equippedGun.MagCapacity;
 
     private void DropShotgun()
-    {        
-        weaponsInventory[2] = null; // Assuming Shotgun is at index 2
+    {                       
+        _playerWeapons.Remove(PlayerWeaponTypes.BANANASHOTGUN); // Remove the shotgun from the player's weapons
 
-        equippedWeapon = null;
+        _equippedWeapon = null;
     }
 
     private void RetrieveNewShotguns()
-    {                
-        DualWieldGunManager shotguns = new DualWieldGunManager(weaponsSet[2] as BananaShotgun, rightHandSocket, leftHandSocket, playerCharacterAnimationsController);
+    {
+        BananaShotgun shotgunPrefab = WeaponsPrefabs.Any(w => w.prefab.WeaponType == PlayerWeaponTypes.BANANASHOTGUN)
+            ? WeaponsPrefabs.FirstOrDefault(w => w.prefab.WeaponType == PlayerWeaponTypes.BANANASHOTGUN).prefab as BananaShotgun
+            : null;
+        if (shotgunPrefab == null) return;        
+
+        DualWieldGunManager shotguns = new DualWieldGunManager(shotgunPrefab, _rightHandSocket, _leftHandSocket, _playerCharacterAnimationsController);
         shotguns.EnableWeapon();
 
-        weaponsInventory[2] = shotguns;
+        _playerWeapons[PlayerWeaponTypes.BANANASHOTGUN] = shotguns; // Add the new shotguns to the player's weapons
 
-        equippedWeapon = shotguns;
-        var playerShotgunsAmmo = playerGunAmmo[shotguns.AmmoType];
-        shotguns.Reload(ref playerShotgunsAmmo);
-        playerGunAmmo[shotguns.AmmoType] = playerShotgunsAmmo;
-    }    
+        _equippedWeapon = shotguns;
+        var playerShotgunsAmmo = _playerGunAmmo[shotguns.AmmoType];
+        shotguns.Reload(ref playerShotgunsAmmo);        
+        SetPlayerGunsAmmo(shotguns.AmmoType, playerShotgunsAmmo); // Set the ammo for the new shotguns
+    }
 
+    [ExecuteInEditMode]
     private void OnEnable()
     {
         AnimationTriggerEvents.onDropShotgun += DropShotgun;
