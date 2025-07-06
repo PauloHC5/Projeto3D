@@ -109,14 +109,17 @@ private void Awake()
 
     private void HandleMouseScroll()
     {
-        var ownedWeapons = playerCharacterCombatController.PlayerWeapons.Keys.ToList();
+        // Use the new IReadOnlyList<IWeapon> PlayerWeapons property
+        var ownedWeapons = playerCharacterCombatController.PlayerWeapons;
         int inventoryCount = ownedWeapons.Count;
 
         if (inventoryCount <= 1)
             return; // No need to scroll if only one weapon
 
-        // Get the current weapon index
-        int currentIndex = ownedWeapons.IndexOf(playerCharacterCombatController.WeaponSelected);
+        // Get the current weapon index by matching WeaponType
+        int currentIndex = ownedWeapons
+            .Select((w, idx) => new { w, idx })
+            .FirstOrDefault(x => x.w.WeaponType == playerCharacterCombatController.WeaponSelected)?.idx ?? 0;
 
         // Calculate new index based on scroll direction
         int newIndex = currentIndex + MouseScroll;
@@ -127,8 +130,8 @@ private void Awake()
         else if (newIndex >= inventoryCount)
             newIndex = 0;
 
-        // Switch weapon
-        playerCharacterCombatController.SwitchToWeapon(ownedWeapons[newIndex]);
+        // Switch weapon using WeaponType
+        playerCharacterCombatController.SwitchToWeapon(newIndex);
     }
 
     private void HandleInput()
