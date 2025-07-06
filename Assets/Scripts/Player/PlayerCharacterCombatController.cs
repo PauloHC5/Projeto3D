@@ -72,14 +72,15 @@ public class PlayerCharacterCombatController : MonoBehaviour
 #endif    
 
     private IWeapon _equippedWeapon;
-    private Dictionary<PlayerWeaponTypes, IWeapon> _playerWeapons = new();
+    private List<IWeapon> _playerWeapons = new List<IWeapon>();
     private Dictionary<AmmoTypes, Int32> _playerGunAmmo;
     private PlayerCombatStates _playerCombatStates = PlayerCombatStates.RAISING;
     private PlayerCharacterAnimationsController _playerCharacterAnimationsController;
-    private MouseLook mouseLook;    
+    private MouseLook _mouseLook;    
+    private int _whichIndexShotgunsWereAssigned = 0; // Used to track which index the shotguns were assigned to in the player weapons list
 
     public PlayerWeaponTypes WeaponSelected => _weaponSelected;
-    public Dictionary<PlayerWeaponTypes, IWeapon> PlayerWeapons => _playerWeapons;    
+    public IReadOnlyList<IWeapon> PlayerWeapons => _playerWeapons.AsReadOnly();    
 
     public IWeapon EquippedWeapon => _equippedWeapon;
     public Dictionary<AmmoTypes, Int32> PlayerGunsAmmo => _playerGunAmmo;    
@@ -100,43 +101,11 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private void Awake()
     {                
         _playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
-        mouseLook = GetComponentInChildren<MouseLook>();
+        _mouseLook = GetComponentInChildren<MouseLook>();
 
-        // Initialize weapons inventory and guns ammo        
-        foreach (var weaponPrefab in WeaponsPrefabs
-            .Select(w => w.prefab)
-            .Where(w => w != null)
-            .Where(w => !_playerWeapons.ContainsKey(w.WeaponType)))
-        {
-            if (weaponPrefab is CarnivovrousPlant carnivorousPlant)
-            {
-                // Use DualWieldMeleeManager for CarnivorousPlant
-                var dualWieldMelee = new DualWieldMeleeManager(
-                    carnivorousPlant,
-                    _rightHandSocket,
-                    _leftHandSocket,
-                    _playerCharacterAnimationsController
-                );
-                _playerWeapons.Add(PlayerWeaponTypes.CARNIVOROUSPLANTS, dualWieldMelee);
-            }
-            else
-            {
-                // Default instantiation for other weapons
-                var instantiatedWeapon = Instantiate(
-                    weaponPrefab,
-                    weaponPrefab.GetSocketToAttach == WeaponSocket.RightHandSocket ? _rightHandSocket : _leftHandSocket
-                );
-                _playerWeapons.Add(instantiatedWeapon.WeaponType, instantiatedWeapon);
-            }
-        }
+        InitializeWeaponsSet();                
 
-        Debug.Log($"Player weapons initialized with {_playerWeapons.Count} weapons.");
-        foreach (var weapon in _playerWeapons)
-        {
-            Debug.Log($"Weapon: {weapon.Key}");
-        }
-
-        _playerGunAmmo = GunsAmmo.ToDictionary(g => g.AmmoType, g => g.AmmoAmount); // Initialize playerGunAmmo dictionary with the gunsAmmo array
+        _playerGunAmmo = GunsAmmo.ToDictionary(g => g.AmmoType, g => g.AmmoAmount);
     }
 
     private void Start()
@@ -144,14 +113,59 @@ public class PlayerCharacterCombatController : MonoBehaviour
         // Switch to the first weapon in the inventory
         if (_playerWeapons.Count > 0)
         {
-            /*if (_playerWeapons.ContainsKey(WeaponSelected))
-                RaiseWeapon(_weaponSelected);
-            else*/
-                RaiseWeapon(_playerWeapons.First().Key); // If the selected weapon is not in the inventory, switch to the first weapon in the inventory
+            // If the selected weapon is not in the inventory, switch to the first weapon in the inventory
+            RaiseWeapon(_playerWeapons[0].WeaponType);
         }
         else
         {
             Debug.LogWarning("No weapons in the inventory.");
+        }
+
+        //Debug.Log($"Player weapons initialized with {_playerWeapons.Count} weapons.");
+        /*foreach (var weapon in _playerWeapons)
+        {
+            Debug.Log($"Weapon: {weapon.WeaponType}");
+        }*/
+    }
+
+    private void InitializeWeaponsSet()
+    {
+        // Initialize weapons
+        foreach (var weaponPrefab in WeaponsPrefabs
+            .Select(w => w.prefab)
+            .Where(w => w != null)
+            .Where(w => !_playerWeapons.Any(weap => weap.WeaponType == w.WeaponType)))
+        {
+            if (weaponPrefab is CarnivovrousPlant carnivorousPlant)
+            {
+                var dualWieldMelee = new DualWieldMeleeManager(
+                    carnivorousPlant,
+                    _rightHandSocket,
+                    _leftHandSocket,
+                    _playerCharacterAnimationsController
+                );
+                _playerWeapons.Add(dualWieldMelee);
+            }
+            else
+            if(weaponPrefab is BananaShotgun bananaShotgun)
+            {
+                var dualWieldGun = new DualWieldGunManager(
+                    bananaShotgun,
+                    _rightHandSocket,
+                    _leftHandSocket,
+                    _playerCharacterAnimationsController
+                );
+                _playerWeapons.Add(dualWieldGun);
+                _whichIndexShotgunsWereAssigned = _playerWeapons.Count - 1; // Store the index where the shotguns were assigned
+            }            
+            else
+            {
+                var instantiatedWeapon = Instantiate(
+                    weaponPrefab,
+                    weaponPrefab.GetSocketToAttach == WeaponSocket.RightHandSocket ? _rightHandSocket : _leftHandSocket
+                );
+                _playerWeapons.Add(instantiatedWeapon);
+            }
         }
     }
 
@@ -170,7 +184,9 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         if (!ConditionToSwitchWeapon(weaponToSwitch)) return;        
 
-        if(_playerWeapons.ContainsKey(WeaponSelected) && _playerWeapons[weaponToSwitch] != null) RaiseWeapon(weaponToSwitch);                
+        var weapon = _playerWeapons.FirstOrDefault(w => w.WeaponType == weaponToSwitch);
+        if (weapon != null)
+            RaiseWeapon(weaponToSwitch);                
     }
 
     public void SwitchToWeapon(int index)
@@ -179,9 +195,15 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             Debug.LogWarning($"Invalid weapon index: {index}. Cannot switch to weapon.");
             return; // If the index is out of bounds, do nothing
+        }        
+
+        if(index == _whichIndexShotgunsWereAssigned && _playerWeapons[index] is null)
+        {
+            // If the index is the one where the shotguns were assigned, retrieve the new shotguns
+            RetrieveNewShotguns();            
         }
 
-        var weaponToSwitch = _playerWeapons.Keys.ElementAt(index);
+        var weaponToSwitch = _playerWeapons[index].WeaponType;
         if (ConditionToSwitchWeapon(weaponToSwitch))
         {
             RaiseWeapon(weaponToSwitch);
@@ -200,20 +222,16 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {        
         foreach (var weapon in _playerWeapons)
         {
-            weapon.Value.DisableWeapon();
+            weapon?.DisableWeapon();
         }
 
-        _equippedWeapon = _playerWeapons[weaponToSwitch];                
+        var weaponToEquip = _playerWeapons.FirstOrDefault(w => w != null && w.WeaponType == weaponToSwitch);
+        _equippedWeapon = weaponToEquip;
         if (_equippedWeapon == null)
         {
             Debug.LogWarning($"Weapon {weaponToSwitch} not found in the inventory.");
             return; // If the weapon is not found in the inventory, do nothing
-        }
-
-        if (_equippedWeapon.WeaponType == PlayerWeaponTypes.BANANASHOTGUN)
-        {
-            RetrieveNewShotguns();
-        }
+        }       
 
         _weaponSelected = _equippedWeapon.WeaponType; // Set the weapon selected to the equipped weapon type
 
@@ -259,7 +277,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             equippedGun.PerformReload();
             _playerCharacterAnimationsController.PlayReload();
-            if(mouseLook) mouseLook.ZoomOut(); // Zoom out the camera if the player is reloading a gun
+            if(_mouseLook) _mouseLook.ZoomOut(); // Zoom out the camera if the player is reloading a gun
         }
     }
 
@@ -325,8 +343,15 @@ public class PlayerCharacterCombatController : MonoBehaviour
         equippedGun.MagAmmo == equippedGun.MagCapacity;
 
     private void DropShotgun()
-    {                       
-        _playerWeapons.Remove(PlayerWeaponTypes.BANANASHOTGUN); // Remove the shotgun from the player's weapons
+    {
+        // Replace the foreach loop with a for loop to avoid modifying the iteration variable
+        for (int i = 0; i < _playerWeapons.Count; i++)
+        {
+            if (_playerWeapons[i].WeaponType == PlayerWeaponTypes.BANANASHOTGUN)
+            {
+                _playerWeapons[i] = null; // Set the weapon to null
+            }
+        }
 
         _equippedWeapon = null;
     }
@@ -336,16 +361,23 @@ public class PlayerCharacterCombatController : MonoBehaviour
         BananaShotgun shotgunPrefab = WeaponsPrefabs.Any(w => w.prefab.WeaponType == PlayerWeaponTypes.BANANASHOTGUN)
             ? WeaponsPrefabs.FirstOrDefault(w => w.prefab.WeaponType == PlayerWeaponTypes.BANANASHOTGUN).prefab as BananaShotgun
             : null;
-        if (shotgunPrefab == null) return;        
+        if (shotgunPrefab == null) return;
 
         DualWieldGunManager shotguns = new DualWieldGunManager(shotgunPrefab, _rightHandSocket, _leftHandSocket, _playerCharacterAnimationsController);
         shotguns.EnableWeapon();
-
-        _playerWeapons[PlayerWeaponTypes.BANANASHOTGUN] = shotguns; // Add the new shotguns to the player's weapons
+        
+        for (int i = 0; i < _playerWeapons.Count; i++)
+        {
+            if (_playerWeapons[i] == null)
+            {
+                _playerWeapons[i] = shotguns; // Assign the new shotguns
+                break;
+            }
+        }
 
         _equippedWeapon = shotguns;
         var playerShotgunsAmmo = _playerGunAmmo[shotguns.AmmoType];
-        shotguns.Reload(ref playerShotgunsAmmo);        
+        shotguns.Reload(ref playerShotgunsAmmo);
         SetPlayerGunsAmmo(shotguns.AmmoType, playerShotgunsAmmo); // Set the ammo for the new shotguns
     }
 
