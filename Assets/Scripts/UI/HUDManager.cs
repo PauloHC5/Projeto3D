@@ -4,72 +4,152 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using System;
+
+[Serializable]
+public struct WeaponUI
+{
+    [HideInInspector] public string name;
+    public PlayerWeaponTypes WeaponType; // The type of weapon this crosshair is associated with
+    public Image WeaponCrosshairImage;
+    public Sprite WeaponSlotBackgroundImage;
+    public Sprite WeaponSlotIconImage;
+}
+
+[Serializable]
+public struct WeaponSlotInspector
+{
+    [HideInInspector] public string name;
+    public WeaponSlot WeaponSlot;
+}
+
+[Serializable]
+public struct WeaponSlot
+{
+    public Image WeaponSlotBackground;
+    public Image WeaponSlotIcon;
+}
 
 public class HUDManager : Singleton<HUDManager>
-{    
+{
     [SerializeField] private GameObject _canvasHud;
 
-    [SerializeField] private Slider playerHealthBar;    
-    [SerializeField] private Image[] weaponCrosshairs = new Image[4];
-    [SerializeField] private Image scopeCrosshair;
+    [Space]
 
-    [Header("Weapon Text Properties")]
-    [SerializeField] private Image ammoPanel;
-    [SerializeField] private TextMeshProUGUI ammoText;
-    [SerializeField] private TextMeshProUGUI magAmmoText;
-    [SerializeField] private TextMeshProUGUI gunAmmoText;
-    [SerializeField] private TextMeshProUGUI meleeText;
-      
-    [SerializeField] private List<Image> weaponSlots = new List<Image>();
+    [Header("Sliders")]
+    [SerializeField] private Slider _playerHealthBar;
 
-    private readonly Vector3 normalScale = Vector3.one;
-    private readonly Vector3 selectedScale = Vector3.one * 1.5f;
-    private Coroutine[] scaleWeaponSlotsCoroutines;
-    private float scaleDuration = 0.2f;
-    private Image[] allImages;
-    private TextMeshProUGUI[] allTexts;
-    private int CrosshairIndex;
-    private PlayerCharacterCombatController playerCharacterCombatController;
-    private static bool enemyOnRange = false;
+    [Space]
 
-    public static bool EnemyOnRange => enemyOnRange;
+    [SerializeField] private WeaponUI[] _weaponsUI;
+    [SerializeField] private Image _scopeCrosshair;
 
-    private Color[] crosshairsOriginalColors = new Color[4];
+    [Header("Ammo Panels")]
+    [SerializeField] private Image _ammoPanel;
+    [SerializeField] private TextMeshProUGUI _ammoTextPanel, _magAmmoTextPanel, _gunAmmoTextPanel, _meleeTextPanel;
+
+    [Space]
+
+#if UNITY_EDITOR
+    [SerializeField] private List<WeaponSlotInspector> _weaponSlotsInspector;
+#endif
+
+    private Dictionary<PlayerWeaponTypes, Image> _weaponCrosshairs = new Dictionary<PlayerWeaponTypes, Image>();
+    private Dictionary<PlayerWeaponTypes, Color> _crosshairsOriginalColors = new Dictionary<PlayerWeaponTypes, Color>();
+    private Dictionary<PlayerWeaponTypes, WeaponSlot> _weaponSlots = new Dictionary<PlayerWeaponTypes, WeaponSlot>();
+
+
+    private readonly Vector3 _normalScale = Vector3.one;
+    private readonly Vector3 _selectedScale = Vector3.one * 1.5f;
+    private Coroutine[] _scaleWeaponSlotsCoroutines;
+    private float _scaleDuration = 0.2f;
+    private Image[] _allImages;
+    private TextMeshProUGUI[] _allTexts;    
+    private PlayerCharacterCombatController _playerCharacterCombatController;
+    private static bool _enemyOnRange = false;    
+
+    public static bool EnemyOnRange => _enemyOnRange;    
 
     private void Awake()
     {        
-        scaleWeaponSlotsCoroutines = new Coroutine[weaponSlots.Count];        
+        _scaleWeaponSlotsCoroutines = new Coroutine[_weaponSlotsInspector.Count];
 
-        // Initialize crosshairs original colors
-        for (int i = 0; i < weaponCrosshairs.Length; i++)
+        // Initialize crosshairs original colors        
+        foreach(var weaponUI in _weaponsUI)
         {
-            if (weaponCrosshairs[i] != null)
+            if (weaponUI.WeaponCrosshairImage == null)
             {
-                crosshairsOriginalColors[i] = weaponCrosshairs[i].color;
+                Debug.LogWarning($"Weapon crosshair for {weaponUI.WeaponType} is not assigned in the inspector.");
             }
             else
             {
-                Debug.LogWarning($"Weapon crosshair at index {i} is not assigned in the inspector.");
+               _crosshairsOriginalColors[weaponUI.WeaponType] = weaponUI.WeaponCrosshairImage.color; // Store the original color of the crosshair
             }
         }
     }
 
     void Start()
     {
-        if (playerCharacterCombatController == null)
-            playerCharacterCombatController = GameManager.Player?.GetComponent<PlayerCharacterCombatController>();
+        if (_playerCharacterCombatController == null)
+            _playerCharacterCombatController = GameManager.Player?.GetComponent<PlayerCharacterCombatController>();
+
+        _weaponCrosshairs = _weaponsUI.ToDictionary(
+            weapon => weapon.WeaponType,
+            weapon => weapon.WeaponCrosshairImage
+        );                
+
+        InitializeWeaponSlots();
 
         // Initialize ammo display
         UpdateAmmoDisplay();
         UpdateCrosshair();
         UpdateWeaponSlots();
-        allImages = GetComponentsInChildren<Image>(true);
-        allTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
+        _allImages = GetComponentsInChildren<Image>(true);
+        _allTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
     }
-    
+
+
+    private void InitializeWeaponSlots()
+    {                          
+        foreach(var playerWeapon in _playerCharacterCombatController.PlayerWeapons)
+        {
+            _weaponSlots.Add(playerWeapon.WeaponType, _weaponSlotsInspector.FirstOrDefault().WeaponSlot);
+            _weaponSlotsInspector.RemoveAt(0); // Remove the first element after adding it to the dictionary
+            if (_weaponSlots[playerWeapon.WeaponType].WeaponSlotBackground != null && _weaponSlots[playerWeapon.WeaponType].WeaponSlotIcon != null)
+            {
+                var weaponUI = _weaponsUI.FirstOrDefault(w => w.WeaponType == playerWeapon.WeaponType);
+                if (weaponUI.WeaponSlotBackgroundImage != null && weaponUI.WeaponSlotIconImage)
+                {
+                    _weaponSlots[playerWeapon.WeaponType].WeaponSlotBackground.sprite = weaponUI.WeaponSlotBackgroundImage;
+                    _weaponSlots[playerWeapon.WeaponType].WeaponSlotIcon.sprite = weaponUI.WeaponSlotIconImage;
+                }
+                else
+                {
+                    Debug.LogWarning($"No UI found for weapon type {playerWeapon.WeaponType}. Please check the WeaponUI array.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Weapon slot for {playerWeapon.WeaponType} is not assigned in the inspector.");
+            }
+        }
+
+        if(_weaponSlotsInspector.Count > 0) _weaponSlotsInspector.ForEach(slot =>
+        {
+            if (slot.WeaponSlot.WeaponSlotBackground != null)
+            {
+                slot.WeaponSlot.WeaponSlotBackground.gameObject.SetActive(false); // Disable unused weapon slots
+            }
+            else
+            {
+                Debug.LogWarning("Unused weapon slot background is not assigned in the inspector.");
+            }
+        });        
+    }
+
     void Update()
-    {        
-        if (GameManager.Player && playerHealthBar) playerHealthBar.value = GameManager.Player.GetComponent<PlayerCharacter>().Health / 100.0f;        
+    {
+        if (GameManager.Player && _playerHealthBar) _playerHealthBar.value = GameManager.Player.GetComponent<PlayerCharacter>().Health / 100.0f;
 
         // Update ammo display every frame
         UpdateAmmoDisplay();
@@ -88,104 +168,77 @@ public class HUDManager : Singleton<HUDManager>
     }
 
     private void UpdateCrosshair()
-    {               
-        if(playerCharacterCombatController)
+    {
+        if (_playerCharacterCombatController)
         {
-            if (weaponCrosshairs.Length == 0)
+            if (_weaponCrosshairs.Count == 0)
             {
                 Debug.LogWarning("Weapon crosshair is not assigned in the inspector.");
                 return;
             }
 
-            CrosshairIndex = (int)playerCharacterCombatController.WeaponSelected; // get the current weapon index from the player character combat controller
-
-            // Ensure the index is within bounds
-            if (CrosshairIndex < 0 || CrosshairIndex >= weaponCrosshairs.Length)
+            foreach (var crosshair in _weaponCrosshairs)
             {
-                Debug.LogWarning("Crosshair index is out of bounds.");
-                return;
-            }
-
-            // Set the active crosshair based on the current weapon
-            for (int i = 0; i < weaponCrosshairs.Length; i++) // loop through all crosshairs
-            {
-                // Check if the crosshair is assigned in the inspector
-                if (weaponCrosshairs[i] == null)
+                if(crosshair.Key == _playerCharacterCombatController.WeaponSelected)
                 {
-                    Debug.LogWarning($"Weapon crosshair at index {i} is not assigned in the inspector.");
-                    continue; // Skip to the next iteration if the crosshair is not assigned
+                    crosshair.Value.gameObject.SetActive(true); // Enable the crosshair for the selected weapon                    
                 }
-
-                // Set the active state of each crosshair based on the current weapon index
-                // If the index matches, set it active; otherwise, set it inactive
-                weaponCrosshairs[i].gameObject.SetActive(i == CrosshairIndex);
+                else
+                {
+                    crosshair.Value.gameObject.SetActive(false); // Disable the crosshair for other weapons
+                }
             }
         }
         else
         {
-           if(weaponCrosshairs.Length > 0)
-            {
-                for (int i = 0; i < weaponCrosshairs.Length; i++) // loop through all crosshairs and disable them                
-                {                    
-                    weaponCrosshairs[i]?.gameObject.SetActive(false);
-                }
-            }
+            _weaponCrosshairs.Values.ToList().ForEach(crosshair => crosshair.gameObject.SetActive(false)); // Disable all crosshairs if no player character combat controller is assigned
         }
-
-
     }
 
     private void DetectIfEnemyIsOnRange()
-    {        
-        if (playerCharacterCombatController?.EquippedWeapon != null)
+    {
+        if (_playerCharacterCombatController?.EquippedWeapon != null)
         {
             // Deproject a ray from the center of the screen to check if an enemy is in range
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, playerCharacterCombatController.EquippedWeapon.WeaponRange)) // Adjust the distance as needed
+            if (Physics.Raycast(ray, out hit, _playerCharacterCombatController.EquippedWeapon.WeaponRange)) // Adjust the distance as needed
             {
                 if (hit.collider.CompareTag("Enemy"))
                 {
                     // If an enemy is detected, change the crosshair color to red
-                    if (CrosshairIndex >= 0 && CrosshairIndex < weaponCrosshairs.Length)
-                    {
-                        weaponCrosshairs[CrosshairIndex].color = Color.red;
-                        enemyOnRange = true; // Set the flag to true if an enemy is detected
-                    }
+                    _weaponCrosshairs[_playerCharacterCombatController.WeaponSelected].color = Color.red;
+                    _enemyOnRange = true; // Set the flag to true if an enemy is detected
                 }
                 else
                 {
                     // If no enemy is detected, reset the crosshair color to its original color
-                    if (CrosshairIndex >= 0 && CrosshairIndex < weaponCrosshairs.Length)
-                    {
-                        weaponCrosshairs[CrosshairIndex].color = crosshairsOriginalColors[CrosshairIndex];
-                        enemyOnRange = false; // Set the flag to false if no enemy is detected
-                    }
+                    _weaponCrosshairs[_playerCharacterCombatController.WeaponSelected].color = _crosshairsOriginalColors[_playerCharacterCombatController.WeaponSelected];
+
+                    _enemyOnRange = false; // Set the flag to false if no enemy is detected
                 }
             }
             else
             {
-                // If no enemy is detected, reset the crosshair color to its original color
-                if (CrosshairIndex >= 0 && CrosshairIndex < weaponCrosshairs.Length)
-                {
-                    weaponCrosshairs[CrosshairIndex].color = crosshairsOriginalColors[CrosshairIndex];
-                    enemyOnRange = false; // Set the flag to false if no enemy is detected
-                }
+                // If no enemy is detected, reset the crosshair color to its original color                
+                _weaponCrosshairs[_playerCharacterCombatController.WeaponSelected].color = _crosshairsOriginalColors[_playerCharacterCombatController.WeaponSelected];
+
+                _enemyOnRange = false; // Set the flag to false if no enemy is detected
             }
 
             // Draw a debug ray in the scene view for visualization
             if (Debug.isDebugBuild) // Only draw the debug ray in debug builds
             {
-                Debug.DrawRay(ray.origin, ray.direction * playerCharacterCombatController.EquippedWeapon.WeaponRange, Color.green);
+                Debug.DrawRay(ray.origin, ray.direction * _playerCharacterCombatController.EquippedWeapon.WeaponRange, Color.green);
             }
         }
     }
 
-    
+
 
     public static void ScopeEvent(bool scopeEnable)
     {
-        if (Instance.scopeCrosshair == null || Instance.weaponCrosshairs == null)
+        if (Instance._scopeCrosshair == null || Instance._weaponsUI == null)
         {
             Debug.LogWarning("Scope or weapon crosshair is not assigned in the inspector.");
             return;
@@ -193,22 +246,14 @@ public class HUDManager : Singleton<HUDManager>
 
         if (!scopeEnable)
         {
-            Instance.scopeCrosshair.gameObject.SetActive(false);
+            Instance._scopeCrosshair.gameObject.SetActive(false);
 
-            // Check if index is within bounds before accessing the array
-            if (Instance.CrosshairIndex < 0 || Instance.CrosshairIndex >= Instance.weaponCrosshairs.Length)
-            {
-                Debug.LogWarning("Crosshair index is out of bounds.");
-            }
-            else
-            {                
-                Instance.weaponCrosshairs[Instance.CrosshairIndex].gameObject.SetActive(true);
-            }
+            Instance._weaponCrosshairs[Instance._playerCharacterCombatController.WeaponSelected].gameObject.SetActive(true); // Enable the crosshair for the selected weapon
 
             // Reset all images in this game object and its children to full alpha            
-            foreach (Image img in Instance.allImages)
+            foreach (Image img in Instance._allImages)
             {
-                if (img != Instance.scopeCrosshair) // Ignore the scope crosshair image
+                if (img != Instance._scopeCrosshair) // Ignore the scope crosshair image
                 {
                     Color color = img.color;
                     color.a = 1f; // Set alpha to 100%
@@ -217,7 +262,7 @@ public class HUDManager : Singleton<HUDManager>
             }
 
             // Reset all text components in this game object and its children to full alpha
-            foreach (TextMeshProUGUI text in Instance.allTexts)
+            foreach (TextMeshProUGUI text in Instance._allTexts)
             {
                 Color color = text.color;
                 color.a = 1f; // Set alpha to 100%
@@ -227,24 +272,16 @@ public class HUDManager : Singleton<HUDManager>
         }
         else
         {
-            Instance.scopeCrosshair.gameObject.SetActive(true);
+            Instance._scopeCrosshair.gameObject.SetActive(true);
 
-            // Check if index is within bounds before accessing the array
-            if (Instance.CrosshairIndex < 0 || Instance.CrosshairIndex >= Instance.weaponCrosshairs.Length)
-            {
-                Debug.LogWarning("Crosshair index is out of bounds.");                
-            }
-            else
-            {                
-                Instance.weaponCrosshairs[Instance.CrosshairIndex].gameObject.SetActive(false);
-            }
-            
+            Instance._weaponCrosshairs[Instance._playerCharacterCombatController.WeaponSelected].gameObject.SetActive(false); // Disable the crosshair for the selected weapon
+
 
             // Get all images in this game object and its children and set their alpha to 10%
             Image[] images = Instance.GetComponentsInChildren<Image>(true);
             foreach (Image img in images)
-            {                
-                if (img != Instance.scopeCrosshair.GetComponentsInChildren<Image>().Any<Image>())
+            {
+                if (img != Instance._scopeCrosshair.GetComponentsInChildren<Image>().Any<Image>())
                 {
                     Color color = img.color;
                     color.a = 0.1f; // Set alpha to 20%
@@ -253,7 +290,7 @@ public class HUDManager : Singleton<HUDManager>
             }
 
             // Get all text components in this game object and its children and set their alpha to 10%            
-            foreach (TextMeshProUGUI text in Instance.allTexts)
+            foreach (TextMeshProUGUI text in Instance._allTexts)
             {
                 Color color = text.color;
                 color.a = 0.1f; // Set alpha to 10%
@@ -264,32 +301,29 @@ public class HUDManager : Singleton<HUDManager>
 
     public static void Bite()
     {
-        int BiteTrigger = Animator.StringToHash("Bite");
+        int BiteTrigger = Animator.StringToHash("Bite");        
 
-        if (Instance.CrosshairIndex == (int)WeaponTypes.Melee)
-        {
-            Instance.weaponCrosshairs[Instance.CrosshairIndex].GetComponent<Animator>().SetTrigger(BiteTrigger);
-        }
+        Instance._weaponCrosshairs[Instance._playerCharacterCombatController.WeaponSelected].GetComponent<Animator>().SetTrigger(BiteTrigger);
     }
 
     private void UpdateAmmoDisplay()
     {
-        if(ammoPanel == null) Debug.LogWarning("Ammo Panel is not assigned in the inspector.");
+        if (_ammoPanel == null) Debug.LogWarning("Ammo Panel is not assigned in the inspector.");
 
-        if (ammoText == null || magAmmoText == null || gunAmmoText == null || meleeText == null)
+        if (_ammoTextPanel == null || _magAmmoTextPanel == null || _gunAmmoTextPanel == null || _meleeTextPanel == null)
         {
             Debug.LogWarning("One or more ammo text fields are not assigned in the inspector.");
             return;
-        }        
-        
-        if (playerCharacterCombatController)
-        {
-            ammoPanel.gameObject.SetActive(true);
+        }
 
-            if (playerCharacterCombatController.EquippedWeapon is IEquippedGun equippedGun)
+        if (_playerCharacterCombatController)
+        {
+            _ammoPanel.gameObject.SetActive(true);
+
+            if (_playerCharacterCombatController.EquippedWeapon is IEquippedGun equippedGun)
             {
-                meleeText.gameObject.SetActive(false);
-                ammoText.gameObject.SetActive(true);
+                _meleeTextPanel.gameObject.SetActive(false);
+                _ammoTextPanel.gameObject.SetActive(true);
 
                 var magAmmo = 0;
                 var totalAmmo = 0;
@@ -301,113 +335,110 @@ public class HUDManager : Singleton<HUDManager>
                 }
 
 
-                totalAmmo = playerCharacterCombatController.PlayerGunsAmmo[equippedGun.AmmoType];
+                totalAmmo = _playerCharacterCombatController.PlayerGunsAmmo[equippedGun.AmmoType];
 
-                if (magAmmoText != null)
+                if (_magAmmoTextPanel != null)
                 {
-                    magAmmoText.text = $"{magAmmo}";
+                    _magAmmoTextPanel.text = $"{magAmmo}";
                 }
                 else Debug.LogWarning("Mag Ammo Text is not assigned in the inspector.");
 
-                if (ammoText != null)
+                if (_ammoTextPanel != null)
                 {
-                    gunAmmoText.text = $"{totalAmmo}";
+                    _gunAmmoTextPanel.text = $"{totalAmmo}";
                 }
                 else Debug.LogWarning("Ammo Text is not assigned in the inspector.");
 
             }
             else
             {
-                meleeText.gameObject.SetActive(true);
-                ammoText.gameObject.SetActive(false);
+                _meleeTextPanel.gameObject.SetActive(true);
+                _ammoTextPanel.gameObject.SetActive(false);
             }
         }
         else
         {
-            ammoPanel.gameObject.SetActive(false);
-            meleeText.gameObject.SetActive(false);
-            ammoText.gameObject.SetActive(false);
+            _ammoPanel.gameObject.SetActive(false);
+            _meleeTextPanel.gameObject.SetActive(false);
+            _ammoTextPanel.gameObject.SetActive(false);
         }
-            
+
     }
 
     private void UpdateWeaponSlots()
     {
-        if (weaponSlots.Count == 0)
+        if (_weaponSlots.Count == 0)
         {
             Debug.LogWarning("Weapon slots are not assigned in the inspector.");
             return;
         }
 
-        if(playerCharacterCombatController)
-        {
-            foreach(var weaponSlot in weaponSlots)
-            {
-                if(weaponSlot != null) weaponSlot.gameObject.SetActive(true);                
-            }
-
-            WeaponTypes weaponType = playerCharacterCombatController.WeaponSelected;
-
-            ChangeWeaponSlotsColor(weaponType);
-
-            for (int i = 0; i < weaponSlots.Count; i++)
-            {
-                Vector3 target = (i == (int)weaponType) ? selectedScale : normalScale;
-
-                if (scaleWeaponSlotsCoroutines[i] != null)
-                    StopCoroutine(scaleWeaponSlotsCoroutines[i]);
-                scaleWeaponSlotsCoroutines[i] = StartCoroutine(ScaleWeponSlotsRoutine(weaponSlots[i], target));
-            }
+        if (_playerCharacterCombatController)
+        {           
+            ChangeWeaponSlotsScale();
+            ChangeWeaponSlotsColor();            
         }
         else
         {
-            foreach (var weaponSlot in weaponSlots)
+            // If the player character combat controller is not assigned, disable all weapon slots
+            foreach (var weaponSlot in _weaponSlots)
             {
-                if (weaponSlot != null) weaponSlot.gameObject.SetActive(false);
+                if (weaponSlot.Value.WeaponSlotBackground != null)
+                {
+                    weaponSlot.Value.WeaponSlotBackground.gameObject.SetActive(false);
+                }
             }
         }
     }
 
-    private void ChangeWeaponSlotsColor(WeaponTypes weaponType)
-    {                
-        for (int i = 0; i < weaponSlots.Count; i++)
+    private void ChangeWeaponSlotsScale()
+    {     
+        foreach (var weaponSlot in _weaponSlots)
         {
-            if (i == (int)weaponType)
-            {
-                weaponSlots[i].color = Color.white;
+            if (weaponSlot.Value.WeaponSlotBackground != null)
+            {                
+                Vector3 targetScale = weaponSlot.Key == _playerCharacterCombatController.WeaponSelected ? _selectedScale : _normalScale;                
 
-                // Set the color of the child image to white
-                Image[] childImages = weaponSlots[i].GetComponentsInChildren<Image>();
-                if (childImages.Length == 2 && childImages[1] != null)
+                // If the weapon slot is selected, scale it up, otherwise scale it down
+                if (_scaleWeaponSlotsCoroutines[(int)weaponSlot.Key] != null)
                 {
-                    childImages[1].color = Color.white;
+                    StopCoroutine(_scaleWeaponSlotsCoroutines[(int)weaponSlot.Key]);
                 }
+                StartCoroutine(ScaleWeponSlotsRoutine(weaponSlot.Value.WeaponSlotBackground, targetScale));
+            }
+        }
+    }
+
+    private void ChangeWeaponSlotsColor()
+    {        
+        foreach(var weaponSlot in _weaponSlots)
+        {
+            bool slotWeaponSelected = weaponSlot.Key == _playerCharacterCombatController.WeaponSelected;
+
+            if (slotWeaponSelected)
+            {
+                weaponSlot.Value.WeaponSlotBackground.color = Color.white;
+                weaponSlot.Value.WeaponSlotIcon.color = Color.white;
             }
             else
             {
-                weaponSlots[i].color = Color.gray;
-
-                // Set the color of the child image to gray
-                Image[] childImages = weaponSlots[i].GetComponentsInChildren<Image>();
-                if (childImages.Length == 2 && childImages[1] != null)
-                {
-                    childImages[1].color = Color.gray;
-                }
+                weaponSlot.Value.WeaponSlotBackground.color = Color.gray;
+                weaponSlot.Value.WeaponSlotIcon.color = Color.gray;
             }
         }
     }
 
-    private IEnumerator ScaleWeponSlotsRoutine(Image slot, Vector3 targetScale)
+    private IEnumerator ScaleWeponSlotsRoutine(Image SlotImage, Vector3 targetScale)
     {
         float time = 0f;
-        Vector3 initialScale = slot.rectTransform.localScale;
-        while (time < scaleDuration)
+        Vector3 initialScale = SlotImage.rectTransform.localScale;
+        while (time < _scaleDuration)
         {
-            slot.rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, time / scaleDuration);
+            SlotImage.rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, time / _scaleDuration);
             time += Time.unscaledDeltaTime;
             yield return null;
         }
-        slot.rectTransform.localScale = targetScale;
+        SlotImage.rectTransform.localScale = targetScale;
     }
 
     private void OnEnable()
