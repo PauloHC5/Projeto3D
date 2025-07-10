@@ -43,7 +43,8 @@ public class ACorngun : ProjectileGun, IChargeable
 
     public void PerformCharge(bool buttomPressed)
     {
-        gunAnimator.SetBool(Charge, buttomPressed);
+        // TOBE IMPLEMENTED: Handle the charging logic for the ACorngun here
+        // Example: play an animation or a specific visual effect
     }
 
     public void PerformSuperFire()
