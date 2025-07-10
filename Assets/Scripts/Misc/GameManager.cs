@@ -6,8 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>   
 {
+    [SerializeField] private bool _skipPlayerTutorial = false;
+    public static bool SkipPlayerTutorial => Instance._skipPlayerTutorial;
+
+    [Space]
+
     [SerializeField] private GameObject _canvasGameOver;
-    [SerializeField] private bool _skipTutorial = false;
+    
 
     [Header("Enemy Spawning Properties")]
     [SerializeField] private List<Enemy> enemies = new List<Enemy>();
@@ -43,8 +48,10 @@ public class GameManager : Singleton<GameManager>
     }    
 
     private void Start()
-    {       
-        if (!_skipTutorial)                           
+    {
+        if (SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
+
+        if (!_skipPlayerTutorial)                           
             StartCoroutine(IntroductionRoutine());
         else
             StartGame();
@@ -68,9 +75,7 @@ public class GameManager : Singleton<GameManager>
     {                
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.CUTSCENE);
 
-        Cursor.lockState = CursorLockMode.Locked;        
-
-        if (SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
+        Cursor.lockState = CursorLockMode.Locked;                
 
         if (!alreadyPlayedIntroCutscene)
         {
@@ -85,10 +90,7 @@ public class GameManager : Singleton<GameManager>
     public static void StartGame()
     {
         Time.timeScale = 1f; // Resume time scale     
-        FadeManager.FadeIn(() =>
-        {
-            
-        });
+        FadeManager.FadeIn(() => {});
 
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
