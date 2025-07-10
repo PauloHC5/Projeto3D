@@ -109,7 +109,7 @@ public class PlayerCharacterController : MonoBehaviour
                 _playerControls.Player.Disable();
                 _playerControls.UI.Disable();
                 _playerControls.Cutscene.Disable();
-                Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.Locked;
                 break;
         }
     }
