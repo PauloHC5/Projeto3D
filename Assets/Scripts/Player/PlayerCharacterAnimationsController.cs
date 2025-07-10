@@ -17,7 +17,7 @@ public class PlayerCharacterAnimationsController
     private readonly int Charge = Animator.StringToHash("Charge");
     private readonly int InspectWeaponTrigger = Animator.StringToHash("InspectWeapon");
 
-    private Dictionary<PlayerWeaponTypes, bool> _weaponChecked = new Dictionary<PlayerWeaponTypes, bool>
+    private Dictionary<PlayerWeaponTypes, bool> _weaponInspected = new Dictionary<PlayerWeaponTypes, bool>
     {
         { PlayerWeaponTypes.CARNIVOROUSPLANTS, false },
         { PlayerWeaponTypes.ACORNGUN, false },
@@ -45,14 +45,16 @@ public class PlayerCharacterAnimationsController
     {
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
 
-        if (_weaponChecked[weapon])        
-            playerAnimator.SetTrigger(RaiseWeaponTrigger);        
-        else
+        if(!GameManager.SkipPlayerTutorial && !_weaponInspected[weapon])
         {
-            _weaponChecked[weapon] = true; // Mark the weapon as checked after the first use
-            playerAnimator.SetTrigger(InspectWeaponTrigger);  
+            _weaponInspected[weapon] = true; // Mark the weapon as checked after the first use
+            playerAnimator.SetTrigger(InspectWeaponTrigger);
             Debug.Log($"Weapon {weapon} checked for the first time.");
-        }            
+
+            return;
+        }
+
+        playerAnimator.SetTrigger(RaiseWeaponTrigger);        
     }    
 
     public void PlayUseWeapon()
