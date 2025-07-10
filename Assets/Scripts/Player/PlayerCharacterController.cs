@@ -5,31 +5,32 @@ public enum PlayerControlTypes
 {
     GAMEPLAY,
     UI,
-    CUTSCENE
+    CUTSCENE,
+    DISABLED
 }
 
 public class PlayerCharacterController : MonoBehaviour
-{                             
+{
     public static bool PrimaryActionButtonPressed = false;
-    public static bool SecondaryActionButtonPressed = false;                           
+    public static bool SecondaryActionButtonPressed = false;
 
     private static PlayerInputActions _playerControls;
     public static PlayerInputActions PlayerControls => _playerControls;
 
-    private int MouseScroll;    
+    private int MouseScroll;
     private Vector2 playerMovementInput;
     private Vector2 playerLookInput;
 
     private PlayerCharacterMovementController playerCharacterMovementController;
-    private PlayerCharacterCombatController playerCharacterCombatController;           
+    private PlayerCharacterCombatController playerCharacterCombatController;
 
-private void Awake()
+    private void Awake()
     {
-        Cursor.lockState = CursorLockMode.Locked;                        
+        Cursor.lockState = CursorLockMode.Locked;
 
         playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
         playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
-        
+
         InitializePlayerControls();
     }
 
@@ -49,8 +50,8 @@ private void Awake()
         _playerControls.Player.Crouch.performed += ctx => Crouch();
 
         _playerControls.Player.Pause.performed += ctx =>
-        {            
-            GameManager.PauseGame();            
+        {
+            GameManager.PauseGame();
         };
 
         _playerControls.UI.Unpause.performed += ctx =>
@@ -60,23 +61,23 @@ private void Awake()
                 GameManager.ResumeGame();
             }
         };
-    
+
         // Assign the SwitchToWeapon method to the respective input action        
         _playerControls.Player.Weapon1.performed += ctx => playerCharacterCombatController.SwitchToWeapon(0);
         _playerControls.Player.Weapon2.performed += ctx => playerCharacterCombatController.SwitchToWeapon(1);
         _playerControls.Player.Weapon3.performed += ctx => playerCharacterCombatController.SwitchToWeapon(2);
         _playerControls.Player.Weapon4.performed += ctx => playerCharacterCombatController.SwitchToWeapon(3);
-                        
+
 
         // Assign the HandleMouseScroll method to the respective input actions
         _playerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };
-        _playerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };        
-    }        
+        _playerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };
+    }
 
     void Update()
     {
         HandleInput();
-        playerCharacterMovementController.HandleMovement(playerMovementInput, playerLookInput);                
+        playerCharacterMovementController.HandleMovement(playerMovementInput, playerLookInput);
     }
 
     public static void SwitchPlayerControlType(PlayerControlTypes playerControlTypes)
@@ -104,8 +105,14 @@ private void Awake()
                 Cursor.lockState = CursorLockMode.Locked;
                 HUDManager.Disable();
                 break;
+            case PlayerControlTypes.DISABLED:
+                _playerControls.Player.Disable();
+                _playerControls.UI.Disable();
+                _playerControls.Cutscene.Disable();
+                Cursor.lockState = CursorLockMode.None;
+                break;
         }
-    }    
+    }
 
     private void HandleMouseScroll()
     {
@@ -140,27 +147,27 @@ private void Awake()
         //if (rmbPressed) PerformSecondaryAction();
 
         playerCharacterCombatController?.ChargeWeapon(SecondaryActionButtonPressed);
-        
+
         playerMovementInput = _playerControls.Player.Move.ReadValue<Vector2>();
         playerLookInput = _playerControls.Player.Look.ReadValue<Vector2>();
-    }           
+    }
 
     private void PerformPrimaryAction()
     {
-        if(playerCharacterCombatController)
+        if (playerCharacterCombatController)
         {
             if (playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RAISING) return;
 
             playerCharacterCombatController.PerformPrimaryAction();
-        }        
-    }    
+        }
+    }
 
     private void PerformSecondaryAction()
-    {        
-        if(playerCharacterCombatController)
+    {
+        if (playerCharacterCombatController)
         {
             playerCharacterCombatController.PerformSecondaryAction();
-        }        
+        }
     }
 
     private void PerformReload()
@@ -180,7 +187,7 @@ private void Awake()
 
     private void OnEnable()
     {
-        _playerControls.Enable();        
+        _playerControls.Enable();
     }
 
     private void OnDisable()
