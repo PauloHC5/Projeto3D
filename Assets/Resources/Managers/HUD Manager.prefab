@@ -855,7 +855,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5525768423849771568
 RectTransform:
   m_ObjectHideFlags: 0
@@ -999,19 +999,19 @@ MonoBehaviour:
   _gunAmmoTextPanel: {fileID: 6614051910178373071}
   _meleeTextPanel: {fileID: 4208245048925279191}
   _weaponSlotsInspector:
-  - name: 
+  - name: Slot 1
     WeaponSlot:
       WeaponSlotBackground: {fileID: 3671173095133066672}
       WeaponSlotIcon: {fileID: 1221355210615444181}
-  - name: 
+  - name: Slot 2
     WeaponSlot:
       WeaponSlotBackground: {fileID: 5984260976569879800}
       WeaponSlotIcon: {fileID: 4249058456365647398}
-  - name: 
+  - name: Slot 3
     WeaponSlot:
       WeaponSlotBackground: {fileID: 3813215595281713446}
       WeaponSlotIcon: {fileID: 4429202738734749892}
-  - name: 
+  - name: Slot 4
     WeaponSlot:
       WeaponSlotBackground: {fileID: 6535223064068317592}
       WeaponSlotIcon: {fileID: 7774333463119773007}
@@ -1610,7 +1610,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7204574940879132549
 RectTransform:
   m_ObjectHideFlags: 0

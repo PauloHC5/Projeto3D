@@ -28,7 +28,7 @@ public class HUDManagerEditor : Editor
         }
 
         // Sync _weaponSlotsInspectors.name with WeaponSlot
-        SerializedProperty weaponSlotsInspectorsProp = serializedObject.FindProperty("_weaponSlotsInspectors");
+        SerializedProperty weaponSlotsInspectorsProp = serializedObject.FindProperty("_weaponSlotsInspector");
         if (weaponSlotsInspectorsProp != null)
         {
             for (int i = 0; i < weaponSlotsInspectorsProp.arraySize; i++)
