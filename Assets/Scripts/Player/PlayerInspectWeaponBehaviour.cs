@@ -5,12 +5,12 @@ public class PlayerInspectWeaponBehaviour : StateMachineBehaviour
     PlayerCharacterCombatController _playerCharacterCombatController;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
+    {        
         HUDManager.Disable();
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.CUTSCENE);
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.DISABLED);
     }         
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
+    {        
         _playerCharacterCombatController = animator.GetComponentInParent<PlayerCharacterCombatController>();
         
         //PlayerCharacterController.PlayerControls.Player.Move.Enable();
