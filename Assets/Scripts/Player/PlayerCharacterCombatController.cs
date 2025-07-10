@@ -74,7 +74,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private IWeapon _equippedWeapon;
     private List<IWeapon> _playerWeapons = new List<IWeapon>();
     private Dictionary<AmmoTypes, Int32> _playerGunAmmo;
-    private PlayerCombatStates _playerCombatStates = PlayerCombatStates.RAISING;
+    private PlayerCombatStates _playerCombatStates = PlayerCombatStates.DEFAULT;
     private PlayerCharacterAnimationsController _playerCharacterAnimationsController;
     private MouseLook _mouseLook;    
     private int _whichIndexShotgunsWereAssigned = 0; // Used to track which index the shotguns were assigned to in the player weapons list
@@ -86,6 +86,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     public Dictionary<AmmoTypes, Int32> PlayerGunsAmmo => _playerGunAmmo;    
     public void SetPlayerGunsAmmo(AmmoTypes type, int amount)
     {
+        if (!enabled) return;
         _playerGunAmmo[type] = Mathf.Max(0, amount);
     }
 
@@ -114,7 +115,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         if (_playerWeapons.Count > 0)
         {
             // If the selected weapon is not in the inventory, switch to the first weapon in the inventory
-            RaiseWeapon(_playerWeapons[0].WeaponType);
+            RaiseWeapon(_playerWeapons[0].WeaponType);            
         }
         else
         {
@@ -182,6 +183,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void SwitchToWeapon(PlayerWeaponTypes weaponToSwitch)
     {
+        if (!enabled) return;
         if (!ConditionToSwitchWeapon(weaponToSwitch)) return;        
 
         var weapon = _playerWeapons.FirstOrDefault(w => w.WeaponType == weaponToSwitch);
@@ -191,6 +193,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void SwitchToWeapon(int index)
     {
+        if (!enabled) return;
         if (index < 0 || index >= _playerWeapons.Count)
         {
             Debug.LogWarning($"Invalid weapon index: {index}. Cannot switch to weapon.");
@@ -244,6 +247,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void PerformPrimaryAction()
     {
+        if (!enabled) return;
         // Check if the equipped weapon implements the IEquippedGun interface
         if (_equippedWeapon is IEquippedGun equippedGun && ConditionsToFire(equippedGun))
         {
@@ -273,6 +277,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void PerformReload()
     {
+        if (!enabled) return;
         if(_equippedWeapon is IEquippedGun equippedGun && ConditionsToReload(equippedGun))
         {
             equippedGun.PerformReload();
@@ -290,6 +295,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void Reload()
     {        
+        if (!enabled) return;
         if(_equippedWeapon is IEquippedGun equippedGun)
         {
             int equippedGunAmmo = _playerGunAmmo[equippedGun.AmmoType];
@@ -300,6 +306,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
        
     public void ChargeWeapon(bool buttomPressed)
     {
+        if (!enabled) return;
         var equippedGun = _equippedWeapon as IEquippedGun;
 
         if (ConditionsToCharge(equippedGun) && _equippedWeapon is IChargeable chargeableWeapon)
@@ -322,6 +329,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     public void PerformSecondaryAction()
     {   
+        if (!enabled) return;
         if(_equippedWeapon is DualWieldGunManager dualWieldGun && ConditionsToSuperFire(dualWieldGun))
         {
             dualWieldGun.FireBoth();
@@ -380,13 +388,12 @@ public class PlayerCharacterCombatController : MonoBehaviour
         shotguns.Reload(ref playerShotgunsAmmo);
         SetPlayerGunsAmmo(shotguns.AmmoType, playerShotgunsAmmo); // Set the ammo for the new shotguns
     }
-
-    [ExecuteInEditMode]
+    
     private void OnEnable()
     {
         AnimationTriggerEvents.onDropShotgun += DropShotgun;
         AnimationTriggerEvents.onReTrieveNewShotguns += RetrieveNewShotguns;
-        AnimationTriggerEvents.onReload += Reload;        
+        AnimationTriggerEvents.onReload += Reload;          
     }
 
     private void OnDisable()
