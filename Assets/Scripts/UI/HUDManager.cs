@@ -352,6 +352,7 @@ public class HUDManager : Singleton<HUDManager>
 
         }
         else
+            if (_playerCharacterCombatController.EquippedWeapon is IEquippedMelee)
         {
             _meleeTextPanel.gameObject.SetActive(true);
             _ammoTextPanel.gameObject.SetActive(false);
