@@ -1,4 +1,4 @@
-using UnityEditor;
+    using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(HUDManager))]
@@ -28,7 +28,7 @@ public class HUDManagerEditor : Editor
         }
 
         // Sync _weaponSlotsInspectors.name with WeaponSlot
-        SerializedProperty weaponSlotsInspectorsProp = serializedObject.FindProperty("_weaponSlotsInspector");
+        SerializedProperty weaponSlotsInspectorsProp = serializedObject.FindProperty("_availableWeaponSlots");
         if (weaponSlotsInspectorsProp != null)
         {
             for (int i = 0; i < weaponSlotsInspectorsProp.arraySize; i++)

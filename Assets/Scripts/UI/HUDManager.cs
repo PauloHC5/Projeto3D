@@ -51,7 +51,7 @@ public class HUDManager : Singleton<HUDManager>
     [Space]
 
 #if UNITY_EDITOR
-    [SerializeField] private List<WeaponSlotInspector> _weaponSlotsInspector;
+    [SerializeField] private List<WeaponSlotInspector> _availableWeaponSlots;
 #endif
 
     private Dictionary<PlayerWeaponTypes, Image> _weaponCrosshairs = new Dictionary<PlayerWeaponTypes, Image>();
@@ -108,12 +108,12 @@ public class HUDManager : Singleton<HUDManager>
             Debug.LogError("One or more ammo text fields are not assigned in the inspector.");
         }
 
-        if (_weaponSlotsInspector.Count == 0)
+        if (_availableWeaponSlots.Count == 0)
         {
             Debug.LogError("Weapon slots are not assigned in the inspector.");
         }
 
-        foreach (var weaponSlot in _weaponSlotsInspector)
+        foreach (var weaponSlot in _availableWeaponSlots)
         {
             if (weaponSlot.WeaponSlot.WeaponSlotBackground == null || weaponSlot.WeaponSlot.WeaponSlotIcon == null)
             {
@@ -360,7 +360,7 @@ public class HUDManager : Singleton<HUDManager>
 
     private void UpdateWeaponSlots()
     {
-        InitializeWeaponSlots();
+        CheckWeaponSlotsCount();
 
         if (!_playerCharacterCombatController || _playerCharacterCombatController.PlayerWeapons.Count == 0)
         {
@@ -380,15 +380,16 @@ public class HUDManager : Singleton<HUDManager>
         ChangeWeaponSlotsColor();
     }
 
-    private void InitializeWeaponSlots()
+    private void CheckWeaponSlotsCount()
     {
-        foreach (var playerWeapon in _playerCharacterCombatController.PlayerWeapons)
-        {
-            if (_weaponSlots.ContainsKey(playerWeapon.WeaponType))
-                continue; // Skip if the weapon type is already in the dictionary
+        if(_weaponSlots.Count == _playerCharacterCombatController.PlayerWeapons.Count) 
+            return; // If the weapon slots count matches the player weapons count, no need to update
 
-            _weaponSlots.Add(playerWeapon.WeaponType, _weaponSlotsInspector.FirstOrDefault().WeaponSlot);
-            _weaponSlotsInspector.RemoveAt(0); // Remove the first element after adding it to the dictionary
+        // make weapon slots count match player weapons count
+        foreach (var playerWeapon in _playerCharacterCombatController.PlayerWeapons)
+        {            
+            _weaponSlots.Add(playerWeapon.WeaponType, _availableWeaponSlots.FirstOrDefault().WeaponSlot);
+            _availableWeaponSlots.RemoveAt(0);
 
             var weaponUI = _weaponsUI.FirstOrDefault(w => w.WeaponType == playerWeapon.WeaponType);
 
@@ -398,7 +399,7 @@ public class HUDManager : Singleton<HUDManager>
             _scaleWeaponSlotsCoroutines.Add(null); // Initialize the coroutine list with null for each weapon slot
         }
 
-        if (_weaponSlotsInspector.Count > 0) _weaponSlotsInspector.ForEach(slot =>
+        if (_availableWeaponSlots.Count > 0) _availableWeaponSlots.ForEach(slot =>
         {
             if (slot.WeaponSlot.WeaponSlotBackground != null)
             {
