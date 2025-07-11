@@ -382,12 +382,12 @@ public class HUDManager : Singleton<HUDManager>
 
     private void CheckWeaponSlotsCount()
     {
-        if(_weaponSlots.Count == _playerCharacterCombatController.PlayerWeapons.Count) 
+        if (_weaponSlots.Count == _playerCharacterCombatController.PlayerWeapons.Count)
             return; // If the weapon slots count matches the player weapons count, no need to update
 
         // make weapon slots count match player weapons count
         foreach (var playerWeapon in _playerCharacterCombatController.PlayerWeapons)
-        {            
+        {
             _weaponSlots.Add(playerWeapon.WeaponType, _availableWeaponSlots.FirstOrDefault().WeaponSlot);
             _availableWeaponSlots.RemoveAt(0);
 
@@ -424,7 +424,7 @@ public class HUDManager : Singleton<HUDManager>
         {
             Vector3 targetScale = weaponSlot.Key == _playerCharacterCombatController.WeaponSelected ? _selectedScale : _normalScale;
 
-            _scaleWeaponSlotsCoroutines.Add(StartCoroutine(ScaleWeponSlotsRoutine(weaponSlot.Value.WeaponSlotBackground, targetScale)));            
+            _scaleWeaponSlotsCoroutines.Add(StartCoroutine(ScaleWeponSlotsRoutine(weaponSlot.Value.WeaponSlotBackground, targetScale)));
         }
     }
 
