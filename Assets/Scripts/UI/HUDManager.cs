@@ -389,13 +389,13 @@ public class HUDManager : Singleton<HUDManager>
         // make weapon slots count match player weapons count
         foreach (var playerWeapon in _playerCharacterCombatController.PlayerWeapons)
         {
-            _weaponSlots.Add(playerWeapon.WeaponType, _availableWeaponSlots.FirstOrDefault().WeaponSlot);
+            _weaponSlots.Add(playerWeapon.Key, _availableWeaponSlots.FirstOrDefault().WeaponSlot);
             _availableWeaponSlots.RemoveAt(0);
 
-            var weaponUI = _weaponsUI.FirstOrDefault(w => w.WeaponType == playerWeapon.WeaponType);
+            var weaponUI = _weaponsUI.FirstOrDefault(w => w.WeaponType == playerWeapon.Key);
 
-            _weaponSlots[playerWeapon.WeaponType].WeaponSlotBackground.sprite = weaponUI.WeaponSlotBackgroundImage;
-            _weaponSlots[playerWeapon.WeaponType].WeaponSlotIcon.sprite = weaponUI.WeaponSlotIconImage;
+            _weaponSlots[playerWeapon.Key].WeaponSlotBackground.sprite = weaponUI.WeaponSlotBackgroundImage;
+            _weaponSlots[playerWeapon.Key].WeaponSlotIcon.sprite = weaponUI.WeaponSlotIconImage;
 
             _scaleWeaponSlotsCoroutines.Add(null); // Initialize the coroutine list with null for each weapon slot
         }
