@@ -8,8 +8,9 @@ public class Weapon : MonoBehaviour, IWeapon
     [SerializeField] protected PlayerWeaponTypes _weaponType;
     [SerializeField] protected WeaponSocket _socketToAttach;
 
-    public WeaponSocket GetSocketToAttach { 
+    public WeaponSocket SocketToAttach { 
         get { return _socketToAttach; }         
+        set { _socketToAttach = value; }
     }
 
     public PlayerWeaponTypes WeaponType
@@ -32,5 +33,13 @@ public class Weapon : MonoBehaviour, IWeapon
     public virtual void EnableWeapon()
     {
         gameObject.SetActive(true);
+    }
+
+    public void AttatchToSocket(Transform rightHandSocket, Transform leftHandSocket)
+    {
+        transform.SetParent(_socketToAttach == WeaponSocket.RightHandSocket ? rightHandSocket : leftHandSocket);
+
+        transform.localPosition = Vector3.zero; // Reset local position
+        transform.localRotation = Quaternion.identity; // Reset local rotation
     }
 }

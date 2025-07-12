@@ -7,6 +7,8 @@ public interface IWeapon
     public void EnableWeapon();
 
     public void DisableWeapon();
+    
+    public void AttatchToSocket(Transform rightHandSocket, Transform leftHandSocket);
 
     float WeaponRange { get; }
 }

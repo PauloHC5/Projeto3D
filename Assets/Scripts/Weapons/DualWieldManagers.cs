@@ -16,10 +16,10 @@ public class DualWieldMeleeManager : IWeapon, IEquippedMelee
 
     PlayerCharacterAnimationsController playerAnimationsController;
 
-    public DualWieldMeleeManager(CarnivovrousPlant weapon, Transform rightWeaponSocketPos, Transform leftWeaponSocketPos, PlayerCharacterAnimationsController playerAnimationsController)
+    public DualWieldMeleeManager(CarnivovrousPlant weapon, PlayerCharacterAnimationsController playerAnimationsController)
     {
-        CarnivovrousPlant rightWeaponSpawned = Object.Instantiate(weapon, rightWeaponSocketPos);
-        CarnivovrousPlant leftWeaponSpawned = Object.Instantiate(weapon, leftWeaponSocketPos);
+        CarnivovrousPlant rightWeaponSpawned = weapon;
+        CarnivovrousPlant leftWeaponSpawned = Object.Instantiate(weapon);
 
         rightWeaponSpawned.DisableWeapon();
         leftWeaponSpawned.DisableWeapon();
@@ -69,7 +69,16 @@ public class DualWieldMeleeManager : IWeapon, IEquippedMelee
     {
         RightCarnivorousPlant.DisableWeapon();
         LeftCarnivorousPlant.DisableWeapon();
-    }    
+    }
+
+    public void AttatchToSocket(Transform rightHandSocket, Transform leftHandSocket)
+    {
+        RightCarnivorousPlant.AttatchToSocket(rightHandSocket, leftHandSocket);
+
+        LeftCarnivorousPlant.SocketToAttach = WeaponSocket.LeftHandSocket;
+
+        LeftCarnivorousPlant.AttatchToSocket(rightHandSocket, leftHandSocket);
+    }
 }
 
 public class DualWieldGunManager : IWeapon, IEquippedGun
@@ -103,10 +112,10 @@ public class DualWieldGunManager : IWeapon, IEquippedGun
 
     public bool CanReload() => RightGun.CanReload() || LeftGun.CanReload();
 
-    public DualWieldGunManager(Gun gun, Transform rightGunSocketPos, Transform leftGunSocketPos, PlayerCharacterAnimationsController playerAnimationsController)
+    public DualWieldGunManager(Gun gun, PlayerCharacterAnimationsController playerAnimationsController)
     {
-        Gun rightGunSpawned = Object.Instantiate(gun, rightGunSocketPos);
-        Gun leftGunSpawned = Object.Instantiate(gun, leftGunSocketPos);        
+        Gun rightGunSpawned = gun;
+        Gun leftGunSpawned = Object.Instantiate(gun);        
 
         RightGun = rightGunSpawned;
         LeftGun = leftGunSpawned;
@@ -166,5 +175,14 @@ public class DualWieldGunManager : IWeapon, IEquippedGun
     {
         // Shotgun ammo corresponds to each shotguns that player can retrieve to equip, that is 2        
         playerGunAmmo -= 2;
+    }
+
+    public void AttatchToSocket(Transform rightHandSocket, Transform leftHandSocket)
+    {
+        RightGun.AttatchToSocket(rightHandSocket, leftHandSocket);
+
+        LeftGun.SocketToAttach = WeaponSocket.LeftHandSocket;
+
+        LeftGun.AttatchToSocket(rightHandSocket, leftHandSocket);
     }
 }
