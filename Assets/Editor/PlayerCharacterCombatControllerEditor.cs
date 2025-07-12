@@ -6,22 +6,25 @@ using UnityEngine;
 public class PlayerCharacterCombatControllerEditor : Editor
 {
     public override void OnInspectorGUI()
-    {        
-        serializedObject.Update();            
+    {
+        serializedObject.Update();
 
         var controller = (PlayerCharacterCombatController)target;
 
         // Sync WeaponsPrefabs with WeaponTypes enum
         if (controller.WeaponsPrefabs != null)
         {
-            for (int i = 0; i < controller.WeaponsPrefabs.Length; i++)
+            for (int i = 0; i < controller.WeaponsPrefabs.Count; i++)
             {
                 var weaponPrefab = controller.WeaponsPrefabs[i].prefab;
                 if (weaponPrefab != null)
                 {
-                    controller.WeaponsPrefabs[i].name = weaponPrefab.WeaponType.ToString();
+                    // Copy struct, modify, then assign back to the list
+                    var weaponPrefabEntry = controller.WeaponsPrefabs[i];
+                    weaponPrefabEntry.name = weaponPrefab.WeaponType.ToString();
+                    controller.WeaponsPrefabs[i] = weaponPrefabEntry;
                 }
-            }
+            }            
         }
 
         // Sync gunsAmmo with AmmoTypes enum        
