@@ -125,9 +125,9 @@ public class PlayerCharacterController : MonoBehaviour
 
         // Get the current weapon index by matching WeaponType
         int currentIndex = ownedWeapons
-            .Where(w => w != null) // Ensure we only consider non-null weapons
+            .Where(w => w.Value != null) // Ensure we only consider non-null weapons
             .Select((w, idx) => new { w, idx })
-            .FirstOrDefault(x => x.w.WeaponType == playerCharacterCombatController.WeaponSelected)?.idx ?? 0;
+            .FirstOrDefault(x => x.w.Key == playerCharacterCombatController.WeaponSelected)?.idx ?? 0;
 
         // Calculate new index based on scroll direction
         int newIndex = currentIndex - MouseScroll;
