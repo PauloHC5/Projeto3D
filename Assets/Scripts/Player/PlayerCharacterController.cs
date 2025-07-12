@@ -130,7 +130,7 @@ public class PlayerCharacterController : MonoBehaviour
             .FirstOrDefault(x => x.w.WeaponType == playerCharacterCombatController.WeaponSelected)?.idx ?? 0;
 
         // Calculate new index based on scroll direction
-        int newIndex = currentIndex + MouseScroll;
+        int newIndex = currentIndex - MouseScroll;
 
         // Wrap around
         if (newIndex < 0)
