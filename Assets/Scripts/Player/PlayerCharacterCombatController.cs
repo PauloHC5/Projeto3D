@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 
 public enum PlayerWeaponTypes
@@ -87,6 +88,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private MouseLook _mouseLook;    
 
     private List<PlayerWeaponTypes> _weaponOrder = new List<PlayerWeaponTypes>();
+    public IReadOnlyList<PlayerWeaponTypes> WeaponOrder => _weaponOrder;
 
     public void SetPlayerGunsAmmo(AmmoTypes type, int amount)
     {
@@ -188,7 +190,11 @@ public class PlayerCharacterCombatController : MonoBehaviour
             return; // Exit after replacing the null weapon
         }
         else // If there is no null weapon, add the new weapon to the player's weapons
+        {
             _playerWeapons.Add(instantiatedWeapon.WeaponType, instantiatedWeapon);
+            _weaponOrder.Add(instantiatedWeapon.WeaponType);
+        }
+            
     }    
 
     private void Update()
@@ -214,22 +220,14 @@ public class PlayerCharacterCombatController : MonoBehaviour
     public void SwitchToWeapon(int index)
     {
         if (!enabled) return;
-        if (index < 0 || index >= _playerWeapons.Count)
+        if (index < 0 || index >= _weaponOrder.Count)
         {
             Debug.LogWarning($"Invalid weapon index: {index}. Cannot switch to weapon.");
-            return; // If the index is out of bounds, do nothing
+            return;
         }
 
-        var weaponList = _playerWeapons.ToList();
-        var weapon = weaponList.ElementAtOrDefault(index).Value;
-
-        if (weapon == null)
-        {
-            RetrieveNewShotguns();
-            weapon = _playerWeapons[PlayerWeaponTypes.BANANASHOTGUN];
-        }
-
-        if (weapon != null && ConditionToSwitchWeapon(weapon.WeaponType))
+        var weaponType = _weaponOrder[index];
+        if (_playerWeapons.TryGetValue(weaponType, out var weapon) && weapon != null && ConditionToSwitchWeapon(weapon.WeaponType))
         {
             RaiseWeapon(weapon.WeaponType);
         }
@@ -414,5 +412,5 @@ public class PlayerCharacterCombatController : MonoBehaviour
         AnimationTriggerEvents.onDropShotgun -= DropShotgun;
         AnimationTriggerEvents.onReTrieveNewShotguns -= RetrieveNewShotguns;
         AnimationTriggerEvents.onReload -= Reload;
-    }
+    }    
 }

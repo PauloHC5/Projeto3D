@@ -116,18 +116,16 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void HandleMouseScroll()
     {
-        // Use the new IReadOnlyList<IWeapon> PlayerWeapons property
-        var ownedWeapons = playerCharacterCombatController.PlayerWeapons;
-        int inventoryCount = ownedWeapons.Count;
+        // Get the weapon order and the dictionary of weapons
+        var weaponOrder = playerCharacterCombatController.WeaponOrder;
+        var playerWeapons = playerCharacterCombatController.PlayerWeapons;
 
+        int inventoryCount = weaponOrder.Count;
         if (inventoryCount <= 1)
             return; // No need to scroll if only one weapon
 
-        // Get the current weapon index by matching WeaponType
-        int currentIndex = ownedWeapons
-            .Where(w => w.Value != null) // Ensure we only consider non-null weapons
-            .Select((w, idx) => new { w, idx })
-            .FirstOrDefault(x => x.w.Key == playerCharacterCombatController.WeaponSelected)?.idx ?? 0;
+        // Replace the problematic line with the following code
+        int currentIndex = playerCharacterCombatController.WeaponOrder.ToList().IndexOf(playerCharacterCombatController.WeaponSelected);
 
         // Calculate new index based on scroll direction
         int newIndex = currentIndex - MouseScroll;
@@ -138,8 +136,17 @@ public class PlayerCharacterController : MonoBehaviour
         else if (newIndex >= inventoryCount)
             newIndex = 0;
 
-        // Switch weapon using WeaponType
-        playerCharacterCombatController.SwitchToWeapon(newIndex);
+        // Find the next available (non-null) weapon
+        for (int i = 0; i < inventoryCount; i++)
+        {
+            int tryIndex = (newIndex + i) % inventoryCount;
+            var tryWeaponType = weaponOrder[tryIndex];
+            if (playerWeapons.TryGetValue(tryWeaponType, out var weapon) && weapon != null)
+            {
+                playerCharacterCombatController.SwitchToWeapon(tryWeaponType);
+                break;
+            }
+        }
     }
 
     private void HandleInput()
