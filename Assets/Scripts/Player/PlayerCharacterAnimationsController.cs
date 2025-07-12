@@ -41,7 +41,7 @@ public class PlayerCharacterAnimationsController
         playerAnimator.SetFloat(CurrentSpeed, Mathf.Clamp(playerVelocityMagnitude, 0f, playerMaxSpeed));        
     }    
         
-    public void PlaySwitchToWeapon(PlayerWeaponTypes weapon)
+    public void PlayRaiseWeapon(PlayerWeaponTypes weapon)
     {
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
 
