@@ -231,7 +231,6 @@ public class HUDManager : Singleton<HUDManager>
             Debug.LogWarning("Scope or weapon crosshair is not assigned in the inspector.");
             return;
         }
-
         
         if (Instance._playerCharacterCombatController.EquippedWeapon == null)
         {
@@ -296,7 +295,6 @@ public class HUDManager : Singleton<HUDManager>
 
     public static void Bite()
     {
-        int BiteTrigger = Animator.StringToHash("Bite");
         if (!Instance._playerCharacterCombatController || Instance._playerCharacterCombatController.EquippedWeapon == null)
         {
             Debug.LogWarning("No equipped weapon found. Cannot trigger bite animation.");
@@ -376,14 +374,14 @@ public class HUDManager : Singleton<HUDManager>
 
         if (!_playerCharacterCombatController || _playerCharacterCombatController.PlayerWeapons.Count == 0)
         {
-            // If no weapons are available, disable all weapon slots
-            foreach (var weaponSlot in _weaponSlots)
+            // If no weapons are available, disable all available weapon slots
+            _availableWeaponSlots.ForEach(slot =>
             {
-                if (weaponSlot.Value.WeaponSlotBackground != null)
+                if (slot.WeaponSlot.WeaponSlotBackground != null)
                 {
-                    weaponSlot.Value.WeaponSlotBackground.gameObject.SetActive(false);
+                    slot.WeaponSlot.WeaponSlotBackground.gameObject.SetActive(false);
                 }
-            }
+            });
 
             return; // Exit if no player character combat controller or no weapons are available
         }
@@ -400,6 +398,12 @@ public class HUDManager : Singleton<HUDManager>
         // make weapon slots count match player weapons count
         foreach (var playerWeapon in _playerCharacterCombatController.PlayerWeapons)
         {
+            if (_weaponSlots.ContainsKey(playerWeapon.Key))
+            {
+                // If the weapon slot already exists, continue to the next weapon
+                continue;
+            }
+            
             _weaponSlots.Add(playerWeapon.Key, _availableWeaponSlots.FirstOrDefault().WeaponSlot);
             _availableWeaponSlots.RemoveAt(0);
 
@@ -407,6 +411,7 @@ public class HUDManager : Singleton<HUDManager>
 
             _weaponSlots[playerWeapon.Key].WeaponSlotBackground.sprite = weaponUI.WeaponSlotBackgroundImage;
             _weaponSlots[playerWeapon.Key].WeaponSlotIcon.sprite = weaponUI.WeaponSlotIconImage;
+            _weaponSlots[playerWeapon.Key].WeaponSlotBackground.gameObject.SetActive(true);
 
             _scaleWeaponSlotsCoroutines.Add(null); // Initialize the coroutine list with null for each weapon slot
         }
@@ -461,8 +466,8 @@ public class HUDManager : Singleton<HUDManager>
 
     private IEnumerator ScaleWeponSlotsRoutine(Image SlotImage, Vector3 targetScale)
     {
-        float time = 0f;
-        Vector3 initialScale = SlotImage.rectTransform.localScale;
+        var time = 0f;
+        var initialScale = SlotImage.rectTransform.localScale;
         while (time < _scaleDuration)
         {
             SlotImage.rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, time / _scaleDuration);
