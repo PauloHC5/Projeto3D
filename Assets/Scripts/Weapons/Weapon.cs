@@ -2,6 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PlayerWeaponTypes
+{
+    CARNIVOROUSPLANTS = 0,
+    ACORNGUN = 1,
+    BANANASHOTGUN = 2,
+    CACTUSSCROSSBOW = 3,
+}
+
 public class Weapon : MonoBehaviour, IWeapon
 {
     [Header("Weapon Properties")]

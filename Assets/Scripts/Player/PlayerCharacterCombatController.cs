@@ -5,15 +5,6 @@ using System;
 using UnityEngine.InputSystem;
 using Unity.VisualScripting;
 
-
-public enum PlayerWeaponTypes
-{
-    CARNIVOROUSPLANTS = 0,
-    ACORNGUN = 1,
-    BANANASHOTGUN = 2,
-    CACTUSSCROSSBOW = 3,
-}
-
 public enum PlayerCombatStates
 {
     RAISING,
