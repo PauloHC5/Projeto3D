@@ -67,6 +67,7 @@ public class HUDManager : Singleton<HUDManager>
     private TextMeshProUGUI[] _allTexts;
     private PlayerCharacterCombatController _playerCharacterCombatController;
     private static bool _enemyOnRange = false;
+    private Animator _carivorousPLantCrosshairAnimator;
 
     public static bool EnemyOnRange => _enemyOnRange;
 
