@@ -268,7 +268,7 @@ public class HUDManager : Singleton<HUDManager>
         {
             Instance._scopeCrosshair.gameObject.SetActive(true);
 
-            Instance._weaponCrosshairs[Instance._playerCharacterCombatController.WeaponSelected].gameObject.SetActive(false); // Disable the crosshair for the selected weapon
+            Instance._weaponCrosshairs[Instance._playerCharacterCombatController.EquippedWeapon.WeaponType].gameObject.SetActive(false); // Disable the crosshair for the selected weapon
 
 
             // Get all images in this game object and its children and set their alpha to 10%
