@@ -1886,6 +1886,7 @@ GameObject:
   - component: {fileID: 4709857358180033657}
   - component: {fileID: 1146334129554183040}
   - component: {fileID: 7542746864910389444}
+  - component: {fileID: 4961890982218404622}
   m_Layer: 7
   m_Name: CactusCrossbow
   m_TagString: Untagged
@@ -2062,6 +2063,21 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4961890982218404622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8543736380258689134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 954566a7ef81b0644a8b4446b9f447da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spinSpeed: 70.5
+  moveAmplitude: 0.08
+  moveFrequency: 0.61
 --- !u!1 &8681570866536669022
 GameObject:
   m_ObjectHideFlags: 0

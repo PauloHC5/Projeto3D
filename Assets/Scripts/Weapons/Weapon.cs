@@ -18,7 +18,8 @@ public class Weapon : MonoBehaviour, IWeapon
     [SerializeField] protected WeaponSocket _socketToAttach;
     
     private bool _isEquipped = false; // Flag to check if the weapon is equipped
-    protected Collider _triggerCollider; // Collider for weapon trigger
+    private Collider _triggerCollider; // Collider for weapon trigger
+    private PickupBehaviour _pickupBehaviour;
 
     public WeaponSocket SocketToAttach { 
         get => _socketToAttach;
@@ -36,6 +37,8 @@ public class Weapon : MonoBehaviour, IWeapon
         {
             Debug.LogError($"Weapon {gameObject.name} requires a Collider component for trigger detection.");
         }
+        
+        _pickupBehaviour = GetComponent<PickupBehaviour>();
     }
 
     protected virtual float GetWeaponRange()
@@ -55,6 +58,8 @@ public class Weapon : MonoBehaviour, IWeapon
 
     public void AttatchToSocket(Transform rightHandSocket, Transform leftHandSocket)
     {
+        if(_pickupBehaviour) _pickupBehaviour.enabled = false;
+        
         transform.SetParent(_socketToAttach == WeaponSocket.RightHandSocket ? rightHandSocket : leftHandSocket);
 
         transform.localPosition = Vector3.zero; // Reset local position
