@@ -9,7 +9,7 @@ public class PlayerAutoReloadACorngun : StateMachineBehaviour
     {        
         PlayerCharacterCombatController playerCharacterCombatController = animator.GetComponentInParent<PlayerCharacterCombatController>();
 
-        if (playerCharacterCombatController == null || playerCharacterCombatController.WeaponSelected != PlayerWeaponTypes.ACORNGUN) return;
+        if (playerCharacterCombatController == null || playerCharacterCombatController.EquippedWeapon?.WeaponType != PlayerWeaponTypes.ACORNGUN) return;
 
         var equippedGun = playerCharacterCombatController.EquippedWeapon as IEquippedGun;
 

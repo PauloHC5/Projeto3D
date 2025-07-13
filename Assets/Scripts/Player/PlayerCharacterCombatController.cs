@@ -51,9 +51,6 @@ public enum AmmoTypes
 public class PlayerCharacterCombatController : MonoBehaviour
 {
     [Space]
-    [SerializeField] private PlayerWeaponTypes _weaponSelected;
-    public PlayerWeaponTypes WeaponSelected => _weaponSelected;
-
     [SerializeField] private Transform _rightHandSocket, _leftHandSocket;
 
     // Weapon prefabs and ammo amounts for the guns
@@ -230,7 +227,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         PlayerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
         PlayerCombatStates != PlayerCombatStates.FIRING &&
         PlayerCombatStates != PlayerCombatStates.ATTACKING &&
-        weaponToSwitch != _weaponSelected;
+        weaponToSwitch != _equippedWeapon?.WeaponType;
 
 
     private void RaiseWeapon(PlayerWeaponTypes weaponToRaise)
@@ -239,6 +236,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             EquipWeapon(weaponToEquip);
 
         _playerCharacterAnimationsController?.PlayRaiseWeapon(_weaponSelected);
+        _playerCharacterAnimationsController?.PlayRaiseWeapon(_equippedWeapon.WeaponType);
         onSwitchToWeapon?.Invoke();
     }
 
@@ -253,8 +251,6 @@ public class PlayerCharacterCombatController : MonoBehaviour
             Debug.LogWarning($"Weapon to equip not found in the inventory.");
             return;
         }
-
-        _weaponSelected = _equippedWeapon.WeaponType;
         _equippedWeapon.EnableWeapon();
     }
 

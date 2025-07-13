@@ -116,6 +116,9 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void HandleMouseScroll()
     {
+        if (playerCharacterCombatController == null || playerCharacterCombatController.EquippedWeapon == null || playerCharacterCombatController.WeaponOrder == null || playerCharacterCombatController.PlayerWeapons == null)
+            return;
+        
         // Get the weapon order and the dictionary of weapons
         var weaponOrder = playerCharacterCombatController.WeaponOrder;
         var playerWeapons = playerCharacterCombatController.PlayerWeapons;
@@ -124,8 +127,8 @@ public class PlayerCharacterController : MonoBehaviour
         if (inventoryCount <= 1)
             return; // No need to scroll if only one weapon
 
-        // Replace the problematic line with the following code
-        int currentIndex = playerCharacterCombatController.WeaponOrder.ToList().IndexOf(playerCharacterCombatController.WeaponSelected);
+        // Get the current index of the equipped weapon
+        int currentIndex = playerCharacterCombatController.WeaponOrder.ToList().IndexOf(playerCharacterCombatController.EquippedWeapon.WeaponType);
 
         // Calculate new index based on scroll direction
         int newIndex = currentIndex - MouseScroll;

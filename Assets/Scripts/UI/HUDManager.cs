@@ -162,15 +162,13 @@ public class HUDManager : Singleton<HUDManager>
 
     private void UpdateCrosshair()
     {
-        if (!_playerCharacterCombatController) return;
-
         if (_weaponCrosshairs.Count == 0)
         {
             Debug.LogWarning("Weapon crosshair is not assigned in the inspector.");
             return;
         }
 
-        if (_playerCharacterCombatController.PlayerWeapons.Count == 0)
+        if (!_playerCharacterCombatController || _playerCharacterCombatController.PlayerWeapons.Count == 0 || _playerCharacterCombatController.EquippedWeapon == null)
         {
             _weaponCrosshairs.Values.ToList().ForEach(crosshair => crosshair.gameObject.SetActive(false)); // Disable all crosshairs if no weapons are available
             return;
@@ -178,14 +176,10 @@ public class HUDManager : Singleton<HUDManager>
 
         foreach (var crosshair in _weaponCrosshairs)
         {
-            if (crosshair.Key == _playerCharacterCombatController.WeaponSelected)
-            {
+            if (crosshair.Key == _playerCharacterCombatController.EquippedWeapon.WeaponType)
                 crosshair.Value.gameObject.SetActive(true); // Enable the crosshair for the selected weapon                    
-            }
             else
-            {
                 crosshair.Value.gameObject.SetActive(false); // Disable the crosshair for other weapons
-            }
         }
     }
 
@@ -202,13 +196,13 @@ public class HUDManager : Singleton<HUDManager>
             if (hit.collider.CompareTag("Enemy"))
             {
                 // If an enemy is detected, change the crosshair color to red
-                _weaponCrosshairs[_playerCharacterCombatController.WeaponSelected].color = Color.red;
+                _weaponCrosshairs[_playerCharacterCombatController.EquippedWeapon.WeaponType].color = Color.red;
                 _enemyOnRange = true; // Set the flag to true if an enemy is detected
             }
             else
             {
                 // If no enemy is detected, reset the crosshair color to its original color
-                _weaponCrosshairs[_playerCharacterCombatController.WeaponSelected].color = _crosshairsOriginalColors[_playerCharacterCombatController.WeaponSelected];
+                _weaponCrosshairs[_playerCharacterCombatController.EquippedWeapon.WeaponType].color = _crosshairsOriginalColors[_playerCharacterCombatController.EquippedWeapon.WeaponType];
 
                 _enemyOnRange = false; // Set the flag to false if no enemy is detected
             }
@@ -216,7 +210,7 @@ public class HUDManager : Singleton<HUDManager>
         else
         {
             // If no enemy is detected, reset the crosshair color to its original color                
-            _weaponCrosshairs[_playerCharacterCombatController.WeaponSelected].color = _crosshairsOriginalColors[_playerCharacterCombatController.WeaponSelected];
+            _weaponCrosshairs[_playerCharacterCombatController.EquippedWeapon.WeaponType].color = _crosshairsOriginalColors[_playerCharacterCombatController.EquippedWeapon.WeaponType];
 
             _enemyOnRange = false; // Set the flag to false if no enemy is detected
         }
@@ -237,11 +231,18 @@ public class HUDManager : Singleton<HUDManager>
             return;
         }
 
+        
+        if (Instance._playerCharacterCombatController.EquippedWeapon == null)
+        {
+            Debug.LogWarning("No equipped weapon found. Cannot toggle scope crosshair.");
+            return;
+        }
+        
         if (!scopeEnable)
         {
             Instance._scopeCrosshair.gameObject.SetActive(false);
 
-            Instance._weaponCrosshairs[Instance._playerCharacterCombatController.WeaponSelected].gameObject.SetActive(true); // Enable the crosshair for the selected weapon
+            Instance._weaponCrosshairs[Instance._playerCharacterCombatController.EquippedWeapon.WeaponType].gameObject.SetActive(true); // Enable the crosshair for the selected weapon
 
             // Reset all images in this game object and its children to full alpha            
             foreach (Image img in Instance._allImages)
@@ -295,8 +296,17 @@ public class HUDManager : Singleton<HUDManager>
     public static void Bite()
     {
         int BiteTrigger = Animator.StringToHash("Bite");
+        if (!Instance._playerCharacterCombatController || Instance._playerCharacterCombatController.EquippedWeapon == null)
+        {
+            Debug.LogWarning("No equipped weapon found. Cannot trigger bite animation.");
+            return;
+        }
+        var biteTrigger = Animator.StringToHash("Bite");
 
-        Instance._weaponCrosshairs[Instance._playerCharacterCombatController.WeaponSelected].GetComponent<Animator>().SetTrigger(BiteTrigger);
+        Instance._carivorousPLantCrosshairAnimator ??= // Get the animator for the carnivorous plant crosshair if it is not already assigned
+            Instance._weaponCrosshairs[PlayerWeaponTypes.CARNIVOROUSPLANTS].GetComponent<Animator>();
+        
+        Instance._carivorousPLantCrosshairAnimator.SetTrigger(biteTrigger); // Trigger the bite animation on the carnivorous plant crosshair animator
     }
 
     private void UpdateAmmoDisplay()
@@ -423,7 +433,7 @@ public class HUDManager : Singleton<HUDManager>
 
         foreach (var weaponSlot in _weaponSlots)
         {
-            Vector3 targetScale = weaponSlot.Key == _playerCharacterCombatController.WeaponSelected ? _selectedScale : _normalScale;
+            Vector3 targetScale = weaponSlot.Key == _playerCharacterCombatController.EquippedWeapon?.WeaponType ? _selectedScale : _normalScale;
 
             _scaleWeaponSlotsCoroutines.Add(StartCoroutine(ScaleWeponSlotsRoutine(weaponSlot.Value.WeaponSlotBackground, targetScale)));
         }
@@ -433,9 +443,9 @@ public class HUDManager : Singleton<HUDManager>
     {
         foreach (var weaponSlot in _weaponSlots)
         {
-            bool slotWeaponSelected = weaponSlot.Key == _playerCharacterCombatController.WeaponSelected;
+            var slotEquippedWeapon = weaponSlot.Key == _playerCharacterCombatController.EquippedWeapon?.WeaponType;
 
-            if (slotWeaponSelected)
+            if (slotEquippedWeapon)
             {
                 weaponSlot.Value.WeaponSlotBackground.color = Color.white;
                 weaponSlot.Value.WeaponSlotIcon.color = Color.white;
