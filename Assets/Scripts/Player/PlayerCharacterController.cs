@@ -80,6 +80,7 @@ public class PlayerCharacterController : MonoBehaviour
         playerCharacterMovementController.HandleMovement(playerMovementInput, playerLookInput);
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     public static void SwitchPlayerControlType(PlayerControlTypes playerControlTypes)
     {
         switch (playerControlTypes)
@@ -155,7 +156,6 @@ public class PlayerCharacterController : MonoBehaviour
     private void HandleInput()
     {
         if (PrimaryActionButtonPressed) PerformPrimaryAction();
-        //if (rmbPressed) PerformSecondaryAction();
 
         playerCharacterCombatController?.ChargeWeapon(SecondaryActionButtonPressed);
 

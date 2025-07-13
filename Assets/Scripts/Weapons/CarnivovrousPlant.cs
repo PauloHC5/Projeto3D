@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -9,26 +11,33 @@ public class CarnivovrousPlant : Weapon
     [SerializeField] private int _damage = 25;
     [SerializeField] private int _chewingDuration = 10;
     [SerializeField] private float _duration = 0.3f; // Duration for the scale-up effect
+    [SerializeField] private Collider _hitCollider;
 
     private bool _canAttack = true;
     public bool CanAttack => _canAttack;
 
-    private Collider _hitCollider;
+    
     private Animator _animator;
     private Vector3 _originalScale;
     private AudioSource _audioSource;
 
     private int Chewing = Animator.StringToHash("Chewing");
 
-    override protected float GetWeaponRange()
+    protected override float GetWeaponRange()
     {
         return 1.5f;
     }
 
     private void Awake()
     {
-        _animator = GetComponentInChildren<Animator>();
-        _hitCollider = GetComponent<Collider>();
+        OnBaseAwake();
+        
+        if (_hitCollider == null)
+        {
+            Debug.LogError("Hit Collider is not assigned in Carnivorous Plant.");
+        }
+        
+        _animator = GetComponentInChildren<Animator>(true);
         _originalScale = transform.localScale;
         _audioSource = GetComponent<AudioSource>();
 

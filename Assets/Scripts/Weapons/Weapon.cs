@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum PlayerWeaponTypes
@@ -15,18 +16,27 @@ public class Weapon : MonoBehaviour, IWeapon
     [Header("Weapon Properties")]
     [SerializeField] protected PlayerWeaponTypes _weaponType;
     [SerializeField] protected WeaponSocket _socketToAttach;
+    
+    private bool _isEquipped = false; // Flag to check if the weapon is equipped
+    protected Collider _triggerCollider; // Collider for weapon trigger
 
     public WeaponSocket SocketToAttach { 
-        get { return _socketToAttach; }         
-        set { _socketToAttach = value; }
+        get => _socketToAttach;
+        set => _socketToAttach = value;
     }
 
-    public PlayerWeaponTypes WeaponType
-    {
-        get { return _weaponType; }
-    }
+    public PlayerWeaponTypes WeaponType => _weaponType;
 
     public float WeaponRange => GetWeaponRange();
+    
+    protected void OnBaseAwake()
+    {
+        _triggerCollider = GetComponents<Collider>().FirstOrDefault(c => c.isTrigger);
+        if (_triggerCollider == null)
+        {
+            Debug.LogError($"Weapon {gameObject.name} requires a Collider component for trigger detection.");
+        }
+    }
 
     protected virtual float GetWeaponRange()
     {
@@ -49,5 +59,8 @@ public class Weapon : MonoBehaviour, IWeapon
 
         transform.localPosition = Vector3.zero; // Reset local position
         transform.localRotation = Quaternion.identity; // Reset local rotation
+        
+        _isEquipped = true; // Set the weapon as equipped
+        _triggerCollider.enabled = false; // Enable the trigger collider when equipped
     }
 }

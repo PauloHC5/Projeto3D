@@ -53,6 +53,8 @@ public class Gun : Weapon, IEquippedGun
 
     protected virtual void Awake()
     {        
+        OnBaseAwake();
+        
         gunAnimator = GetComponent<Animator>();
         if (gunAnimator == null) gunAnimator = GetComponentInChildren<Animator>();
         

@@ -29,6 +29,16 @@ public struct WeaponPrefab
 {
     [HideInInspector] public string name;
     public Weapon prefab;
+
+    public WeaponPrefab(string toString, Weapon newWeapon)
+    {
+        name = toString;
+        prefab = newWeapon as Weapon; // Cast the IWeapon to Weapon
+        if (prefab == null)
+        {
+            Debug.LogError($"WeaponPrefab: {toString} is not a valid Weapon type.");
+        }
+    }
 }
 
 [Serializable]
@@ -121,11 +131,12 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         foreach (var weaponPrefab in WeaponsPrefabs)
         {
-            AddWeapon(weaponPrefab.prefab);
+            var instantiatedWeapon = Instantiate(weaponPrefab.prefab) as IWeapon;
+            AddWeapon(instantiatedWeapon);
         }
     }
 
-    private void AddWeapon(Weapon newWeapon)
+    private void AddWeapon(IWeapon newWeapon)
     {
         // Check if the weapon is null
         if (newWeapon == null)
@@ -141,31 +152,44 @@ public class PlayerCharacterCombatController : MonoBehaviour
             return; // If the weapon is already in the player's weapons, do nothing
         }
 
-        // Instantiate the weapon and attach it to the player's sockets
+        if (WeaponsPrefabs.All(w => w.prefab.WeaponType != newWeapon.WeaponType))
+        {
+            var prefabs = Resources.LoadAll("Weapons"); // Load all weapon prefabs from the Resources folder
+            
+            // Find the weapon prefab in the loaded resources
+            var weaponPrefab = prefabs.Select(prefab => prefab.GetComponent<Weapon>()) // Get the Weapon component from each prefab
+                .FirstOrDefault(w => w != null && w.WeaponType == newWeapon.WeaponType); // Check if the prefab's WeaponType matches the new weapon's WeaponType
+            
+            if (weaponPrefab is null)
+            {
+                Debug.LogWarning("Weapon prefab not found for " + newWeapon.WeaponType);
+            }
+            else
+                WeaponsPrefabs.Add(new WeaponPrefab(newWeapon.WeaponType.ToString(), weaponPrefab));
+        }
 
-        var instantiatedWeapon = Instantiate(newWeapon) as IWeapon;
-
-        if (instantiatedWeapon is CarnivovrousPlant carnivovrousPlant)
+        // Attach the weapon to the player's hands
+        if (newWeapon is CarnivovrousPlant carnivovrousPlant)
         {
             var dualWieldMelee = new DualWieldMeleeManager(
-                instantiatedWeapon as CarnivovrousPlant,
+                carnivovrousPlant,
                 _playerCharacterAnimationsController
             );
             dualWieldMelee.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the dual wield melee to the sockets
-            instantiatedWeapon = dualWieldMelee; // Replace the instantiated weapon with the dual wield melee manager
+            newWeapon = dualWieldMelee; // Replace the instantiated weapon with the dual wield melee manager
         }
         else
-           if (newWeapon is BananaShotgun)
+           if (newWeapon is BananaShotgun bananaShotgun)
         {
             var dualWieldGun = new DualWieldGunManager(
-                instantiatedWeapon as BananaShotgun,
+                bananaShotgun,
                 _playerCharacterAnimationsController
             );
             dualWieldGun.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the dual wield gun to the sockets
-            instantiatedWeapon = dualWieldGun; // Replace the instantiated weapon with the dual wield gun manager            
+            newWeapon = dualWieldGun; // Replace the instantiated weapon with the dual wield gun manager            
         }
         else
-            instantiatedWeapon.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the weapon to the sockets
+            newWeapon.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the weapon to the sockets
 
 
         // Check if there is a null weapon in the player's weapons
@@ -174,13 +198,13 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             // If there is a null weapon in the player's weapons, replace it with the new weapon
             var nullWeaponIndex = _playerWeapons.FirstOrDefault(w => w.Value == null).Key;
-            _playerWeapons[nullWeaponIndex] = instantiatedWeapon;
+            _playerWeapons[nullWeaponIndex] = newWeapon;
             return; // Exit after replacing the null weapon
         }
         else // If there is no null weapon, add the new weapon to the player's weapons
         {
-            _playerWeapons.Add(instantiatedWeapon.WeaponType, instantiatedWeapon);
-            _weaponOrder.Add(instantiatedWeapon.WeaponType);
+            _playerWeapons.Add(newWeapon.WeaponType, newWeapon);
+            _weaponOrder.Add(newWeapon.WeaponType);
         }
             
     }    
@@ -235,7 +259,6 @@ public class PlayerCharacterCombatController : MonoBehaviour
         if (_playerWeapons.TryGetValue(weaponToRaise, out var weaponToEquip))
             EquipWeapon(weaponToEquip);
 
-        _playerCharacterAnimationsController?.PlayRaiseWeapon(_weaponSelected);
         _playerCharacterAnimationsController?.PlayRaiseWeapon(_equippedWeapon.WeaponType);
         onSwitchToWeapon?.Invoke();
     }
@@ -378,7 +401,9 @@ public class PlayerCharacterCombatController : MonoBehaviour
         BananaShotgun shotgunPrefab = WeaponsPrefabs.FirstOrDefault(w => w.prefab.WeaponType == PlayerWeaponTypes.BANANASHOTGUN).prefab as BananaShotgun;
         if (shotgunPrefab == null) return;
 
-        AddWeapon(shotgunPrefab);
+        // Instantiate the shotgun prefab and add it to the player's weapons
+        var shotgunInstance = Instantiate(shotgunPrefab);
+        AddWeapon(shotgunInstance);
 
         EquipWeapon(_playerWeapons[PlayerWeaponTypes.BANANASHOTGUN]); // Equip the new shotguns
         RaiseWeapon(PlayerWeaponTypes.BANANASHOTGUN);
@@ -399,5 +424,16 @@ public class PlayerCharacterCombatController : MonoBehaviour
         AnimationTriggerEvents.onDropShotgun -= DropShotgun;
         AnimationTriggerEvents.onReTrieveNewShotguns -= RetrieveNewShotguns;
         AnimationTriggerEvents.onReload -= Reload;
-    }    
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        var weapon = other.GetComponent<Weapon>();
+        
+        if (weapon)
+        {
+            AddWeapon(weapon);
+            SwitchToWeapon(weapon.WeaponType);
+        }
+    }
 }

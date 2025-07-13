@@ -1360,20 +1360,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaa92be1072a8d48ba880d899df4c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponSelected: 1
   _rightHandSocket: {fileID: 2860071523350465062}
   _leftHandSocket: {fileID: 7072074740685791458}
   WeaponsPrefabs:
-  - name: ACORNGUN
-    prefab: {fileID: 9184081368244243887, guid: f309566e5b334dd4b8484ae8263e9713,
-      type: 3}
-  - name: CARNIVOROUSPLANTS
-    prefab: {fileID: 186649536490876846, guid: b668074fe76b63f43bea7b67044c27e5, type: 3}
   - name: BANANASHOTGUN
     prefab: {fileID: 2297985535481940187, guid: d455c95032e16d743ad1388472a47104,
-      type: 3}
-  - name: CACTUSSCROSSBOW
-    prefab: {fileID: 4709857358180033657, guid: cac6572748ee7e14cb6cb7f8ce128c81,
       type: 3}
   GunsAmmo:
   - AmmoType: 0
