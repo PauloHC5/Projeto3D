@@ -99,6 +99,8 @@ public class GameManager : Singleton<GameManager>
 
     public static void PauseGame()
     {
+        if(TutorialManager.IsPlayingTutorial) return;
+        
         Time.timeScale = 0f;
         IsPaused = true;
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);

@@ -48,6 +48,9 @@ public class TutorialManager : Singleton<TutorialManager>
     private VideoPlayer _videoPlayer;
     private RenderTexture _renderTexture;
     private WeaponTutorialType _currentWeaponTutorial;
+    
+    private static bool _isPlayingTutorial = false;
+    public static bool IsPlayingTutorial => _isPlayingTutorial;
 
     private static Dictionary<WeaponTutorialType, bool> _tutorialCompleted = new Dictionary<WeaponTutorialType, bool>
     {
@@ -131,6 +134,7 @@ public class TutorialManager : Singleton<TutorialManager>
             return;
         }
 
+        _isPlayingTutorial = true;
         Instance._canvasTutorial.SetActive(true);
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
         Time.timeScale = 0f;
@@ -186,7 +190,8 @@ public class TutorialManager : Singleton<TutorialManager>
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Time.timeScale = 1f;
         _tutorialCompleted[_currentWeaponTutorial] = true; // Mark the tutorial as completed
-        gameObject.SetActive(false);        
+        gameObject.SetActive(false);   
+        _isPlayingTutorial = false;
     }
 
     [RuntimeInitializeOnLoadMethod]
