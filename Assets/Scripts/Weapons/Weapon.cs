@@ -37,7 +37,7 @@ public class Weapon : MonoBehaviour, IWeapon
         {
             _triggerCollider = GetComponentInParent<Collider>();
             if (_triggerCollider == null)
-                Debug.LogError($"Weapon {gameObject.name} requires a Collider component for trigger detection.");
+                Debug.LogWarning($"Warning: No collider found on {gameObject.name} or its parent. Weapon may not function correctly.");
         }
         
         _pickupBehaviour = GetComponent<PickupBehaviour>();
@@ -68,6 +68,6 @@ public class Weapon : MonoBehaviour, IWeapon
         transform.localRotation = Quaternion.identity; // Reset local rotation
         
         _isEquipped = true; // Set the weapon as equipped
-        _triggerCollider.enabled = false; // Enable the trigger collider when equipped
+        if(_triggerCollider) _triggerCollider.enabled = false; // Enable the trigger collider when equipped
     }
 }
