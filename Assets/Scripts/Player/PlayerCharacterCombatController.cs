@@ -60,17 +60,18 @@ public enum AmmoTypes
 
 public class PlayerCharacterCombatController : MonoBehaviour
 {
-    [Space]
-    [SerializeField] private Transform _rightHandSocket, _leftHandSocket;
+    [Space] [SerializeField] private Transform _rightHandSocket, _leftHandSocket;
 
     // Weapon prefabs and ammo amounts for the guns
     // This section is only visible in the Unity Editor for easy configuration
     // if you need access player weapons or ammo amounts in runtime, use _playerWeaponsSet and _playerGunAmmo
     [Header("Weapons Prefabs and Ammo")]
-#if UNITY_EDITOR    
-    [SerializeField] public List<WeaponPrefab> WeaponsPrefabs;
+#if UNITY_EDITOR
+    [SerializeField]
+    public List<WeaponPrefab> WeaponsPrefabs;
+
     [SerializeField] public GunAmmo[] GunsAmmo;
-#endif    
+#endif
 
     private IWeapon _equippedWeapon;
     public IWeapon EquippedWeapon => _equippedWeapon;
@@ -83,7 +84,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private PlayerCombatStates _playerCombatStates = PlayerCombatStates.DEFAULT;
     private PlayerCharacterAnimationsController _playerCharacterAnimationsController;
-    private MouseLook _mouseLook;    
+    private MouseLook _mouseLook;
 
     private List<PlayerWeaponTypes> _weaponOrder = new List<PlayerWeaponTypes>();
     public IReadOnlyList<PlayerWeaponTypes> WeaponOrder => _weaponOrder;
@@ -100,13 +101,16 @@ public class PlayerCharacterCombatController : MonoBehaviour
         get { return _playerCombatStates; }
         set { _playerCombatStates = value; }
     }
-    public PlayerCharacterAnimationsController PlayerCharacterAnimationsController => _playerCharacterAnimationsController;
+
+    public PlayerCharacterAnimationsController PlayerCharacterAnimationsController =>
+        _playerCharacterAnimationsController;
 
     public static event Action onSwitchToWeapon;
 
     private void Awake()
     {
-        _playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
+        _playerCharacterAnimationsController =
+            new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
         _mouseLook = GetComponentInChildren<MouseLook>();
 
         InitializePlayerWeapons();
@@ -119,7 +123,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         // Switch to the first weapon in the inventory
         if (_playerWeapons.Count > 0)
         {
-           RaiseWeapon(_playerWeapons.First().Key);
+            RaiseWeapon(_playerWeapons.First().Key);
         }
         else
         {
@@ -131,9 +135,23 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         foreach (var weaponPrefab in WeaponsPrefabs)
         {
+            // Check if the weapon type is already in the player's weapons
+            if(IsWeaponAlreadyInPlayerWeapons(weaponPrefab.prefab.WeaponType))
+                continue; // Skip adding this weapon if it's already present
+            
             var instantiatedWeapon = Instantiate(weaponPrefab.prefab);
             AddWeapon(new[] { instantiatedWeapon });
         }
+    }
+    
+    private bool IsWeaponAlreadyInPlayerWeapons(PlayerWeaponTypes weaponType)
+    {
+        var weaponAlreadyExists = _playerWeapons.ContainsKey(weaponType) && _playerWeapons[weaponType] != null;
+        if (weaponAlreadyExists)
+        {
+            Debug.LogWarning($"Weapon {weaponType} is already in the player's weapons.");
+        }
+        return weaponAlreadyExists;
     }
 
     private void AddWeapon(Weapon[] newWeapon)
@@ -142,24 +160,25 @@ public class PlayerCharacterCombatController : MonoBehaviour
         if (newWeapon == null || newWeapon.Length == 0 || newWeapon[0] == null)
         {
             Debug.LogWarning("Cannot add a null weapon to the player's weapons.");
-            return; // If the weapon is null, do nothing
+            return;
         }
 
         // Check if the weapon is already in the player's weapons
-        if (_playerWeapons.ContainsKey(newWeapon[0].WeaponType) && _playerWeapons[newWeapon[0].WeaponType] is not null)
-        {
-            Debug.LogWarning($"Weapon {newWeapon[0].WeaponType} is already in the player's weapons.");
-            return; // If the weapon is already in the player's weapons, do nothing
-        }
+        if (IsWeaponAlreadyInPlayerWeapons(newWeapon[0].WeaponType))
+            return;
 
         if (WeaponsPrefabs.All(w => w.prefab.WeaponType != newWeapon[0].WeaponType))
         {
             var prefabs = Resources.LoadAll("Weapons"); // Load all weapon prefabs from the Resources folder
-            
+
             // Find the weapon prefab in the loaded resources
-            var weaponPrefab = prefabs.Select(prefab => prefab.GetComponent<Weapon>()) // Get the Weapon component from each prefab
-                .FirstOrDefault(w => w != null && w.WeaponType == newWeapon[0].WeaponType); // Check if the prefab's WeaponType matches the new weapon's WeaponType
-            
+            var weaponPrefab = prefabs
+                .Select(prefab => prefab.GetComponent<Weapon>()) // Get the Weapon component from each prefab
+                .FirstOrDefault(w =>
+                    w != null &&
+                    w.WeaponType ==
+                    newWeapon[0].WeaponType); // Check if the prefab's WeaponType matches the new weapon's WeaponType
+
             if (weaponPrefab is null)
             {
                 Debug.LogWarning("Weapon prefab not found for " + newWeapon[0].WeaponType);
@@ -169,39 +188,37 @@ public class PlayerCharacterCombatController : MonoBehaviour
         }
 
         IWeapon weaponToAdd; // Variable to hold the weapon to add to the player's weapons
-
-        /* If the new weapon is a dual wield weapon, instantiate the appropriate manager
-         * To handle dual wield weapons, we check if the newWeapon array has exactly two elements
-         * and both elements are not null. Then we instantiate the appropriate manager based on the type of the first element. */
-        if (newWeapon.Length == 2 && newWeapon[0] is not null && newWeapon[1] is not null )
+        
+        switch (newWeapon[0]) // Check the type of the new weapon to determine which manager to instantiate
         {
-            switch (newWeapon[0]) // Check the type of the new weapon to determine which manager to instantiate
-            {
-                case CarnivovrousPlant:
-                    var dualWieldMelee = new DualWieldMeleeManager(
-                         new [] { newWeapon[0] as CarnivovrousPlant, newWeapon[1] as CarnivovrousPlant },
-                        _playerCharacterAnimationsController
-                    );
-                    dualWieldMelee.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the dual wield melee to the sockets
-                    weaponToAdd = dualWieldMelee; // Initialize the weapon to add with the dual wield melee manager
-                    break;
-                case BananaShotgun:
-                    var dualWieldGun = new DualWieldGunManager(
-                        new []{newWeapon[0] as Gun, newWeapon[1] as Gun},
-                        _playerCharacterAnimationsController
-                    );
-                    dualWieldGun.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the dual wield gun to the sockets
-                    weaponToAdd = dualWieldGun; // Initialize the weapon to add with the dual wield gun manager
-                    break;
-                default:
-                    Debug.LogWarning("Dual wield weapon does not have a valid manager.");
-                    return; // Exit if the dual wield weapon does not have a valid manager
-            }
-        }
-        else // If the new weapon is not a dual wield weapon, use the first weapon in the array as the weapon to add
-        {
-            weaponToAdd = newWeapon[0]; // Use the first weapon in the array as the weapon to add
-            weaponToAdd.AttatchToSocket(_rightHandSocket, _leftHandSocket);
+            case CarnivovrousPlant:
+                if(newWeapon.Length == 1) // If only one CarnivorousPlant is provided, instantiate a second one 
+                    newWeapon = new[] { newWeapon[0], Instantiate(newWeapon[0]) };
+                
+                var dualWieldMelee = new DualWieldMeleeManager(
+                    new[] { newWeapon[0] as CarnivovrousPlant, newWeapon[1] as CarnivovrousPlant },
+                    _playerCharacterAnimationsController
+                );
+                dualWieldMelee.AttatchToSocket(_rightHandSocket,
+                    _leftHandSocket); // Attach the dual wield melee to the sockets
+                weaponToAdd = dualWieldMelee; // Initialize the weapon to add with the dual wield melee manager
+                break;
+            case BananaShotgun:
+                if (newWeapon.Length == 1) // If only one BananaShotgun is provided, instantiate a second one
+                    newWeapon = new[] { newWeapon[0], Instantiate(newWeapon[0]) };
+                
+                var dualWieldGun = new DualWieldGunManager(
+                    new[] { newWeapon[0] as Gun, newWeapon[1] as Gun },
+                    _playerCharacterAnimationsController
+                );
+                dualWieldGun.AttatchToSocket(_rightHandSocket,
+                    _leftHandSocket); // Attach the dual wield gun to the sockets
+                weaponToAdd = dualWieldGun; // Initialize the weapon to add with the dual wield gun manager
+                break;
+            default:
+                weaponToAdd = newWeapon[0]; // Use the first weapon in the array as the weapon to add
+                weaponToAdd.AttatchToSocket(_rightHandSocket, _leftHandSocket);
+                break;
         }
 
 
@@ -219,8 +236,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             _playerWeapons.Add(weaponToAdd.WeaponType, weaponToAdd);
             _weaponOrder.Add(weaponToAdd.WeaponType);
         }
-            
-    }    
+    }
 
     private void Update()
     {
@@ -229,7 +245,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             if (Keyboard.current.kKey.wasPressedThisFrame) _playerGunAmmo[equippedGun.AmmoType] += 3;
 
-            _playerCharacterAnimationsController.CheckAutoReload(equippedGun.MagAmmo, equippedGun.MagCapacity, _playerGunAmmo[equippedGun.AmmoType]);
+            _playerCharacterAnimationsController.CheckAutoReload(equippedGun.MagAmmo, equippedGun.MagCapacity,
+                _playerGunAmmo[equippedGun.AmmoType]);
         }
     }
 
@@ -237,7 +254,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         if (!enabled) return;
         if (!ConditionToSwitchWeapon(weaponToSwitch)) return;
-        
+
         if (_playerWeapons.TryGetValue(weaponToSwitch, out var weapon))
             RaiseWeapon(weaponToSwitch);
     }
@@ -252,7 +269,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
         }
 
         var weaponType = _weaponOrder[index];
-        if (_playerWeapons.TryGetValue(weaponType, out var weapon) && weapon != null && ConditionToSwitchWeapon(weapon.WeaponType))
+        if (_playerWeapons.TryGetValue(weaponType, out var weapon) && weapon != null &&
+            ConditionToSwitchWeapon(weapon.WeaponType))
         {
             RaiseWeapon(weapon.WeaponType);
         }
@@ -287,6 +305,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             Debug.LogWarning($"Weapon to equip not found in the inventory.");
             return;
         }
+
         _equippedWeapon.EnableWeapon();
     }
 
@@ -305,6 +324,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
                 {
                     PerformReload();
                 }
+
                 break;
             case IEquippedMelee equippedMelee when ConditionsToAttack(equippedMelee):
                 equippedMelee.Attack();
@@ -383,7 +403,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             dualWieldGun.FireBoth();
             _playerCharacterAnimationsController.PlayFireBoth();
-            GetComponent<PlayerCharacterMovementController>().ApplyImpulse(20f); // Apply backward impulse from camera when firing both guns
+            GetComponent<PlayerCharacterMovementController>()
+                .ApplyImpulse(20f); // Apply backward impulse from camera when firing both guns
             return;
         }
 
@@ -406,16 +427,19 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             _playerWeapons[PlayerWeaponTypes.BANANASHOTGUN] = null;
         }
+
         _equippedWeapon = null;
     }
 
     private void RetrieveNewShotguns()
     {
-        BananaShotgun shotgunPrefab = WeaponsPrefabs.FirstOrDefault(w => w.prefab.WeaponType == PlayerWeaponTypes.BANANASHOTGUN).prefab as BananaShotgun;
+        BananaShotgun shotgunPrefab =
+            WeaponsPrefabs.FirstOrDefault(w => w.prefab.WeaponType == PlayerWeaponTypes.BANANASHOTGUN)
+                .prefab as BananaShotgun;
         if (shotgunPrefab == null) return;
 
         // Instantiate the shotgun prefab and add it to the player's weapons
-        Weapon[] shotgunInstance = { Instantiate(shotgunPrefab), Instantiate(shotgunPrefab) }; 
+        Weapon[] shotgunInstance = { Instantiate(shotgunPrefab), Instantiate(shotgunPrefab) };
         AddWeapon(shotgunInstance);
 
         EquipWeapon(_playerWeapons[PlayerWeaponTypes.BANANASHOTGUN]); // Equip the new shotguns
@@ -442,7 +466,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var weapon = other.GetComponentsInChildren<Weapon>();
-        
+
         if (weapon is not null)
         {
             AddWeapon(weapon);
