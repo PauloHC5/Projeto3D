@@ -16,10 +16,16 @@ public class DualWieldMeleeManager : IWeapon, IEquippedMelee
 
     PlayerCharacterAnimationsController playerAnimationsController;
 
-    public DualWieldMeleeManager(CarnivovrousPlant weapon, PlayerCharacterAnimationsController playerAnimationsController)
+    public DualWieldMeleeManager(CarnivovrousPlant[] weapons, PlayerCharacterAnimationsController playerAnimationsController)
     {
-        CarnivovrousPlant rightWeaponSpawned = weapon;
-        CarnivovrousPlant leftWeaponSpawned = Object.Instantiate(weapon);
+        if(weapons is null || weapons[0] == null || weapons[1] == null)
+        {
+            Debug.LogError("Both weapons must be of type CarnivovrousPlant.");
+            return;
+        }
+        
+        var rightWeaponSpawned = weapons[0];
+        var leftWeaponSpawned = weapons[1];
 
         rightWeaponSpawned.DisableWeapon();
         leftWeaponSpawned.DisableWeapon();
@@ -112,10 +118,16 @@ public class DualWieldGunManager : IWeapon, IEquippedGun
 
     public bool CanReload() => RightGun.CanReload() || LeftGun.CanReload();
 
-    public DualWieldGunManager(Gun gun, PlayerCharacterAnimationsController playerAnimationsController)
+    public DualWieldGunManager(Gun[] guns, PlayerCharacterAnimationsController playerAnimationsController)
     {
-        Gun rightGunSpawned = gun;
-        Gun leftGunSpawned = Object.Instantiate(gun);        
+        if (guns is null || guns[0] == null || guns[1] == null)
+        {
+            Debug.LogError("Both guns must be of type Gun.");
+            return;
+        }
+        
+        var rightGunSpawned = guns[0];
+        var leftGunSpawned = guns[1];
 
         RightGun = rightGunSpawned;
         LeftGun = leftGunSpawned;

@@ -131,65 +131,78 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         foreach (var weaponPrefab in WeaponsPrefabs)
         {
-            var instantiatedWeapon = Instantiate(weaponPrefab.prefab) as IWeapon;
-            AddWeapon(instantiatedWeapon);
+            var instantiatedWeapon = Instantiate(weaponPrefab.prefab);
+            AddWeapon(new[] { instantiatedWeapon });
         }
     }
 
-    private void AddWeapon(IWeapon newWeapon)
+    private void AddWeapon(Weapon[] newWeapon)
     {
         // Check if the weapon is null
-        if (newWeapon == null)
+        if (newWeapon == null || newWeapon.Length == 0 || newWeapon[0] == null)
         {
             Debug.LogWarning("Cannot add a null weapon to the player's weapons.");
             return; // If the weapon is null, do nothing
         }
 
         // Check if the weapon is already in the player's weapons
-        if (_playerWeapons.ContainsKey(newWeapon.WeaponType) && _playerWeapons[newWeapon.WeaponType] is not null)
+        if (_playerWeapons.ContainsKey(newWeapon[0].WeaponType) && _playerWeapons[newWeapon[0].WeaponType] is not null)
         {
-            Debug.LogWarning($"Weapon {newWeapon.WeaponType} is already in the player's weapons.");
+            Debug.LogWarning($"Weapon {newWeapon[0].WeaponType} is already in the player's weapons.");
             return; // If the weapon is already in the player's weapons, do nothing
         }
 
-        if (WeaponsPrefabs.All(w => w.prefab.WeaponType != newWeapon.WeaponType))
+        if (WeaponsPrefabs.All(w => w.prefab.WeaponType != newWeapon[0].WeaponType))
         {
             var prefabs = Resources.LoadAll("Weapons"); // Load all weapon prefabs from the Resources folder
             
             // Find the weapon prefab in the loaded resources
             var weaponPrefab = prefabs.Select(prefab => prefab.GetComponent<Weapon>()) // Get the Weapon component from each prefab
-                .FirstOrDefault(w => w != null && w.WeaponType == newWeapon.WeaponType); // Check if the prefab's WeaponType matches the new weapon's WeaponType
+                .FirstOrDefault(w => w != null && w.WeaponType == newWeapon[0].WeaponType); // Check if the prefab's WeaponType matches the new weapon's WeaponType
             
             if (weaponPrefab is null)
             {
-                Debug.LogWarning("Weapon prefab not found for " + newWeapon.WeaponType);
+                Debug.LogWarning("Weapon prefab not found for " + newWeapon[0].WeaponType);
             }
             else
-                WeaponsPrefabs.Add(new WeaponPrefab(newWeapon.WeaponType.ToString(), weaponPrefab));
+                WeaponsPrefabs.Add(new WeaponPrefab(newWeapon[0].WeaponType.ToString(), weaponPrefab));
         }
 
-        // Attach the weapon to the player's hands
-        if (newWeapon is CarnivovrousPlant carnivovrousPlant)
+        IWeapon weaponToAdd; // Variable to hold the weapon to add to the player's weapons
+
+        /* If the new weapon is a dual wield weapon, instantiate the appropriate manager
+         * To handle dual wield weapons, we check if the newWeapon array has exactly two elements
+         * and both elements are not null. Then we instantiate the appropriate manager based on the type of the first element. */
+        if (newWeapon.Length == 2 && newWeapon[0] is not null && newWeapon[1] is not null )
         {
-            var dualWieldMelee = new DualWieldMeleeManager(
-                carnivovrousPlant,
-                _playerCharacterAnimationsController
-            );
-            dualWieldMelee.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the dual wield melee to the sockets
-            newWeapon = dualWieldMelee; // Replace the instantiated weapon with the dual wield melee manager
+            switch (newWeapon[0]) // Check the type of the new weapon to determine which manager to instantiate
+            {
+                case CarnivovrousPlant:
+                    var dualWieldMelee = new DualWieldMeleeManager(
+                         new [] { newWeapon[0] as CarnivovrousPlant, newWeapon[1] as CarnivovrousPlant },
+                        _playerCharacterAnimationsController
+                    );
+                    dualWieldMelee.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the dual wield melee to the sockets
+                    weaponToAdd = dualWieldMelee; // Initialize the weapon to add with the dual wield melee manager
+                    break;
+                case BananaShotgun:
+                    var dualWieldGun = new DualWieldGunManager(
+                        new []{newWeapon[0] as Gun, newWeapon[1] as Gun},
+                        _playerCharacterAnimationsController
+                    );
+                    dualWieldGun.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the dual wield gun to the sockets
+                    weaponToAdd = dualWieldGun; // Initialize the weapon to add with the dual wield gun manager
+                    break;
+                default:
+                    Debug.LogWarning("Dual wield weapon does not have a valid manager.");
+                    return; // Exit if the dual wield weapon does not have a valid manager
+            }
         }
-        else
-           if (newWeapon is BananaShotgun bananaShotgun)
+        else // If the new weapon is not a dual wield weapon, use the first weapon in the array as the weapon to add
         {
-            var dualWieldGun = new DualWieldGunManager(
-                bananaShotgun,
-                _playerCharacterAnimationsController
-            );
-            dualWieldGun.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the dual wield gun to the sockets
-            newWeapon = dualWieldGun; // Replace the instantiated weapon with the dual wield gun manager            
+            weaponToAdd = newWeapon[0]; // Use the first weapon in the array as the weapon to add
+            weaponToAdd.AttatchToSocket(_rightHandSocket, _leftHandSocket);
         }
-        else
-            newWeapon.AttatchToSocket(_rightHandSocket, _leftHandSocket); // Attach the weapon to the sockets
 
 
         // Check if there is a null weapon in the player's weapons
@@ -198,13 +211,13 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             // If there is a null weapon in the player's weapons, replace it with the new weapon
             var nullWeaponIndex = _playerWeapons.FirstOrDefault(w => w.Value == null).Key;
-            _playerWeapons[nullWeaponIndex] = newWeapon;
+            _playerWeapons[nullWeaponIndex] = weaponToAdd;
             return; // Exit after replacing the null weapon
         }
         else // If there is no null weapon, add the new weapon to the player's weapons
         {
-            _playerWeapons.Add(newWeapon.WeaponType, newWeapon);
-            _weaponOrder.Add(newWeapon.WeaponType);
+            _playerWeapons.Add(weaponToAdd.WeaponType, weaponToAdd);
+            _weaponOrder.Add(weaponToAdd.WeaponType);
         }
             
     }    
@@ -402,7 +415,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         if (shotgunPrefab == null) return;
 
         // Instantiate the shotgun prefab and add it to the player's weapons
-        var shotgunInstance = Instantiate(shotgunPrefab);
+        Weapon[] shotgunInstance = { Instantiate(shotgunPrefab), Instantiate(shotgunPrefab) }; 
         AddWeapon(shotgunInstance);
 
         EquipWeapon(_playerWeapons[PlayerWeaponTypes.BANANASHOTGUN]); // Equip the new shotguns
@@ -428,12 +441,12 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var weapon = other.GetComponent<Weapon>();
+        var weapon = other.GetComponentsInChildren<Weapon>();
         
-        if (weapon)
+        if (weapon is not null)
         {
             AddWeapon(weapon);
-            SwitchToWeapon(weapon.WeaponType);
+            SwitchToWeapon(weapon.First().WeaponType);
         }
     }
 }

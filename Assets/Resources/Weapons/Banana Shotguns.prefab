@@ -1,0 +1,236 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3279981972159822858
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7182836749249151134}
+  - component: {fileID: 2134769352798282744}
+  - component: {fileID: 7000929067798375854}
+  - component: {fileID: 7533085712111796243}
+  m_Layer: 0
+  m_Name: Banana Shotguns
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7182836749249151134
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3279981972159822858}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6943906834398710537}
+  - {fileID: 668235838897966942}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &2134769352798282744
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3279981972159822858}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0.11, z: 0.21}
+--- !u!114 &7000929067798375854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3279981972159822858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 954566a7ef81b0644a8b4446b9f447da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spinSpeed: 70.5
+  moveAmplitude: 0.08
+  moveFrequency: 0.61
+--- !u!114 &7533085712111796243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3279981972159822858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5854cdbbe5c478549b3eda37223fa77c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &3672958784876812069
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7182836749249151134}
+    m_Modifications:
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.059
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.062
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6659519
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.25618336
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.6568295
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.24383031
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -138.584
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 269.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -180.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6961345242618615251, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_Name
+      value: BananaShotgun
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 9010321085129650363, guid: d455c95032e16d743ad1388472a47104, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d455c95032e16d743ad1388472a47104, type: 3}
+--- !u!4 &6943906834398710537 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+    type: 3}
+  m_PrefabInstance: {fileID: 3672958784876812069}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6621208445959230322
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7182836749249151134}
+    m_Modifications:
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.043
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.005999855
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.036
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.69722867
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.23005314
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.63924736
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.22871526
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -37.822
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -84.415
+      objectReference: {fileID: 0}
+    - target: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6961345242618615251, guid: d455c95032e16d743ad1388472a47104,
+        type: 3}
+      propertyPath: m_Name
+      value: BananaShotgun (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 9010321085129650363, guid: d455c95032e16d743ad1388472a47104, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d455c95032e16d743ad1388472a47104, type: 3}
+--- !u!4 &668235838897966942 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5955252893329497132, guid: d455c95032e16d743ad1388472a47104,
+    type: 3}
+  m_PrefabInstance: {fileID: 6621208445959230322}
+  m_PrefabAsset: {fileID: 0}

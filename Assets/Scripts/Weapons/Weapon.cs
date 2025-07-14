@@ -32,10 +32,12 @@ public class Weapon : MonoBehaviour, IWeapon
     
     protected void OnBaseAwake()
     {
-        _triggerCollider = GetComponents<Collider>().FirstOrDefault(c => c.isTrigger);
+        _triggerCollider = GetComponent<Collider>();
         if (_triggerCollider == null)
         {
-            Debug.LogError($"Weapon {gameObject.name} requires a Collider component for trigger detection.");
+            _triggerCollider = GetComponentInParent<Collider>();
+            if (_triggerCollider == null)
+                Debug.LogError($"Weapon {gameObject.name} requires a Collider component for trigger detection.");
         }
         
         _pickupBehaviour = GetComponent<PickupBehaviour>();

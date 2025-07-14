@@ -1,0 +1,234 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5934105960677187514
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5100787025478269320}
+  - component: {fileID: 5457193050909069864}
+  - component: {fileID: 2125151163326838375}
+  - component: {fileID: -4776840697288363103}
+  m_Layer: 0
+  m_Name: Carnivorous Plants
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5100787025478269320
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5934105960677187514}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7606512808245629963}
+  - {fileID: 4282085193285982997}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &5457193050909069864
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5934105960677187514}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0.11, z: 0.21}
+--- !u!114 &2125151163326838375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5934105960677187514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 954566a7ef81b0644a8b4446b9f447da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spinSpeed: 70.5
+  moveAmplitude: 0.08
+  moveFrequency: 0.61
+--- !u!114 &-4776840697288363103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5934105960677187514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5854cdbbe5c478549b3eda37223fa77c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &2626387191832318579
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5100787025478269320}
+    m_Modifications:
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.02949524
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.15002823
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.039848972
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.016859692
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.8932765
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.4474204
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -53.195
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -185.374
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723683411905504031, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_Name
+      value: CarnivorousPlant (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b668074fe76b63f43bea7b67044c27e5, type: 3}
+--- !u!4 &4282085193285982997 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+    type: 3}
+  m_PrefabInstance: {fileID: 2626387191832318579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8543341614162566509
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5100787025478269320}
+    m_Modifications:
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.219
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.035037994
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.376
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.90399927
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.41433638
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.10482861
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.011030994
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -48.715
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -15.866
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 5.822
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723683411905504031, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+      propertyPath: m_Name
+      value: CarnivorousPlant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b668074fe76b63f43bea7b67044c27e5, type: 3}
+--- !u!4 &7606512808245629963 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2242732106394913126, guid: b668074fe76b63f43bea7b67044c27e5,
+    type: 3}
+  m_PrefabInstance: {fileID: 8543341614162566509}
+  m_PrefabAsset: {fileID: 0}
