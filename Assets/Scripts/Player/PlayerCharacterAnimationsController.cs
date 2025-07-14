@@ -45,7 +45,7 @@ public class PlayerCharacterAnimationsController
     {
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
 
-        if(!GameManager.SkipPlayerTutorial && !_weaponInspected[weapon])
+        if(!_weaponInspected[weapon])
         {
             _weaponInspected[weapon] = true; // Mark the weapon as checked after the first use
             playerAnimator.SetTrigger(InspectWeaponTrigger);
