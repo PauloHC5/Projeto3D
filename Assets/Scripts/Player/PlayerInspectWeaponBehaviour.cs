@@ -25,6 +25,6 @@ public class PlayerInspectWeaponBehaviour : StateMachineBehaviour
 
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
 
-        TutorialManager.PlayTutorial(weaponTutorialType);
+        if(!GameManager.SkipPlayerTutorial) TutorialManager.PlayTutorial(weaponTutorialType);
     }    
 }
