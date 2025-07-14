@@ -296,14 +296,26 @@ public class HUDManager : Singleton<HUDManager>
     public static void Bite()
     {
         if (!Instance._playerCharacterCombatController || Instance._playerCharacterCombatController.EquippedWeapon == null)
-        {
-            Debug.LogWarning("No equipped weapon found. Cannot trigger bite animation.");
             return;
-        }
+        
         var biteTrigger = Animator.StringToHash("Bite");
 
-        Instance._carivorousPLantCrosshairAnimator ??= // Get the animator for the carnivorous plant crosshair if it is not already assigned
-            Instance._weaponCrosshairs[PlayerWeaponTypes.CARNIVOROUSPLANTS].GetComponent<Animator>();
+        if (Instance._carivorousPLantCrosshairAnimator == null)
+        {
+            var crosshair = Instance._weaponCrosshairs[PlayerWeaponTypes.CARNIVOROUSPLANTS];
+            if (crosshair == null)
+            {
+                Debug.LogWarning("Carnivorous plant crosshair not found.");
+                return;
+            }
+
+            Instance._carivorousPLantCrosshairAnimator = crosshair.GetComponentInChildren<Animator>(true);
+            if (Instance._carivorousPLantCrosshairAnimator == null)
+            {
+                Debug.LogWarning("Carnivorous plant crosshair animator not found.");
+                return;
+            }
+        }
         
         Instance._carivorousPLantCrosshairAnimator.SetTrigger(biteTrigger); // Trigger the bite animation on the carnivorous plant crosshair animator
     }
