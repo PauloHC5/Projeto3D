@@ -90,7 +90,7 @@ public class GameManager : Singleton<GameManager>
     public static void StartGame()
     {
         Time.timeScale = 1f; // Resume time scale     
-        FadeManager.FadeIn(() => {});
+        if(!SkipPlayerTutorial) FadeManager.FadeIn(() => {});
 
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
