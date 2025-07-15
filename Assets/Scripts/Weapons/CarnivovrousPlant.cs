@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(AudioSource))]
 public class CarnivovrousPlant : Weapon
@@ -21,7 +23,12 @@ public class CarnivovrousPlant : Weapon
     private Vector3 _originalScale;
     private AudioSource _audioSource;
 
-    private int Chewing = Animator.StringToHash("Chewing");
+    private readonly int _chewing = Animator.StringToHash("Chewing");
+    
+    private readonly int _raiseR = Animator.StringToHash("RaiseR");
+    private readonly int _raiseL = Animator.StringToHash("RaiseL");
+    private readonly int _inspectR = Animator.StringToHash("InspectR");
+    private readonly int _inspectL = Animator.StringToHash("InspectL");
 
     protected override float GetWeaponRange()
     {
@@ -46,7 +53,7 @@ public class CarnivovrousPlant : Weapon
 
     private void Update()
     {
-        _animator.SetBool(Chewing, !CanAttack);
+        _animator.SetBool(_chewing, !CanAttack);
     }
 
     public void Attack()
@@ -67,9 +74,40 @@ public class CarnivovrousPlant : Weapon
         if (playerCombat != null) playerCombat.PlayerCharacterAnimationsController.PlayUseWeapon();
     }
 
-    public void PlayRaise(string trigger)
+    private void PlayRaise(PlayerWeaponTypes weaponType)
     {
-        _animator.SetTrigger(trigger);
+        if (_weaponType != weaponType)
+            return;
+        
+        switch (_socketToAttach)
+        {
+            case WeaponSocket.RightHandSocket:
+                _animator.SetTrigger(_raiseR);
+                break;
+            case WeaponSocket.LeftHandSocket:
+                _animator.SetTrigger(_raiseL);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+    
+    private void PlayInspect(PlayerWeaponTypes weaponType)
+    {
+        if (_weaponType != weaponType)
+            return;
+        
+        switch (_socketToAttach)
+        {
+            case WeaponSocket.RightHandSocket:
+                _animator.SetTrigger(_inspectR);
+                break;
+            case WeaponSocket.LeftHandSocket:
+                _animator.SetTrigger(_inspectL);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     public void EnableCollision()
@@ -96,6 +134,9 @@ public class CarnivovrousPlant : Weapon
 
     public override void DisableWeapon()
     {
+        PlayerCharacterAnimationsController.OnRaiseWeapon -= PlayRaise; // Unsubscribe from the RaiseWeapon event
+        PlayerCharacterAnimationsController.OnInspectWeapon -= PlayInspect; // Unsubscribe from the InspectWeapon event
+        
         var childObjects = GetComponentsInChildren<Transform>(true);
 
         if (childObjects == null || childObjects.Length == 0)
@@ -113,6 +154,9 @@ public class CarnivovrousPlant : Weapon
 
     public override void EnableWeapon()
     {
+        PlayerCharacterAnimationsController.OnRaiseWeapon += PlayRaise; // Subscribe to the RaiseWeapon event
+        PlayerCharacterAnimationsController.OnInspectWeapon += PlayInspect; // Subscribe to the InspectWeapon event
+        
         var childObjects = GetComponentsInChildren<Transform>(true);
 
         if (childObjects == null || childObjects.Length == 0)

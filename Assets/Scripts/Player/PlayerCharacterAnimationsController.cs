@@ -24,6 +24,9 @@ public class PlayerCharacterAnimationsController
         { PlayerWeaponTypes.BANANASHOTGUN, false },
         { PlayerWeaponTypes.CACTUSSCROSSBOW, false },        
     };
+    
+    public static event Action<PlayerWeaponTypes> OnRaiseWeapon;
+    public static event Action<PlayerWeaponTypes> OnInspectWeapon;
 
     public PlayerCharacterAnimationsController(Animator animator)
     {
@@ -45,16 +48,17 @@ public class PlayerCharacterAnimationsController
     {
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
 
-        if(!_weaponInspected[weapon])
+        if(!_weaponInspected[weapon]) // If the weapon has not been inspected yet
         {
             _weaponInspected[weapon] = true; // Mark the weapon as checked after the first use
             playerAnimator.SetTrigger(InspectWeaponTrigger);
-            Debug.Log($"Weapon {weapon} checked for the first time.");
-
-            return;
+            OnInspectWeapon?.Invoke(weapon); // Notify that the weapon has been inspected
         }
-
-        playerAnimator.SetTrigger(RaiseWeaponTrigger);        
+        else
+        {
+            playerAnimator.SetTrigger(RaiseWeaponTrigger);   
+            OnRaiseWeapon?.Invoke(weapon); // Notify that the weapon has been raised   
+        }
     }    
 
     public void PlayUseWeapon()
