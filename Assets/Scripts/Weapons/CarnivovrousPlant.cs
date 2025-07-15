@@ -58,7 +58,7 @@ public class CarnivovrousPlant : Weapon
 
     public void Attack()
     {
-        if (_animator != null)
+        if (_animator != null || !_animator)
         {
             _animator.SetTrigger("Attack");
             HUDManager.Bite();
@@ -94,7 +94,7 @@ public class CarnivovrousPlant : Weapon
     
     private void PlayInspect(PlayerWeaponTypes weaponType)
     {
-        if (_weaponType != weaponType)
+        if (_weaponType != weaponType || !_animator)
             return;
         
         switch (_socketToAttach)
