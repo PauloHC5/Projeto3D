@@ -169,13 +169,13 @@ public class MouseLook : MonoBehaviour
     private void OnEnable()
     {        
         CactusCrossbow.AimEvent += PerformAim;              
-        PlayerCharacterCombatController.onSwitchToWeapon += ZoomOut;
+        PlayerCharacterCombatController.OnSwitchToWeapon += ZoomOut;
     }
 
     private void OnDisable()
     {        
         CactusCrossbow.AimEvent -= PerformAim;
         AnimationTriggerEvents.onReload -= ZoomOut;
-        PlayerCharacterCombatController.onSwitchToWeapon -= ZoomOut;
+        PlayerCharacterCombatController.OnSwitchToWeapon -= ZoomOut;
     }
 }

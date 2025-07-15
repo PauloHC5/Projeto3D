@@ -491,8 +491,8 @@ public class HUDManager : Singleton<HUDManager>
 
     private void OnEnable()
     {
-        PlayerCharacterCombatController.onSwitchToWeapon += UpdateWeaponSlots;
-        PlayerCharacterCombatController.onSwitchToWeapon += UpdateCrosshair; // Update crosshair when switching weapons
+        PlayerCharacterCombatController.OnSwitchToWeapon += UpdateWeaponSlots;
+        PlayerCharacterCombatController.OnSwitchToWeapon += UpdateCrosshair; // Update crosshair when switching weapons
 
         GameManager.OnPauseGame += Disable; // Disable HUD when the game is paused
         GameManager.OnResumeGame += Enable; // Enable HUD when the game is resumed
@@ -500,8 +500,8 @@ public class HUDManager : Singleton<HUDManager>
 
     private void OnDisable()
     {
-        PlayerCharacterCombatController.onSwitchToWeapon -= UpdateWeaponSlots;
-        PlayerCharacterCombatController.onSwitchToWeapon -= UpdateCrosshair; // Remove the event listener when disabled
+        PlayerCharacterCombatController.OnSwitchToWeapon -= UpdateWeaponSlots;
+        PlayerCharacterCombatController.OnSwitchToWeapon -= UpdateCrosshair; // Remove the event listener when disabled
 
         GameManager.OnPauseGame -= Disable; // Remove the event listener when disabled
         GameManager.OnResumeGame -= Enable; // Remove the event listener when disabled

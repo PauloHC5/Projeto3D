@@ -105,7 +105,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     public PlayerCharacterAnimationsController PlayerCharacterAnimationsController =>
         _playerCharacterAnimationsController;
 
-    public static event Action onSwitchToWeapon;
+    public static event Action OnSwitchToWeapon;
 
     private void Awake()
     {
@@ -291,7 +291,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             EquipWeapon(weaponToEquip);
 
         _playerCharacterAnimationsController?.PlayRaiseWeapon(_equippedWeapon.WeaponType);
-        onSwitchToWeapon?.Invoke();
+        OnSwitchToWeapon?.Invoke();
     }
 
     private void EquipWeapon(IWeapon weaponToEquip)
