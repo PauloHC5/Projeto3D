@@ -60,8 +60,15 @@ public enum AmmoTypes
 
 public class PlayerCharacterCombatController : MonoBehaviour
 {
-    [Space] [SerializeField] private Transform _rightHandSocket, _leftHandSocket;
+    [SerializeField] private bool skipWeaponInspection = false;
+    
+    [Space]
+    
+    [Header("Weapon Socket")]
+    [SerializeField] private Transform _rightHandSocket, _leftHandSocket;
 
+    [Space]
+    
     // Weapon prefabs and ammo amounts for the guns
     // This section is only visible in the Unity Editor for easy configuration
     // if you need access player weapons or ammo amounts in runtime, use _playerWeaponsSet and _playerGunAmmo
@@ -110,7 +117,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     private void Awake()
     {
         _playerCharacterAnimationsController =
-            new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
+            new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>(), skipWeaponInspection);
         _mouseLook = GetComponentInChildren<MouseLook>();
 
         InitializePlayerWeapons();

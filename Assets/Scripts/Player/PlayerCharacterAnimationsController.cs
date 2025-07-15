@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerCharacterAnimationsController
 {
     private Animator playerAnimator;
+    private bool _skipWeaponInspection = false;
 
     private readonly int CurrentSpeed = Animator.StringToHash("CurrentSpeed");
     private readonly int UseWeaponTrigger = Animator.StringToHash("UseWeapon");
@@ -28,9 +29,10 @@ public class PlayerCharacterAnimationsController
     public static event Action<PlayerWeaponTypes> OnRaiseWeapon;
     public static event Action<PlayerWeaponTypes> OnInspectWeapon;
 
-    public PlayerCharacterAnimationsController(Animator animator)
+    public PlayerCharacterAnimationsController(Animator animator, bool skipWeaponInspection = false)
     {
         playerAnimator = animator;
+        _skipWeaponInspection = skipWeaponInspection;
     }
 
     public void CheckAutoReload(int gunMagAmmo, int gunMagCapacity, int playerAmmo)
@@ -48,7 +50,7 @@ public class PlayerCharacterAnimationsController
     {
         playerAnimator.SetInteger(WeaponIndex, (int)weapon);
 
-        if(!_weaponInspected[weapon]) // If the weapon has not been inspected yet
+        if(!_weaponInspected[weapon] && !_skipWeaponInspection) // If the weapon has not been inspected yet
         {
             _weaponInspected[weapon] = true; // Mark the weapon as checked after the first use
             playerAnimator.SetTrigger(InspectWeaponTrigger);
