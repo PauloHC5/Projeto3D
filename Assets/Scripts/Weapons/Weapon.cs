@@ -37,7 +37,7 @@ public class Weapon : MonoBehaviour, IWeapon
         {
             _triggerCollider = GetComponentInParent<Collider>();
             if (_triggerCollider == null)
-                Debug.LogWarning($"Warning: No collider found on {gameObject.name} or its parent. Weapon may not function correctly.");
+                Debug.LogWarning($"No collider found on {gameObject.name} or its parent. \n If this weapon is not going to be used as a pickup, you can ignore this warning.");
         }
         
         _pickupBehaviour = GetComponent<PickupBehaviour>();
