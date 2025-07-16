@@ -13,7 +13,6 @@ public class PlayerInspectWeaponBehaviour : StateMachineBehaviour
     {        
         _playerCharacterCombatController = animator.GetComponentInParent<PlayerCharacterCombatController>();
         
-        //PlayerCharacterController.PlayerControls.Player.Move.Enable();
         var weaponTutorialType = _playerCharacterCombatController.EquippedWeapon?.WeaponType switch
         {
             PlayerWeaponTypes.CARNIVOROUSPLANTS => WeaponTutorialType.CARNIVOROUSPLANT,
