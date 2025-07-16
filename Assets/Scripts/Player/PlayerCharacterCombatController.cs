@@ -73,12 +73,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
     // This section is only visible in the Unity Editor for easy configuration
     // if you need access player weapons or ammo amounts in runtime, use _playerWeaponsSet and _playerGunAmmo
     [Header("Weapons Prefabs and Ammo")]
-#if UNITY_EDITOR
-    [SerializeField]
     public List<WeaponPrefab> WeaponsPrefabs;
-
-    [SerializeField] public GunAmmo[] GunsAmmo;
-#endif
+    public GunAmmo[] GunsAmmoInitializer;
 
     private IWeapon _equippedWeapon;
     public IWeapon EquippedWeapon => _equippedWeapon;
@@ -122,7 +118,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
         InitializePlayerWeapons();
 
-        _playerGunAmmo = GunsAmmo.ToDictionary(g => g.AmmoType, g => g.AmmoAmount);
+        _playerGunAmmo = GunsAmmoInitializer.ToDictionary(g => g.AmmoType, g => g.AmmoAmount);
     }
 
     private void Start()

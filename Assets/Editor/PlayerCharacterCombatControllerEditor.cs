@@ -28,7 +28,7 @@ public class PlayerCharacterCombatControllerEditor : Editor
         }
 
         // Sync gunsAmmo with AmmoTypes enum        
-        if (controller.GunsAmmo != null)
+        if (controller.GunsAmmoInitializer != null)
         {
             // Create a new array to avoid modifying the property directly
             string[] names = Enum.GetNames(typeof(AmmoTypes));
@@ -43,21 +43,21 @@ public class PlayerCharacterCombatControllerEditor : Editor
                 };
 
                 // Preserve existing ammoAmount if possible
-                if (i < controller.GunsAmmo.Length)
+                if (i < controller.GunsAmmoInitializer.Length)
                 {
-                    updatedGunsAmmo[i].AmmoAmount = controller.GunsAmmo[i].AmmoAmount;
+                    updatedGunsAmmo[i].AmmoAmount = controller.GunsAmmoInitializer[i].AmmoAmount;
                 }
             }
 
             // Assign the updated array back to the property
-            controller.GunsAmmo = updatedGunsAmmo;
+            controller.GunsAmmoInitializer = updatedGunsAmmo;
         }
 
         // Draw all properties except 'gunsAmmo'
-        DrawPropertiesExcluding(serializedObject, "GunsAmmo");
+        DrawPropertiesExcluding(serializedObject, "GunsAmmoInitializer");
 
         // Show GunsAmmo array with ammoType as read-only and ammoAmount editable
-        SerializedProperty gunsAmmo = serializedObject.FindProperty("GunsAmmo");
+        SerializedProperty gunsAmmo = serializedObject.FindProperty("GunsAmmoInitializer");
         if (gunsAmmo != null && gunsAmmo.isArray)
         {
             for (int i = 0; i < gunsAmmo.arraySize; i++)
