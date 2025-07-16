@@ -49,15 +49,11 @@ public class HUDManager : Singleton<HUDManager>
     [SerializeField] private TextMeshProUGUI _ammoTextPanel, _magAmmoTextPanel, _gunAmmoTextPanel, _meleeTextPanel;
 
     [Space]
-
-#if UNITY_EDITOR
     [SerializeField] private List<WeaponSlotInspector> _availableWeaponSlots;
-#endif
 
     private Dictionary<PlayerWeaponTypes, Image> _weaponCrosshairs = new Dictionary<PlayerWeaponTypes, Image>();
     private Dictionary<PlayerWeaponTypes, Color> _crosshairsOriginalColors = new Dictionary<PlayerWeaponTypes, Color>();
     private Dictionary<PlayerWeaponTypes, WeaponSlot> _weaponSlots = new Dictionary<PlayerWeaponTypes, WeaponSlot>();
-
 
     private readonly Vector3 _normalScale = Vector3.one;
     private readonly Vector3 _selectedScale = Vector3.one * 1.5f;
