@@ -470,7 +470,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         var weapon = other.GetComponentsInChildren<Weapon>();
 
-        if (weapon is not null)
+        if (weapon is not null && weapon.Length > 0)
         {
             AddWeapon(weapon);
             SwitchToWeapon(weapon.First().WeaponType);
