@@ -113,10 +113,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Die(PlayerWeaponTypes damageType)
     {        
-        gameObject.tag = "Untagged"; // Remove the enemy tag to prevent further detection
-
-        // call event to notify the game manager that the enemy has died
-        GameManager.EnemyDied(this);
+        gameObject.tag = "Untagged"; // Remove the enemy tag to prevent further detectio
 
         enemyCollider.enabled = false;
         behaviorGraph.enabled = false;

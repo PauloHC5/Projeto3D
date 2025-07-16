@@ -12,16 +12,6 @@ public class GameManager : Singleton<GameManager>
     [Space]
 
     [SerializeField] private GameObject _canvasGameOver;
-    
-
-    [Header("Enemy Spawning Properties")]
-    [SerializeField] private List<Enemy> enemies = new List<Enemy>();
-    [SerializeField] private int maxEnemies = 10;
-    [SerializeField] private float timeToSpawn = 1f;
-    [SerializeField] private float spawnInterval = 2f;
-
-    private List<GameObject> enemiesInScene = new List<GameObject>();
-    private GameObject[] spawnPoints;
 
     public static PlayerCharacterController Player { get; private set; }
 
@@ -39,12 +29,7 @@ public class GameManager : Singleton<GameManager>
     private void Awake()
     {
         // Find the player character controller in the scene
-        Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();        
-
-        // Find all spawn points in the scene by tag
-        spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
-        if (spawnPoints.Length == 0)
-            Debug.LogWarning("No enemy spawn points found in the scene.");
+        Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();      
     }    
 
     private void Start()
@@ -63,11 +48,6 @@ public class GameManager : Singleton<GameManager>
         if (Input.GetKeyDown(KeyCode.F12))
         {
             ReloadScene();
-        }
-
-        if (enemiesInScene.Count >= maxEnemies)
-        {
-            CancelInvoke(nameof(SpawnEnemy));
         }
     }
 
@@ -152,37 +132,6 @@ public class GameManager : Singleton<GameManager>
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
-    }
-
-    private void SpawnEnemy()
-    {
-        if (enemies.Count == 0)
-        {
-            Debug.LogWarning("No enemies available to spawn.");
-            return;
-        }
-
-        // Check if the player is not null
-        if (spawnPoints != null && spawnPoints.Length > 0)
-        {
-            // Get a random spawn point from the list
-            Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)].transform;
-
-            // Get a random enemy from the list
-            Enemy enemy = enemies[UnityEngine.Random.Range(0, enemies.Count)];
-
-            // Instantiate the enemy at the spawn point
-            Enemy enemySpawned = Instantiate(enemy, spawnPoint.position, Quaternion.identity);
-
-            // Add the spawned enemy to the list of enemies in the scene
-            enemiesInScene.Add(enemySpawned.gameObject);
-        }
-    }
-
-    public static void EnemyDied(Enemy enemy)
-    {
-        // Remove the enemy from the list of enemies in the scene
-        Instance.enemiesInScene.Remove(enemy.gameObject);
     }
 
     [RuntimeInitializeOnLoadMethod]
