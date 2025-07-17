@@ -7,25 +7,26 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField] private float regenerationWaitTime = 5f; // Health regeneration rate per second
     [SerializeField] private float regenerationRate = 1f; // Health regeneration rate per second
 
-    private Coroutine healthRegenerationCoroutine;
+    private Coroutine _healthRegenerationCoroutine;
 
     public int Health
     {
         get { return health; }
         set
         {
+            if (!enabled) return;
+
             health = value;
-            if (healthRegenerationCoroutine != null)
+            if (_healthRegenerationCoroutine != null)
             {
-                StopCoroutine(healthRegenerationCoroutine); // Stop any existing regeneration coroutine
+                StopCoroutine(_healthRegenerationCoroutine); // Stop any existing regeneration coroutine
             }
-            healthRegenerationCoroutine = StartCoroutine(RegenerateHealth()); // Start a new regeneration coroutine
+            _healthRegenerationCoroutine = StartCoroutine(RegenerateHealth()); // Start a new regeneration coroutine
 
 
             if (health <= 0)
             {
                 health = 0;                
-                
                 Die();
             }
         }
@@ -33,6 +34,8 @@ public class PlayerCharacter : MonoBehaviour
 
     private void Die()
     {
+        if (!enabled) return;
+
         Debug.Log("Player has died.");                        
         GameManager.GameOver();
 
