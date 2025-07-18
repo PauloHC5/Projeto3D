@@ -33,6 +33,7 @@ public struct WeaponSlot
 public class HUDManager : Singleton<HUDManager>
 {
     [SerializeField] private GameObject _canvasHud;
+    [SerializeField] private bool DebugPlayerRaycast = false; // Enable this to draw a debug ray in the scene view
 
     [Space]
 
@@ -213,7 +214,7 @@ public class HUDManager : Singleton<HUDManager>
         }
 
         // Draw a debug ray in the scene view for visualization
-        if (Debug.isDebugBuild) // Only draw the debug ray in debug builds
+        if (Debug.isDebugBuild && DebugPlayerRaycast) // Only draw the debug ray in debug builds
         {
             Debug.DrawRay(ray.origin, ray.direction * _playerCharacterCombatController.EquippedWeapon.WeaponRange, Color.green);
         }
