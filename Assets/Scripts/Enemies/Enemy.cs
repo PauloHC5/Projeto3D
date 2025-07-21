@@ -15,17 +15,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float stunDuration = 0.5f;
     [SerializeField] private bool canStun = true;    
     [SerializeField] private GameObject enemyEatenMesh;
-    [SerializeField] protected Collider damageCollider;
-
-    [Header("Range Detector Properties")]
-    [SerializeField] private float detectionRadius = 5.0f; // Radius of the detection zone
-    [SerializeField] private LayerMask detectionLayer; // Layer mask to filter the detection to specific layers (e.g., Player layer)
-    [SerializeField] private bool showDebugVisuals = true; // Show the detection zone in the editor
-
-    [Header("Line of Sight Detector Properties")]
-    [SerializeField] private float detectionRange = 10.0f;
-    [SerializeField] private float detectionHeight = 3.0f;
-    [SerializeField] private Transform raycastOrigin;
 
     protected NavMeshAgent agent;
     private BehaviorGraphAgent behaviorGraph;
@@ -173,8 +162,6 @@ public class Enemy : MonoBehaviour
         Vector3 direction = Camera.main.transform.forward;        
         rb.AddForce(direction * impulse, ForceMode.Impulse);        
     }
-
-    public GameObject DetectPlayer()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayer);
         foreach (var hitCollider in hitColliders)
@@ -192,42 +179,5 @@ public class Enemy : MonoBehaviour
 
         return DetectedTarget;
     }
-
-    public GameObject PerformDetection(GameObject potentialTarget)
-    {
-        RaycastHit hit;
-        Vector3 direction = potentialTarget.transform.position - raycastOrigin.position;
-        direction.y += detectionHeight; // Adjust the direction to include detectionHeight
-
-        // Project a raycast
-        if (Physics.Raycast(raycastOrigin.position, direction, out hit, detectionRange, detectionLayer))
-        {
-            if (showDebugVisuals && this.enabled)
-            {
-                Debug.DrawRay(raycastOrigin.position, direction * detectionRange, Color.red);
-            }
-
-            if (hit.collider.gameObject == potentialTarget)
-            {
-                return hit.collider.gameObject;
-            }
-        }
-        else
-        {
-            if (showDebugVisuals && this.enabled)
-            {
-                Debug.DrawRay(raycastOrigin.position, direction * detectionRange, Color.green);
-            }
-        }
-
-        return null;
-    }
-
-    // Optional: Draw the detection sphere in the editor for visualization
-    private void OnDrawGizmosSelected()
-    {
-        if (!showDebugVisuals) return;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
-    }    
+      
 }
