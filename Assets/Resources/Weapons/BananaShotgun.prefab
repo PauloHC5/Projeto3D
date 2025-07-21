@@ -2510,7 +2510,7 @@ MonoBehaviour:
   gunRange: 4.4
   shootLayer:
     serializedVersion: 2
-    m_Bits: 521
+    m_Bits: 16905
   shootImpactImpulse: 10
   DebugRaycast: 1
   impactVFX: {fileID: 0}
