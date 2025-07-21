@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Woodsman : Enemy
@@ -5,6 +6,7 @@ public class Woodsman : Enemy
     [Header("Woodsman Properties")]
     [SerializeField] private float attackRate = 1f;
     [SerializeField] private GameObject weapon;
+    
     private void Awake()
     {
         OnAwake();
@@ -17,6 +19,11 @@ public class Woodsman : Enemy
         
         if (_damageColliderEvents != null)
         {
+            // For single hit on enter
+            _damageColliderEvents.onHitDamage += DamagePlayer;
+        }
+    }
+    
     private void Update()
     {
         OnUpdate();
@@ -29,7 +36,28 @@ public class Woodsman : Enemy
             weapon.GetComponent<Collider>().enabled = !isDead;
         }
     }
+    
+    protected override void DamagePlayer(Collider other)
+    {
+        if (isDead) return;
+        
+        var player = other.GetComponent<PlayerCharacter>();
+        
+        // Check if the player is not null
+        if (player != null)
+        {
+            PlayerCharacter playerCharacter = player.GetComponent<PlayerCharacter>();
+            if (playerCharacter != null)
+            {
+                playerCharacter.Health -= damage;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Woodsman: Player GameObject is null.");
+        }
     }
+
     protected override void Die(PlayerWeaponTypes damageType)
     {
         base.Die(damageType);
@@ -42,5 +70,10 @@ public class Woodsman : Enemy
             // Desatch weapon from player
             weapon.transform.SetParent(null);            
         }             
+    }
+
+    private void OnDestroy()
+    {
+        _damageColliderEvents.onHitDamage -= DamagePlayer;
     }
 }

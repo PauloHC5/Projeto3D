@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     private Collider enemyCollider;
     private Rigidbody rb;
     protected AudioSource _audioSource;
+    protected DamageColliderEvents _damageColliderEvents;
 
     protected int IsDead = Animator.StringToHash("IsDead");
     protected int Velocity = Animator.StringToHash("Velocity");
@@ -38,7 +39,6 @@ public class Enemy : MonoBehaviour
     public GameObject DetectedTarget { get; set; } // The detected target within the detection zone
     public int Damage => damage;
 
-    private void Awake()
     protected void OnAwake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -67,14 +67,14 @@ public class Enemy : MonoBehaviour
             Debug.LogWarning("Enemy: Blackboard variable 'DistanceThreshold' not found. \n " +
                              "Please ensure it is set in the Behavior Graph or if the name has changed.");
         }
+        
+        _damageColliderEvents = GetComponentInChildren<DamageColliderEvents>(true);
     }
 
-    private void Update()
     protected void OnUpdate()
     {
         if(animator)
         {
-            animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));
             animator.SetFloat(Velocity, agent.velocity.sqrMagnitude);
             animator.SetBool(IsDead, isDead);
         }
@@ -179,22 +179,10 @@ public class Enemy : MonoBehaviour
         Vector3 direction = Camera.main.transform.forward;        
         rb.AddForce(direction * impulse, ForceMode.Impulse);        
     }
+    
+    protected virtual void DamagePlayer(Collider other)
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectionRadius, detectionLayer);
-        foreach (var hitCollider in hitColliders)
-        {
-            if (hitCollider.CompareTag("Player"))
-            {
-                DetectedTarget = hitCollider.gameObject;
-                return DetectedTarget;
-            }
-            else
-            {
-                DetectedTarget = null;
-            }
-        }
-
-        return DetectedTarget;
+        // This method should be overridden in derived classes to handle player damage
     }
       
 }
