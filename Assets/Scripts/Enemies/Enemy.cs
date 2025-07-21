@@ -7,8 +7,7 @@ public class Enemy : MonoBehaviour
 {
     [Header("Enemy Properties")]
     [SerializeField] private int health = 100;
-    [SerializeField] private int damage = 10;
-    [SerializeField] protected GameObject weapon;
+    [SerializeField] protected int damage = 10;
     [SerializeField] private CapsuleCollider enemyDeadCollider;
     [SerializeField] private float deathImpulse = 20.0f; 
     [SerializeField] private float stunHitImpulse = 10.0f;
@@ -17,7 +16,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject enemyEatenMesh;
 
     protected NavMeshAgent agent;
-    private BehaviorGraphAgent behaviorGraph;
+    protected BehaviorGraphAgent behaviorGraph;
     protected Animator animator;
     private Collider enemyCollider;
     private Rigidbody rb;
@@ -40,6 +39,7 @@ public class Enemy : MonoBehaviour
     public int Damage => damage;
 
     private void Awake()
+    protected void OnAwake()
     {
         agent = GetComponent<NavMeshAgent>();
         behaviorGraph = GetComponent<BehaviorGraphAgent>();
@@ -50,8 +50,23 @@ public class Enemy : MonoBehaviour
         if (_audioSource == null)
             Debug.LogWarning("ChemAgent: AudioSource component is missing. Please add one for sound effects.");
 
-        behaviorGraph.BlackboardReference.SetVariableValue("Speed", agent.speed);
-        behaviorGraph.BlackboardReference.SetVariableValue("EnemyAnimator", animator);
+        if(!behaviorGraph.BlackboardReference.SetVariableValue("Speed", agent.speed))
+        {
+            Debug.LogWarning("Enemy: Blackboard variable 'Speed' not found. \n" +
+                             "Please ensure it is set in the Behavior Graph or if the name has changed.");
+        }
+        
+        if (!behaviorGraph.BlackboardReference.SetVariableValue("EnemyAnimator", animator))
+        {
+            Debug.LogWarning("Enemy: Blackboard variable 'EnemyAnimator' not found. \n" +
+                             "Please ensure it is set in the Behavior Graph or if the name has changed.");
+        }
+
+        if (!behaviorGraph.BlackboardReference.SetVariableValue("DistanceThreshold", agent.stoppingDistance))
+        {
+            Debug.LogWarning("Enemy: Blackboard variable 'DistanceThreshold' not found. \n " +
+                             "Please ensure it is set in the Behavior Graph or if the name has changed.");
+        }
     }
 
     private void Update()
