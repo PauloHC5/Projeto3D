@@ -17,6 +17,18 @@ public class Woodsman : Enemy
         
         if (_damageColliderEvents != null)
         {
+    private void Update()
+    {
+        OnUpdate();
+
+        // Check if the weapon is not null and has a Rigidbody component
+        if (weapon && weapon.GetComponent<Rigidbody>() != null)
+        {
+            // Ensure the weapon is kinematic while the enemy is alive
+            weapon.GetComponent<Rigidbody>().isKinematic = !isDead;
+            weapon.GetComponent<Collider>().enabled = !isDead;
+        }
+    }
     }
     protected override void Die(PlayerWeaponTypes damageType)
     {

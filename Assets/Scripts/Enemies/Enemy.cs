@@ -70,12 +70,14 @@ public class Enemy : MonoBehaviour
     }
 
     private void Update()
+    protected void OnUpdate()
     {
         if(animator)
         {
             animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));
+            animator.SetFloat(Velocity, agent.velocity.sqrMagnitude);
             animator.SetBool(IsDead, isDead);
-        }        
+        }
     }
 
     // funtion to take damage

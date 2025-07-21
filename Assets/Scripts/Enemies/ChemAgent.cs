@@ -24,22 +24,24 @@ public class ChemAgent : Enemy
     }
     // Update is called once per frame
     void Update()
+    private void Update()
     {
-        animator.SetFloat(Velocity, Mathf.Clamp(agent.velocity.sqrMagnitude, 0f, 1f));
-        animator.SetBool(IsDead, isDead);
+        OnUpdate();
 
         if (animator.GetBool(Fire))
         {
             if (!gunParticle.isPlaying) gunParticle.Play();
-            if(damageCollider) damageCollider.enabled = true;
+            if (damageCollider) damageCollider.enabled = true;
 
-            if(_audioSource) SoundManager.PlayRandomSFX(WorldSfxType.CHEMAGENT_GAS, _audioSource, true);
+            if (_audioSource) SoundManager.PlayRandomSFX(WorldSfxType.CHEMAGENT_GAS, _audioSource, true);
         }
         else
         {
             if (gunParticle.isPlaying) gunParticle.Stop();
-            if (damageCollider) damageCollider.enabled = false;            
-            if(_audioSource) _audioSource.Stop();
+            if (damageCollider) damageCollider.enabled = false;
+            if (_audioSource) _audioSource.Stop();
+        }
+    }
         }
     }
 
