@@ -1360,6 +1360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaa92be1072a8d48ba880d899df4c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skipWeaponInspection: 1
   _rightHandSocket: {fileID: 2860071523350465062}
   _leftHandSocket: {fileID: 7072074740685791458}
   WeaponsPrefabs:
