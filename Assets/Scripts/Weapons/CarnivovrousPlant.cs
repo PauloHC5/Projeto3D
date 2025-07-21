@@ -22,6 +22,7 @@ public class CarnivovrousPlant : Weapon
     private Animator _animator;
     private Vector3 _originalScale;
     private AudioSource _audioSource;
+    private DamageColliderEvents _damageColliderEvents;
 
     private readonly int _chewing = Animator.StringToHash("Chewing");
     
@@ -49,6 +50,10 @@ public class CarnivovrousPlant : Weapon
         _audioSource = GetComponent<AudioSource>();
 
         _audioSource.playOnAwake = false;
+
+        _damageColliderEvents = _hitCollider.GetComponent<DamageColliderEvents>();
+        if (_damageColliderEvents != null)
+            _damageColliderEvents.onHitDamage += HitDamage;
     }
 
     private void Update()
@@ -76,7 +81,7 @@ public class CarnivovrousPlant : Weapon
 
     private void PlayRaise(PlayerWeaponTypes weaponType)
     {
-        if (_weaponType != weaponType)
+        if (_weaponType != weaponType || !_animator)
             return;
         
         switch (_socketToAttach)
@@ -120,7 +125,7 @@ public class CarnivovrousPlant : Weapon
         _hitCollider.enabled = false;
     }    
 
-    private void OnTriggerEnter(Collider other)
+    private void HitDamage(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
@@ -197,5 +202,10 @@ public class CarnivovrousPlant : Weapon
         _canAttack = false;        
         yield return new WaitForSeconds(_chewingDuration);
         _canAttack = true;        
+    }
+
+    private void OnDestroy()
+    {
+        _damageColliderEvents.onHitDamage -= HitDamage;
     }
 }
