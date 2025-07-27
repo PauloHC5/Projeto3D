@@ -1598,7 +1598,7 @@ MonoBehaviour:
         AuthoringAssetID:
           m_Value0: 16431893854131049350
           m_Value1: 12977670345748136842
-        m_DebugInfo: {fileID: 0}
+        m_DebugInfo: {fileID: -5106346904554858071}
         Root:
           rid: 470864143949496962
         BlackboardReference:
@@ -1714,7 +1714,7 @@ MonoBehaviour:
           m_Value0: 15289829283565369562
           m_Value1: 11004505919566064994
         Name: DistanceToStartFire
-        m_Value: 0
+        m_Value: 5
     - rid: 470864143949496973
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
@@ -1723,7 +1723,7 @@ MonoBehaviour:
           m_Value0: 8891660047740295973
           m_Value1: 13993374551933070907
         Name: Speed
-        m_Value: 0
+        m_Value: 2
     - rid: 470864143949496974
       type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
@@ -1741,7 +1741,7 @@ MonoBehaviour:
           m_Value0: 9072345382218587561
           m_Value1: 17047373945294276855
         Name: DistanceThreshold
-        m_Value: 0
+        m_Value: 4
     - rid: 470864143949496976
       type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
@@ -2061,7 +2061,7 @@ MonoBehaviour:
   - rid: 470864103070237375
   - rid: 470864103070237412
   - rid: 470864103070237449
-  m_VersionTimestamp: 638887233698403062
+  m_VersionTimestamp: 638890418922800169
   m_CommandBuffer:
     m_Commands: []
   m_RuntimeBlackboardAsset: {fileID: -3624198569826825801}
@@ -2076,7 +2076,7 @@ MonoBehaviour:
           m_Value0: 1
           m_Value1: 0
         Name: Self
-        IsExposed: 1
+        IsExposed: 0
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 470864086048702478
@@ -2087,7 +2087,7 @@ MonoBehaviour:
           m_Value0: 5279720259391094195
           m_Value1: 12428841181541783771
         Name: Player
-        IsExposed: 1
+        IsExposed: 0
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 470864086048703076
