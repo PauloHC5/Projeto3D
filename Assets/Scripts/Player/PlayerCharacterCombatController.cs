@@ -41,23 +41,6 @@ public struct WeaponPrefab
     }
 }
 
-[Serializable]
-public struct GunAmmo
-{
-    public AmmoTypes AmmoType;
-    public int AmmoAmount;
-}
-
-[Serializable]
-public enum AmmoTypes
-{
-    Acorn,
-    Banana,
-    Spikes,
-    Corn,
-    Coconut,
-}
-
 public class PlayerCharacterCombatController : MonoBehaviour
 {
     [SerializeField] private bool skipWeaponInspection = false;

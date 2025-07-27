@@ -3,6 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public struct GunAmmo
+{
+    public AmmoTypes AmmoType;
+    public int AmmoAmount;
+}
+
+[Serializable]
+public enum AmmoTypes
+{
+    Acorn,
+    Banana,
+    Spikes,
+    Corn,
+    Coconut,
+}
+
 [RequireComponent(typeof(AudioSource))]
 public class Gun : Weapon, IEquippedGun
 {
