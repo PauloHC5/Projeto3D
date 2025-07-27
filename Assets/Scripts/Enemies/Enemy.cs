@@ -1,174 +1,173 @@
 using System.Collections;
+using Enemies;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
-    [Header("Enemy Properties")]
-    [SerializeField] private int health = 100;
+    [Header("Enemy Properties")] [SerializeField]
+    private int health = 100;
+
     [SerializeField] protected int damage = 10;
-    [SerializeField] private CapsuleCollider enemyDeadCollider;
-    [SerializeField] private float deathImpulse = 20.0f; 
+    [SerializeField] private GameObject enemyMesh;
+    [SerializeField] private float deathImpulse = 20.0f;
     [SerializeField] private float stunHitImpulse = 10.0f;
     [SerializeField] private float stunDuration = 0.5f;
-    [SerializeField] private bool canStun = true;    
+    [SerializeField] private bool canStun = true;
     [SerializeField] private GameObject enemyEatenMesh;
 
-    protected NavMeshAgent agent;
-    protected BehaviorGraphAgent behaviorGraph;
-    protected Animator animator;
-    private Collider enemyCollider;
-    private Rigidbody rb;
-    protected AudioSource _audioSource;
-    protected DamageColliderEvents _damageColliderEvents;
+    protected NavMeshAgent Agent;
+    protected BehaviorGraphAgent BehaviorGraph;
+    protected EnemyAnimationsControlller EnemyAnimationsControlller;
+    private Collider _enemyCollider;
+    private Rigidbody _rb;
+    protected AudioSource AudioSource;
+    protected DamageColliderEvents DamageColliderEvents;
+    private Collider _enemyMeshCollider;
+    private Rigidbody _enemyMeshRigidbody;
 
-    protected int IsDead = Animator.StringToHash("IsDead");
-    protected int Velocity = Animator.StringToHash("Velocity");
-    private int React = Animator.StringToHash("React");
-    private int Stun = Animator.StringToHash("Stun");
-    private int WeaponIndex = Animator.StringToHash("WeaponIndex");
+    protected bool IsDead = false;
+    private IEnumerator _shotgunStunReactRoutine;
 
-    protected bool isDead = false;
-    private IEnumerator shotgunStunReactRoutine;
-
-    private const int reactionLayerIndex = 1; // Index of the reaction layer in the animator
-    private const float mediumLayerWeight = 0.75f; // Medium layer weight for the reaction layer
-    private const float fullLayerWeight = 1.0f; // Full layer weight for the reaction layer    
+    public int Health
+    {
+        get => health;
+        set
+        {
+            health = Mathf.Clamp(value, 0, 100);
+            if (health <= 0)
+            {
+                IsDead = true;
+                if (_shotgunStunReactRoutine != null) StopCoroutine(_shotgunStunReactRoutine);
+            }
+        }
+    }
 
     public GameObject DetectedTarget { get; set; } // The detected target within the detection zone
     public int Damage => damage;
 
     protected void OnAwake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        behaviorGraph = GetComponent<BehaviorGraphAgent>();
-        animator = GetComponentInChildren<Animator>();
-        enemyCollider = GetComponent<Collider>();
-        rb = GetComponent<Rigidbody>();
-        _audioSource = GetComponent<AudioSource>();
-        if (_audioSource == null)
+        Agent = GetComponent<NavMeshAgent>();
+        BehaviorGraph = GetComponent<BehaviorGraphAgent>();
+        _enemyCollider = GetComponent<Collider>();
+        _rb = GetComponent<Rigidbody>();
+        AudioSource = GetComponent<AudioSource>();
+        _enemyMeshCollider = enemyMesh.GetComponent<Collider>();
+        _enemyMeshRigidbody = enemyMesh.GetComponent<Rigidbody>();
+        
+
+        EnemyAnimationsControlller = new EnemyAnimationsControlller(GetComponentInChildren<Animator>(true), Agent);
+
+        if (AudioSource == null)
             Debug.LogWarning("ChemAgent: AudioSource component is missing. Please add one for sound effects.");
 
-        if(!behaviorGraph.BlackboardReference.SetVariableValue("Speed", agent.speed))
+        if (!BehaviorGraph.BlackboardReference.SetVariableValue("Speed", Agent.speed))
         {
             Debug.LogWarning("Enemy: Blackboard variable 'Speed' not found. \n" +
                              "Please ensure it is set in the Behavior Graph or if the name has changed.");
         }
-        
-        if (!behaviorGraph.BlackboardReference.SetVariableValue("EnemyAnimator", animator))
+
+        if (!BehaviorGraph.BlackboardReference.SetVariableValue("EnemyAnimator", EnemyAnimationsControlller.Animator))
         {
             Debug.LogWarning("Enemy: Blackboard variable 'EnemyAnimator' not found. \n" +
                              "Please ensure it is set in the Behavior Graph or if the name has changed.");
         }
 
-        if (!behaviorGraph.BlackboardReference.SetVariableValue("DistanceThreshold", agent.stoppingDistance))
+        if (!BehaviorGraph.BlackboardReference.SetVariableValue("DistanceThreshold", Agent.stoppingDistance))
         {
             Debug.LogWarning("Enemy: Blackboard variable 'DistanceThreshold' not found. \n " +
                              "Please ensure it is set in the Behavior Graph or if the name has changed.");
         }
-        
-        _damageColliderEvents = GetComponentInChildren<DamageColliderEvents>(true);
+
+        DamageColliderEvents = GetComponentInChildren<DamageColliderEvents>(true);
     }
 
     protected void OnUpdate()
     {
-        if(animator)
-        {
-            animator.SetFloat(Velocity, agent.velocity.sqrMagnitude);
-            animator.SetBool(IsDead, isDead);
-        }
+        EnemyAnimationsControlller.HandleLocomotion();
     }
 
     // funtion to take damage
-    public void TakeDamage(int damage, PlayerWeaponTypes damageType)
+    public void TakeDamage(int takenDamage, PlayerWeaponTypes damageType)
     {
-        if(isDead) return; // Ignore damage if already dead
+        if (IsDead) return; // Ignore damage if already dead
 
-        health -= damage;        
+        Health -= takenDamage;
 
-        if (health <= 0)
+        if (IsDead)
         {
-            isDead = true;
-            if (shotgunStunReactRoutine != null) StopCoroutine(shotgunStunReactRoutine);
-            Die(damageType);                        
+            Die(damageType);
+            return;
         }
-        else
+        
+        if (canStun && damageType == PlayerWeaponTypes.BANANASHOTGUN)
         {
-            float layerWeight = (damageType == PlayerWeaponTypes.CACTUSSCROSSBOW) ? mediumLayerWeight : fullLayerWeight;
-            animator.SetLayerWeight(reactionLayerIndex, layerWeight);
-
-            // Trigger the react animation based on the damage type
-            // You can use an enum or int to represent different damage types
-            animator.SetInteger(WeaponIndex, (int)damageType);
-
-
-            if (canStun && damageType == PlayerWeaponTypes.BANANASHOTGUN)
+            if (_shotgunStunReactRoutine == null)
             {
-                if (shotgunStunReactRoutine == null)
-                {
-                    shotgunStunReactRoutine = StunReact();
-                    StartCoroutine(shotgunStunReactRoutine);
-                    return;
-                }
-            }            
-            
-            animator.SetTrigger(React);
-        }        
-    }   
+                _shotgunStunReactRoutine = StunReact();
+                StartCoroutine(_shotgunStunReactRoutine);
+                return;
+            }
+        }
+
+        EnemyAnimationsControlller.PlayTakeDamage(damageType);
+    }
 
     protected virtual void Die(PlayerWeaponTypes damageType)
-    {        
+    {
         gameObject.tag = "Untagged"; // Remove the enemy tag to prevent further detectio
 
-        enemyCollider.enabled = false;
-        behaviorGraph.enabled = false;
-        agent.enabled = false;        
-        rb.isKinematic = false;
-        animator.SetInteger(WeaponIndex, (int)damageType);
+        _enemyCollider.enabled = false;
+        BehaviorGraph.enabled = false;
+        _rb.isKinematic = false;
+        
+        EnemyAnimationsControlller.PlayDeath(damageType);
 
         if (damageType == PlayerWeaponTypes.CARNIVOROUSPLANTS)
         {
-            if(enemyEatenMesh == null)
+            if (enemyEatenMesh == null)
             {
                 Debug.LogWarning("Enemy eaten mesh has not been assigned.");
                 return;
-            }            
-            
+            }
+
             GameObject eatenMeshInstance = Instantiate(enemyEatenMesh, transform.position, this.transform.rotation);
-            
+
             Destroy(gameObject);
         }
 
-        if (enemyDeadCollider) enemyDeadCollider.enabled = true;
+        if (_enemyMeshCollider) _enemyMeshCollider.enabled = true;
+        if (_enemyMeshRigidbody) _enemyMeshRigidbody.isKinematic = false;
 
         if (damageType == PlayerWeaponTypes.BANANASHOTGUN)
         {
-            agent.velocity = Vector3.zero;
+            Agent.velocity = Vector3.zero;
             ApplyImpulse(deathImpulse);
-        }        
+        }
     }
 
     private IEnumerator StunReact()
     {
-        if(!canStun) yield break; // Exit if stun is not allowed
+        if (!canStun) yield break; // Exit if stun is not allowed
 
-        agent.velocity = Vector3.zero;
-        agent.enabled = false;
-        behaviorGraph.enabled = false;
-        rb.isKinematic = false;
+        Agent.velocity = Vector3.zero;
+        Agent.enabled = false;
+        BehaviorGraph.enabled = false;
+        _rb.isKinematic = false;
         ApplyImpulse(stunHitImpulse);
-        animator.SetTrigger(Stun);
+        EnemyAnimationsControlller.PlayStun();
         yield return new WaitForSeconds(stunDuration);
-        agent.enabled = true;
-        behaviorGraph.enabled = true;
-        behaviorGraph.Restart();
-        rb.isKinematic = true;
-        shotgunStunReactRoutine = null; // Reset the coroutine reference
+        Agent.enabled = true;
+        BehaviorGraph.enabled = true;
+        BehaviorGraph.Restart();
+        _rb.isKinematic = true;
+        _shotgunStunReactRoutine = null; // Reset the coroutine reference
     }
 
     private void ApplyImpulse(float impulse)
-    {                        
+    {
         // set the rotation of the enemy to look at the player
         Vector3 lookAtDirection = Camera.main.transform.position - transform.position;
         lookAtDirection.y = 0; // Keep the y component zero to only rotate on the y-axis
@@ -176,13 +175,12 @@ public class Enemy : MonoBehaviour
         transform.rotation = rotation;
 
         // Apply impulse force to the enemy                        
-        Vector3 direction = Camera.main.transform.forward;        
-        rb.AddForce(direction * impulse, ForceMode.Impulse);        
+        Vector3 direction = Camera.main.transform.forward;
+        _rb.AddForce(direction * impulse, ForceMode.Impulse);
     }
-    
+
     protected virtual void DamagePlayer(Collider other)
     {
         // This method should be overridden in derived classes to handle player damage
     }
-      
 }

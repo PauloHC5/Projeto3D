@@ -1,4 +1,5 @@
 using System;
+using Enemies;
 using UnityEngine;
 
 public class ChemAgent : Enemy
@@ -10,24 +11,25 @@ public class ChemAgent : Enemy
     [SerializeField] private float damageInterval = 1.5f;
     
     private float _lastDamageTime = -Mathf.Infinity;
-
-    private readonly int Fire = Animator.StringToHash("Fire");
+    private ChemAgentAnimationsController _chemAgentAnimationsController;
 
     private void Awake()
     {
         OnAwake();
 
+        _chemAgentAnimationsController = new ChemAgentAnimationsController(EnemyAnimationsControlller.Animator, Agent);
+
         // Set the distance to start firing in the behavior graph blackboard
-        if (!behaviorGraph.BlackboardReference.SetVariableValue("DistanceToStartFire", distanceToStartFire))
+        if (!BehaviorGraph.BlackboardReference.SetVariableValue("DistanceToStartFire", distanceToStartFire))
         {
             Debug.LogWarning(
                 "ChemAgent: Blackboard variable 'DistanceToStartFire' not found. Please ensure it is set in the Behavior Graph.");
         }
         
-        if (_damageColliderEvents != null)
+        if (DamageColliderEvents != null)
         {
             // For single hit on enter
-            _damageColliderEvents.onPersistanceDamage += DamagePlayer;
+            DamageColliderEvents.onPersistanceDamage += DamagePlayer;
         }
     }
 
@@ -36,24 +38,24 @@ public class ChemAgent : Enemy
     {
         OnUpdate();
 
-        if (animator.GetBool(Fire))
+        if (_chemAgentAnimationsController.IsFiring)
         {
             if (!gunParticle.isPlaying) gunParticle.Play();
             if (damageCollider) damageCollider.enabled = true;
 
-            if (_audioSource) SoundManager.PlayRandomSFX(WorldSfxType.CHEMAGENT_GAS, _audioSource, true);
+            if (AudioSource && !AudioSource.isPlaying) SoundManager.PlayRandomSFX(WorldSfxType.CHEMAGENT_GAS, AudioSource, true);
         }
         else
         {
             if (gunParticle.isPlaying) gunParticle.Stop();
             if (damageCollider) damageCollider.enabled = false;
-            if (_audioSource) _audioSource.Stop();
+            if (AudioSource) AudioSource.Stop();
         }
     }
 
     protected override void DamagePlayer(Collider other)
     {
-        if (isDead) return;
+        if (IsDead) return;
         
         if (Time.time - _lastDamageTime < damageInterval) return;
         _lastDamageTime = Time.time;
@@ -72,13 +74,13 @@ public class ChemAgent : Enemy
     protected override void Die(PlayerWeaponTypes damageType)
     {
         gunParticle.Stop();
-        animator.SetBool(Fire, false);
+        _chemAgentAnimationsController.IsFiring = false;
 
         base.Die(damageType);
     }
 
     private void OnDestroy()
     {
-        _damageColliderEvents.onPersistanceDamage -= DamagePlayer;
+        DamageColliderEvents.onPersistanceDamage -= DamagePlayer;
     }
 }
