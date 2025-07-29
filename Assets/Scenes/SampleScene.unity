@@ -3629,6 +3629,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6659763412728848342, guid: 7033c42e984f975478ab3078097ff9b9,
+        type: 3}
+      propertyPath: _shouldPersistBetweenScenes
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7556439363713432683, guid: 7033c42e984f975478ab3078097ff9b9,
         type: 3}
       propertyPath: m_LocalPosition.x
