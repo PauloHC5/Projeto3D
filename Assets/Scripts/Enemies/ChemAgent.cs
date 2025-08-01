@@ -38,7 +38,7 @@ public class ChemAgent : Enemy
     {
         OnUpdate();
 
-        if (_chemAgentAnimationsController.IsFiring)
+        if (_chemAgentAnimationsController.IsFiring && !IsStunned)
         {
             if (!gunParticle.isPlaying) gunParticle.Play();
             if (damageCollider) damageCollider.enabled = true;
@@ -51,6 +51,8 @@ public class ChemAgent : Enemy
             if (damageCollider) damageCollider.enabled = false;
             if (AudioSource) AudioSource.Stop();
         }
+        
+        if(IsStunned) _chemAgentAnimationsController.StopFire();
     }
 
     protected override void DamagePlayer(Collider other)
@@ -71,12 +73,14 @@ public class ChemAgent : Enemy
         }
     }
 
-    protected override void Die(PlayerWeaponTypes damageType)
+    protected override void Die(DamageType damageType)
     {
         gunParticle.Stop();
         _chemAgentAnimationsController.IsFiring = false;
 
         base.Die(damageType);
+        
+        Agent.enabled = false;
     }
 
     private void OnDestroy()

@@ -1939,7 +1939,7 @@ MonoBehaviour:
   _returnSpeed: 4
   _fireSocket: {fileID: 7556959668680944268}
   _muzzleFlash: {fileID: 0}
-  projectile: {fileID: 5969348226918421055, guid: 5c4a490cd8edef34581c9f20f0473aa6,
+  projectilePrefab: {fileID: 5969348226918421055, guid: 5c4a490cd8edef34581c9f20f0473aa6,
     type: 3}
   projectileForce: 120
   intervalBetweenShots: 0.07

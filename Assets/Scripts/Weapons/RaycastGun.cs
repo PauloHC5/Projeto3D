@@ -8,6 +8,7 @@ public class RaycastGun : Gun
     [SerializeField] protected LayerMask shootLayer;
     [SerializeField] private float shootImpactImpulse = 10f;
     [SerializeField] protected bool DebugRaycast = false;
+    [SerializeField] private DamageType damageType;
 
     [Header("Raycast Gun VFX")]
     [SerializeField] protected ParticleSystem impactVFX;
@@ -41,7 +42,7 @@ public class RaycastGun : Gun
         {
             if (hit.collider.gameObject.GetComponent<Enemy>())
             {
-                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage, _weaponType);
+                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage, damageType);
             }
 
             if (impactVFX) Instantiate(impactVFX, hit.point, Quaternion.LookRotation(-ray.direction));
@@ -69,7 +70,7 @@ public class RaycastGun : Gun
         {
             if (hitCollider.gameObject.GetComponent<Enemy>())
             {
-                hitCollider.gameObject.GetComponent<Enemy>().TakeDamage(damage, _weaponType);
+                hitCollider.gameObject.GetComponent<Enemy>().TakeDamage(damage, damageType);
             }
         }
     }

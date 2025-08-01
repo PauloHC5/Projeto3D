@@ -21,6 +21,9 @@ namespace Enemies
         private readonly int _shotgunDeath = Animator.StringToHash("ShotgunDeath");
         private readonly int _crossbowDeath = Animator.StringToHash("CrossbowDeath");
         private readonly int _shotgunStun = Animator.StringToHash("ShotgunStun");
+        private readonly int _superAcornReact = Animator.StringToHash("SuperACornReact");
+        private readonly int _superAcornDeath = Animator.StringToHash("SuperACornDeath");
+        
         
         public Animator Animator => _enemyAnimator;
         
@@ -37,44 +40,50 @@ namespace Enemies
             _enemyAnimator.SetFloat(_velocity, _enemyAgent.velocity.sqrMagnitude);
         }
 
-        public void PlayTakeDamage(PlayerWeaponTypes damageType)
+        public void PlayTakeDamage(DamageType damageType)
         {
-            float layerWeight = (damageType == PlayerWeaponTypes.CACTUSSCROSSBOW) ? MediumLayerWeight : FullLayerWeight;
+            float layerWeight = (damageType == DamageType.Spike) ? MediumLayerWeight : FullLayerWeight;
             _enemyAnimator.SetLayerWeight(ReactionLayerIndex, layerWeight);
 
             switch (damageType)
             {
-                case PlayerWeaponTypes.ACORNGUN:
+                case DamageType.Acorn:
                     _enemyAnimator.SetTrigger(_acornReact);
                     break;
-                case PlayerWeaponTypes.BANANASHOTGUN:
+                case DamageType.Banana:
                     _enemyAnimator.SetTrigger(_shotgunReact);
                     break;
-                case PlayerWeaponTypes.CACTUSSCROSSBOW:
+                case DamageType.Spike:
                     _enemyAnimator.SetTrigger(_crossbowReact);
+                    break;
+                case DamageType.SuperAcorn:
+                    _enemyAnimator.SetTrigger(_superAcornReact);
                     break;
             }
         }
 
-        public void PlayStun()
+        public virtual void PlayStun()
         {
             _enemyAnimator.SetTrigger(_shotgunStun);
         }
         
-        public void PlayDeath(PlayerWeaponTypes damageType)
+        public void PlayDeath(DamageType damageType)
         {
             _enemyAnimator.SetBool(_isDead, true);
 
             switch (damageType)
             {
-                case PlayerWeaponTypes.ACORNGUN:
+                case DamageType.Acorn:
                     _enemyAnimator.SetTrigger(_acornDeath);
                     break;
-                case PlayerWeaponTypes.BANANASHOTGUN:
+                case DamageType.Banana:
                     _enemyAnimator.SetTrigger(_shotgunDeath);
                     break;
-                case PlayerWeaponTypes.CACTUSSCROSSBOW:
+                case DamageType.Spike:
                     _enemyAnimator.SetTrigger(_crossbowDeath);
+                    break;
+                case DamageType.SuperAcorn:
+                    _enemyAnimator.SetTrigger(_superAcornDeath);
                     break;
             }
             

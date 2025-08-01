@@ -129,7 +129,7 @@ public class CarnivovrousPlant : Weapon
     {
         if (other.CompareTag("Enemy"))
         {
-            other.GetComponent<Enemy>().TakeDamage(_damage, _weaponType);
+            other.GetComponent<Enemy>().TakeDamage(_damage, DamageType.Carnivorous);
             _hitCollider.enabled = false; // Disable the collider after hitting
             
             StopCoroutine(ChewingRoutine());

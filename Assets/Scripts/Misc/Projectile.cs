@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
 {
     [SerializeField] protected int damage = 10;
     [SerializeField] protected float timeToDestroy = 5f;
+    [SerializeField] protected DamageType damageType;
 
     public int Damage
     {
@@ -33,7 +34,7 @@ public class Projectile : MonoBehaviour
         Enemy enemy = collision.gameObject.GetComponent<Enemy>();
         if (enemy)
         {
-            enemy.TakeDamage(damage, PlayerWeaponTypes.ACORNGUN);
+            enemy.TakeDamage(damage, damageType);
             Destroy(gameObject);
         }
     }

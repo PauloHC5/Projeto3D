@@ -48,7 +48,7 @@ public class Woodsman : Enemy
         }
     }
 
-    protected override void Die(PlayerWeaponTypes damageType)
+    protected override void Die(DamageType damageType)
     {
         base.Die(damageType);
 

@@ -4,6 +4,15 @@ using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum DamageType
+{
+    Acorn,
+    Banana,
+    Spike,
+    SuperAcorn,
+    Carnivorous,
+    }
+
 public abstract class Enemy : MonoBehaviour
 {
     [Header("Enemy Properties")] [SerializeField]
@@ -11,8 +20,6 @@ public abstract class Enemy : MonoBehaviour
 
     [SerializeField] protected int damage = 10;
     [SerializeField] private GameObject enemyMesh;
-    [SerializeField] private float deathImpulse = 20.0f;
-    [SerializeField] private float stunHitImpulse = 10.0f;
     [SerializeField] private float stunDuration = 0.5f;
     [SerializeField] private bool canStun = true;
     [SerializeField] private GameObject enemyEatenMesh;
@@ -28,6 +35,7 @@ public abstract class Enemy : MonoBehaviour
     private Rigidbody _enemyMeshRigidbody;
 
     protected bool IsDead = false;
+    protected bool IsStunned = false;
     private IEnumerator _shotgunStunReactRoutine;
 
     public int Health
@@ -35,9 +43,10 @@ public abstract class Enemy : MonoBehaviour
         get => health;
         set
         {
-            health = Mathf.Clamp(value, 0, 100);
+            health = value;
             if (health <= 0)
             {
+                health = 0; // Ensure health does not go below zero
                 IsDead = true;
                 if (_shotgunStunReactRoutine != null) StopCoroutine(_shotgunStunReactRoutine);
             }
@@ -90,7 +99,7 @@ public abstract class Enemy : MonoBehaviour
     }
 
     // funtion to take damage
-    public void TakeDamage(int takenDamage, PlayerWeaponTypes damageType)
+    public void TakeDamage(int takenDamage, DamageType damageType)
     {
         if (IsDead) return; // Ignore damage if already dead
 
@@ -102,7 +111,7 @@ public abstract class Enemy : MonoBehaviour
             return;
         }
         
-        if (canStun && damageType == PlayerWeaponTypes.BANANASHOTGUN)
+        if (canStun && damageType == DamageType.Banana)
         {
             if (_shotgunStunReactRoutine == null)
             {
@@ -115,17 +124,17 @@ public abstract class Enemy : MonoBehaviour
         EnemyAnimationsControlller.PlayTakeDamage(damageType);
     }
 
-    protected virtual void Die(PlayerWeaponTypes damageType)
+    protected virtual void Die(DamageType damageType)
     {
         gameObject.tag = "Untagged"; // Remove the enemy tag to prevent further detectio
 
         _enemyCollider.enabled = false;
         BehaviorGraph.enabled = false;
-        _rb.isKinematic = false;
+        _rb.isKinematic = true;
         
         EnemyAnimationsControlller.PlayDeath(damageType);
 
-        if (damageType == PlayerWeaponTypes.CARNIVOROUSPLANTS)
+        if (damageType == DamageType.Carnivorous)
         {
             if (enemyEatenMesh == null)
             {
@@ -141,10 +150,9 @@ public abstract class Enemy : MonoBehaviour
         if (_enemyMeshCollider) _enemyMeshCollider.enabled = true;
         if (_enemyMeshRigidbody) _enemyMeshRigidbody.isKinematic = false;
 
-        if (damageType == PlayerWeaponTypes.BANANASHOTGUN)
+        if (damageType == DamageType.Banana)
         {
             Agent.velocity = Vector3.zero;
-            ApplyImpulse(deathImpulse);
         }
     }
 
@@ -152,11 +160,11 @@ public abstract class Enemy : MonoBehaviour
     {
         if (!canStun) yield break; // Exit if stun is not allowed
 
+        IsStunned = true;
         Agent.velocity = Vector3.zero;
         Agent.enabled = false;
         BehaviorGraph.enabled = false;
         _rb.isKinematic = false;
-        ApplyImpulse(stunHitImpulse);
         EnemyAnimationsControlller.PlayStun();
         yield return new WaitForSeconds(stunDuration);
         Agent.enabled = true;
@@ -164,6 +172,7 @@ public abstract class Enemy : MonoBehaviour
         BehaviorGraph.Restart();
         _rb.isKinematic = true;
         _shotgunStunReactRoutine = null; // Reset the coroutine reference
+        IsStunned = false;
     }
 
     private void ApplyImpulse(float impulse)

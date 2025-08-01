@@ -4395,6 +4395,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Woodsman
       objectReference: {fileID: 0}
+    - target: {fileID: 2698330378980774502, guid: 21b3b941d463e4a41bfb64ecaa0b65ff,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5380157350571352226, guid: 21b3b941d463e4a41bfb64ecaa0b65ff,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10779,7 +10784,7 @@ PrefabInstance:
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.27
+      value: -1.73
       objectReference: {fileID: 0}
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
@@ -10789,7 +10794,7 @@ PrefabInstance:
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.662
+      value: 6.23
       objectReference: {fileID: 0}
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
@@ -10834,7 +10839,62 @@ PrefabInstance:
     - target: {fileID: 1070014290292914364, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3103149421863583508, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944986009367791039, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944986009367791039, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: health
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: canStun
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: stunDuration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: stunHitImpulse
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6784166209287339015, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 9216
+      objectReference: {fileID: 0}
+    - target: {fileID: 6784166209287339015, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: m_LayerOverridePriority
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7196261255042364520, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245851980912683135, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

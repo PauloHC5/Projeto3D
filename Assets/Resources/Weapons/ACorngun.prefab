@@ -348,9 +348,11 @@ MonoBehaviour:
   _returnSpeed: 1.5
   _fireSocket: {fileID: 1729148229857485247}
   _muzzleFlash: {fileID: 0}
-  projectile: {fileID: 7392494035453153853, guid: 0a87dd43d1d759148bab6cbfab6cb510,
+  projectilePrefab: {fileID: 7392494035453153853, guid: 0a87dd43d1d759148bab6cbfab6cb510,
     type: 3}
   projectileForce: 20
+  superAcorngunProjectilePrefab: {fileID: 7392494035453153853, guid: eb30e92a3ab5e5d458264db972e45e91,
+    type: 3}
 --- !u!82 &8291493836464442535
 AudioSource:
   m_ObjectHideFlags: 0

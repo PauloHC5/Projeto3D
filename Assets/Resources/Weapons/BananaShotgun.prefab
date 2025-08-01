@@ -2513,6 +2513,7 @@ MonoBehaviour:
     m_Bits: 16905
   shootImpactImpulse: 10
   DebugRaycast: 1
+  damageType: 1
   impactVFX: {fileID: 0}
   shootRadius: 0.5
   throwForce: 10

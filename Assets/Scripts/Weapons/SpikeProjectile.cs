@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Bolt : Projectile
+public class SpikeProjectile : Projectile
 {    
     private  void OnCollisionEnter(Collision collision)
     {        
@@ -11,7 +11,7 @@ public class Bolt : Projectile
         Enemy enemy = collision.gameObject.GetComponent<Enemy>();
         if (enemy)
         {            
-            enemy.TakeDamage(damage, PlayerWeaponTypes.CACTUSSCROSSBOW);
+            enemy.TakeDamage(damage, damageType);
             Destroy(gameObject);
         }
     }

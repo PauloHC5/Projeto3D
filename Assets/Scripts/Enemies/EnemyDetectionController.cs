@@ -32,7 +32,7 @@ public class EnemyDetectionController : MonoBehaviour
         // Project a raycast
         if (Physics.Raycast(raycastOrigin.position, direction, out hit, detectionRange, detectionLayer))
         {
-            if (hit.collider.gameObject == potentialTarget)
+            if (hit.collider.gameObject.CompareTag("Player"))
             {
                 Debug.DrawRay(raycastOrigin.position, direction * detectionRange, Color.red);
                 return true; // Target detected within the detection range

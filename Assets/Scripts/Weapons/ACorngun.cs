@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ACorngun : ProjectileGun, IChargeable
 {
+    [SerializeField] private GameObject superAcorngunProjectilePrefab; // Prefab for the super ACorngun projectile
+    
     private readonly int Charge = Animator.StringToHash("Charge");
 
     private float originalProjectileForce, originalRecoilX, originalRecoilY, originalRecoilZ, originalSnappiness, originalReturnSpeed;
@@ -56,13 +58,13 @@ public class ACorngun : ProjectileGun, IChargeable
         _snappiness *= 2f; // Increase snappiness for super fire
         _returnSpeed /= 2f; // Increase return speed for super fire
         projectileForce *= 2f; // Increase the force for super fire
-
-        base.Fire();        
-        if (spawnedProjectile)
+        
+        if (superAcorngunProjectilePrefab)
         {
-            spawnedProjectile.transform.localScale *= 3f; // Double the size of the projectile for super fire
-            spawnedProjectile.GetComponent<Projectile>().Damage = 200; // Set damage to 100 for super fire
+            base.Fire(superAcorngunProjectilePrefab);
         }
+        else base.Fire();
+        
         _magAmmo = 0;
         SoundManager.PlayRandomSFX(WorldSfxType.SUPERSHOOT, _gunAudioSource); // Play the super fire sound
 

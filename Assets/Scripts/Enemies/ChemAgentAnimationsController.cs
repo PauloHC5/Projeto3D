@@ -16,5 +16,10 @@ namespace Enemies
         public ChemAgentAnimationsController(Animator enemyAnimator, NavMeshAgent enemyAgent) : base(enemyAnimator, enemyAgent)
         {
         }
+
+        public void StopFire()
+        {
+            _enemyAnimator.SetBool(_fire, false);
+        }
     }
 }
