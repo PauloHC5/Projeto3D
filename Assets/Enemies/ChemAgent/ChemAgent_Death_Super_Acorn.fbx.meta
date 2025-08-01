@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 260ac3a8052c1964bbe0e42694096307
+guid: 74b4e73ba0482de4895c899fedc2f9aa
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -31,25 +31,25 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: ChemAgent_Walk
+      name: ChemAgent_Death_Super_Acorn
       takeName: Scene
       internalID: -623603649343465320
       firstFrame: 1
-      lastFrame: 40
+      lastFrame: 104
       wrapMode: 0
-      orientationOffsetY: 0
+      orientationOffsetY: 9.33
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
+      keepOriginalPositionXZ: 1
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
