@@ -4802,17 +4802,17 @@ PrefabInstance:
     - target: {fileID: 2075349027788936261, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.61096144
+      value: 0.22
       objectReference: {fileID: 0}
     - target: {fileID: 2075349027788936261, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00069475174
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2075349027788936261, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.016
+      value: -5.98
       objectReference: {fileID: 0}
     - target: {fileID: 2075349027788936261, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
         type: 3}
@@ -10784,17 +10784,17 @@ PrefabInstance:
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.73
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00069594383
+      value: -0.002
       objectReference: {fileID: 0}
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.23
+      value: 8.17
       objectReference: {fileID: 0}
     - target: {fileID: 1004031800203229623, guid: 515189fad3a8baf44bfb500b695d4bc9,
         type: 3}
@@ -10835,66 +10835,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ChemAgent
-      objectReference: {fileID: 0}
-    - target: {fileID: 1070014290292914364, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3103149421863583508, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3944986009367791039, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: m_Mass
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3944986009367791039, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: m_ExcludeLayers.m_Bits
-      value: 1024
-      objectReference: {fileID: 0}
-    - target: {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: health
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: canStun
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: stunDuration
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: stunHitImpulse
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6784166209287339015, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: m_ExcludeLayers.m_Bits
-      value: 9216
-      objectReference: {fileID: 0}
-    - target: {fileID: 6784166209287339015, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: m_LayerOverridePriority
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7196261255042364520, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8245851980912683135, guid: 515189fad3a8baf44bfb500b695d4bc9,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

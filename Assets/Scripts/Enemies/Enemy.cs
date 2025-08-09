@@ -53,9 +53,6 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    public GameObject DetectedTarget { get; set; } // The detected target within the detection zone
-    public int Damage => damage;
-
     protected void OnAwake()
     {
         Agent = GetComponent<NavMeshAgent>();
@@ -133,6 +130,12 @@ public abstract class Enemy : MonoBehaviour
         _rb.isKinematic = true;
         
         EnemyAnimationsControlller.PlayDeath(damageType);
+        
+        // set all layers to zero
+        for (int i = 0; i < EnemyAnimationsControlller.Animator.layerCount; i++)
+        {
+            EnemyAnimationsControlller.Animator.SetLayerWeight(i, 0f);
+        }
 
         if (damageType == DamageType.Carnivorous)
         {
