@@ -12,24 +12,23 @@ public class GameManager : Singleton<GameManager>
     [Space]
 
     [SerializeField] private GameObject _canvasGameOver;
+    
+    private HordeManager _hordeManager;
 
     public static PlayerCharacterController Player { get; private set; }
-
     public static bool IsPaused { get; private set; } = false;
-
     public static bool alreadyPlayedIntroCutscene = false; // Flag to check if the intro cutscene has already been played
-
-    // Action event to be invoked when PauseGame is called
+    
     public static event Action OnPauseGame;
-
-    // Action event to be invoked when ResumeGame is called
     public static event Action OnResumeGame;
 
-    // Awake is called when the script instance is being loaded
+    public static float HordeTimer => Instance._hordeManager.HordeTimer;
+    
     private void Awake()
     {
         // Find the player character controller in the scene
         Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();      
+        _hordeManager = GetComponent<HordeManager>();
     }    
 
     private void Start()
@@ -75,6 +74,7 @@ public class GameManager : Singleton<GameManager>
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
 
+        Instance._hordeManager.StartHorde();
     }    
 
     public static void PauseGame()

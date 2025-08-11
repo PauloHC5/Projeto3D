@@ -4398,7 +4398,7 @@ PrefabInstance:
     - target: {fileID: 2698330378980774502, guid: 21b3b941d463e4a41bfb64ecaa0b65ff,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5380157350571352226, guid: 21b3b941d463e4a41bfb64ecaa0b65ff,
         type: 3}
@@ -4449,6 +4449,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6076036143720261335, guid: 21b3b941d463e4a41bfb64ecaa0b65ff,
+        type: 3}
+      propertyPath: health
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4858,6 +4863,72 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: WeaponsPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: WeaponsPrefabs.Array.data[0].name
+      value: ACORNGUN
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: WeaponsPrefabs.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 9184081368244243887, guid: f309566e5b334dd4b8484ae8263e9713,
+        type: 3}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.data[1].AmmoType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.data[2].AmmoType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.data[3].AmmoType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.data[4].AmmoType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.data[0].AmmoAmount
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.data[1].AmmoAmount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.data[2].AmmoAmount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.data[3].AmmoAmount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.data[4].AmmoAmount
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4791302133543716961, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
         type: 3}
@@ -10835,6 +10906,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ChemAgent
+      objectReference: {fileID: 0}
+    - target: {fileID: 1070014290292914364, guid: 515189fad3a8baf44bfb500b695d4bc9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

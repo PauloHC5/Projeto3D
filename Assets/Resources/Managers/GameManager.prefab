@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2477071576534336466}
   - component: {fileID: 1963020311414406052}
+  - component: {fileID: 6160668832429094257}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameController
@@ -44,12 +45,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b1ae96df803e944588d6d90e75ee108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shouldPersistBetweenScenes: 0
+  _shouldPersistBetweenScenes: 1
+  _skipPlayerTutorial: 1
   _canvasGameOver: {fileID: 4479818352807064268, guid: 88f01673783c5a442b7c63e36a781874,
     type: 3}
-  enemies:
-  - {fileID: 6076036143720261335, guid: 21b3b941d463e4a41bfb64ecaa0b65ff, type: 3}
-  - {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9, type: 3}
-  maxEnemies: 30
-  timeToSpawn: 20
-  spawnInterval: 3
+--- !u!114 &6160668832429094257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2933851528390729399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d911ce550ef00b540b61a02ab633a4cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hordeManagerDatas:
+  - timeToStart: 10
+    timeToEnd: 100
+    enemies:
+    - {fileID: 6076036143720261335, guid: 21b3b941d463e4a41bfb64ecaa0b65ff, type: 3}
+    maxEnemies: 10
+    timeToSpawn: 5
+    spawnInterval: 5
+  hordeIndex: 0
+  delayToStart: 0
+  spawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

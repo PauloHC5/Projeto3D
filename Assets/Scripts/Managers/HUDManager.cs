@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 using System;
+using System.Globalization;
 
 [Serializable]
 public struct WeaponUI
@@ -44,6 +45,15 @@ public class HUDManager : Singleton<HUDManager>
 
     [SerializeField] private WeaponUI[] _weaponsUI;
     [SerializeField] private Image _scopeCrosshair;
+    
+    [Space]
+    
+    [Header("Horde Panel")]
+    [SerializeField] private Image _hordePanel;
+    [SerializeField] private TextMeshProUGUI _hordeText;
+    [SerializeField] private TextMeshProUGUI _hordeTimerText;
+    
+    [Space]
 
     [Header("Ammo Panels")]
     [SerializeField] private Image _ammoPanel;
@@ -94,6 +104,16 @@ public class HUDManager : Singleton<HUDManager>
             }
 
             _crosshairsOriginalColors[weaponUI.WeaponType] = weaponUI.WeaponCrosshairImage.color; // Store the original color of the crosshair
+        }
+        
+        if(_hordePanel == null)
+        {
+            Debug.LogError("Horde Panel is not assigned in the inspector.");
+        }
+        
+        if (_hordeText == null || _hordeTimerText == null)
+        {
+            Debug.LogError("Horde text or timer text is not assigned in the inspector.");
         }
 
         if (_ammoPanel == null)
@@ -146,6 +166,9 @@ public class HUDManager : Singleton<HUDManager>
         UpdateAmmoDisplay();
 
         DetectIfEnemyIsOnRange();
+        
+        int hordeTimer = (int)GameManager.HordeTimer;
+        _hordeTimerText.SetText(hordeTimer.ToString(CultureInfo.InvariantCulture));
     }
 
     public static void Enable()
