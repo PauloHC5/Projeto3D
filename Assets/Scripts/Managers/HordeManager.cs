@@ -40,7 +40,7 @@ public class HordeManager : MonoBehaviour
     public void StartHorde()
     {
         // Check if the player is not null
-        if (spawnPoints != null && spawnPoints.Length == 0)
+        if (spawnPoints == null || spawnPoints.Length == 0)
         {
             FindSpawnPoints();
             
