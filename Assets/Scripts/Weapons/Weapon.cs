@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,8 @@ public class Weapon : MonoBehaviour, IWeapon
     public PlayerWeaponTypes WeaponType => _weaponType;
 
     public float WeaponRange => GetWeaponRange();
+    
+    public event Action OnPickup;
     
     protected void OnBaseAwake()
     {
@@ -69,5 +72,7 @@ public class Weapon : MonoBehaviour, IWeapon
         
         _isEquipped = true; // Set the weapon as equipped
         if(_triggerCollider) _triggerCollider.enabled = false; // Enable the trigger collider when equipped
+        
+        OnPickup?.Invoke();
     }
 }

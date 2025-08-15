@@ -48,10 +48,15 @@ public class HUDManager : Singleton<HUDManager>
     
     [Space]
     
-    [Header("Horde Panel")]
+    [Header("Wave Panel")]
     [SerializeField] private Image _hordePanel;
-    [SerializeField] private TextMeshProUGUI _hordeText;
+    [SerializeField] private TextMeshProUGUI _raidersComingText;
     [SerializeField] private TextMeshProUGUI _hordeTimerText;
+    [SerializeField] private TextMeshProUGUI _waveText;
+    [SerializeField] private TextMeshProUGUI _waveCounterText;
+    [SerializeField] private TextMeshProUGUI _raidersRemainingText;
+    [SerializeField] private TextMeshProUGUI _raidersRemainingCounterText;
+    [SerializeField] private TextMeshProUGUI _waveCompletedText;
     
     [Space]
 
@@ -106,14 +111,9 @@ public class HUDManager : Singleton<HUDManager>
             _crosshairsOriginalColors[weaponUI.WeaponType] = weaponUI.WeaponCrosshairImage.color; // Store the original color of the crosshair
         }
         
-        if(_hordePanel == null)
+        if(_hordePanel == null || _raidersComingText == null || _hordeTimerText == null || _waveText == null || _waveCounterText == null || _raidersRemainingText == null || _raidersRemainingCounterText == null)
         {
             Debug.LogError("Horde Panel is not assigned in the inspector.");
-        }
-        
-        if (_hordeText == null || _hordeTimerText == null)
-        {
-            Debug.LogError("Horde text or timer text is not assigned in the inspector.");
         }
 
         if (_ammoPanel == null)
@@ -167,8 +167,64 @@ public class HUDManager : Singleton<HUDManager>
 
         DetectIfEnemyIsOnRange();
         
-        int hordeTimer = (int)GameManager.HordeTimer;
-        _hordeTimerText.SetText(hordeTimer.ToString(CultureInfo.InvariantCulture));
+        UpdateHordePanel();
+    }
+    
+    private void UpdateHordePanel()
+    {
+        switch (GameManager.HordeStatus)
+        {
+            case HordeStatus.NotStarted:
+                _hordePanel.gameObject.SetActive(false);
+                break;
+            
+            case HordeStatus.Preparing:
+                _hordePanel.gameObject.SetActive(true);
+                _raidersComingText.gameObject.SetActive(true);
+                _waveText.gameObject.SetActive(false);
+                _waveCounterText.gameObject.SetActive(false);
+                _hordeTimerText.gameObject.SetActive(true);
+                _raidersRemainingText.gameObject.SetActive(false);
+                _raidersRemainingCounterText.gameObject.SetActive(false);
+                _waveCompletedText.gameObject.SetActive(false);
+                
+                int hordeTimer = (int)GameManager.HordeTimer;
+                _hordeTimerText.SetText(hordeTimer.ToString(CultureInfo.InvariantCulture));
+                break;
+            
+            case HordeStatus.Running:
+                _raidersComingText.gameObject.SetActive(false);
+                _hordeTimerText.gameObject.SetActive(false);
+                _waveText.gameObject.SetActive(true);
+                _waveCounterText.gameObject.SetActive(true);
+                _waveCounterText.SetText((GameManager.CurrentWave).ToString(CultureInfo.InvariantCulture));
+                _raidersRemainingText.gameObject.SetActive(false);
+                _raidersRemainingCounterText.gameObject.SetActive(false);
+                _waveCompletedText.gameObject.SetActive(false);
+                break;
+            case HordeStatus.Finishing:
+                _raidersComingText.gameObject.SetActive(false);
+                _hordeTimerText.gameObject.SetActive(false);
+                _waveText.gameObject.SetActive(false);
+                _waveCounterText.gameObject.SetActive(false);
+                _raidersRemainingText.gameObject.SetActive(true);
+                _raidersRemainingCounterText.gameObject.SetActive(true);
+                _waveCompletedText.gameObject.SetActive(false);
+                
+                _raidersRemainingCounterText.SetText(GameManager.EnemiesInSceneCount.ToString(CultureInfo.InvariantCulture));
+                break;
+            
+            case HordeStatus.Finished:
+                _raidersComingText.gameObject.SetActive(false);
+                _hordeTimerText.gameObject.SetActive(false);
+                _waveText.gameObject.SetActive(false);
+                _waveCounterText.gameObject.SetActive(false);
+                _raidersRemainingText.gameObject.SetActive(false);
+                _raidersRemainingCounterText.gameObject.SetActive(false);
+                _waveCompletedText.gameObject.SetActive(true);
+                break;
+                
+        }
     }
 
     public static void Enable()

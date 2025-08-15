@@ -1,34 +1,44 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>   
 {
     [SerializeField] private bool _skipPlayerTutorial = false;
-    public static bool SkipPlayerTutorial => Instance._skipPlayerTutorial;
 
     [Space]
 
     [SerializeField] private GameObject _canvasGameOver;
-    
-    private HordeManager _hordeManager;
 
+    [Space] [Header("Player progress")] 
+    [SerializeField] private List<GameObject> weaponsPrefabs;
+    [SerializeField] private Transform weaponsSpawnPoint;
+    
+    private WaveManager _waveManager;
+
+    public static bool SkipPlayerTutorial => Instance._skipPlayerTutorial;
     public static PlayerCharacterController Player { get; private set; }
     public static bool IsPaused { get; private set; } = false;
-    public static bool alreadyPlayedIntroCutscene = false; // Flag to check if the intro cutscene has already been played
+    public static bool AlreadyPlayedIntroCutscene = false; // Flag to check if the intro cutscene has already been played
     
     public static event Action OnPauseGame;
     public static event Action OnResumeGame;
 
-    public static float HordeTimer => Instance._hordeManager.HordeTimer;
+    public static float HordeTimer => Instance._waveManager.HordeTimer;
+    public static HordeStatus HordeStatus => Instance._waveManager.HordeStatus;
+    public static int EnemiesInSceneCount => Instance._waveManager.EnemiesInSceneCount;
+    public static int CurrentWave => Instance._waveManager.CurrentWave;
     
     private void Awake()
     {
+        if(weaponsSpawnPoint == null) Debug.LogError("Weapons spawn point is not assigned in the GameManager.");
+        
         // Find the player character controller in the scene
         Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();      
-        _hordeManager = GetComponent<HordeManager>();
+        _waveManager = GetComponent<WaveManager>();
     }    
 
     private void Start()
@@ -38,7 +48,7 @@ public class GameManager : Singleton<GameManager>
         if (!_skipPlayerTutorial)                           
             StartCoroutine(IntroductionRoutine());
         else
-            StartGame();
+            StartCoroutine(StartGame());
     }
 
     private void Update()
@@ -56,17 +66,16 @@ public class GameManager : Singleton<GameManager>
 
         Cursor.lockState = CursorLockMode.Locked;                
 
-        if (!alreadyPlayedIntroCutscene)
+        if (!AlreadyPlayedIntroCutscene)
         {
-            alreadyPlayedIntroCutscene = true; // Set the flag to true after playing the cutscene
+            AlreadyPlayedIntroCutscene = true; // Set the flag to true after playing the cutscene
             yield return StartCoroutine(CutsceneManager.StartCutscene(CutsceneType.INTRO)); // Play and wait until cutscene is finished
-        }                
+        }
 
-        StartGame();
-
+        StartCoroutine(StartGame());
     }    
 
-    public static void StartGame()
+    private IEnumerator StartGame()
     {
         Time.timeScale = 1f; // Resume time scale     
         if(!SkipPlayerTutorial) FadeManager.FadeIn(() => {});
@@ -74,8 +83,34 @@ public class GameManager : Singleton<GameManager>
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
 
-        Instance._hordeManager.StartHorde();
+        yield return Instance._waveManager.StartHorde();
+        
+        if(weaponsPrefabs.Count == 0)
+        {
+            Debug.LogWarning("No weapons available to spawn. Please assign weapons in the GameManager.");
+            yield break;
+        }
+        
+        var weaponPrefab = weaponsPrefabs.First();
+        weaponsPrefabs.Remove(weaponPrefab);
+        Instantiate(weaponPrefab, weaponsSpawnPoint.position, Quaternion.identity);
+        
+        var weapon = weaponPrefab.GetComponentInChildren<Weapon>(true);
+        if (!weapon) yield break;
+        
+        Action handler = null;
+        handler = () =>
+        {
+            weapon.OnPickup -= handler;
+            PlayerPickedUpWeapon(weapon);
+        };
+        weapon.OnPickup += handler;
     }    
+    
+    private void PlayerPickedUpWeapon(Weapon weapon)
+    {
+        StartCoroutine(StartGame());
+    }
 
     public static void PauseGame()
     {
@@ -119,6 +154,8 @@ public class GameManager : Singleton<GameManager>
 
     public static void ReloadScene()
     {        
+        Instance._waveManager.StopHorde();
+        
         // Reload the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -137,6 +174,7 @@ public class GameManager : Singleton<GameManager>
     [RuntimeInitializeOnLoadMethod]
     private static void OnRuntimeInitialize()
     {
-        alreadyPlayedIntroCutscene = false; // Reset the flag when the game starts
+        Instance._waveManager.StopHorde();
+        AlreadyPlayedIntroCutscene = false; // Reset the flag when the game starts
     }
 }

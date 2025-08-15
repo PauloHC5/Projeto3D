@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Enemies;
 using Unity.Behavior;
@@ -37,6 +38,8 @@ public abstract class Enemy : MonoBehaviour
     protected bool IsDead = false;
     protected bool IsStunned = false;
     private IEnumerator _shotgunStunReactRoutine;
+    
+    public static event Action<Enemy> OnDeath;
 
     public int Health
     {
@@ -123,6 +126,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void Die(DamageType damageType)
     {
+        OnDeath?.Invoke(this);
         gameObject.tag = "Untagged"; // Remove the enemy tag to prevent further detectio
 
         _enemyCollider.enabled = false;
