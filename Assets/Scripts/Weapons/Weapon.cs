@@ -31,8 +31,6 @@ public class Weapon : MonoBehaviour, IWeapon
 
     public float WeaponRange => GetWeaponRange();
     
-    public event Action OnPickup;
-    
     protected void OnBaseAwake()
     {
         _triggerCollider = GetComponent<Collider>();
@@ -71,8 +69,6 @@ public class Weapon : MonoBehaviour, IWeapon
         transform.localRotation = Quaternion.identity; // Reset local rotation
         
         _isEquipped = true; // Set the weapon as equipped
-        if(_triggerCollider) _triggerCollider.enabled = false; // Enable the trigger collider when equipped
-        
-        OnPickup?.Invoke();
+        if(_triggerCollider) _triggerCollider.enabled = false; // Enable the trigger collider when equippe
     }
 }

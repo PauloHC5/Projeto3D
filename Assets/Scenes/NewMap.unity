@@ -6097,6 +6097,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
         type: 3}
+      propertyPath: skipWeaponInspection
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
       propertyPath: WeaponsPrefabs.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -14732,9 +14737,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1963020311414406052, guid: 7b88a521f88473e44962f73b67f570e4,
         type: 3}
+      propertyPath: _skipPlayerTutorial
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1963020311414406052, guid: 7b88a521f88473e44962f73b67f570e4,
+        type: 3}
       propertyPath: 'weapons.Array.data[0]'
       value: 
       objectReference: {fileID: 186649536490876846, guid: b668074fe76b63f43bea7b67044c27e5,
+        type: 3}
+    - target: {fileID: 1963020311414406052, guid: 7b88a521f88473e44962f73b67f570e4,
+        type: 3}
+      propertyPath: weaponsPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1963020311414406052, guid: 7b88a521f88473e44962f73b67f570e4,
+        type: 3}
+      propertyPath: 'weaponsPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 5934105960677187514, guid: c01f5f2ee6f4ac446b2272564a315b3a,
         type: 3}
     - target: {fileID: 2477071576534336466, guid: 7b88a521f88473e44962f73b67f570e4,
         type: 3}
@@ -14854,12 +14875,12 @@ PrefabInstance:
     - target: {fileID: 6160668832429094257, guid: 7b88a521f88473e44962f73b67f570e4,
         type: 3}
       propertyPath: wavesDatas.Array.data[0].preparationTime
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6160668832429094257, guid: 7b88a521f88473e44962f73b67f570e4,
         type: 3}
       propertyPath: wavesDatas.Array.data[1].preparationTime
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6160668832429094257, guid: 7b88a521f88473e44962f73b67f570e4,
         type: 3}

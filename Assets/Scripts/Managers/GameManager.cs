@@ -77,6 +77,8 @@ public class GameManager : Singleton<GameManager>
 
     private IEnumerator StartGame()
     {
+        Debug.Log("Starting Game");
+        
         Time.timeScale = 1f; // Resume time scale     
         if(!SkipPlayerTutorial) FadeManager.FadeIn(() => {});
 
@@ -93,21 +95,19 @@ public class GameManager : Singleton<GameManager>
         
         var weaponPrefab = weaponsPrefabs.First();
         weaponsPrefabs.Remove(weaponPrefab);
-        Instantiate(weaponPrefab, weaponsSpawnPoint.position, Quaternion.identity);
+        weaponPrefab = Instantiate(weaponPrefab, weaponsSpawnPoint.position, Quaternion.identity);
         
-        var weapon = weaponPrefab.GetComponentInChildren<Weapon>(true);
-        if (!weapon) yield break;
-        
-        Action handler = null;
-        handler = () =>
+        var weaponPickup = weaponPrefab.GetComponent<PickupBehaviour>();
+        if (weaponPickup is null)
         {
-            weapon.OnPickup -= handler;
-            PlayerPickedUpWeapon(weapon);
-        };
-        weapon.OnPickup += handler;
+            yield break;
+        }
+            
+        
+        weaponPickup.OnPickup += PlayerPickedUpWeapon; // Subscribe to the weapon pickup event
     }    
     
-    private void PlayerPickedUpWeapon(Weapon weapon)
+    private void PlayerPickedUpWeapon()
     {
         StartCoroutine(StartGame());
     }

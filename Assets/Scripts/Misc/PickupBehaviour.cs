@@ -8,6 +8,8 @@ public class PickupBehaviour : MonoBehaviour
     public float moveFrequency = 1f; // cycles per second
 
     private float initialY;
+    
+    public event Action OnPickup;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,5 +26,15 @@ public class PickupBehaviour : MonoBehaviour
         Vector3 pos = transform.position;
         pos.y = initialY + Mathf.Sin(Time.time * moveFrequency * Mathf.PI * 2) * moveAmplitude;
         transform.position = pos;
+    }
+
+    private void OnDisable()
+    {
+        OnPickup?.Invoke();
+    }
+
+    private void OnDestroy()
+    {
+        OnPickup?.Invoke();
     }
 }

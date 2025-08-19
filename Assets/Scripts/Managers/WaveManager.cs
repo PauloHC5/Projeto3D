@@ -108,6 +108,8 @@ public class WaveManager : MonoBehaviour
         _enemiesSpawned = 0;
         hordeIndex++;
         onHordeFinished.Invoke();
+        _waveCoroutine = null;
+
     }
     
     private IEnumerator HordePreparationCoroutine()
