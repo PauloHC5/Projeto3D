@@ -1209,6 +1209,7 @@ Transform:
   - {fileID: 586123004645549830}
   - {fileID: 9180909906419331081}
   - {fileID: 1790979581169680410}
+  - {fileID: 2799087654367545719}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &4646708541106787938
@@ -1364,16 +1365,16 @@ MonoBehaviour:
   _rightHandSocket: {fileID: 2860071523350465062}
   _leftHandSocket: {fileID: 7072074740685791458}
   WeaponsPrefabs:
-  - name: BANANASHOTGUN
-    prefab: {fileID: 2297985535481940187, guid: d455c95032e16d743ad1388472a47104,
+  - name: ACORNGUN
+    prefab: {fileID: 9184081368244243887, guid: f309566e5b334dd4b8484ae8263e9713,
       type: 3}
-  GunsAmmo:
+  GunsAmmoInitializer:
   - AmmoType: 0
-    AmmoAmount: 40
+    AmmoAmount: 100
   - AmmoType: 1
-    AmmoAmount: 80
+    AmmoAmount: 0
   - AmmoType: 2
-    AmmoAmount: 300
+    AmmoAmount: 0
   - AmmoType: 3
     AmmoAmount: 0
   - AmmoType: 4

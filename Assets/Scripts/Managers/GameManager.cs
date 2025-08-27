@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>   
@@ -12,6 +13,7 @@ public class GameManager : Singleton<GameManager>
     [Space]
 
     [SerializeField] private GameObject _canvasGameOver;
+    [SerializeField] private GameObject _canvasVictory;
 
     [Space] [Header("Player progress")] 
     [SerializeField] private List<GameObject> weaponsPrefabs;
@@ -26,9 +28,11 @@ public class GameManager : Singleton<GameManager>
     
     public static event Action OnPauseGame;
     public static event Action OnResumeGame;
+    
+    public UnityEvent OnGameStarted;
 
     public static float HordeTimer => Instance._waveManager.HordeTimer;
-    public static HordeStatus HordeStatus => Instance._waveManager.HordeStatus;
+    public static WaveStatus WaveStatus => Instance._waveManager.WaveStatus;
     public static int EnemiesInSceneCount => Instance._waveManager.EnemiesInSceneCount;
     public static int CurrentWave => Instance._waveManager.CurrentWave;
     
@@ -85,27 +89,40 @@ public class GameManager : Singleton<GameManager>
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
 
-        yield return Instance._waveManager.StartHorde();
+        Instance._waveManager.StartHorde(WaveFinished);
+
+        OnGameStarted.Invoke();
         
-        if(weaponsPrefabs.Count == 0)
-        {
-            Debug.LogWarning("No weapons available to spawn. Please assign weapons in the GameManager.");
-            yield break;
-        }
-        
-        var weaponPrefab = weaponsPrefabs.First();
-        weaponsPrefabs.Remove(weaponPrefab);
-        weaponPrefab = Instantiate(weaponPrefab, weaponsSpawnPoint.position, Quaternion.identity);
-        
-        var weaponPickup = weaponPrefab.GetComponent<PickupBehaviour>();
-        if (weaponPickup is null)
-        {
-            yield break;
-        }
-            
-        
-        weaponPickup.OnPickup += PlayerPickedUpWeapon; // Subscribe to the weapon pickup event
+        yield return null;
     }    
+    
+    private IEnumerator WaveFinished()
+    {
+        if (_waveManager.WavesFinished)
+        {
+            Instantiate(_canvasVictory, Vector3.zero, Quaternion.identity);
+            PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            if(weaponsPrefabs.Count == 0)
+            {
+                yield return new WaitForSeconds(5f);
+                StartCoroutine(StartGame());
+                yield break;
+            }
+            
+            var weaponPrefab = weaponsPrefabs.FirstOrDefault();
+            weaponsPrefabs.Remove(weaponPrefab);
+            weaponPrefab = Instantiate(weaponPrefab, weaponsSpawnPoint.position, Quaternion.identity);
+        
+            var weaponPickup = weaponPrefab.GetComponent<PickupBehaviour>();
+            if (weaponPickup is null) yield break;
+        
+            weaponPickup.OnPickup += PlayerPickedUpWeapon; // Subscribe to the weapon pickup event
+        }
+    }
     
     private void PlayerPickedUpWeapon()
     {
@@ -176,5 +193,6 @@ public class GameManager : Singleton<GameManager>
     {
         Instance._waveManager.StopHorde();
         AlreadyPlayedIntroCutscene = false; // Reset the flag when the game starts
+        WaveManager.onWaveStatusChanged = null; // Clear all subscribers to avoid duplicates
     }
 }

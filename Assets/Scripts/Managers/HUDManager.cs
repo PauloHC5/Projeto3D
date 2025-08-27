@@ -50,6 +50,11 @@ public class HUDManager : Singleton<HUDManager>
     
     [Header("Wave Panel")]
     [SerializeField] private Image _hordePanel;
+    [SerializeField] private float _hordePanelScaleUpDuration = 0.5f;
+    [SerializeField] private float _hordePanelScaleUpAmount = 1.1f;
+    [SerializeField] private float _hordePanelScaleDownDuration = 0.5f;
+    [SerializeField] private float _hordePanelScaleDownAmount = 1.1f;
+    [SerializeField] private float _hordePanelScaleBackDuration = 0.5f;
     [SerializeField] private TextMeshProUGUI _raidersComingText;
     [SerializeField] private TextMeshProUGUI _hordeTimerText;
     [SerializeField] private TextMeshProUGUI _waveText;
@@ -57,6 +62,7 @@ public class HUDManager : Singleton<HUDManager>
     [SerializeField] private TextMeshProUGUI _raidersRemainingText;
     [SerializeField] private TextMeshProUGUI _raidersRemainingCounterText;
     [SerializeField] private TextMeshProUGUI _waveCompletedText;
+    [SerializeField] private TextMeshProUGUI _goGetNewWeaponText;
     
     [Space]
 
@@ -80,12 +86,15 @@ public class HUDManager : Singleton<HUDManager>
     private PlayerCharacterCombatController _playerCharacterCombatController;
     private static bool _enemyOnRange = false;
     private Animator _carivorousPLantCrosshairAnimator;
+    private Vector2 _initialHordePanelSize;
 
     public static bool EnemyOnRange => _enemyOnRange;
 
     private void Awake()
     {
         CheckInspectorAssigns();
+        
+        _initialHordePanelSize = _hordePanel.transform.localScale;
     }
 
     private void CheckInspectorAssigns()
@@ -111,7 +120,7 @@ public class HUDManager : Singleton<HUDManager>
             _crosshairsOriginalColors[weaponUI.WeaponType] = weaponUI.WeaponCrosshairImage.color; // Store the original color of the crosshair
         }
         
-        if(_hordePanel == null || _raidersComingText == null || _hordeTimerText == null || _waveText == null || _waveCounterText == null || _raidersRemainingText == null || _raidersRemainingCounterText == null)
+        if(_hordePanel == null || _raidersComingText == null || _hordeTimerText == null || _waveText == null || _waveCounterText == null || _raidersRemainingText == null || _raidersRemainingCounterText == null || _waveCompletedText == null || _goGetNewWeaponText == null)
         {
             Debug.LogError("Horde Panel is not assigned in the inspector.");
         }
@@ -156,6 +165,9 @@ public class HUDManager : Singleton<HUDManager>
         UpdateWeaponSlots();
         _allImages = GetComponentsInChildren<Image>(true);
         _allTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
+        
+        WaveManager.onWaveStatusChanged += UpdateHordePanel;
+        UpdateHordePanel(GameManager.WaveStatus);
     }
 
     void Update()
@@ -166,43 +178,46 @@ public class HUDManager : Singleton<HUDManager>
         UpdateAmmoDisplay();
 
         DetectIfEnemyIsOnRange();
-        
-        UpdateHordePanel();
+
+        if (GameManager.WaveStatus == WaveStatus.Preparing)
+        {
+            int hordeTimer = (int)GameManager.HordeTimer;
+            _hordeTimerText?.SetText(hordeTimer.ToString(CultureInfo.InvariantCulture));
+        }
+
+        if (GameManager.WaveStatus == WaveStatus.Finishing)
+        {
+            _raidersRemainingCounterText.SetText(GameManager.EnemiesInSceneCount.ToString(CultureInfo.InvariantCulture));
+        }
     }
     
-    private void UpdateHordePanel()
+    private void UpdateHordePanel(WaveStatus waveStatus)
     {
-        switch (GameManager.HordeStatus)
+        switch (waveStatus)
         {
-            case HordeStatus.NotStarted:
-                _hordePanel.gameObject.SetActive(false);
+            case WaveStatus.NotStarted:
+                _hordePanel?.gameObject.SetActive(false);
                 break;
             
-            case HordeStatus.Preparing:
-                _hordePanel.gameObject.SetActive(true);
-                _raidersComingText.gameObject.SetActive(true);
-                _waveText.gameObject.SetActive(false);
-                _waveCounterText.gameObject.SetActive(false);
-                _hordeTimerText.gameObject.SetActive(true);
-                _raidersRemainingText.gameObject.SetActive(false);
-                _raidersRemainingCounterText.gameObject.SetActive(false);
-                _waveCompletedText.gameObject.SetActive(false);
-                
-                int hordeTimer = (int)GameManager.HordeTimer;
-                _hordeTimerText.SetText(hordeTimer.ToString(CultureInfo.InvariantCulture));
+            case WaveStatus.Preparing:
+                _hordePanel?.gameObject?.SetActive(true);
+                _raidersComingText?.gameObject.SetActive(true);
+                _waveText?.gameObject.SetActive(false);
+                _waveCounterText?.gameObject.SetActive(false);
+                _hordeTimerText?.gameObject.SetActive(true);
+                _raidersRemainingText?.gameObject.SetActive(false);
+                _raidersRemainingCounterText?.gameObject.SetActive(false);
+                _waveCompletedText?.gameObject.SetActive(false);
+                _goGetNewWeaponText.gameObject.SetActive(false);
+
+                _hordePanel.transform.localScale = _initialHordePanelSize;
                 break;
             
-            case HordeStatus.Running:
-                _raidersComingText.gameObject.SetActive(false);
-                _hordeTimerText.gameObject.SetActive(false);
-                _waveText.gameObject.SetActive(true);
-                _waveCounterText.gameObject.SetActive(true);
-                _waveCounterText.SetText((GameManager.CurrentWave).ToString(CultureInfo.InvariantCulture));
-                _raidersRemainingText.gameObject.SetActive(false);
-                _raidersRemainingCounterText.gameObject.SetActive(false);
-                _waveCompletedText.gameObject.SetActive(false);
+            case WaveStatus.Running:
+                StartCoroutine(WaveRunningRoutine());
                 break;
-            case HordeStatus.Finishing:
+            case WaveStatus.Finishing:
+                _hordePanel?.gameObject?.SetActive(true);
                 _raidersComingText.gameObject.SetActive(false);
                 _hordeTimerText.gameObject.SetActive(false);
                 _waveText.gameObject.SetActive(false);
@@ -210,21 +225,104 @@ public class HUDManager : Singleton<HUDManager>
                 _raidersRemainingText.gameObject.SetActive(true);
                 _raidersRemainingCounterText.gameObject.SetActive(true);
                 _waveCompletedText.gameObject.SetActive(false);
-                
-                _raidersRemainingCounterText.SetText(GameManager.EnemiesInSceneCount.ToString(CultureInfo.InvariantCulture));
+                _goGetNewWeaponText.gameObject.SetActive(false);
+
+                StartCoroutine(ScaleBackToOriginalSize());
                 break;
             
-            case HordeStatus.Finished:
-                _raidersComingText.gameObject.SetActive(false);
-                _hordeTimerText.gameObject.SetActive(false);
-                _waveText.gameObject.SetActive(false);
-                _waveCounterText.gameObject.SetActive(false);
-                _raidersRemainingText.gameObject.SetActive(false);
-                _raidersRemainingCounterText.gameObject.SetActive(false);
-                _waveCompletedText.gameObject.SetActive(true);
+            case WaveStatus.Finished:
+                StartCoroutine(WaveCompletedRoutine());
                 break;
                 
         }
+    }
+    
+    private IEnumerator ScaleUpHordePanel()
+    {
+        if (_hordePanel == null) yield break;
+
+        var rectTransform = _hordePanel.rectTransform;
+        Vector3 initialScale = rectTransform.localScale;
+        Vector3 targetScale = initialScale * _hordePanelScaleUpAmount;
+        float elapsed = 0f;
+
+        while (elapsed < _hordePanelScaleUpDuration)
+        {
+            rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, elapsed / _hordePanelScaleUpDuration);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        rectTransform.localScale = targetScale;
+    }
+    
+    private IEnumerator ScaleDownHordePanel()
+    {
+        if (_hordePanel == null) yield break;
+
+        var rectTransform = _hordePanel.rectTransform;
+        Vector3 initialScale = rectTransform.localScale;
+        Vector3 targetScale = initialScale * -_hordePanelScaleDownAmount;
+        float elapsed = 0f;
+
+        while (elapsed < _hordePanelScaleDownDuration)
+        {
+            rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, elapsed / _hordePanelScaleDownDuration);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        rectTransform.localScale = targetScale;
+    }
+    
+    private IEnumerator ScaleBackToOriginalSize()
+    {
+        if (_hordePanel == null) yield break;
+
+        var rectTransform = _hordePanel.rectTransform;
+        Vector3 initialScale = rectTransform.localScale;
+        Vector3 targetScale = _initialHordePanelSize;
+        float elapsed = 0f;
+
+        while (elapsed < _hordePanelScaleBackDuration)
+        {
+            rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, elapsed / _hordePanelScaleBackDuration);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        rectTransform.localScale = targetScale;
+    }
+    
+    private IEnumerator WaveRunningRoutine()
+    {
+        _raidersComingText.gameObject.SetActive(false);
+        _hordeTimerText.gameObject.SetActive(false);
+        _waveText.gameObject.SetActive(true);
+        _waveCounterText.gameObject.SetActive(true);
+        _waveCounterText.SetText((GameManager.CurrentWave).ToString(CultureInfo.InvariantCulture));
+        _raidersRemainingText.gameObject.SetActive(false);
+        _raidersRemainingCounterText.gameObject.SetActive(false);
+        _waveCompletedText.gameObject.SetActive(false);
+        _goGetNewWeaponText.gameObject.SetActive(false);
+        StartCoroutine(ScaleUpHordePanel());
+        yield return new WaitForSeconds(5f);
+        yield return StartCoroutine(ScaleDownHordePanel());
+        _hordePanel?.gameObject.SetActive(false);
+    }
+
+    private IEnumerator WaveCompletedRoutine()
+    {
+        _hordePanel?.gameObject?.SetActive(true);
+        _raidersComingText.gameObject.SetActive(false);
+        _hordeTimerText.gameObject.SetActive(false);
+        _waveText.gameObject.SetActive(false);
+        _waveCounterText.gameObject.SetActive(false);
+        _raidersRemainingText.gameObject.SetActive(false);
+        _raidersRemainingCounterText.gameObject.SetActive(false);
+        _waveCompletedText.gameObject.SetActive(true);
+        _goGetNewWeaponText.gameObject.SetActive(false);
+        StartCoroutine(ScaleUpHordePanel());
+        yield return new WaitForSeconds(10f);
+        _waveCompletedText.gameObject.SetActive(false);
+        _goGetNewWeaponText.gameObject.SetActive(true);
     }
 
     public static void Enable()
@@ -572,6 +670,8 @@ public class HUDManager : Singleton<HUDManager>
 
         GameManager.OnPauseGame += Disable; // Disable HUD when the game is paused
         GameManager.OnResumeGame += Enable; // Enable HUD when the game is resumed
+        
+        WaveManager.onWaveStatusChanged += UpdateHordePanel; // Update the horde panel when the wave status changes
     }
 
     private void OnDisable()
@@ -581,6 +681,8 @@ public class HUDManager : Singleton<HUDManager>
 
         GameManager.OnPauseGame -= Disable; // Remove the event listener when disabled
         GameManager.OnResumeGame -= Enable; // Remove the event listener when disabled
+        
+        WaveManager.onWaveStatusChanged -= UpdateHordePanel; // Remove the event listener when disabled
     }
 
 }

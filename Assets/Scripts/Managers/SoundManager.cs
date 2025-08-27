@@ -32,6 +32,7 @@ public enum MusicType
     AMBIENCE,    
     VICTORY,
     DEFEAT,
+    PREPAREFORBATTLE,
 
     DEFAULT, // Default music type for fallback
 }
@@ -58,6 +59,8 @@ public class SoundManager : Singleton<SoundManager>
     
     private static MusicType _currentMusicType = MusicType.DEFAULT; // Default music type to avoid null reference issues
     public static MusicType CurrentMusicType => _currentMusicType;
+    
+    public static event Action<MusicType> OnMusicFinished;
 
     public static float MusicVolume
     {
@@ -207,11 +210,20 @@ public class SoundManager : Singleton<SoundManager>
             Instance._musicSource.Play();
 
             _currentMusicType = musicType;
+            
+            if (!loopMusic)
+                Instance.StartCoroutine(Instance.MonitorMusicEnd(musicType));
         }
         else
         {
             Debug.LogWarning($"SoundManager: Music clip for {musicType} is not set.");
         }
+    }
+    
+    private System.Collections.IEnumerator MonitorMusicEnd(MusicType musicType)
+    {
+        yield return new WaitWhile(() => _musicSource.isPlaying);
+        OnMusicFinished?.Invoke(musicType);
     }
 
     public static void PlayGlobalSfx(GlobalSfxTypes sfxType)

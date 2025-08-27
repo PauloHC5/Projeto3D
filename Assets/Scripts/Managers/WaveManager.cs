@@ -16,7 +16,7 @@ public struct WaveData
     public float spawnInterval;
 }
 
-public enum HordeStatus
+public enum WaveStatus
 {
     NotStarted,
     Preparing,
@@ -29,24 +29,26 @@ public class WaveManager : MonoBehaviour
 {
     [SerializeField] private WaveData[] wavesDatas;
     [SerializeField] private int hordeIndex = 0;
-    [SerializeField] private float hordeTimer;
     
     [Space]
     
-    public UnityEvent onHordeFinished;
+    public UnityEvent onWaveFinishedEvent;
+    public static Action<WaveStatus> onWaveStatusChanged;
 
+    private float hordeTimer;
     private List<GameObject> _enemiesInScene = new List<GameObject>();
     private int enemiesInSceneCount;
     private GameObject[] _spawnPoints;
-    private HordeStatus _hordeStatus = HordeStatus.NotStarted;
-    [SerializeField] private int _enemiesSpawned = 0;
+    private WaveStatus _waveStatus = WaveStatus.NotStarted;
+    private int _enemiesSpawned = 0;
     
     private Coroutine _waveCoroutine;
     
     public float HordeTimer => hordeTimer;
-    public HordeStatus HordeStatus => _hordeStatus;
+    public WaveStatus WaveStatus => _waveStatus;
     public int EnemiesInSceneCount => _enemiesInScene.Count;
     public int CurrentWave => hordeIndex + 1;
+    public bool WavesFinished => hordeIndex >= wavesDatas.Length;
 
     private void Update()
     {
@@ -61,60 +63,74 @@ public class WaveManager : MonoBehaviour
             Debug.LogWarning("No enemy spawn points found in the scene.");
     }
 
-    public Coroutine StartHorde()
+    public void StartHorde(Func<IEnumerator> onFinishedCallback)
     {
         // Check if the player is not null
         if (_spawnPoints == null || _spawnPoints.Length == 0)
         {
             FindSpawnPoints();
             
-            if (_spawnPoints.Length == 0) return null;
+            if (_spawnPoints.Length == 0) return;
         }
         
         if(wavesDatas.Length == 0 || hordeIndex >= wavesDatas.Length)
         {
             Debug.LogWarning("HordeManagerData is not set up correctly.");
-            return null;
+            return;
         }
         
         if (wavesDatas[hordeIndex].enemies.Count == 0)
         {
             Debug.LogWarning("No enemies available to spawn.");
-            return null;
+            return;
         }
         
         // Start spawning enemies at the specified interval
         if (_waveCoroutine == null)
         {
-            _waveCoroutine = StartCoroutine(WaveCoroutine(wavesDatas[hordeIndex]));
-            return _waveCoroutine;
+            _waveCoroutine = StartCoroutine(WaveCoroutine(onFinishedCallback));
         }
         else
         {
             Debug.LogWarning("Horde is already spawning enemies.");
-            return null;
         }
     }
     
-    private IEnumerator WaveCoroutine(WaveData waveData)
+    private IEnumerator WaveCoroutine(Func<IEnumerator> onFinishedCallback)
     {
         // Preparation Phase
         yield return StartCoroutine(HordePreparationCoroutine());
         
         // Running Phase
+        SoundManager.PlayMusic(MusicType.PREPAREFORBATTLE, false);
+        SoundManager.OnMusicFinished += OnMusicFinished;
         yield return StartCoroutine(HordeRunningCoroutine());
         
-        _hordeStatus = HordeStatus.Finished;
+        _waveStatus = WaveStatus.Finished;
+        onWaveStatusChanged.Invoke(_waveStatus);
         _enemiesSpawned = 0;
         hordeIndex++;
-        onHordeFinished.Invoke();
+        onWaveFinishedEvent.Invoke();
         _waveCoroutine = null;
+        SoundManager.PlayMusic(MusicType.VICTORY, false);
+        SoundManager.OnMusicFinished += OnMusicFinished;
+        
+        if (onFinishedCallback != null)
+            yield return StartCoroutine(onFinishedCallback());
 
+    }
+
+    private void OnMusicFinished(MusicType musicType)
+    {
+        if (_waveStatus == WaveStatus.Running) SoundManager.PlayMusic(MusicType.BATTLE);
+        else if (_waveStatus == WaveStatus.Finished) SoundManager.PlayMusic(MusicType.AMBIENCE);
+        SoundManager.OnMusicFinished -= OnMusicFinished;
     }
     
     private IEnumerator HordePreparationCoroutine()
     {
-        _hordeStatus = HordeStatus.Preparing;
+        _waveStatus = WaveStatus.Preparing;
+        onWaveStatusChanged?.Invoke(_waveStatus);
         hordeTimer = wavesDatas[hordeIndex].preparationTime;
         
         while (hordeTimer > 0f)
@@ -127,7 +143,8 @@ public class WaveManager : MonoBehaviour
     
     private IEnumerator HordeRunningCoroutine()
     {
-        _hordeStatus = HordeStatus.Running;
+        _waveStatus = WaveStatus.Running;
+        onWaveStatusChanged?.Invoke(_waveStatus);
         InvokeRepeating(nameof(SpawnEnemies), wavesDatas[hordeIndex].timeToSpawn, wavesDatas[hordeIndex].spawnInterval);
         
         while (_enemiesSpawned != wavesDatas[hordeIndex].enemiesAmountToSpawn)
@@ -137,7 +154,8 @@ public class WaveManager : MonoBehaviour
         
         CancelInvoke(nameof(SpawnEnemies));
         
-        _hordeStatus = HordeStatus.Finishing;
+        _waveStatus = WaveStatus.Finishing;
+        onWaveStatusChanged?.Invoke(_waveStatus);
         while (_enemiesInScene.Count > 0)
         {
             yield return null;
@@ -150,7 +168,8 @@ public class WaveManager : MonoBehaviour
         {
             StopCoroutine(_waveCoroutine);
             _waveCoroutine = null;
-            _hordeStatus = HordeStatus.NotStarted;
+            _waveStatus = WaveStatus.NotStarted;
+            onWaveStatusChanged?.Invoke(_waveStatus);
             _enemiesSpawned = 0;
             _enemiesInScene.Clear();
             CancelInvoke(nameof(SpawnEnemies));
