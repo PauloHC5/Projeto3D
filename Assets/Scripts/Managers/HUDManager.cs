@@ -200,6 +200,7 @@ public class HUDManager : Singleton<HUDManager>
                 break;
             
             case WaveStatus.Preparing:
+                StopCoroutine(WaveCompletedRoutine());
                 _hordePanel?.gameObject?.SetActive(true);
                 _raidersComingText?.gameObject.SetActive(true);
                 _waveText?.gameObject.SetActive(false);
