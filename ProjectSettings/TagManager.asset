@@ -10,6 +10,7 @@ TagManager:
   - FxTemporaire
   - Nexus
   - SpawnPoint
+  - AcornAmmo
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - Buildings
   - Enemy Detection
   - Enemy
-  - 
+  - Pickups
   - 
   - 
   - 

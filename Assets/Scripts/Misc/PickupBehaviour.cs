@@ -14,7 +14,7 @@ public class PickupBehaviour : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        initialY = transform.position.y;
+        initialY = transform.localPosition.y;
     }
 
     // Update is called once per frame
@@ -23,9 +23,9 @@ public class PickupBehaviour : MonoBehaviour
         transform.Rotate(0, spinSpeed * Time.deltaTime, 0);
 
         // Move up and down
-        Vector3 pos = transform.position;
+        Vector3 pos = transform.localPosition;
         pos.y = initialY + Mathf.Sin(Time.time * moveFrequency * Mathf.PI * 2) * moveAmplitude;
-        transform.position = pos;
+        transform.localPosition = pos;
     }
 
     private void OnDisable()

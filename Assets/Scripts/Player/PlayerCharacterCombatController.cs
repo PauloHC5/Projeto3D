@@ -53,11 +53,16 @@ public class PlayerCharacterCombatController : MonoBehaviour
     [Space]
     
     // Weapon prefabs and ammo amounts for the guns
-    // This section is only visible in the Unity Editor for easy configuration
+    // This section is only visible in the Unity Editor for initialization and easy configuration
     // if you need access player weapons or ammo amounts in runtime, use _playerWeaponsSet and _playerGunAmmo
     [Header("Weapons Prefabs and Ammo")]
     public List<WeaponPrefab> WeaponsPrefabs;
     public GunAmmo[] GunsAmmoInitializer;
+    
+    [Space]
+    
+    [Header("Ammo Amounts")]
+    [SerializeField] private int acornAmmoAmount = 1;
 
     private IWeapon _equippedWeapon;
     public IWeapon EquippedWeapon => _equippedWeapon;
@@ -74,6 +79,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private List<PlayerWeaponTypes> _weaponOrder = new List<PlayerWeaponTypes>();
     public IReadOnlyList<PlayerWeaponTypes> WeaponOrder => _weaponOrder;
+    
+    public static Action<int, AmmoTypes> OnAmmoPickedUp;
 
     public void SetPlayerGunsAmmo(AmmoTypes type, int amount)
     {
@@ -457,6 +464,13 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             AddWeapon(weapon);
             SwitchToWeapon(weapon.First().WeaponType);
+        }
+        
+        if (other.CompareTag("AcornAmmo"))
+        {
+            Destroy(other.gameObject);
+            _playerGunAmmo[AmmoTypes.Acorn] += acornAmmoAmount;
+            OnAmmoPickedUp?.Invoke(acornAmmoAmount, AmmoTypes.Acorn);
         }
     }
 }

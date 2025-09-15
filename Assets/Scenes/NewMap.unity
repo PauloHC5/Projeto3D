@@ -1336,7 +1336,7 @@ Transform:
   m_GameObject: {fileID: 79640204}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 49.768, y: 6.389, z: 46.017}
+  m_LocalPosition: {x: 49.964, y: 6.389, z: 47.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4347,6 +4347,77 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 126851453}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &151374194
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 151374196}
+  - component: {fileID: 151374195}
+  - component: {fileID: 151374197}
+  m_Layer: 0
+  m_Name: Acorn ammo spawner area
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!135 &151374195
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151374194}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &151374196
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151374194}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 49.9, y: 31.21, z: 51.3}
+  m_LocalScale: {x: 34.27909, y: 28.153, z: 28.153}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &151374197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151374194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a28cccd8acc975e40a22a59a9dbce763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  acornPrefab: {fileID: 9006216542985259282, guid: 167af888b03da72438e4d248a83d0201,
+    type: 3}
+  minSpawnDelay: 5
+  maxSpawnDelay: 15
+  maxAcornsInScene: 10
 --- !u!1001 &161398135
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5951,10 +6022,20 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: GunsAmmoInitializer.Array.data[0].AmmoAmount
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4791302133543716961, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
         type: 3}
       propertyPath: m_Name
       value: Player Character
+      objectReference: {fileID: 0}
+    - target: {fileID: 4791302133543716961, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6149,7 +6230,7 @@ Transform:
   m_GameObject: {fileID: 319299591}
   serializedVersion: 2
   m_LocalRotation: {x: -0.19515595, y: -0.81475884, z: 0.16488466, w: 0.5204761}
-  m_LocalPosition: {x: 17.098, y: 1.319, z: 31.797}
+  m_LocalPosition: {x: 14.27, y: 1.319, z: 30.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8368,8 +8449,8 @@ MeshCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
+    m_Bits: 32768
+  m_LayerOverridePriority: 1
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
@@ -16038,12 +16119,12 @@ PrefabInstance:
     - target: {fileID: 6836218612018751066, guid: bc7286ef5c1a2a84aaf97b6e3b9b5357,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 41.4037
+      value: 30.734015
       objectReference: {fileID: 0}
     - target: {fileID: 6836218612018751066, guid: bc7286ef5c1a2a84aaf97b6e3b9b5357,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 159.33173
+      value: 229.11696
       objectReference: {fileID: 0}
     - target: {fileID: 6836218612018751066, guid: bc7286ef5c1a2a84aaf97b6e3b9b5357,
         type: 3}
@@ -16053,7 +16134,7 @@ PrefabInstance:
     - target: {fileID: 6836218612018751066, guid: bc7286ef5c1a2a84aaf97b6e3b9b5357,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.89
+      value: 6.25
       objectReference: {fileID: 0}
     - target: {fileID: 6836218612018751066, guid: bc7286ef5c1a2a84aaf97b6e3b9b5357,
         type: 3}
@@ -27476,6 +27557,12 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6659763412728848342, guid: 7033c42e984f975478ab3078097ff9b9,
+        type: 3}
+      propertyPath: _ammoPickupText
+      value: 
+      objectReference: {fileID: 1489219247749457363, guid: 8609f1816c9e0264396af0430c1292d5,
+        type: 3}
     - target: {fileID: 7556439363713432683, guid: 7033c42e984f975478ab3078097ff9b9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -27551,3 +27638,4 @@ SceneRoots:
   - {fileID: 275369715}
   - {fileID: 1087419737}
   - {fileID: 79640205}
+  - {fileID: 151374196}

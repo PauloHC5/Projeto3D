@@ -69,6 +69,13 @@ public class HUDManager : Singleton<HUDManager>
     [Header("Ammo Panels")]
     [SerializeField] private Image _ammoPanel;
     [SerializeField] private TextMeshProUGUI _ammoTextPanel, _magAmmoTextPanel, _gunAmmoTextPanel, _meleeTextPanel;
+    
+    [Space]
+    
+    [Header("Ammo pickup text")]
+    [SerializeField] private TextMeshProUGUI _ammoPickupText;
+    [SerializeField] private float _ammoPickupTextDuration = 2f;
+    [SerializeField] private int _maxAmmoPickupTextInstances = 5;
 
     [Space]
     [SerializeField] private List<WeaponSlotInspector> _availableWeaponSlots;
@@ -87,6 +94,7 @@ public class HUDManager : Singleton<HUDManager>
     private static bool _enemyOnRange = false;
     private Animator _carivorousPLantCrosshairAnimator;
     private Vector2 _initialHordePanelSize;
+    private List<TextMeshProUGUI> _ammoPickupTextList = new List<TextMeshProUGUI>();
 
     public static bool EnemyOnRange => _enemyOnRange;
 
@@ -663,6 +671,47 @@ public class HUDManager : Singleton<HUDManager>
         }
         SlotImage.rectTransform.localScale = targetScale;
     }
+    
+    private void ShowAmmoPickupText(int amount, AmmoTypes ammoType)
+    {
+        if (_ammoPickupText == null)
+        {
+            Debug.LogWarning("Ammo pickup text is not assigned in the inspector.");
+            return;
+        }
+
+        // Clean up null references in the list
+        _ammoPickupTextList.Remove(_ammoPickupTextList.Find(ugui => ugui is null));
+
+        var ammoTextInstance = Instantiate(_ammoPickupText, _canvasHud.transform);
+        ammoTextInstance.gameObject.SetActive(true);
+        ammoTextInstance.text = $"+{amount} {ammoType.ToString()}";
+        _ammoPickupTextList.Add(ammoTextInstance);
+        
+        if(_ammoPickupTextList.Count > _maxAmmoPickupTextInstances)
+        {
+            Destroy(_ammoPickupTextList.Last());
+        }
+
+        if (_ammoPickupTextList.Count > 1)
+        {
+            for (int i = _ammoPickupTextList.Count - 1; i > 0; i--)
+            {
+                if(i == 0) break;
+            
+                if(_ammoPickupTextList[i] && _ammoPickupTextList[i - 1]) _ammoPickupTextList[i].transform.position = _ammoPickupTextList[i - 1].transform.position + new Vector3(0, 30, 0); // Move the text up by 30 units
+            }
+        }
+        
+        StartCoroutine(AmmoPickupTextRoutine(ammoTextInstance.gameObject));
+    }
+
+    private IEnumerator AmmoPickupTextRoutine(GameObject ammoPickupText)
+    {
+        yield return new WaitForSeconds(_ammoPickupTextDuration);
+        _ammoPickupTextList.Remove(ammoPickupText.GetComponent<TextMeshProUGUI>());
+        Destroy(ammoPickupText);
+    }
 
     private void OnEnable()
     {
@@ -673,6 +722,8 @@ public class HUDManager : Singleton<HUDManager>
         GameManager.OnResumeGame += Enable; // Enable HUD when the game is resumed
         
         WaveManager.onWaveStatusChanged += UpdateHordePanel; // Update the horde panel when the wave status changes
+        
+        PlayerCharacterCombatController.OnAmmoPickedUp += ShowAmmoPickupText; // Subscribe to the ammo pickup event
     }
 
     private void OnDisable()
@@ -684,6 +735,8 @@ public class HUDManager : Singleton<HUDManager>
         GameManager.OnResumeGame -= Enable; // Remove the event listener when disabled
         
         WaveManager.onWaveStatusChanged -= UpdateHordePanel; // Remove the event listener when disabled
+        
+        PlayerCharacterCombatController.OnAmmoPickedUp -= ShowAmmoPickupText; // Unsubscribe from the ammo pickup event
     }
 
 }
