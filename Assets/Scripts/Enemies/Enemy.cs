@@ -133,6 +133,7 @@ public abstract class Enemy : MonoBehaviour
         BehaviorGraph.enabled = false;
         _rb.isKinematic = true;
         if(Agent && Agent.navMeshOwner) Agent.destination = transform.position; // Stop the agent from moving
+        Agent.enabled = false;
         
         EnemyAnimationsControlller.PlayDeath(damageType);
         
