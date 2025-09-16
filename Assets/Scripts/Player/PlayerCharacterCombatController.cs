@@ -58,11 +58,6 @@ public class PlayerCharacterCombatController : MonoBehaviour
     [Header("Weapons Prefabs and Ammo")]
     public List<WeaponPrefab> WeaponsPrefabs;
     public GunAmmo[] GunsAmmoInitializer;
-    
-    [Space]
-    
-    [Header("Ammo Amounts")]
-    [SerializeField] private int acornAmmoAmount = 1;
 
     private IWeapon _equippedWeapon;
     public IWeapon EquippedWeapon => _equippedWeapon;
@@ -464,13 +459,22 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             AddWeapon(weapon);
             SwitchToWeapon(weapon.First().WeaponType);
+            return;
         }
         
         if (other.CompareTag("AcornAmmo"))
         {
             Destroy(other.gameObject);
-            _playerGunAmmo[AmmoTypes.Acorn] += acornAmmoAmount;
-            OnAmmoPickedUp?.Invoke(acornAmmoAmount, AmmoTypes.Acorn);
+            _playerGunAmmo[AmmoTypes.Acorn] += 1;
+            OnAmmoPickedUp?.Invoke(1, AmmoTypes.Acorn);
+            return;
+        }
+
+        if (other.GetComponent<AmmoTreeBehaviour>() is { } ammoTreeBehaviour)
+        {
+            var amountCollected = ammoTreeBehaviour.CollectAmmo();
+            _playerGunAmmo[ammoTreeBehaviour.AmmoType] += amountCollected;
+            OnAmmoPickedUp?.Invoke(amountCollected, ammoTreeBehaviour.AmmoType);
         }
     }
 }
