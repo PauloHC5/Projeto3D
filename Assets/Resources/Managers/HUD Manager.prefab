@@ -1556,6 +1556,10 @@ MonoBehaviour:
   _magAmmoTextPanel: {fileID: 1857183993336715264}
   _gunAmmoTextPanel: {fileID: 6614051910178373071}
   _meleeTextPanel: {fileID: 4208245048925279191}
+  _ammoPickupText: {fileID: 1489219247749457363, guid: 8609f1816c9e0264396af0430c1292d5,
+    type: 3}
+  _ammoPickupTextDuration: 2
+  _maxAmmoPickupTextInstances: 5
   _availableWeaponSlots:
   - name: Slot 1
     WeaponSlot:

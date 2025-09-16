@@ -1186,7 +1186,7 @@ GameObject:
   - component: {fileID: 2716941723819670036}
   - component: {fileID: 5645082565342579536}
   - component: {fileID: 3164638836893852914}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player Character
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1370,11 +1370,11 @@ MonoBehaviour:
       type: 3}
   GunsAmmoInitializer:
   - AmmoType: 0
-    AmmoAmount: 100
+    AmmoAmount: 10
   - AmmoType: 1
-    AmmoAmount: 0
+    AmmoAmount: 20
   - AmmoType: 2
-    AmmoAmount: 0
+    AmmoAmount: 108
   - AmmoType: 3
     AmmoAmount: 0
   - AmmoType: 4
