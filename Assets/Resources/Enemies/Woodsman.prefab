@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 2903102645122821324}
   - component: {fileID: 990035631667682632}
   - component: {fileID: 3808985596929028609}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Woodsman Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,8 +311,8 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 1729
-  m_LayerOverridePriority: 1
+    m_Bits: 18113
+  m_LayerOverridePriority: 5
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 0
@@ -567,8 +567,6 @@ MonoBehaviour:
   health: 100
   damage: 10
   enemyMesh: {fileID: 1923906048885793314}
-  deathImpulse: 200
-  stunHitImpulse: 10
   stunDuration: 0.5
   canStun: 1
   enemyEatenMesh: {fileID: 1456413288852863847, guid: 7a2564625bed5d847832a61965498f8e,
