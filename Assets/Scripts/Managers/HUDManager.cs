@@ -95,6 +95,7 @@ public class HUDManager : Singleton<HUDManager>
     private Animator _carivorousPLantCrosshairAnimator;
     private Vector2 _initialHordePanelSize;
     private List<TextMeshProUGUI> _ammoPickupTextList = new List<TextMeshProUGUI>();
+    private IEnumerator _currentWaveRunningRoutine;
 
     public static bool EnemyOnRange => _enemyOnRange;
 
@@ -174,8 +175,8 @@ public class HUDManager : Singleton<HUDManager>
         _allImages = GetComponentsInChildren<Image>(true);
         _allTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
         
-        WaveManager.onWaveStatusChanged += UpdateHordePanel;
-        UpdateHordePanel(GameManager.WaveStatus);
+        WaveManager.onWaveStatusChanged += UpdateWavePanel;
+        UpdateWavePanel(GameManager.WaveStatus);
     }
 
     void Update()
@@ -199,7 +200,7 @@ public class HUDManager : Singleton<HUDManager>
         }
     }
     
-    private void UpdateHordePanel(WaveStatus waveStatus)
+    private void UpdateWavePanel(WaveStatus waveStatus)
     {
         switch (waveStatus)
         {
@@ -208,7 +209,8 @@ public class HUDManager : Singleton<HUDManager>
                 break;
             
             case WaveStatus.Preparing:
-                StopCoroutine(WaveCompletedRoutine());
+                if(_currentWaveRunningRoutine is not null) StopCoroutine(_currentWaveRunningRoutine);
+                
                 _hordePanel?.gameObject?.SetActive(true);
                 _raidersComingText?.gameObject.SetActive(true);
                 _waveText?.gameObject.SetActive(false);
@@ -223,7 +225,8 @@ public class HUDManager : Singleton<HUDManager>
                 break;
             
             case WaveStatus.Running:
-                StartCoroutine(WaveRunningRoutine());
+                _currentWaveRunningRoutine = WaveRunningRoutine(); 
+                StartCoroutine(_currentWaveRunningRoutine);
                 break;
             case WaveStatus.Finishing:
                 _hordePanel?.gameObject?.SetActive(true);
@@ -240,7 +243,8 @@ public class HUDManager : Singleton<HUDManager>
                 break;
             
             case WaveStatus.Finished:
-                StartCoroutine(WaveCompletedRoutine());
+                _currentWaveRunningRoutine = WaveCompletedRoutine();
+                StartCoroutine(_currentWaveRunningRoutine);
                 break;
                 
         }
@@ -721,7 +725,7 @@ public class HUDManager : Singleton<HUDManager>
         GameManager.OnPauseGame += Disable; // Disable HUD when the game is paused
         GameManager.OnResumeGame += Enable; // Enable HUD when the game is resumed
         
-        WaveManager.onWaveStatusChanged += UpdateHordePanel; // Update the horde panel when the wave status changes
+        WaveManager.onWaveStatusChanged += UpdateWavePanel; // Update the horde panel when the wave status changes
         
         PlayerCharacterCombatController.OnAmmoPickedUp += ShowAmmoPickupText; // Subscribe to the ammo pickup event
     }
@@ -734,7 +738,7 @@ public class HUDManager : Singleton<HUDManager>
         GameManager.OnPauseGame -= Disable; // Remove the event listener when disabled
         GameManager.OnResumeGame -= Enable; // Remove the event listener when disabled
         
-        WaveManager.onWaveStatusChanged -= UpdateHordePanel; // Remove the event listener when disabled
+        WaveManager.onWaveStatusChanged -= UpdateWavePanel; // Remove the event listener when disabled
         
         PlayerCharacterCombatController.OnAmmoPickedUp -= ShowAmmoPickupText; // Unsubscribe from the ammo pickup event
     }
