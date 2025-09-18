@@ -70,12 +70,12 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private PlayerCombatStates _playerCombatStates = PlayerCombatStates.DEFAULT;
     private PlayerCharacterAnimationsController _playerCharacterAnimationsController;
-    private MouseLook _mouseLook;
 
     private List<PlayerWeaponTypes> _weaponOrder = new List<PlayerWeaponTypes>();
     public IReadOnlyList<PlayerWeaponTypes> WeaponOrder => _weaponOrder;
     
     public static Action<int, AmmoTypes> OnAmmoPickedUp;
+    public static Action OnPerformReload;
 
     public void SetPlayerGunsAmmo(AmmoTypes type, int amount)
     {
@@ -99,7 +99,6 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         _playerCharacterAnimationsController =
             new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>(), skipWeaponInspection);
-        _mouseLook = GetComponentInChildren<MouseLook>();
 
         InitializePlayerWeapons();
 
@@ -339,7 +338,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
         {
             equippedGun.PerformReload();
             _playerCharacterAnimationsController.PlayReload();
-            if (_mouseLook) _mouseLook.ZoomOut(); // Zoom out the camera if the player is reloading a gun
+            OnPerformReload?.Invoke();
         }
     }
 
