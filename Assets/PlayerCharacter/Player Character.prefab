@@ -680,8 +680,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 8002709758977372624}
-  Amount: {x: 0.05, y: 0.025}
-  Frequency: {x: 1, y: 10}
+  Amount: {x: 0.06, y: 0.03}
+  Frequency: {x: 5, y: 10}
 --- !u!1 &2168371858986161816
 GameObject:
   m_ObjectHideFlags: 0
@@ -1346,11 +1346,11 @@ MonoBehaviour:
   DebugSpheresCheck: 1
   sway: 1
   swayStep: 0.01
-  swayMaxStepDistance: 0.06
+  swayMaxStepDistance: 0.12
   swaySmooth: 4
   swayRotation: 1
   rotationStep: 2
-  maxRotationStep: 8
+  maxRotationStep: 17
   swaySmoothRot: 2
 --- !u!114 &3164638836893852914
 MonoBehaviour:
