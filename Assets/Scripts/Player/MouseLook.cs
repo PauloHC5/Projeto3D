@@ -8,7 +8,9 @@ public class MouseLook : MonoBehaviour
 {
     [Header("Camera Properties")]
     [Range(1f, 50f)]
-    [SerializeField] private float mouseSensitivity;    
+    [SerializeField] private float defaultMouseSensitivity;
+    [Range(1f, 5f)]
+    [SerializeField] private float mouseScopeSensitivity;    
     [SerializeField] private Transform cameraRot;
     [SerializeField] private LayerMask scopeLayerMask; // Layer mask for the scope view
     
@@ -32,6 +34,7 @@ public class MouseLook : MonoBehaviour
     private bool zoomIn = false;
     private const float defaultZoomSpeed = 1000f;
     private LayerMask defaultCullingMask;
+    private float currentMouseSensitivity;
 
     private float xRotation = 0f;
     private float yRotation = 0f;    
@@ -53,6 +56,8 @@ public class MouseLook : MonoBehaviour
         playerMeshDefaultLocalPos = playerMeshPushAndPull.localPosition;
         
         defaultCullingMask = playerCameras[0].cullingMask; // Store the default culling mask
+
+        currentMouseSensitivity = defaultMouseSensitivity;
     }
 
     // Update is called once per frame
@@ -60,8 +65,8 @@ public class MouseLook : MonoBehaviour
     {
         MouseInput = PlayerCharacterController.PlayerControls.Player.Look.ReadValue<Vector2>();        
 
-        xRotation -= MouseInput.y * mouseSensitivity * Time.deltaTime;
-        yRotation = MouseInput.x * mouseSensitivity * Time.deltaTime;
+        xRotation -= MouseInput.y * currentMouseSensitivity * Time.deltaTime;
+        yRotation = MouseInput.x * currentMouseSensitivity * Time.deltaTime;
 
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
@@ -74,7 +79,8 @@ public class MouseLook : MonoBehaviour
             playerMeshPushAndPull.localRotation = Quaternion.Euler(xRotation + xRotationDeltaPlayerMesh, playerMeshPushAndPull.localRotation.y, playerMeshPushAndPull.localRotation.z);            
         }      
         
-        mouseSensitivity = PauseManager.MouseSensitivitySlider.value; // Update the slider value in the pause menu
+        defaultMouseSensitivity = PauseManager.MouseSensitivitySlider.value; // Update the slider value in the pause menu
+        if(!zoomIn) currentMouseSensitivity = PauseManager.MouseSensitivitySlider.value; // Update the slider value in the pause menu
     }
 
     private void UpdatePlayerMeshPushAndPull()
@@ -109,11 +115,13 @@ public class MouseLook : MonoBehaviour
         {
             playerCameras[1].enabled = false;     
             playerCameras[0].cullingMask = scopeLayerMask; // Change to scope layer mask
+            currentMouseSensitivity = mouseScopeSensitivity; // Change to scope sensitivity
         }
         else
         {
             playerCameras[1].enabled = true;
             playerCameras[0].cullingMask = defaultCullingMask; // Revert to default culling mask
+            currentMouseSensitivity = defaultMouseSensitivity; // Revert to default sensitivity
         }
 
         if (zoomCoroutine != null)
