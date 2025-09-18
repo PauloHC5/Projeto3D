@@ -39,7 +39,6 @@ public class AcornSpawner : MonoBehaviour
     {
         Vector3 randomPoint = Random.insideUnitSphere * sphereCollider.radius;
         randomPoint += transform.position;
-        randomPoint.y = transform.position.y; // Keep the y position the same as the spawner
 
         Instantiate(acornPrefab, randomPoint, Quaternion.identity);
     }
