@@ -10,12 +10,12 @@ public class MouseLook : MonoBehaviour
     [Range(1f, 50f)]
     [SerializeField] private float mouseSensitivity;    
     [SerializeField] private Transform cameraRot;
-    [SerializeField] private GameObject scopeVolume;
+    [SerializeField] private LayerMask scopeLayerMask; // Layer mask for the scope view
     
 
     [Header("Player Mesh Properties")]
     [SerializeField] private Transform player;
-    [SerializeField] private Transform playerMesh;
+    [SerializeField] private Transform playerMeshPushAndPull;
     [SerializeField] private float xRotationDeltaPlayerMesh = 0f;    
 
     [Range(-2f, 2f)]
@@ -31,6 +31,7 @@ public class MouseLook : MonoBehaviour
     private float defaultFoV;
     private bool zoomIn = false;
     private const float defaultZoomSpeed = 1000f;
+    private LayerMask defaultCullingMask;
 
     private float xRotation = 0f;
     private float yRotation = 0f;    
@@ -40,11 +41,6 @@ public class MouseLook : MonoBehaviour
     private Coroutine zoomCoroutine;        
 
     public bool ZoomIn => zoomIn;
-
-    private void Awake()
-    {
-        
-    }
         
     void Start()
     {        
@@ -54,7 +50,9 @@ public class MouseLook : MonoBehaviour
         {
             defaultFoV = playerCameras[0].fieldOfView;
         }
-        playerMeshDefaultLocalPos = playerMesh.localPosition;
+        playerMeshDefaultLocalPos = playerMeshPushAndPull.localPosition;
+        
+        defaultCullingMask = playerCameras[0].cullingMask; // Store the default culling mask
     }
 
     // Update is called once per frame
@@ -73,7 +71,7 @@ public class MouseLook : MonoBehaviour
         {
             UpdatePlayerMeshPushAndPull();
             player.Rotate(Vector3.up * yRotation);
-            playerMesh.localRotation = Quaternion.Euler(xRotation + xRotationDeltaPlayerMesh, playerMesh.localRotation.y, playerMesh.localRotation.z);            
+            playerMeshPushAndPull.localRotation = Quaternion.Euler(xRotation + xRotationDeltaPlayerMesh, playerMeshPushAndPull.localRotation.y, playerMeshPushAndPull.localRotation.z);            
         }      
         
         mouseSensitivity = PauseManager.MouseSensitivitySlider.value; // Update the slider value in the pause menu
@@ -92,12 +90,12 @@ public class MouseLook : MonoBehaviour
         }
 
         // Move along the camera's forward direction, relative to the mesh's parent
-        Vector3 cameraForwardLocal = playerMesh.parent.InverseTransformDirection(playerCameras[0].transform.forward);
+        Vector3 cameraForwardLocal = playerMeshPushAndPull.parent.InverseTransformDirection(playerCameras[0].transform.forward);
         Vector3 targetLocalPos = playerMeshDefaultLocalPos + cameraForwardLocal * moveAmount;
 
         // Smoothly interpolate to the target position
-        playerMesh.localPosition = Vector3.Lerp(
-            playerMesh.localPosition,
+        playerMeshPushAndPull.localPosition = Vector3.Lerp(
+            playerMeshPushAndPull.localPosition,
             targetLocalPos,
             Time.deltaTime * pullSpeed
         );
@@ -109,15 +107,13 @@ public class MouseLook : MonoBehaviour
 
         if(zoomIn)
         {
-            scopeVolume.SetActive(true);            
-            playerCameras[1].enabled = false;            
-            HUDManager.ScopeEvent(true); // Notify the HUD that the scope is active
+            playerCameras[1].enabled = false;     
+            playerCameras[0].cullingMask = scopeLayerMask; // Change to scope layer mask
         }
         else
         {
-            scopeVolume.SetActive(false);            
             playerCameras[1].enabled = true;
-            HUDManager.ScopeEvent(false); // Notify the HUD that the scope is inactive
+            playerCameras[0].cullingMask = defaultCullingMask; // Revert to default culling mask
         }
 
         if (zoomCoroutine != null)
@@ -155,9 +151,8 @@ public class MouseLook : MonoBehaviour
         if (zoomIn == false) return;
 
         zoomIn = false;
-        scopeVolume.SetActive(false);
-        HUDManager.ScopeEvent(false); // Notify the HUD that the scope is inactive
         playerCameras[1].enabled = true;
+        playerCameras[0].cullingMask = defaultCullingMask; // Revert to default culling mask
 
         if (zoomCoroutine != null)
         {
@@ -170,12 +165,14 @@ public class MouseLook : MonoBehaviour
     {        
         CactusCrossbow.AimEvent += PerformAim;              
         PlayerCharacterCombatController.OnSwitchToWeapon += ZoomOut;
+        PlayerCharacterCombatController.OnPerformReload += ZoomOut;
     }
 
     private void OnDisable()
     {        
         CactusCrossbow.AimEvent -= PerformAim;
-        AnimationTriggerEvents.onReload -= ZoomOut;
         PlayerCharacterCombatController.OnSwitchToWeapon -= ZoomOut;
+        PlayerCharacterCombatController.OnPerformReload -= ZoomOut;
+        
     }
 }
