@@ -795,7 +795,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7716172974955175032
 RectTransform:
   m_ObjectHideFlags: 0
@@ -919,7 +919,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2833865602737878682
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3380,7 +3380,7 @@ MonoBehaviour:
     weaponTutorialType: 0
   - fileName: AcornGunTutorial.mp4
     weaponTutorialType: 1
-  - fileName: BananaGunTutorialmp4
+  - fileName: BananaShotgunTutorial.mp4
     weaponTutorialType: 2
   - fileName: CactusCrossbowTutorial.mp4
     weaponTutorialType: 3
