@@ -2500,7 +2500,7 @@ MonoBehaviour:
   _magAmmo: 2
   _ammoType: 1
   _recoilX: -39.4
-  _recoilY: 12.29
+  _recoilY: 6.145
   _recoilZ: 0.35
   _snappiness: 5
   _returnSpeed: 2.65
