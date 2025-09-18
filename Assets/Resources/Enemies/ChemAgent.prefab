@@ -308,7 +308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 150
-  damage: 3
+  damage: 5
   enemyMesh: {fileID: 7004894677080850849}
   stunDuration: 1
   canStun: 1
@@ -317,7 +317,7 @@ MonoBehaviour:
   distanceToStartFire: 5
   gunParticle: {fileID: 3638354726615879013}
   damageCollider: {fileID: 3220522905188539154}
-  damageInterval: 0.31
+  damageInterval: 0.28
 --- !u!114 &794626612123596084
 MonoBehaviour:
   m_ObjectHideFlags: 0
