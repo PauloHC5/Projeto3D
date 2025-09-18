@@ -28,8 +28,6 @@ public class AmmoTreeBehaviour : MonoBehaviour
     
     public int CollectAmmo() 
     {
-        Debug.Log("Collect Ammo");
-        
         triggerCollider.enabled = false;
         hasAmmo = false;
         meshWithAmmo.enabled = false;
