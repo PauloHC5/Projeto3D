@@ -256,10 +256,10 @@ public class PlayerCharacterCombatController : MonoBehaviour
         }
 
         var weaponType = _weaponOrder[index];
-        if (_playerWeapons.TryGetValue(weaponType, out var weapon) && weapon != null &&
-            ConditionToSwitchWeapon(weapon.WeaponType))
+        if (_playerWeapons.ContainsKey(weaponType) &&
+            ConditionToSwitchWeapon(weaponType))
         {
-            RaiseWeapon(weapon.WeaponType);
+            RaiseWeapon(weaponType);
         }
     }
 
@@ -274,8 +274,17 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private void RaiseWeapon(PlayerWeaponTypes weaponToRaise)
     {
-        if (_playerWeapons.TryGetValue(weaponToRaise, out var weaponToEquip))
+        if (_playerWeapons.TryGetValue(weaponToRaise, out var weaponToEquip) && weaponToEquip != null)
             EquipWeapon(weaponToEquip);
+        else if (weaponToRaise == PlayerWeaponTypes.BANANASHOTGUN)
+        {
+            RetrieveNewShotguns();
+        }
+        else
+        {
+            Debug.LogWarning($"Weapon {weaponToRaise} not found in the inventory.");
+            return;
+        }
 
         _playerCharacterAnimationsController?.PlayRaiseWeapon(_equippedWeapon.WeaponType);
         OnSwitchToWeapon?.Invoke();
