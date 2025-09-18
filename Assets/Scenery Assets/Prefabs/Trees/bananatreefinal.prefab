@@ -151,7 +151,7 @@ MonoBehaviour:
   meshWithAmmo: {fileID: 4997625897429187924}
   meshWithoutAmmo: {fileID: 8007600275427843496}
   triggerCollider: {fileID: 8486869280803491446}
-  timeBetweenAmmoRespawn: 30
+  timeBetweenAmmoRespawn: 60
   ammoAmount: 10
 --- !u!1001 &8710282356936720684
 PrefabInstance:

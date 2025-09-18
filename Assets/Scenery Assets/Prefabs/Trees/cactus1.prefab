@@ -152,7 +152,7 @@ MonoBehaviour:
   meshWithoutAmmo: {fileID: 3434302598235767726}
   triggerCollider: {fileID: 703216846055089431}
   timeBetweenAmmoRespawn: 90
-  ammoAmount: 60
+  ammoAmount: 36
 --- !u!1 &5018879357331430305
 GameObject:
   m_ObjectHideFlags: 0
