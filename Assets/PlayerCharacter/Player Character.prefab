@@ -590,13 +590,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 034e21556af5ccb49b9848ec7ca35cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 25
+  defaultMouseSensitivity: 25
+  mouseScopeSensitivity: 2.38
   cameraRot: {fileID: 1790979581169680410}
-  scopeVolume: {fileID: 7092716412571113679}
+  scopeLayerMask:
+    serializedVersion: 2
+    m_Bits: 32895
   player: {fileID: 2075349027788936261}
-  playerMesh: {fileID: 1367476817322579109}
+  playerMeshPushAndPull: {fileID: 1367476817322579109}
   xRotationDeltaPlayerMesh: 0
-  maxPullBack: -0.4
+  maxPullBack: -0.33
   pullSpeed: 31.18
   maxPushForward: 0.1
 --- !u!1 &2128802348096803783
@@ -1361,7 +1364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaa92be1072a8d48ba880d899df4c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skipWeaponInspection: 1
+  skipWeaponInspection: 0
   _rightHandSocket: {fileID: 2860071523350465062}
   _leftHandSocket: {fileID: 7072074740685791458}
   WeaponsPrefabs:
