@@ -161,7 +161,7 @@ public class TutorialManager : Singleton<TutorialManager>
         RenderTexture.active = Instance._renderTexture;
         GL.Clear(true, true, Color.black);
         RenderTexture.active = activeRT;
-
+        
         _videoPlayer.url = videoPath;
         _videoPlayer.Play();
     }
@@ -190,7 +190,7 @@ public class TutorialManager : Singleton<TutorialManager>
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Time.timeScale = 1f;
         _tutorialCompleted[_currentWeaponTutorial] = true; // Mark the tutorial as completed
-        gameObject.SetActive(false);   
+        _canvasTutorial.SetActive(false);   
         _isPlayingTutorial = false;
     }
 
