@@ -37,6 +37,11 @@ public class CutsceneManager : Singleton<CutsceneManager>
     private float _skipSliderInactivityTimer = 0f;
     private bool _wantsToSkip = false;
 
+    private void Awake()
+    {
+        OnAwake();
+    }
+
     private void Start()
     {
         PlayerCharacterController.PlayerControls.Cutscene.Skip.started += ctx =>

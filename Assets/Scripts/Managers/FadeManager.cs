@@ -13,8 +13,10 @@ public class FadeManager : Singleton<FadeManager>
     private event Action OnFadeInComplete;
     private event Action OnFadeOutComplete;
 
-    protected override void OnAwake()
+    private void Awake()
     {
+        OnAwake();
+        
         _fadeImage = _canvasFade.GetComponentInChildren<Image>(true);
     }
 
