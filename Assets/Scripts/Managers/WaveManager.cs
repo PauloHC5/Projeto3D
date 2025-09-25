@@ -128,7 +128,7 @@ public class WaveManager : MonoBehaviour
     private void OnMusicFinished(MusicType musicType)
     {
         if (_waveStatus == WaveStatus.Running) SoundManager.PlayMusic(MusicType.BATTLE);
-        else if (_waveStatus == WaveStatus.Finished) SoundManager.PlayMusic(MusicType.AMBIENCE);
+        else if (musicType == MusicType.VICTORY) SoundManager.PlayMusic(MusicType.AMBIENCE);
         SoundManager.OnMusicFinished -= OnMusicFinished;
     }
     

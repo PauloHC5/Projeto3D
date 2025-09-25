@@ -349,7 +349,7 @@ MonoBehaviour:
   - _name: VICTORY
     _music: {fileID: 8300000, guid: 8e78a4429061bca44a3c9e6bcfe0b8b1, type: 3}
   - _name: DEFEAT
-    _music: {fileID: 0}
+    _music: {fileID: 8300000, guid: 862c6a092adc43b4fafd4be3e7a4778d, type: 3}
   - _name: PREPAREFORBATTLE
     _music: {fileID: 8300000, guid: aa48d6aa2bac7c04f942912b674948cf, type: 3}
   - _name: DEFAULT

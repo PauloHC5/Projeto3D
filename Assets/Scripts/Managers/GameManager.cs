@@ -172,7 +172,10 @@ public class GameManager : Singleton<GameManager>
 
     public static void GameOver()
     {                        
-        HUDManager.Disable();
+        Instance._waveManager.StopHorde();
+        
+        SoundManager.PlayMusic(MusicType.DEFEAT);
+        
         // Spawn endgame canvas
         if (Instance._canvasGameOver != null)
         {
