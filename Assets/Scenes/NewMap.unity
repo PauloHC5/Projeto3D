@@ -1322,7 +1322,7 @@ GameObject:
   - component: {fileID: 79640205}
   m_Layer: 0
   m_Name: WeaponSpawnPoint
-  m_TagString: Untagged
+  m_TagString: WeaponsSpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17002,16 +17002,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1963020311414406052, guid: 7b88a521f88473e44962f73b67f570e4,
-        type: 3}
-      propertyPath: weaponsSpawnPoint
-      value: 
-      objectReference: {fileID: 79640205}
-    - target: {fileID: 1963020311414406052, guid: 7b88a521f88473e44962f73b67f570e4,
-        type: 3}
-      propertyPath: OnGameStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 864009997}
     - target: {fileID: 2477071576534336466, guid: 7b88a521f88473e44962f73b67f570e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -17067,11 +17057,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 6160668832429094257, guid: 7b88a521f88473e44962f73b67f570e4,
-        type: 3}
-      propertyPath: onWaveFinishedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 864009997}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -29827,16 +29812,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HUD Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 5222519191618209684, guid: 7033c42e984f975478ab3078097ff9b9,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5222519191618209684, guid: 7033c42e984f975478ab3078097ff9b9,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7556439363713432683, guid: 7033c42e984f975478ab3078097ff9b9,
         type: 3}
