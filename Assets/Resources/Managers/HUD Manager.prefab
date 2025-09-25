@@ -1538,25 +1538,25 @@ MonoBehaviour:
       type: 3}
     WeaponSlotIconImage: {fileID: 21300000, guid: 66be46c403282624abc61176573835aa,
       type: 3}
-  _wavePanel: {fileID: 8705662251271012926}
-  _wavePanelScaleUpDuration: 1
-  _wavePanelScaleUpAmount: 2
-  _wavePanelScaleDownDuration: 0.25
-  _wavePanelScaleDownAmount: 0.65
-  _wavePanelScaleBackDuration: 0.5
-  _raidersComingText: {fileID: 9088545104008015596}
-  _waveTimerText: {fileID: 4323316745625153131}
-  _waveText: {fileID: 8180590341061318154}
-  _waveCounterText: {fileID: 2028161095533721053}
-  _raidersRemainingText: {fileID: 2202787135965977220}
-  _raidersRemainingCounterText: {fileID: 3309562444311360899}
-  _waveCompletedText: {fileID: 838723063545299087}
-  _goGetNewWeaponText: {fileID: 6751213930623906195}
-  _ammoPanel: {fileID: 1776695944147105259}
-  _ammoTextPanel: {fileID: 5962020432087685139}
-  _magAmmoTextPanel: {fileID: 1857183993336715264}
-  _gunAmmoTextPanel: {fileID: 6614051910178373071}
-  _meleeTextPanel: {fileID: 4208245048925279191}
+  wavePanel: {fileID: 8705662251271012926}
+  wavePanelScaleUpDuration: 1
+  wavePanelScaleUpAmount: 2
+  wavePanelScaleDownDuration: 0.25
+  wavePanelScaleDownAmount: 0.65
+  wavePanelScaleBackDuration: 0.5
+  raidersComingText: {fileID: 9088545104008015596}
+  waveTimerText: {fileID: 4323316745625153131}
+  waveText: {fileID: 8180590341061318154}
+  waveCounterText: {fileID: 2028161095533721053}
+  raidersRemainingText: {fileID: 2202787135965977220}
+  raidersRemainingCounterText: {fileID: 3309562444311360899}
+  waveCompletedText: {fileID: 838723063545299087}
+  goGetNewWeaponText: {fileID: 6751213930623906195}
+  ammoPanel: {fileID: 1776695944147105259}
+  ammoTextPanel: {fileID: 5962020432087685139}
+  magAmmoTextPanel: {fileID: 1857183993336715264}
+  gunAmmoTextPanel: {fileID: 6614051910178373071}
+  meleeTextPanel: {fileID: 4208245048925279191}
   _ammoPickupText: {fileID: 1489219247749457363, guid: 8609f1816c9e0264396af0430c1292d5,
     type: 3}
   _ammoPickupTextDuration: 2
@@ -2732,7 +2732,7 @@ RectTransform:
   m_Father: {fileID: 1127168518136498307}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -3.7635078, y: 0.72529984}
   m_SizeDelta: {x: 2.4729, y: 9.5729}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3083,7 +3083,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6049618698268939168
 RectTransform:
   m_ObjectHideFlags: 0

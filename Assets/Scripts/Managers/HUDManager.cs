@@ -51,26 +51,26 @@ public class HUDManager : Singleton<HUDManager>
     [Space]
     
     [Header("Wave Panel")]
-    [SerializeField] private Image _wavePanel;
-    [FormerlySerializedAs("_hordePanelScaleUpDuration")] [SerializeField] private float _wavePanelScaleUpDuration = 0.5f;
-    [FormerlySerializedAs("_hordePanelScaleUpAmount")] [SerializeField] private float _wavePanelScaleUpAmount = 1.1f;
-    [FormerlySerializedAs("_hordePanelScaleDownDuration")] [SerializeField] private float _wavePanelScaleDownDuration = 0.5f;
-    [FormerlySerializedAs("_hordePanelScaleDownAmount")] [SerializeField] private float _wavePanelScaleDownAmount = 1.1f;
-    [FormerlySerializedAs("_hordePanelScaleBackDuration")] [SerializeField] private float _wavePanelScaleBackDuration = 0.5f;
-    [SerializeField] private TextMeshProUGUI _raidersComingText;
-    [FormerlySerializedAs("_hordeTimerText")] [SerializeField] private TextMeshProUGUI _waveTimerText;
-    [SerializeField] private TextMeshProUGUI _waveText;
-    [SerializeField] private TextMeshProUGUI _waveCounterText;
-    [SerializeField] private TextMeshProUGUI _raidersRemainingText;
-    [SerializeField] private TextMeshProUGUI _raidersRemainingCounterText;
-    [SerializeField] private TextMeshProUGUI _waveCompletedText;
-    [SerializeField] private TextMeshProUGUI _goGetNewWeaponText;
+    [SerializeField] private Image wavePanel;
+    [SerializeField] private float wavePanelScaleUpDuration = 0.5f;
+    [SerializeField] private float wavePanelScaleUpAmount = 1.1f;
+    [SerializeField] private float wavePanelScaleDownDuration = 0.5f;
+    [SerializeField] private float wavePanelScaleDownAmount = 1.1f;
+    [SerializeField] private float wavePanelScaleBackDuration = 0.5f;
+    [SerializeField] private TextMeshProUGUI raidersComingText;
+    [SerializeField] private TextMeshProUGUI waveTimerText;
+    [SerializeField] private TextMeshProUGUI waveText;
+    [SerializeField] private TextMeshProUGUI waveCounterText;
+    [SerializeField] private TextMeshProUGUI raidersRemainingText;
+    [SerializeField] private TextMeshProUGUI raidersRemainingCounterText;
+    [SerializeField] private TextMeshProUGUI waveCompletedText;
+    [SerializeField] private TextMeshProUGUI goGetNewWeaponText;
     
     [Space]
 
     [Header("Ammo Panels")]
-    [SerializeField] private Image _ammoPanel;
-    [SerializeField] private TextMeshProUGUI _ammoTextPanel, _magAmmoTextPanel, _gunAmmoTextPanel, _meleeTextPanel;
+    [SerializeField] private Image ammoPanel;
+    [SerializeField] private TextMeshProUGUI ammoTextPanel, magAmmoTextPanel, gunAmmoTextPanel, meleeTextPanel;
     
     [Space]
     
@@ -108,7 +108,7 @@ public class HUDManager : Singleton<HUDManager>
         
         CheckInspectorAssigns();
         
-        _initialHordePanelSize = _wavePanel.transform.localScale;
+        _initialHordePanelSize = wavePanel.transform.localScale;
     }
 
     private void CheckInspectorAssigns()
@@ -134,17 +134,17 @@ public class HUDManager : Singleton<HUDManager>
             _crosshairsOriginalColors[weaponUI.WeaponType] = weaponUI.WeaponCrosshairImage.color; // Store the original color of the crosshair
         }
         
-        if(_wavePanel == null || _raidersComingText == null || _waveTimerText == null || _waveText == null || _waveCounterText == null || _raidersRemainingText == null || _raidersRemainingCounterText == null || _waveCompletedText == null || _goGetNewWeaponText == null)
+        if(wavePanel == null || raidersComingText == null || waveTimerText == null || waveText == null || waveCounterText == null || raidersRemainingText == null || raidersRemainingCounterText == null || waveCompletedText == null || goGetNewWeaponText == null)
         {
             Debug.LogError("Horde Panel is not assigned in the inspector.");
         }
 
-        if (_ammoPanel == null)
+        if (ammoPanel == null)
         {
             Debug.LogError("Ammo Panel is not assigned in the inspector.");
         }
 
-        if (_ammoTextPanel == null || _magAmmoTextPanel == null || _gunAmmoTextPanel == null || _meleeTextPanel == null)
+        if (ammoTextPanel == null || magAmmoTextPanel == null || gunAmmoTextPanel == null || meleeTextPanel == null)
         {
             Debug.LogError("One or more ammo text fields are not assigned in the inspector.");
         }
@@ -165,9 +165,6 @@ public class HUDManager : Singleton<HUDManager>
 
     void Start()
     {
-        if (_playerCharacterCombatController == null)
-            _playerCharacterCombatController = GameManager.Player?.GetComponent<PlayerCharacterCombatController>();
-
         _weaponCrosshairs = _weaponsUI.ToDictionary(
             weapon => weapon.WeaponType,
             weapon => weapon.WeaponCrosshairImage
@@ -176,7 +173,6 @@ public class HUDManager : Singleton<HUDManager>
         // Initialize ammo display
         UpdateAmmoDisplay();
         UpdateCrosshair();
-        UpdateWeaponSlots();
         _allImages = GetComponentsInChildren<Image>(true);
         _allTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
         
@@ -186,7 +182,7 @@ public class HUDManager : Singleton<HUDManager>
 
     void Update()
     {
-        if (GameManager.Player && _playerHealthBar) _playerHealthBar.value = GameManager.Player.GetComponent<PlayerCharacter>().Health / 100.0f;
+        if (GameManager.Instance.Player && _playerHealthBar) _playerHealthBar.value = GameManager.Instance.Player.GetComponent<PlayerCharacter>().Health / 100.0f;
 
         // Update ammo display every frame
         UpdateAmmoDisplay();
@@ -196,12 +192,12 @@ public class HUDManager : Singleton<HUDManager>
         if (GameManager.WaveStatus == WaveStatus.Preparing)
         {
             int hordeTimer = (int)GameManager.HordeTimer;
-            _waveTimerText?.SetText(hordeTimer.ToString(CultureInfo.InvariantCulture));
+            waveTimerText?.SetText(hordeTimer.ToString(CultureInfo.InvariantCulture));
         }
 
         if (GameManager.WaveStatus == WaveStatus.Finishing)
         {
-            _raidersRemainingCounterText.SetText(GameManager.EnemiesInSceneCount.ToString(CultureInfo.InvariantCulture));
+            raidersRemainingCounterText.SetText(GameManager.EnemiesInSceneCount.ToString(CultureInfo.InvariantCulture));
         }
     }
     
@@ -210,23 +206,23 @@ public class HUDManager : Singleton<HUDManager>
         switch (waveStatus)
         {
             case WaveStatus.NotStarted:
-                _wavePanel?.gameObject.SetActive(false);
+                wavePanel?.gameObject.SetActive(false);
                 break;
             
             case WaveStatus.Preparing:
                 if(_currentWaveRunningRoutine is not null) StopCoroutine(_currentWaveRunningRoutine);
                 
-                _wavePanel?.gameObject?.SetActive(true);
-                _raidersComingText?.gameObject.SetActive(true);
-                _waveText?.gameObject.SetActive(false);
-                _waveCounterText?.gameObject.SetActive(false);
-                _waveTimerText?.gameObject.SetActive(true);
-                _raidersRemainingText?.gameObject.SetActive(false);
-                _raidersRemainingCounterText?.gameObject.SetActive(false);
-                _waveCompletedText?.gameObject.SetActive(false);
-                _goGetNewWeaponText.gameObject.SetActive(false);
+                wavePanel?.gameObject?.SetActive(true);
+                raidersComingText?.gameObject.SetActive(true);
+                waveText?.gameObject.SetActive(false);
+                waveCounterText?.gameObject.SetActive(false);
+                waveTimerText?.gameObject.SetActive(true);
+                raidersRemainingText?.gameObject.SetActive(false);
+                raidersRemainingCounterText?.gameObject.SetActive(false);
+                waveCompletedText?.gameObject.SetActive(false);
+                goGetNewWeaponText.gameObject.SetActive(false);
 
-                _wavePanel.transform.localScale = _initialHordePanelSize;
+                wavePanel.transform.localScale = _initialHordePanelSize;
                 break;
             
             case WaveStatus.Running:
@@ -234,15 +230,15 @@ public class HUDManager : Singleton<HUDManager>
                 StartCoroutine(_currentWaveRunningRoutine);
                 break;
             case WaveStatus.Finishing:
-                _wavePanel?.gameObject?.SetActive(true);
-                _raidersComingText.gameObject.SetActive(false);
-                _waveTimerText.gameObject.SetActive(false);
-                _waveText.gameObject.SetActive(false);
-                _waveCounterText.gameObject.SetActive(false);
-                _raidersRemainingText.gameObject.SetActive(true);
-                _raidersRemainingCounterText.gameObject.SetActive(true);
-                _waveCompletedText.gameObject.SetActive(false);
-                _goGetNewWeaponText.gameObject.SetActive(false);
+                wavePanel?.gameObject?.SetActive(true);
+                raidersComingText.gameObject.SetActive(false);
+                waveTimerText.gameObject.SetActive(false);
+                waveText.gameObject.SetActive(false);
+                waveCounterText.gameObject.SetActive(false);
+                raidersRemainingText.gameObject.SetActive(true);
+                raidersRemainingCounterText.gameObject.SetActive(true);
+                waveCompletedText.gameObject.SetActive(false);
+                goGetNewWeaponText.gameObject.SetActive(false);
 
                 StartCoroutine(ScaleBackToOriginalSize());
                 break;
@@ -257,16 +253,16 @@ public class HUDManager : Singleton<HUDManager>
     
     private IEnumerator ScaleUpHordePanel()
     {
-        if (_wavePanel == null) yield break;
+        if (wavePanel == null) yield break;
 
-        var rectTransform = _wavePanel.rectTransform;
+        var rectTransform = wavePanel.rectTransform;
         Vector3 initialScale = rectTransform.localScale;
-        Vector3 targetScale = initialScale * _wavePanelScaleUpAmount;
+        Vector3 targetScale = initialScale * wavePanelScaleUpAmount;
         float elapsed = 0f;
 
-        while (elapsed < _wavePanelScaleUpDuration)
+        while (elapsed < wavePanelScaleUpDuration)
         {
-            rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, elapsed / _wavePanelScaleUpDuration);
+            rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, elapsed / wavePanelScaleUpDuration);
             elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
@@ -275,16 +271,16 @@ public class HUDManager : Singleton<HUDManager>
     
     private IEnumerator ScaleDownHordePanel()
     {
-        if (_wavePanel == null) yield break;
+        if (wavePanel == null) yield break;
 
-        var rectTransform = _wavePanel.rectTransform;
+        var rectTransform = wavePanel.rectTransform;
         Vector3 initialScale = rectTransform.localScale;
-        Vector3 targetScale = initialScale * -_wavePanelScaleDownAmount;
+        Vector3 targetScale = initialScale * -wavePanelScaleDownAmount;
         float elapsed = 0f;
 
-        while (elapsed < _wavePanelScaleDownDuration)
+        while (elapsed < wavePanelScaleDownDuration)
         {
-            rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, elapsed / _wavePanelScaleDownDuration);
+            rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, elapsed / wavePanelScaleDownDuration);
             elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
@@ -293,16 +289,16 @@ public class HUDManager : Singleton<HUDManager>
     
     private IEnumerator ScaleBackToOriginalSize()
     {
-        if (_wavePanel == null) yield break;
+        if (wavePanel == null) yield break;
 
-        var rectTransform = _wavePanel.rectTransform;
+        var rectTransform = wavePanel.rectTransform;
         Vector3 initialScale = rectTransform.localScale;
         Vector3 targetScale = _initialHordePanelSize;
         float elapsed = 0f;
 
-        while (elapsed < _wavePanelScaleBackDuration)
+        while (elapsed < wavePanelScaleBackDuration)
         {
-            rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, elapsed / _wavePanelScaleBackDuration);
+            rectTransform.localScale = Vector3.Lerp(initialScale, targetScale, elapsed / wavePanelScaleBackDuration);
             elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
@@ -311,36 +307,36 @@ public class HUDManager : Singleton<HUDManager>
     
     private IEnumerator WaveRunningRoutine()
     {
-        _raidersComingText.gameObject.SetActive(false);
-        _waveTimerText.gameObject.SetActive(false);
-        _waveText.gameObject.SetActive(true);
-        _waveCounterText.gameObject.SetActive(true);
-        _waveCounterText.SetText((GameManager.CurrentWave).ToString(CultureInfo.InvariantCulture));
-        _raidersRemainingText.gameObject.SetActive(false);
-        _raidersRemainingCounterText.gameObject.SetActive(false);
-        _waveCompletedText.gameObject.SetActive(false);
-        _goGetNewWeaponText.gameObject.SetActive(false);
+        raidersComingText.gameObject.SetActive(false);
+        waveTimerText.gameObject.SetActive(false);
+        waveText.gameObject.SetActive(true);
+        waveCounterText.gameObject.SetActive(true);
+        waveCounterText.SetText((GameManager.CurrentWave).ToString(CultureInfo.InvariantCulture));
+        raidersRemainingText.gameObject.SetActive(false);
+        raidersRemainingCounterText.gameObject.SetActive(false);
+        waveCompletedText.gameObject.SetActive(false);
+        goGetNewWeaponText.gameObject.SetActive(false);
         StartCoroutine(ScaleUpHordePanel());
         yield return new WaitForSeconds(5f);
         yield return StartCoroutine(ScaleDownHordePanel());
-        _wavePanel?.gameObject.SetActive(false);
+        wavePanel?.gameObject.SetActive(false);
     }
 
     private IEnumerator WaveCompletedRoutine()
     {
-        _wavePanel?.gameObject?.SetActive(true);
-        _raidersComingText.gameObject.SetActive(false);
-        _waveTimerText.gameObject.SetActive(false);
-        _waveText.gameObject.SetActive(false);
-        _waveCounterText.gameObject.SetActive(false);
-        _raidersRemainingText.gameObject.SetActive(false);
-        _raidersRemainingCounterText.gameObject.SetActive(false);
-        _waveCompletedText.gameObject.SetActive(true);
-        _goGetNewWeaponText.gameObject.SetActive(false);
+        wavePanel?.gameObject?.SetActive(true);
+        raidersComingText.gameObject.SetActive(false);
+        waveTimerText.gameObject.SetActive(false);
+        waveText.gameObject.SetActive(false);
+        waveCounterText.gameObject.SetActive(false);
+        raidersRemainingText.gameObject.SetActive(false);
+        raidersRemainingCounterText.gameObject.SetActive(false);
+        waveCompletedText.gameObject.SetActive(true);
+        goGetNewWeaponText.gameObject.SetActive(false);
         StartCoroutine(ScaleUpHordePanel());
         yield return new WaitForSeconds(10f);
-        _waveCompletedText.gameObject.SetActive(false);
-        _goGetNewWeaponText.gameObject.SetActive(true);
+        waveCompletedText.gameObject.SetActive(false);
+        goGetNewWeaponText.gameObject.SetActive(true);
     }
 
     public static void Enable()
@@ -351,6 +347,7 @@ public class HUDManager : Singleton<HUDManager>
     public static void Disable()
     {
         Instance._canvasHud.SetActive(false);
+        Instance._canvasScope.SetActive(false);
     }
 
     private void UpdateCrosshair()
@@ -416,75 +413,6 @@ public class HUDManager : Singleton<HUDManager>
 
     }
 
-    /*public static void ScopeEvent(bool scopeEnable)
-    {
-        if (Instance._scopeCrosshair == null || Instance._weaponsUI == null)
-        {
-            Debug.LogWarning("Scope or weapon crosshair is not assigned in the inspector.");
-            return;
-        }
-        
-        if (Instance._playerCharacterCombatController.EquippedWeapon == null)
-        {
-            Debug.LogWarning("No equipped weapon found. Cannot toggle scope crosshair.");
-            return;
-        }
-        
-        if (!scopeEnable)
-        {
-            Instance._scopeCrosshair.gameObject.SetActive(false);
-
-            Instance._weaponCrosshairs[Instance._playerCharacterCombatController.EquippedWeapon.WeaponType].gameObject.SetActive(true); // Enable the crosshair for the selected weapon
-
-            // Reset all images in this game object and its children to full alpha            
-            foreach (Image img in Instance._allImages)
-            {
-                if (img != Instance._scopeCrosshair) // Ignore the scope crosshair image
-                {
-                    Color color = img.color;
-                    color.a = 1f; // Set alpha to 100%
-                    img.color = color;
-                }
-            }
-
-            // Reset all text components in this game object and its children to full alpha
-            foreach (TextMeshProUGUI text in Instance._allTexts)
-            {
-                Color color = text.color;
-                color.a = 1f; // Set alpha to 100%
-                text.color = color;
-            }
-
-        }
-        else
-        {
-            Instance._scopeCrosshair.gameObject.SetActive(true);
-
-            Instance._weaponCrosshairs[Instance._playerCharacterCombatController.EquippedWeapon.WeaponType].gameObject.SetActive(false); // Disable the crosshair for the selected weapon
-
-
-            // Get all images in this game object and its children and set their alpha to 10%
-            Image[] images = Instance.GetComponentsInChildren<Image>(true);
-            foreach (Image img in images)
-            {
-                if (img != Instance._scopeCrosshair.GetComponentsInChildren<Image>().Any<Image>())
-                {
-                    Color color = img.color;
-                    color.a = 0.1f; // Set alpha to 20%
-                    img.color = color;
-                }
-            }
-
-            // Get all text components in this game object and its children and set their alpha to 10%            
-            foreach (TextMeshProUGUI text in Instance._allTexts)
-            {
-                Color color = text.color;
-                color.a = 0.1f; // Set alpha to 10%
-                text.color = color;
-            }
-        }
-    }*/
-
     public static void Bite()
     {
         if (!Instance._playerCharacterCombatController || Instance._playerCharacterCombatController.EquippedWeapon == null)
@@ -514,9 +442,9 @@ public class HUDManager : Singleton<HUDManager>
 
     private void UpdateAmmoDisplay()
     {
-        if (_ammoPanel == null) Debug.LogError("Ammo Panel is not assigned in the inspector.");
+        if (ammoPanel == null) Debug.LogError("Ammo Panel is not assigned in the inspector.");
 
-        if (_ammoTextPanel == null || _magAmmoTextPanel == null || _gunAmmoTextPanel == null || _meleeTextPanel == null)
+        if (ammoTextPanel == null || magAmmoTextPanel == null || gunAmmoTextPanel == null || meleeTextPanel == null)
         {
             Debug.LogError("One or more ammo text fields are not assigned in the inspector.");
             return;
@@ -524,20 +452,20 @@ public class HUDManager : Singleton<HUDManager>
 
         if (!_playerCharacterCombatController || _playerCharacterCombatController.PlayerWeapons.Count == 0)
         {
-            _ammoPanel.gameObject.SetActive(false);
-            _meleeTextPanel.gameObject.SetActive(false);
-            _ammoTextPanel.gameObject.SetActive(false);
+            ammoPanel.gameObject.SetActive(false);
+            meleeTextPanel.gameObject.SetActive(false);
+            ammoTextPanel.gameObject.SetActive(false);
 
             return; // Exit if no player character combat controller or no weapons are available
         }
 
 
-        _ammoPanel.gameObject.SetActive(true);
+        ammoPanel.gameObject.SetActive(true);
 
         if (_playerCharacterCombatController.EquippedWeapon is IEquippedGun equippedGun)
         {
-            _meleeTextPanel.gameObject.SetActive(false);
-            _ammoTextPanel.gameObject.SetActive(true);
+            meleeTextPanel.gameObject.SetActive(false);
+            ammoTextPanel.gameObject.SetActive(true);
 
             var magAmmo = 0;
             var totalAmmo = 0;
@@ -551,15 +479,15 @@ public class HUDManager : Singleton<HUDManager>
 
             totalAmmo = _playerCharacterCombatController.PlayerGunsAmmo[equippedGun.AmmoType];
 
-            if (_magAmmoTextPanel != null)
+            if (magAmmoTextPanel != null)
             {
-                _magAmmoTextPanel.text = $"{magAmmo}";
+                magAmmoTextPanel.text = $"{magAmmo}";
             }
             else Debug.LogWarning("Mag Ammo Text is not assigned in the inspector.");
 
-            if (_ammoTextPanel != null)
+            if (ammoTextPanel != null)
             {
-                _gunAmmoTextPanel.text = $"{totalAmmo}";
+                gunAmmoTextPanel.text = $"{totalAmmo}";
             }
             else Debug.LogWarning("Ammo Text is not assigned in the inspector.");
 
@@ -567,8 +495,8 @@ public class HUDManager : Singleton<HUDManager>
         else
             if (_playerCharacterCombatController.EquippedWeapon is IEquippedMelee)
         {
-            _meleeTextPanel.gameObject.SetActive(true);
-            _ammoTextPanel.gameObject.SetActive(false);
+            meleeTextPanel.gameObject.SetActive(true);
+            ammoTextPanel.gameObject.SetActive(false);
         }
     }
 
@@ -596,16 +524,34 @@ public class HUDManager : Singleton<HUDManager>
 
     private void CheckWeaponSlotsCount()
     {
-        if (_weaponSlots.Count == _playerCharacterCombatController.PlayerWeapons.Count)
-            return; // If the weapon slots count matches the player weapons count, no need to update
+        if (!_playerCharacterCombatController)
+        {
+            _playerCharacterCombatController = GameManager.Instance?.Player?.GetComponent<PlayerCharacterCombatController>();
+            
+            if (!_playerCharacterCombatController)
+            {
+                Debug.LogWarning("PlayerCharacterCombatController component not found.");
+                return;
+            }
+        }
+        
+        // If there are more weapon slots than player weapons, set the extra slots to inactive
+        if (_weaponSlots.Count > _playerCharacterCombatController.PlayerWeapons.Count)
+        {
+            var keysToRemove = _weaponSlots.Keys.Except(_playerCharacterCombatController.PlayerWeapons.Keys).ToList();
+            foreach (var key in keysToRemove)
+            {
+                _weaponSlots[key].WeaponSlotBackground.gameObject.SetActive(false);
+            }
+        }
 
         // make weapon slots count match player weapons count
         foreach (var playerWeapon in _playerCharacterCombatController.PlayerWeapons)
         {
             if (_weaponSlots.ContainsKey(playerWeapon.Key))
             {
-                // If the weapon slot already exists, continue to the next weapon
-                continue;
+                _weaponSlots[playerWeapon.Key].WeaponSlotBackground.gameObject.SetActive(true);
+                continue; // If the weapon slot already exists, skip to the next weapon
             }
             
             _weaponSlots.Add(playerWeapon.Key, _availableWeaponSlots.FirstOrDefault().WeaponSlot);
@@ -765,6 +711,7 @@ public class HUDManager : Singleton<HUDManager>
 
         GameManager.OnPauseGame += Disable; // Disable HUD when the game is paused
         GameManager.OnResumeGame += Enable; // Enable HUD when the game is resumed
+        GameManager.OnGameOver += Disable; // Disable HUD when the game is over
         
         WaveManager.onWaveStatusChanged += UpdateWavePanel; // Update the horde panel when the wave status changes
         
@@ -784,6 +731,7 @@ public class HUDManager : Singleton<HUDManager>
 
         GameManager.OnPauseGame -= Disable; // Remove the event listener when disabled
         GameManager.OnResumeGame -= Enable; // Remove the event listener when disabled
+        GameManager.OnGameOver -= Disable; // Remove the event listener when disabled
         
         WaveManager.onWaveStatusChanged -= UpdateWavePanel; // Remove the event listener when disabled
         
