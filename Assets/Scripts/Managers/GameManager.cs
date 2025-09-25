@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Misc;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -17,19 +18,20 @@ public class GameManager : Singleton<GameManager>
 
     [Space] [Header("Player progress")] 
     [SerializeField] private List<GameObject> weaponsPrefabs;
-    [SerializeField] private Transform weaponsSpawnPoint;
     
     private WaveManager _waveManager;
+    private Transform _weaponsSpawnPoint;
+    private PulsatingLightBehaviour _lightEffect;
+    private List<GameObject> weaponsToSpawn = new List<GameObject>();
 
     public static bool SkipPlayerTutorial => Instance._skipPlayerTutorial;
-    public static PlayerCharacterController Player { get; private set; }
+    public PlayerCharacterController Player { get; private set; }
     public static bool IsPaused { get; private set; } = false;
     public static bool AlreadyPlayedIntroCutscene = false; // Flag to check if the intro cutscene has already been played
     
     public static event Action OnPauseGame;
     public static event Action OnResumeGame;
-    
-    public UnityEvent OnGameStarted;
+    public static event Action OnGameOver;
 
     public static float HordeTimer => Instance._waveManager.HordeTimer;
     public static WaveStatus WaveStatus => Instance._waveManager.WaveStatus;
@@ -38,22 +40,37 @@ public class GameManager : Singleton<GameManager>
     
     private void Awake()
     {
-        if(weaponsSpawnPoint == null) Debug.LogError("Weapons spawn point is not assigned in the GameManager.");
         OnAwake();
         
-        // Find the player character controller in the scene
-        Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();      
         _waveManager = GetComponent<WaveManager>();
     }    
-
+    
     private void Start()
     {
-        if (SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
+        HandleSceneStart();
+    }
+
+    private void HandleSceneStart()
+    {
+        // Find the player character controller in the scene
+        Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();
+
+        _weaponsSpawnPoint = GameObject.FindWithTag("WeaponsSpawnPoint")?.transform;
+        if (_weaponsSpawnPoint == null)
+            Debug.LogError("Weapons spawn point not found int the scene.");
+        
+        
+        SoundManager.PlayMusic(MusicType.AMBIENCE, true);
+        
+        weaponsToSpawn = new List<GameObject>(weaponsPrefabs);
 
         if (!_skipPlayerTutorial)                           
             StartCoroutine(IntroductionRoutine());
         else
             StartCoroutine(StartGame());
+        
+        _lightEffect = FindFirstObjectByType<PulsatingLightBehaviour>();
+        if(!_lightEffect) Debug.LogWarning("No PulsatingLightBehaviour found in the scene.");
     }
 
     private void Update()
@@ -92,7 +109,7 @@ public class GameManager : Singleton<GameManager>
 
         Instance._waveManager.StartHorde(WaveFinished);
 
-        OnGameStarted.Invoke();
+        if(_lightEffect) _lightEffect.enabled = false;
         
         yield return null;
     }    
@@ -114,9 +131,9 @@ public class GameManager : Singleton<GameManager>
                 yield break;
             }
             
-            var weaponPrefab = weaponsPrefabs.FirstOrDefault();
-            weaponsPrefabs.Remove(weaponPrefab);
-            weaponPrefab = Instantiate(weaponPrefab, weaponsSpawnPoint.position, Quaternion.identity);
+            var weaponPrefab = weaponsToSpawn.FirstOrDefault();
+            weaponsToSpawn.Remove(weaponPrefab);
+            weaponPrefab = Instantiate(weaponPrefab, _weaponsSpawnPoint.position, Quaternion.identity);
         
             var weaponPickup = weaponPrefab.GetComponent<PickupBehaviour>();
             if (weaponPickup is null) yield break;
@@ -166,8 +183,11 @@ public class GameManager : Singleton<GameManager>
             Debug.LogError("Endgame canvas is not assigned in the GameManager.");
         }
 
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
+        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.CUTSCENE);
         Cursor.lockState = CursorLockMode.None;
+        
+        // Invoke game over event
+        OnGameOver?.Invoke();
     }
 
     public static void ReloadScene()
@@ -176,6 +196,21 @@ public class GameManager : Singleton<GameManager>
         
         // Reload the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        HandleSceneStart();
+    }
+    
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     public static void QuitGame()
