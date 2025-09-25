@@ -17,6 +17,7 @@ public class PlayerCharacterAnimationsController
     private readonly int FireBoth = Animator.StringToHash("FireBoth");
     private readonly int Charge = Animator.StringToHash("Charge");
     private readonly int InspectWeaponTrigger = Animator.StringToHash("InspectWeapon");
+    private readonly int DeathTrigger = Animator.StringToHash("Death");
 
     private Dictionary<PlayerWeaponTypes, bool> _weaponInspected = new Dictionary<PlayerWeaponTypes, bool>
     {
@@ -61,7 +62,12 @@ public class PlayerCharacterAnimationsController
             playerAnimator.SetTrigger(RaiseWeaponTrigger);   
             OnRaiseWeapon?.Invoke(weapon); // Notify that the weapon has been raised   
         }
-    }    
+    }
+
+    public void PlayDeath()
+    {
+        playerAnimator.SetTrigger(DeathTrigger);
+    }
 
     public void PlayUseWeapon()
     {        

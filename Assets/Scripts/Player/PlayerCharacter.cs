@@ -1,13 +1,37 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour
 {
+    [Header("Health Properties")]
     [SerializeField] private int health = 100;
     [SerializeField] private float regenerationWaitTime = 5f; // Health regeneration rate per second
     [SerializeField] private float regenerationRate = 1f; // Health regeneration rate per second
 
+    [Header("Death Properties")] 
+    [SerializeField] private GameObject playerDeathObject;
+    [SerializeField] private GameObject playerArmsMesh;
+    
+    private PlayerCharacterController _playerCharacterController;
+    private PlayerCharacterMovementController _playerCharacterMovementController;
+    private PlayerCharacterCombatController _playerCharacterCombatController;
+    private PlayerCharacterAnimationsController _playerCharacterAnimationsController;
+    private CharacterController _characterController;
+    
     private Coroutine _healthRegenerationCoroutine;
+    
+    public Action OnDeath;
+
+    private void Awake()
+    {
+        _playerCharacterController = GetComponent<PlayerCharacterController>();
+        _playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
+        _playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
+        _characterController = GetComponent<CharacterController>();
+        
+        _playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
+    }
 
     public int Health
     {
@@ -39,15 +63,25 @@ public class PlayerCharacter : MonoBehaviour
         Debug.Log("Player has died.");                        
         GameManager.GameOver();
 
-        Camera.main.transform.SetParent(null); // Unparent the camera from the player character
-
-        Destroy(gameObject); // Destroy the player character object
+        Camera.main.transform.SetParent(playerDeathObject.transform);
+        playerArmsMesh.transform.SetParent(playerDeathObject.transform);
+        _playerCharacterAnimationsController.PlayDeath();
+        _playerCharacterMovementController.enabled = false;
+        _playerCharacterCombatController.EquippedWeapon.DropWeapon();
+        
+        playerDeathObject.SetActive(true);
+        
+        OnDeath?.Invoke();
+        
+        FadeManager.FadeOut(() => { });
+        
+        enabled = false;
     }
 
     private IEnumerator RegenerateHealth()
     {
         yield return new WaitForSeconds(regenerationWaitTime); // Wait before starting regeneration
-        while (health < 100) // Assuming 100 is the maximum health
+        while (health < 100 && health != 0) // Assuming 100 is the maximum health
         {
             health += Mathf.RoundToInt(regenerationRate);
             health = Mathf.Min(health, 100); // Ensure health does not exceed maximum
