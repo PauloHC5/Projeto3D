@@ -227,14 +227,10 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private void Update()
     {
-        // if k button is pressed, add 3 to playerWeaponAmmo[weaponSelected]
+        // Check for auto-reload if the equipped weapon is a gun
         if (_equippedWeapon is IEquippedGun equippedGun)
-        {
-            if (Keyboard.current.kKey.wasPressedThisFrame) _playerGunAmmo[equippedGun.AmmoType] += 3;
-
             _playerCharacterAnimationsController.CheckAutoReload(equippedGun.MagAmmo, equippedGun.MagCapacity,
                 _playerGunAmmo[equippedGun.AmmoType]);
-        }
     }
 
     public void SwitchToWeapon(PlayerWeaponTypes weaponToSwitch)
