@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,78 +27,84 @@ public class MouseLook : MonoBehaviour
     [Range(-2f, 2f)]
     [SerializeField] private float maxPushForward = 0.5f; // How far to push forward    
 
-    private Vector3 playerMeshDefaultLocalPos;    
+    private Vector3 _playerMeshDefaultLocalPos;    
 
-    private Camera[] playerCameras;
+    private Camera[] _playerCameras;
         
-    private float defaultFoV;
-    private bool zoomIn = false;
-    private const float defaultZoomSpeed = 1000f;
-    private LayerMask defaultCullingMask;
-    private float currentMouseSensitivity;
+    private float _defaultFoV;
+    private bool _zoomIn = false;
+    private const float DefaultZoomSpeed = 1000f;
+    private LayerMask _defaultCullingMask;
+    private float _currentMouseSensitivity;
+    private PlayerCharacter _playerCharacter;
 
-    private float xRotation = 0f;
-    private float yRotation = 0f;    
+    private float _xRotation = 0f;
+    private float _yRotation = 0f;    
 
     
-    private Vector2 MouseInput;
-    private Coroutine zoomCoroutine;        
+    private Vector2 _mouseInput;
+    private Coroutine _zoomCoroutine;        
 
-    public bool ZoomIn => zoomIn;
-        
+    public bool ZoomIn => _zoomIn;
+
+    private void Awake()
+    {
+        _playerCharacter = GetComponentInParent<PlayerCharacter>();
+    }
+
     void Start()
     {        
-        playerCameras = GetComponentsInChildren<Camera>();
+        _playerCameras = GetComponentsInChildren<Camera>();
 
-        if (playerCameras[0] != null)
+        if (_playerCameras[0] != null)
         {
-            defaultFoV = playerCameras[0].fieldOfView;
+            _defaultFoV = _playerCameras[0].fieldOfView;
         }
-        playerMeshDefaultLocalPos = playerMeshPushAndPull.localPosition;
+        _playerMeshDefaultLocalPos = playerMeshPushAndPull.localPosition;
         
-        defaultCullingMask = playerCameras[0].cullingMask; // Store the default culling mask
+        _defaultCullingMask = _playerCameras[0].cullingMask; // Store the default culling mask
 
-        currentMouseSensitivity = defaultMouseSensitivity;
+        _currentMouseSensitivity = defaultMouseSensitivity;
     }
 
     // Update is called once per frame
     void Update()
     {
-        MouseInput = PlayerCharacterController.PlayerControls.Player.Look.ReadValue<Vector2>();        
+        _mouseInput = PlayerCharacterController.PlayerControls.Player.Look.ReadValue<Vector2>();        
 
-        xRotation -= MouseInput.y * currentMouseSensitivity * Time.deltaTime;
-        yRotation = MouseInput.x * currentMouseSensitivity * Time.deltaTime;
+        _xRotation -= _mouseInput.y * _currentMouseSensitivity * Time.deltaTime;
+        _yRotation = _mouseInput.x * _currentMouseSensitivity * Time.deltaTime;
 
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);        
+        transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);        
 
         if (player)
         {
             UpdatePlayerMeshPushAndPull();
-            player.Rotate(Vector3.up * yRotation);
-            playerMeshPushAndPull.localRotation = Quaternion.Euler(xRotation + xRotationDeltaPlayerMesh, playerMeshPushAndPull.localRotation.y, playerMeshPushAndPull.localRotation.z);            
+            player.Rotate(Vector3.up * _yRotation);
+            playerMeshPushAndPull.localRotation = Quaternion.Euler(_xRotation + xRotationDeltaPlayerMesh, playerMeshPushAndPull.localRotation.y, playerMeshPushAndPull.localRotation.z);            
         }      
         
         defaultMouseSensitivity = PauseManager.MouseSensitivitySlider.value; // Update the slider value in the pause menu
-        if(!zoomIn) currentMouseSensitivity = PauseManager.MouseSensitivitySlider.value; // Update the slider value in the pause menu
+        if(!_zoomIn) _currentMouseSensitivity = PauseManager.MouseSensitivitySlider.value; // Update the slider value in the pause menu
     }
 
     private void UpdatePlayerMeshPushAndPull()
     {
         float moveAmount = 0f;
-        if (xRotation > 0f)
+        if (_xRotation > 0f)
         {
-            moveAmount = Mathf.InverseLerp(0f, 90f, xRotation) * maxPullBack;
+            moveAmount = Mathf.InverseLerp(0f, 90f, _xRotation) * maxPullBack;
         }
-        else if (xRotation < 0f)
+        else if (_xRotation < 0f)
         {
-            moveAmount = Mathf.InverseLerp(0f, -90f, xRotation) * maxPushForward;
+            moveAmount = Mathf.InverseLerp(0f, -90f, _xRotation) * maxPushForward;
         }
 
         // Move along the camera's forward direction, relative to the mesh's parent
-        Vector3 cameraForwardLocal = playerMeshPushAndPull.parent.InverseTransformDirection(playerCameras[0].transform.forward);
-        Vector3 targetLocalPos = playerMeshDefaultLocalPos + cameraForwardLocal * moveAmount;
+        Vector3 cameraForwardLocal = playerMeshPushAndPull.parent.InverseTransformDirection(_playerCameras[0].transform.forward);
+        Vector3 targetLocalPos = _playerMeshDefaultLocalPos + cameraForwardLocal * moveAmount;
 
         // Smoothly interpolate to the target position
         playerMeshPushAndPull.localPosition = Vector3.Lerp(
@@ -109,38 +116,38 @@ public class MouseLook : MonoBehaviour
 
     private void PerformAim(float zoomFoV, float zoomSpeed)
     {
-        zoomIn = !zoomIn;
+        _zoomIn = !_zoomIn;
 
-        if(zoomIn)
+        if(_zoomIn)
         {
-            playerCameras[1].enabled = false;     
-            playerCameras[0].cullingMask = scopeLayerMask; // Change to scope layer mask
-            currentMouseSensitivity = mouseScopeSensitivity; // Change to scope sensitivity
+            _playerCameras[1].enabled = false;     
+            _playerCameras[0].cullingMask = scopeLayerMask; // Change to scope layer mask
+            _currentMouseSensitivity = mouseScopeSensitivity; // Change to scope sensitivity
         }
         else
         {
-            playerCameras[1].enabled = true;
-            playerCameras[0].cullingMask = defaultCullingMask; // Revert to default culling mask
-            currentMouseSensitivity = defaultMouseSensitivity; // Revert to default sensitivity
+            _playerCameras[1].enabled = true;
+            _playerCameras[0].cullingMask = _defaultCullingMask; // Revert to default culling mask
+            _currentMouseSensitivity = defaultMouseSensitivity; // Revert to default sensitivity
         }
 
-        if (zoomCoroutine != null)
+        if (_zoomCoroutine != null)
         {
-            StopCoroutine(zoomCoroutine);
+            StopCoroutine(_zoomCoroutine);
         }
-        zoomCoroutine = StartCoroutine(Zoom(zoomFoV, zoomSpeed));
+        _zoomCoroutine = StartCoroutine(Zoom(zoomFoV, zoomSpeed));
     }
 
     private IEnumerator Zoom(float zoomFoV, float zoomSpeed)
     {        
         float elapsedTime = 0;
-        float startFoV = playerCameras[0].fieldOfView;
-        float targetFoV = zoomIn ? zoomFoV : defaultFoV;
-        float localscopeSpeed = zoomIn ? zoomSpeed : zoomSpeed * 3;        
+        float startFoV = _playerCameras[0].fieldOfView;
+        float targetFoV = _zoomIn ? zoomFoV : _defaultFoV;
+        float localscopeSpeed = _zoomIn ? zoomSpeed : zoomSpeed * 3;        
 
-        while (Mathf.Abs(playerCameras[0].fieldOfView - targetFoV) > 0.01f)
+        while (Mathf.Abs(_playerCameras[0].fieldOfView - targetFoV) > 0.01f)
         {
-            foreach (Camera playerCamera in playerCameras)
+            foreach (Camera playerCamera in _playerCameras)
             {
                 playerCamera.fieldOfView = Mathf.Lerp(startFoV, targetFoV, localscopeSpeed * (elapsedTime / zoomSpeed));
             }
@@ -148,7 +155,7 @@ public class MouseLook : MonoBehaviour
             yield return null;
         }
 
-        foreach (Camera playerCamera in playerCameras)
+        foreach (Camera playerCamera in _playerCameras)
         {
             playerCamera.fieldOfView = targetFoV;
         }
@@ -156,17 +163,17 @@ public class MouseLook : MonoBehaviour
 
     public void ZoomOut()
     {
-        if (zoomIn == false) return;
+        if (_zoomIn == false) return;
 
-        zoomIn = false;
-        playerCameras[1].enabled = true;
-        playerCameras[0].cullingMask = defaultCullingMask; // Revert to default culling mask
+        _zoomIn = false;
+        _playerCameras[1].enabled = true;
+        _playerCameras[0].cullingMask = _defaultCullingMask; // Revert to default culling mask
 
-        if (zoomCoroutine != null)
+        if (_zoomCoroutine != null)
         {
-            StopCoroutine(zoomCoroutine);
+            StopCoroutine(_zoomCoroutine);
         }
-        zoomCoroutine = StartCoroutine(Zoom(defaultFoV, defaultZoomSpeed));
+        _zoomCoroutine = StartCoroutine(Zoom(_defaultFoV, DefaultZoomSpeed));
     }
 
     private void OnEnable()
@@ -174,6 +181,7 @@ public class MouseLook : MonoBehaviour
         CactusCrossbow.AimEvent += PerformAim;              
         PlayerCharacterCombatController.OnSwitchToWeapon += ZoomOut;
         PlayerCharacterCombatController.OnPerformReload += ZoomOut;
+        if(_playerCharacter) _playerCharacter.OnDeath += ZoomOut;
     }
 
     private void OnDisable()
@@ -181,6 +189,7 @@ public class MouseLook : MonoBehaviour
         CactusCrossbow.AimEvent -= PerformAim;
         PlayerCharacterCombatController.OnSwitchToWeapon -= ZoomOut;
         PlayerCharacterCombatController.OnPerformReload -= ZoomOut;
+        if(_playerCharacter) _playerCharacter.OnDeath -= ZoomOut;
         
     }
 }
