@@ -11,6 +11,7 @@ TagManager:
   - Nexus
   - SpawnPoint
   - AcornAmmo
+  - WeaponsSpawnPoint
   layers:
   - Default
   - TransparentFX
