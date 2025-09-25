@@ -1887,6 +1887,8 @@ GameObject:
   - component: {fileID: 1146334129554183040}
   - component: {fileID: 7542746864910389444}
   - component: {fileID: 4961890982218404622}
+  - component: {fileID: 6711154816846169646}
+  - component: {fileID: -1134501290608213202}
   m_Layer: 7
   m_Name: CactusCrossbow
   m_TagString: Untagged
@@ -2078,6 +2080,56 @@ MonoBehaviour:
   spinSpeed: 70.5
   moveAmplitude: 0.08
   moveFrequency: 0.61
+--- !u!136 &6711154816846169646
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8543736380258689134}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 17408
+  m_LayerOverridePriority: 10
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.12
+  m_Height: 1.5822926
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.04, z: 0.29114628}
+--- !u!54 &-1134501290608213202
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8543736380258689134}
+  serializedVersion: 4
+  m_Mass: 5
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8681570866536669022
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,10 @@ public class DualWieldMeleeManager : IWeapon, IEquippedMelee
     public bool CanAttack => LeftCarnivorousPlant.CanAttack || RightCarnivorousPlant.CanAttack;
 
     public float WeaponRange => RightCarnivorousPlant.WeaponRange; // Assuming both plants have the same range
+    public void DropWeapon()
+    {
+        
+    }
 
     private bool toggleAttack = false;
 
@@ -113,6 +117,11 @@ public class DualWieldGunManager : IWeapon, IEquippedGun
     }
 
     public float WeaponRange => RightGun.WeaponRange;
+    public void DropWeapon()
+    {
+        RightGun.DropWeapon();
+        LeftGun.DropWeapon();
+    }
 
     PlayerCharacterAnimationsController playerAnimationsController;
 

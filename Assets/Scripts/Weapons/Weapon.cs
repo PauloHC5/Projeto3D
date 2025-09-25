@@ -21,6 +21,9 @@ public class Weapon : MonoBehaviour, IWeapon
     private bool _isEquipped = false; // Flag to check if the weapon is equipped
     private Collider _triggerCollider; // Collider for weapon trigger
     private PickupBehaviour _pickupBehaviour;
+    private CapsuleCollider _dropColliderCapsule;
+    private MeshCollider _dropMeshCollider;
+    private Rigidbody _dropRigidbody;
 
     public WeaponSocket SocketToAttach { 
         get => _socketToAttach;
@@ -30,7 +33,7 @@ public class Weapon : MonoBehaviour, IWeapon
     public PlayerWeaponTypes WeaponType => _weaponType;
 
     public float WeaponRange => GetWeaponRange();
-    
+
     protected void OnBaseAwake()
     {
         _triggerCollider = GetComponent<Collider>();
@@ -42,6 +45,28 @@ public class Weapon : MonoBehaviour, IWeapon
         }
         
         _pickupBehaviour = GetComponent<PickupBehaviour>();
+        _dropColliderCapsule = GetComponent<CapsuleCollider>();
+        _dropRigidbody = GetComponent<Rigidbody>();
+        _dropMeshCollider = GetComponentInChildren<MeshCollider>();
+    }
+    
+    public void DropWeapon()
+    {
+        if(_isEquipped)
+        {
+            transform.SetParent(null); // Detach from parent
+            _isEquipped = false; // Set the weapon as not equipped
+            
+            if(_dropMeshCollider) _dropMeshCollider.enabled = true;
+            else
+            if(_dropColliderCapsule) _dropColliderCapsule.enabled = true;
+            
+            if (_dropRigidbody) 
+            {
+                _dropRigidbody.isKinematic = false; // Enable physics
+                _dropRigidbody.AddForce(Vector3.forward * 2f, ForceMode.Impulse); // Add a slight forward force when dropped
+            }
+        }
     }
 
     protected virtual float GetWeaponRange()

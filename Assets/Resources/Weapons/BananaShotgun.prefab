@@ -605,6 +605,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3483344929526559245}
   - component: {fileID: 3453829410463955554}
+  - component: {fileID: 3724888042181149884}
   m_Layer: 7
   m_Name: Shotgun
   m_TagString: Untagged
@@ -713,6 +714,28 @@ SkinnedMeshRenderer:
     m_Center: {x: -5.820766e-11, y: 0.0013262574, z: 0.0006032128}
     m_Extent: {x: 0.000736278, y: 0.002221928, z: 0.00086664205}
   m_DirtyAABB: 0
+--- !u!64 &3724888042181149884
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231602844802598063}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 17408
+  m_LayerOverridePriority: 10
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3814378201483603881, guid: 81b7214284221194d88144eb8a218bc9, type: 3}
 --- !u!1 &1527341941117386943
 GameObject:
   m_ObjectHideFlags: 0

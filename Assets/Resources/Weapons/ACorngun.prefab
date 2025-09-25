@@ -294,6 +294,8 @@ GameObject:
   - component: {fileID: 8291493836464442535}
   - component: {fileID: 4327766699606828895}
   - component: {fileID: 4489120011000414998}
+  - component: {fileID: 7133381676817565894}
+  - component: {fileID: 4681224015197115701}
   m_Layer: 7
   m_Name: ACorngun
   m_TagString: Untagged
@@ -486,6 +488,56 @@ MonoBehaviour:
   spinSpeed: 70.5
   moveAmplitude: 0.08
   moveFrequency: 0.61
+--- !u!136 &7133381676817565894
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076845817486309928}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 17408
+  m_LayerOverridePriority: 1
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.08
+  m_Height: 0.41770604
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.11999999, z: 0.16695239}
+--- !u!54 &4681224015197115701
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076845817486309928}
+  serializedVersion: 4
+  m_Mass: 5
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2901351047078527544
 GameObject:
   m_ObjectHideFlags: 0

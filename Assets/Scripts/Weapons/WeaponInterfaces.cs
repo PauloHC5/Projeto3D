@@ -11,6 +11,8 @@ public interface IWeapon
     public void AttatchToSocket(Transform rightHandSocket, Transform leftHandSocket);
 
     float WeaponRange { get; }
+    
+    public void DropWeapon();
 }
 
 public interface IEquippedMelee
