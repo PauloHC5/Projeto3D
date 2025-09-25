@@ -60,6 +60,10 @@ public class TutorialManager : Singleton<TutorialManager>
         { WeaponTutorialType.CACTUSCROSSBOW, false }
     };
 
+    private void Awake()
+    {
+        OnAwake();
+    }
 
     private void Start()
     {

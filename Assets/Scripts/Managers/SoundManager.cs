@@ -91,7 +91,12 @@ public class SoundManager : Singleton<SoundManager>
             Instance._globalSfxSource.volume = Mathf.Clamp(value, 0f, 1f);
             Instance._sfxVolume = Mathf.Clamp(value, 0f, 1f); 
         } 
-    }    
+    }
+
+    private void Awake()
+    {
+        OnAwake();
+    }
 
     private void Update()
     {

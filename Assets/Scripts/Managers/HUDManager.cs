@@ -104,6 +104,8 @@ public class HUDManager : Singleton<HUDManager>
 
     private void Awake()
     {
+        OnAwake();
+        
         CheckInspectorAssigns();
         
         _initialHordePanelSize = _wavePanel.transform.localScale;

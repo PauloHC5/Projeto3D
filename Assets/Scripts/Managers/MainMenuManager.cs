@@ -9,6 +9,8 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private void Awake()
     {        
+        OnAwake();
+        
         _starGameTxt = GetComponentInChildren<TextMeshProUGUI>(true).gameObject;
     }
 

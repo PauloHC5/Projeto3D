@@ -39,6 +39,7 @@ public class GameManager : Singleton<GameManager>
     private void Awake()
     {
         if(weaponsSpawnPoint == null) Debug.LogError("Weapons spawn point is not assigned in the GameManager.");
+        OnAwake();
         
         // Find the player character controller in the scene
         Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();      

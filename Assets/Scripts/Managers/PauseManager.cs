@@ -14,7 +14,12 @@ public class PauseManager : Singleton<PauseManager>
     public static Slider MouseSensitivitySlider
     {
         get { return Instance.mouseSensitivitySlider; }        
-    }            
+    }
+
+    private void Awake()
+    {
+        OnAwake();
+    }
 
     private void Start()
     {
@@ -113,15 +118,15 @@ public class PauseManager : Singleton<PauseManager>
         if (buttom == null)
             return false;
 
-        // Obtém o RectTransform do botão
+        // Obtï¿½m o RectTransform do botï¿½o
         RectTransform rectTransform = buttom.GetComponent<RectTransform>();
         if (rectTransform == null)
             return false;
 
-        // Pega a posição do mouse na tela
+        // Pega a posiï¿½ï¿½o do mouse na tela
         Vector2 mousePosition = Input.mousePosition;        
 
-        // Verifica se o mouse está sobre o botão
+        // Verifica se o mouse estï¿½ sobre o botï¿½o
         return RectTransformUtility.RectangleContainsScreenPoint(
             rectTransform,
             mousePosition,            

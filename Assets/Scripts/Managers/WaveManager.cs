@@ -50,6 +50,12 @@ public class WaveManager : MonoBehaviour
     public int CurrentWave => hordeIndex + 1;
     public bool WavesFinished => hordeIndex >= wavesDatas.Length;
 
+    private void Start()
+    {
+        _lightEffect = FindFirstObjectByType<PulsatingLightBehaviour>();
+        if(!_lightEffect) Debug.LogWarning("No PulsatingLightBehaviour found in the scene.");
+    }
+
     private void Update()
     {
         enemiesInSceneCount = _enemiesInScene.Count;
