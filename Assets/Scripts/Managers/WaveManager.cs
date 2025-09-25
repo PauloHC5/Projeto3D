@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Misc;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 [Serializable]
 public struct WaveData
@@ -32,7 +31,6 @@ public class WaveManager : MonoBehaviour
     
     [Space]
     
-    public UnityEvent onWaveFinishedEvent;
     public static Action<WaveStatus> onWaveStatusChanged;
 
     private float hordeTimer;
@@ -41,6 +39,7 @@ public class WaveManager : MonoBehaviour
     private GameObject[] _spawnPoints;
     private WaveStatus _waveStatus = WaveStatus.NotStarted;
     private int _enemiesSpawned = 0;
+    private PulsatingLightBehaviour _lightEffect;
     
     private Coroutine _waveCoroutine;
     
@@ -116,7 +115,7 @@ public class WaveManager : MonoBehaviour
         onWaveStatusChanged.Invoke(_waveStatus);
         _enemiesSpawned = 0;
         hordeIndex++;
-        onWaveFinishedEvent.Invoke();
+        if(_lightEffect) _lightEffect = FindFirstObjectByType<PulsatingLightBehaviour>();
         _waveCoroutine = null;
         SoundManager.PlayMusic(MusicType.VICTORY, false);
         SoundManager.OnMusicFinished += OnMusicFinished;
