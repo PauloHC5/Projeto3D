@@ -18,6 +18,7 @@ public class PlayerCharacter : MonoBehaviour
     private PlayerCharacterCombatController _playerCharacterCombatController;
     private PlayerCharacterAnimationsController _playerCharacterAnimationsController;
     private CharacterController _characterController;
+    private AudioSource _audioSource;
     
     private Coroutine _healthRegenerationCoroutine;
     
@@ -29,6 +30,7 @@ public class PlayerCharacter : MonoBehaviour
         _playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
         _playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
         _characterController = GetComponent<CharacterController>();
+        _audioSource = GetComponent<AudioSource>();
         
         _playerCharacterAnimationsController = new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>());
     }
@@ -36,10 +38,9 @@ public class PlayerCharacter : MonoBehaviour
     public int Health
     {
         get { return health; }
-        set
+        
+        private set
         {
-            if (!enabled) return;
-
             health = value;
             if (_healthRegenerationCoroutine != null)
             {
@@ -47,13 +48,29 @@ public class PlayerCharacter : MonoBehaviour
             }
             _healthRegenerationCoroutine = StartCoroutine(RegenerateHealth()); // Start a new regeneration coroutine
 
-
             if (health <= 0)
             {
                 health = 0;                
                 Die();
             }
         }
+    }
+
+    public void TakeDamage(int damage, DamageType damageType)
+    {
+        if (!enabled) return;
+
+        switch (damageType)
+        {
+            case DamageType.Axe:
+                SoundManager.PlayRandomSFX(GlobalSfxTypes.HIT);
+                break;
+            case DamageType.Gas:
+                SoundManager.PlayRandomSFX(WorldSfxType.COUGHING, _audioSource, true);
+                break;
+        }
+        
+        Health -= damage;
     }
 
     private void Die()
@@ -68,6 +85,9 @@ public class PlayerCharacter : MonoBehaviour
         _playerCharacterAnimationsController.PlayDeath();
         _playerCharacterMovementController.enabled = false;
         _playerCharacterCombatController.EquippedWeapon.DropWeapon();
+        _playerCharacterCombatController.enabled = false;
+        _characterController.enabled = false;
+        _playerCharacterController.enabled = false;
         
         playerDeathObject.SetActive(true);
         

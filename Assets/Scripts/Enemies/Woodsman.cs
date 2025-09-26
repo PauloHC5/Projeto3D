@@ -43,7 +43,7 @@ public class Woodsman : Enemy
             var playerCharacter = player.GetComponent<PlayerCharacter>();
             if (playerCharacter != null)
             {
-                playerCharacter.Health -= damage;
+                playerCharacter.TakeDamage(damage, DamageType.Axe);
             }
         }
     }

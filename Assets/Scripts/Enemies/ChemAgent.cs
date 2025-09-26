@@ -65,7 +65,7 @@ public class ChemAgent : Enemy
         var player = other.GetComponent<PlayerCharacter>();
         if (player != null)
         {
-            player.Health -= damage;
+            player.TakeDamage(damage, DamageType.Gas);
         }
         else
         {

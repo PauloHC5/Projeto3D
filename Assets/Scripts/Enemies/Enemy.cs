@@ -12,7 +12,9 @@ public enum DamageType
     Spike,
     SuperAcorn,
     Carnivorous,
-    }
+    Axe,
+    Gas
+}
 
 public abstract class Enemy : MonoBehaviour
 {

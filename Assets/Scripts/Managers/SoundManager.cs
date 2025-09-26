@@ -11,7 +11,8 @@ public enum WorldSfxType
     FOOTSTEP,
     CHEMAGENT_GAS,        
     SUPERSHOOT,
-    CLOSEDOOR,    
+    CLOSEDOOR,
+    COUGHING
 }
 
 [Serializable]
@@ -229,21 +230,6 @@ public class SoundManager : Singleton<SoundManager>
     {
         yield return new WaitWhile(() => _musicSource.isPlaying);
         OnMusicFinished?.Invoke(musicType);
-    }
-
-    public static void PlayGlobalSfx(GlobalSfxTypes sfxType)
-    {        
-        AudioClip[] sfxClips = Instance._globalSoundEffects[(int)sfxType].Sounds;
-        AudioClip randomClip = sfxClips[UnityEngine.Random.Range(0, sfxClips.Length)];
-        
-        if (Instance._globalSfxSource != null && randomClip != null)
-        {
-            Instance._globalSfxSource.PlayOneShot(randomClip, Instance._sfxVolume);
-        }
-        else
-        {
-            Debug.LogWarning($"SoundManager: AudioSource or clip for {sfxType} is not set.");
-        }
     }
 
     public static void PlayAmbienceSound(AmbienceSoundType ambienceSoundType)
