@@ -377,7 +377,11 @@ MonoBehaviour:
   - _name: MENUHOVER
     _sounds: []
   - _name: HIT
-    _sounds: []
+    _sounds:
+    - {fileID: 8300000, guid: 9f14ae6e549a5bc479efc559a497c2be, type: 3}
+    - {fileID: 8300000, guid: 74a2467d315059645a74f5b17c6ab66c, type: 3}
+    - {fileID: 8300000, guid: 2606a29b5a90a3f449cc06d0e44ba6d5, type: 3}
+    - {fileID: 8300000, guid: 2c5c39c2ae8fb024e9f12b83e625d76b, type: 3}
   - _name: DEATH
     _sounds: []
   - _name: PICKUP
@@ -404,3 +408,6 @@ MonoBehaviour:
     - {fileID: 8300000, guid: eab19471ef1fa89458a22150d4a2f01f, type: 3}
   - _name: CLOSEDOOR
     _sounds: []
+  - _name: COUGHING
+    _sounds:
+    - {fileID: 8300000, guid: 1be85e743d9ee8741822789a63a622f4, type: 3}

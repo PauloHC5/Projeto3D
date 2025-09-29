@@ -21,6 +21,7 @@ public class PlayerCharacter : MonoBehaviour
     private AudioSource _audioSource;
     
     private Coroutine _healthRegenerationCoroutine;
+    private Coroutine _stopCoughingCoroutine;
     
     public Action OnDeath;
 
@@ -67,6 +68,12 @@ public class PlayerCharacter : MonoBehaviour
                 break;
             case DamageType.Gas:
                 SoundManager.PlayRandomSFX(WorldSfxType.COUGHING, _audioSource, true);
+                if (_stopCoughingCoroutine != null)
+                {
+                    StopCoroutine(_stopCoughingCoroutine);
+                }
+                _stopCoughingCoroutine = StartCoroutine(StopCoughtingAfterDelay());
+                
                 break;
         }
         
@@ -79,7 +86,10 @@ public class PlayerCharacter : MonoBehaviour
 
         Debug.Log("Player has died.");                        
         GameManager.GameOver();
+        
+        _audioSource.Stop();
 
+        playerDeathObject.transform.rotation = Camera.main.transform.rotation;
         Camera.main.transform.SetParent(playerDeathObject.transform);
         playerArmsMesh.transform.SetParent(playerDeathObject.transform);
         _playerCharacterAnimationsController.PlayDeath();
@@ -106,6 +116,15 @@ public class PlayerCharacter : MonoBehaviour
             health += Mathf.RoundToInt(regenerationRate);
             health = Mathf.Min(health, 100); // Ensure health does not exceed maximum
             yield return new WaitForSeconds(1f); // Wait for 1 second before next regeneration
+        }
+    }
+    
+    private IEnumerator StopCoughtingAfterDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        if (_audioSource.isPlaying)
+        {
+            _audioSource.Stop();
         }
     }
 }
