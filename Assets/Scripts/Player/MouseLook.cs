@@ -11,7 +11,11 @@ public class MouseLook : MonoBehaviour
     [Range(1f, 50f)]
     [SerializeField] private float defaultMouseSensitivity;
     [Range(1f, 5f)]
-    [SerializeField] private float mouseScopeSensitivity;    
+    [SerializeField] private float mouseScopeSensitivity;
+    [Range(1f, 90f)]
+    [SerializeField] private float maxRotationDown = 90f; // Maximum up/down rotation angle
+    [Range(-90f, 0f)]
+    [SerializeField] private float maxRotationUp = -90f; // Minimum up/down rotation angle
     [SerializeField] private Transform cameraRot;
     [SerializeField] private LayerMask scopeLayerMask; // Layer mask for the scope view
     
@@ -75,7 +79,7 @@ public class MouseLook : MonoBehaviour
         _xRotation -= _mouseInput.y * _currentMouseSensitivity * Time.deltaTime;
         _yRotation = _mouseInput.x * _currentMouseSensitivity * Time.deltaTime;
 
-        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
+        _xRotation = Mathf.Clamp(_xRotation, maxRotationUp, maxRotationDown);
 
         transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);        
 
@@ -95,11 +99,11 @@ public class MouseLook : MonoBehaviour
         float moveAmount = 0f;
         if (_xRotation > 0f)
         {
-            moveAmount = Mathf.InverseLerp(0f, 90f, _xRotation) * maxPullBack;
+            moveAmount = Mathf.InverseLerp(0f, maxRotationDown, _xRotation) * maxPullBack;
         }
         else if (_xRotation < 0f)
         {
-            moveAmount = Mathf.InverseLerp(0f, -90f, _xRotation) * maxPushForward;
+            moveAmount = Mathf.InverseLerp(0f, maxRotationUp, _xRotation) * maxPushForward;
         }
 
         // Move along the camera's forward direction, relative to the mesh's parent
@@ -181,7 +185,13 @@ public class MouseLook : MonoBehaviour
         CactusCrossbow.AimEvent += PerformAim;              
         PlayerCharacterCombatController.OnSwitchToWeapon += ZoomOut;
         PlayerCharacterCombatController.OnPerformReload += ZoomOut;
-        if(_playerCharacter) _playerCharacter.OnDeath += ZoomOut;
+        if (_playerCharacter)
+        {
+            _playerCharacter.OnDeath += ZoomOut;
+            _playerCharacter.OnDeath += () => { enabled = false; };
+        }
+            
+        
     }
 
     private void OnDisable()
@@ -189,7 +199,11 @@ public class MouseLook : MonoBehaviour
         CactusCrossbow.AimEvent -= PerformAim;
         PlayerCharacterCombatController.OnSwitchToWeapon -= ZoomOut;
         PlayerCharacterCombatController.OnPerformReload -= ZoomOut;
-        if(_playerCharacter) _playerCharacter.OnDeath -= ZoomOut;
+        if (_playerCharacter)
+        {
+            _playerCharacter.OnDeath -= ZoomOut;
+            _playerCharacter.OnDeath -= () => { enabled = false; };
+        }
         
     }
 }
