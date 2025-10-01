@@ -38,6 +38,25 @@ public class HUDManager : Singleton<HUDManager>
     [SerializeField] private GameObject _canvasHud;
     [SerializeField] private GameObject _canvasScope;
     [SerializeField] private bool DebugPlayerRaycast = false; // Enable this to draw a debug ray in the scene view
+    
+    [Space]
+    
+    [Header("Blood Screen Effect Settings")]
+    [SerializeField] private Image bloodScreenImage;
+    [SerializeField] private float bloodScreenFadeDuration = 0.5f;
+    [SerializeField] private float bloodScreenTimeOut = 0.25f;
+    
+    [Space]
+    
+    [Header("Gas Poisoning Effect Settings")]
+    [SerializeField] private Image gasPoisoningImage;
+    [SerializeField] private float gasPoisoningPulseDuration = 0.5f;
+    [SerializeField] private float gasPoisoningTimeOut = 3f;
+    
+    [Range(0f, 1f)]
+    [SerializeField] private float gasPoisoningMaxAlpha = 1.0f;
+    [Range(0f, 1f)]
+    [SerializeField] private float gasPoisoningMinAlpha = 0f;
 
     [Space]
 
@@ -99,6 +118,8 @@ public class HUDManager : Singleton<HUDManager>
     private List<TextMeshProUGUI> _ammoPickupTextList = new List<TextMeshProUGUI>();
     private IEnumerator _currentWaveRunningRoutine;
     private bool _scopeEnabled = false;
+    private PlayerCharacter _playerCharacter;
+    private IEnumerator _gasPoisoningEffectRoutine;
 
     public static bool EnemyOnRange => _enemyOnRange;
 
@@ -178,11 +199,21 @@ public class HUDManager : Singleton<HUDManager>
         
         WaveManager.onWaveStatusChanged += UpdateWavePanel;
         UpdateWavePanel(GameManager.WaveStatus);
+        
+        _playerCharacter = GameManager.Instance?.Player?.GetComponent<PlayerCharacter>();
+        if (_playerCharacter) 
+            _playerCharacter.OnRegeneration += OnReGeneration;
+        else
+            Debug.LogWarning("PlayerCharacter component not found.");
     }
 
     void Update()
     {
-        if (GameManager.Instance.Player && _playerHealthBar) _playerHealthBar.value = GameManager.Instance.Player.GetComponent<PlayerCharacter>().Health / 100.0f;
+        if (_playerCharacter) _playerHealthBar.value = _playerCharacter.Health / 100.0f;
+        else
+        {
+            _playerCharacter = GameManager.Instance?.Player?.GetComponent<PlayerCharacter>();
+        }
 
         // Update ammo display every frame
         UpdateAmmoDisplay();
@@ -342,12 +373,16 @@ public class HUDManager : Singleton<HUDManager>
     public static void Enable()
     {
         Instance._canvasHud.SetActive(true);
+        Instance.bloodScreenImage.gameObject.SetActive(true);
+        Instance.gasPoisoningImage.gameObject.SetActive(true);
     }
 
     public static void Disable()
     {
         Instance._canvasHud.SetActive(false);
         Instance._canvasScope.SetActive(false);
+        Instance.bloodScreenImage.gameObject.SetActive(false);
+        Instance.gasPoisoningImage.gameObject.SetActive(false);
     }
 
     private void UpdateCrosshair()
@@ -701,6 +736,138 @@ public class HUDManager : Singleton<HUDManager>
         _scopeEnabled = false;
         _canvasHud.gameObject.SetActive(true);
         _canvasScope.gameObject.SetActive(false);
+    }
+    
+    public static void ShowBloodScreen()
+    {
+        if (Instance.bloodScreenImage == null)
+        {   
+            Debug.LogWarning("Blood screen image is not assigned in the inspector.");
+            return;
+        }
+
+        Instance.StartCoroutine(Instance.FadeInBloodScreenRoutine());
+    }
+
+    private IEnumerator FadeInBloodScreenRoutine()
+    {
+        var elapsedTime = 0f;
+        var duration = bloodScreenFadeDuration;
+        var noTranparencyColor = bloodScreenImage.color;
+        if(_playerHealthBar.value > 75f / 100f) 
+            noTranparencyColor.a = 0.25f;
+        else
+            if(_playerHealthBar.value <= 75f / 100f && _playerHealthBar.value > 50f / 100f) 
+                noTranparencyColor.a = 0.5f;
+        else
+            noTranparencyColor.a = 1.0f;
+        
+        while (elapsedTime < duration)
+        {
+            bloodScreenImage.color = Color.Lerp(bloodScreenImage.color, noTranparencyColor, (elapsedTime / duration));
+            elapsedTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        
+        yield return new WaitForSeconds(bloodScreenTimeOut);
+        
+        if(_playerHealthBar.value <= 15f / 100f) yield break;
+
+        StartCoroutine(FadeOutBloodScreenRoutine());
+    }
+    
+    private IEnumerator FadeOutBloodScreenRoutine()
+    {
+        var elapsedTime = 0f;
+        var duration = 0.5f;
+        var noTranparencyColor = bloodScreenImage.color;
+        
+        if(_playerHealthBar.value <= 75f / 100f && _playerHealthBar.value > 50f / 100f)
+            noTranparencyColor.a = 0.25f;
+        else
+            if(_playerHealthBar.value <= 50f / 100f && _playerHealthBar.value > 25f / 100f)
+                noTranparencyColor.a = 0.5f;
+        else
+            if(_playerHealthBar.value <= 25f / 100f && _playerHealthBar.value > 15f / 100f)
+                noTranparencyColor.a = 0.75f;
+        else
+            noTranparencyColor.a = 0.0f;
+
+        while (elapsedTime < duration)
+        {
+            bloodScreenImage.color = Color.Lerp(bloodScreenImage.color, noTranparencyColor, (elapsedTime / duration));
+            elapsedTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+    }
+    
+    public static void ShowGasPoisoningScreen()
+    {
+        if (Instance.gasPoisoningImage == null)
+        {   
+            Debug.LogWarning("Gas poisoning image is not assigned in the inspector.");
+            return;
+        }
+
+        Instance.gasPoisoningImage.gameObject.SetActive(true);
+        Instance.StartCoroutine(Instance.GasPoisoningEffectRoutine());
+    }
+    
+    private IEnumerator GasPoisoningEffectRoutine()
+    {
+        if (_gasPoisoningEffectRoutine != null)
+        {
+            yield break;
+        }
+        _gasPoisoningEffectRoutine = GasPoisoningEffect();
+        
+        StartCoroutine(_gasPoisoningEffectRoutine);
+        
+        yield return new WaitForSeconds(gasPoisoningTimeOut);
+        
+        StopCoroutine(_gasPoisoningEffectRoutine);
+        _gasPoisoningEffectRoutine = null;
+        
+        // Fade out the gas poisoning effect
+        var elapsedTime = 0f;
+        var duration = 0.5f;
+        var transparentColor = gasPoisoningImage.color;
+        transparentColor.a = 0.0f;
+        while (elapsedTime < duration)
+        {
+            gasPoisoningImage.color = Color.Lerp(gasPoisoningImage.color, transparentColor, (elapsedTime / duration));
+            elapsedTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+    }
+
+    private IEnumerator GasPoisoningEffect()
+    {
+        // Interpolate the alpha value of the gas poisoning image to create a pulsing effect
+        var elapsedTime = 0f;
+        var pulseDuration = gasPoisoningPulseDuration; // Duration of one pulse cycle (fade in + fade out)
+        var maxAlpha = gasPoisoningImage.color;
+        maxAlpha.a = gasPoisoningMaxAlpha;
+        var minAlpha = gasPoisoningImage.color;
+        minAlpha.a = gasPoisoningMinAlpha;
+        var fadingOut = true;
+        
+        while (true)
+        {
+            while (elapsedTime < pulseDuration / 2f)
+            {
+                gasPoisoningImage.color = Color.Lerp(fadingOut ? maxAlpha : minAlpha, fadingOut ? minAlpha : maxAlpha, (elapsedTime / (pulseDuration / 2f)));
+                elapsedTime += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            elapsedTime = 0f;
+            fadingOut = !fadingOut; // Toggle between fading in and out
+        }
+    }
+    
+    private void OnReGeneration()
+    {
+        StartCoroutine(FadeOutBloodScreenRoutine());
     }
 
     private void OnEnable()

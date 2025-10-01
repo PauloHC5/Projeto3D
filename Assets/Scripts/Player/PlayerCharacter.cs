@@ -24,6 +24,7 @@ public class PlayerCharacter : MonoBehaviour
     private Coroutine _stopCoughingCoroutine;
     
     public Action OnDeath;
+    public Action OnRegeneration;
 
     private void Awake()
     {
@@ -65,6 +66,7 @@ public class PlayerCharacter : MonoBehaviour
         {
             case DamageType.Axe:
                 SoundManager.PlayRandomSFX(GlobalSfxTypes.HIT);
+                HUDManager.ShowBloodScreen();
                 break;
             case DamageType.Gas:
                 SoundManager.PlayRandomSFX(WorldSfxType.COUGHING, _audioSource, true);
@@ -74,6 +76,7 @@ public class PlayerCharacter : MonoBehaviour
                 }
                 _stopCoughingCoroutine = StartCoroutine(StopCoughtingAfterDelay());
                 
+                HUDManager.ShowGasPoisoningScreen();
                 break;
         }
         
@@ -115,6 +118,7 @@ public class PlayerCharacter : MonoBehaviour
         {
             health += Mathf.RoundToInt(regenerationRate);
             health = Mathf.Min(health, 100); // Ensure health does not exceed maximum
+            OnRegeneration?.Invoke();
             yield return new WaitForSeconds(1f); // Wait for 1 second before next regeneration
         }
     }
