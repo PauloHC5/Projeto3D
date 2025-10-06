@@ -86,7 +86,7 @@ public class GameManager : Singleton<GameManager>
     {                
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.CUTSCENE);
 
-        Cursor.lockState = CursorLockMode.Locked;                
+        HUDManager.Disable(); 
 
         if (!AlreadyPlayedIntroCutscene)
         {
