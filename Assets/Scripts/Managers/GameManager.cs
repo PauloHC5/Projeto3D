@@ -121,6 +121,7 @@ public class GameManager : Singleton<GameManager>
             Instantiate(_canvasVictory, Vector3.zero, Quaternion.identity);
             PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
             Cursor.lockState = CursorLockMode.None;
+            FadeManager.FadeOut(() => { });
         }
         else
         {
@@ -175,6 +176,8 @@ public class GameManager : Singleton<GameManager>
         Instance._waveManager.StopHorde();
         
         SoundManager.PlayMusic(MusicType.DEFEAT);
+        
+        FadeManager.FadeOut(() => { });
         
         // Spawn endgame canvas
         if (Instance._canvasGameOver != null)

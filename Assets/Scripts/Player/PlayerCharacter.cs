@@ -106,8 +106,6 @@ public class PlayerCharacter : MonoBehaviour
         
         OnDeath?.Invoke();
         
-        FadeManager.FadeOut(() => { });
-        
         enabled = false;
     }
 
