@@ -1763,7 +1763,13 @@ MonoBehaviour:
   _canvasScope: {fileID: 9128822356395698377}
   DebugPlayerRaycast: 0
   bloodScreenImage: {fileID: 6329961464246122794}
+  bloodScreenFadeDuration: 0.5
+  bloodScreenTimeOut: 0.25
   gasPoisoningImage: {fileID: 7224538674852044519}
+  gasPoisoningPulseDuration: 1
+  gasPoisoningTimeOut: 3
+  gasPoisoningMaxAlpha: 0.334
+  gasPoisoningMinAlpha: 0.153
   _playerHealthBar: {fileID: 3414508664551858123}
   _weaponsUI:
   - name: CARNIVOROUSPLANTS

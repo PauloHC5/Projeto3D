@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections;
 using System;
 using System.Globalization;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 [Serializable]
@@ -200,7 +201,7 @@ public class HUDManager : Singleton<HUDManager>
         WaveManager.onWaveStatusChanged += UpdateWavePanel;
         UpdateWavePanel(GameManager.WaveStatus);
         
-        _playerCharacter = GameManager.Instance?.Player?.GetComponent<PlayerCharacter>();
+        _playerCharacter = GameObject.FindAnyObjectByType<PlayerCharacter>();
         if (_playerCharacter) 
             _playerCharacter.OnRegeneration += OnReGeneration;
         else
@@ -373,16 +374,22 @@ public class HUDManager : Singleton<HUDManager>
     public static void Enable()
     {
         Instance._canvasHud.SetActive(true);
-        Instance.bloodScreenImage.gameObject.SetActive(true);
-        Instance.gasPoisoningImage.gameObject.SetActive(true);
+        Instance.bloodScreenImage.transform.parent.gameObject.SetActive(true);
+        Instance.gasPoisoningImage.transform.parent.gameObject.SetActive(true);
     }
 
     public static void Disable()
     {
         Instance._canvasHud.SetActive(false);
         Instance._canvasScope.SetActive(false);
-        Instance.bloodScreenImage.gameObject.SetActive(false);
-        Instance.gasPoisoningImage.gameObject.SetActive(false);
+        Instance.bloodScreenImage.transform.parent.gameObject.SetActive(false);
+        Instance.gasPoisoningImage.transform.parent.gameObject.SetActive(false);
+    }
+
+    private void OnGameOver()
+    {
+        Instance._canvasHud.SetActive(false);
+        Instance._canvasScope.SetActive(false);
     }
 
     private void UpdateCrosshair()
@@ -745,6 +752,8 @@ public class HUDManager : Singleton<HUDManager>
             Debug.LogWarning("Blood screen image is not assigned in the inspector.");
             return;
         }
+        
+        Instance.bloodScreenImage.gameObject.SetActive(true);
 
         Instance.StartCoroutine(Instance.FadeInBloodScreenRoutine());
     }
@@ -778,6 +787,8 @@ public class HUDManager : Singleton<HUDManager>
     
     private IEnumerator FadeOutBloodScreenRoutine()
     {
+        if(!bloodScreenImage.gameObject.activeSelf) yield break;
+        
         var elapsedTime = 0f;
         var duration = 0.5f;
         var noTranparencyColor = bloodScreenImage.color;
@@ -799,6 +810,8 @@ public class HUDManager : Singleton<HUDManager>
             elapsedTime += Time.unscaledDeltaTime;
             yield return null;
         }
+        
+        if(bloodScreenImage.color.a > 75f / 100f) bloodScreenImage.gameObject.SetActive(false);
     }
     
     public static void ShowGasPoisoningScreen()
@@ -869,6 +882,19 @@ public class HUDManager : Singleton<HUDManager>
     {
         StartCoroutine(FadeOutBloodScreenRoutine());
     }
+    
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        bloodScreenImage.color = new Color(bloodScreenImage.color.r, bloodScreenImage.color.g, bloodScreenImage.color.g, 0f);
+        bloodScreenImage.gameObject.SetActive(false);
+        gasPoisoningImage.gameObject.SetActive(false);
+        
+        _playerCharacter = GameObject.FindAnyObjectByType<PlayerCharacter>();
+        if (_playerCharacter) 
+            _playerCharacter.OnRegeneration += OnReGeneration;
+        else
+            Debug.LogWarning("PlayerCharacter component not found.");
+    }
 
     private void OnEnable()
     {
@@ -878,7 +904,7 @@ public class HUDManager : Singleton<HUDManager>
 
         GameManager.OnPauseGame += Disable; // Disable HUD when the game is paused
         GameManager.OnResumeGame += Enable; // Enable HUD when the game is resumed
-        GameManager.OnGameOver += Disable; // Disable HUD when the game is over
+        GameManager.OnGameOver += OnGameOver; // Disable HUD when the game is over
         
         WaveManager.onWaveStatusChanged += UpdateWavePanel; // Update the horde panel when the wave status changes
         
@@ -887,6 +913,8 @@ public class HUDManager : Singleton<HUDManager>
         CactusCrossbow.AimEvent += ScopeEvent; // Subscribe to the scope event
         
         PlayerCharacterCombatController.OnPerformReload += ZoomOut;
+        
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
@@ -898,7 +926,7 @@ public class HUDManager : Singleton<HUDManager>
 
         GameManager.OnPauseGame -= Disable; // Remove the event listener when disabled
         GameManager.OnResumeGame -= Enable; // Remove the event listener when disabled
-        GameManager.OnGameOver -= Disable; // Remove the event listener when disabled
+        GameManager.OnGameOver -= OnGameOver; // Remove the event listener when disabled
         
         WaveManager.onWaveStatusChanged -= UpdateWavePanel; // Remove the event listener when disabled
         
@@ -907,6 +935,8 @@ public class HUDManager : Singleton<HUDManager>
         CactusCrossbow.AimEvent -= ScopeEvent; // Unsubscribe from the scope event
         
         PlayerCharacterCombatController.OnPerformReload -= ZoomOut;
+        
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
 }
