@@ -696,7 +696,7 @@ public class HUDManager : Singleton<HUDManager>
             {
                 if(i == 0) break;
             
-                if(_ammoPickupTextList[i] && _ammoPickupTextList[i - 1]) _ammoPickupTextList[i].transform.position = _ammoPickupTextList[i - 1].transform.position + new Vector3(0, 30, 0); // Move the text up by 30 units
+                if(_ammoPickupTextList[i] && _ammoPickupTextList[i - 1]) _ammoPickupTextList[i].transform.position = _ammoPickupTextList[i - 1].transform.position + new Vector3(0, 50, 0); // Move the text up by 50 units
             }
         }
         
