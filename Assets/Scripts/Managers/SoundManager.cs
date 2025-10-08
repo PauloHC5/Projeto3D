@@ -50,13 +50,15 @@ public enum AmbienceSoundType
 
 [RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), ExecuteInEditMode]
 public class SoundManager : Singleton<SoundManager>
-{            
+{
+    [SerializeField] private AudioMixer sfxAudioMixer;
     [SerializeField] private MusicClip[] _musics;
     [SerializeField] private SoundClip[] _ambienceSounds, _globalSoundEffects, _worldSoundEffects;    
     
     private AudioSource _ambienceSource, _musicSource, _globalSfxSource;    
     
     private float _sfxVolume = 1f;
+    private bool _gamePaused = false;
     
     private static MusicType _currentMusicType = MusicType.DEFAULT; // Default music type to avoid null reference issues
     public static MusicType CurrentMusicType => _currentMusicType;
@@ -228,7 +230,7 @@ public class SoundManager : Singleton<SoundManager>
     
     private System.Collections.IEnumerator MonitorMusicEnd(MusicType musicType)
     {
-        yield return new WaitWhile(() => _musicSource.isPlaying);
+        yield return new WaitWhile(() =>Mathf.Round(_musicSource.time) < Math.Round(_musicSource.clip.length));
         OnMusicFinished?.Invoke(musicType);
     }
 
@@ -294,15 +296,23 @@ public class SoundManager : Singleton<SoundManager>
     }
 
     private void OnPauseGame()
-    {       
+    {    
+        _gamePaused = true;
+        
         Instance._ambienceSource.Pause();
         Instance._musicSource.Pause();
+        
+        sfxAudioMixer.SetFloat("WorldSFXVolume" , -80f); // Mute SFX
     }
 
     private void OnResumeGame()
     {        
+        _gamePaused = false;
+        
         Instance._ambienceSource.UnPause();
         Instance._musicSource.UnPause();
+        
+        sfxAudioMixer.SetFloat("WorldSFXVolume" , 0f); // Unmute SFX
     }
 
     private void OnApplicationQuit()
