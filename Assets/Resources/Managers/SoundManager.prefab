@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3001003226804154415}
   - component: {fileID: 7260700640648309009}
   - component: {fileID: 2870294330529407798}
+  - component: {fileID: 4815324003349504167}
   - component: {fileID: 1030986922889913290}
   m_Layer: 2
   m_Name: SoundManager
@@ -44,7 +45,8 @@ AudioSource:
   m_GameObject: {fileID: 4724124187172512847}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: f34ee5ec697a25341bbd0190600e6468,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -238,6 +240,104 @@ AudioSource:
   m_GameObject: {fileID: 4724124187172512847}
   m_Enabled: 1
   serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: f34ee5ec697a25341bbd0190600e6468,
+    type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!82 &4815324003349504167
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4724124187172512847}
+  m_Enabled: 1
+  serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
@@ -339,6 +439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shouldPersistBetweenScenes: 1
+  sfxAudioMixer: {fileID: 24100000, guid: f34ee5ec697a25341bbd0190600e6468, type: 2}
   _musics:
   - _name: MENU
     _music: {fileID: 8300000, guid: 3f1162df3ee141145814f16762192c20, type: 3}
@@ -373,9 +474,12 @@ MonoBehaviour:
     _sounds: []
   _globalSoundEffects:
   - _name: MENUCLICK
-    _sounds: []
+    _sounds:
+    - {fileID: 8300000, guid: 2fbdfa177b29edf4b83ddec99257be88, type: 3}
+    - {fileID: 8300000, guid: bdc6213a3e8ca494291155c389ecc04f, type: 3}
   - _name: MENUHOVER
-    _sounds: []
+    _sounds:
+    - {fileID: 8300000, guid: e504708e6c34a2f47988dcf2448a4d24, type: 3}
   - _name: HIT
     _sounds:
     - {fileID: 8300000, guid: 9f14ae6e549a5bc479efc559a497c2be, type: 3}
@@ -385,7 +489,9 @@ MonoBehaviour:
   - _name: DEATH
     _sounds: []
   - _name: PICKUP
-    _sounds: []
+    _sounds:
+    - {fileID: 8300000, guid: 267f5ab6ea6e3f142aab9f2b3f1d159c, type: 3}
+    - {fileID: 8300000, guid: df7c59b2bac2ec74ab353bbc7a4e3fba, type: 3}
   _worldSoundEffects:
   - _name: SHOOT
     _sounds:

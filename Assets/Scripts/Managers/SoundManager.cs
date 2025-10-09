@@ -48,14 +48,14 @@ public enum AmbienceSoundType
     OCEAN,
 }
 
-[RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), ExecuteInEditMode]
+[RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), RequireComponent(typeof(AudioSource)), ExecuteInEditMode]
 public class SoundManager : Singleton<SoundManager>
 {
     [SerializeField] private AudioMixer sfxAudioMixer;
     [SerializeField] private MusicClip[] _musics;
     [SerializeField] private SoundClip[] _ambienceSounds, _globalSoundEffects, _worldSoundEffects;    
     
-    private AudioSource _ambienceSource, _musicSource, _globalSfxSource;    
+    private AudioSource _ambienceSource, _musicSource, _globalSfxSource, _UISfxSource;    
     
     private float _sfxVolume = 1f;
     private bool _gamePaused = false;
@@ -92,6 +92,7 @@ public class SoundManager : Singleton<SoundManager>
 
             Instance._ambienceSource.volume = Mathf.Clamp(value, 0f, 1f);
             Instance._globalSfxSource.volume = Mathf.Clamp(value, 0f, 1f);
+            Instance._UISfxSource.volume = Mathf.Clamp(value, 0f, 1f);
             Instance._sfxVolume = Mathf.Clamp(value, 0f, 1f); 
         } 
     }
@@ -125,6 +126,7 @@ public class SoundManager : Singleton<SoundManager>
             _ambienceSource = audioSources[0];
             _musicSource = audioSources[1];
             _globalSfxSource = audioSources[2];
+            _UISfxSource = audioSources[3];
         }        
     }
 
@@ -176,15 +178,52 @@ public class SoundManager : Singleton<SoundManager>
         }
 
         AudioClip randomClip = clips[UnityEngine.Random.Range(0, clips.Length)];
+        
+        var sfxSource = sfxType is GlobalSfxTypes.MENUCLICK or GlobalSfxTypes.MENUHOVER ? Instance._UISfxSource : Instance._globalSfxSource;
+        
         if (randomClip != null && Instance._globalSfxSource != null)
         {
-            Instance._globalSfxSource.PlayOneShot(randomClip, Instance._sfxVolume);
+            sfxSource.PlayOneShot(randomClip, Instance._sfxVolume);
         }
         else
         {
             Debug.LogWarning($"SoundManager: AudioSource or clip for {randomClip.name} is not set.");
         }
     }    
+    
+    public static void PlaySfx(GlobalSfxTypes sfxType, int index)
+    {
+        Instance.EnsureAudioSourcesInitialized();
+
+        AudioClip[] clips = Instance._globalSoundEffects[(int)sfxType].Sounds;
+
+        // Check if index is within bounds
+        if (clips == null || clips.Length == 0)
+        {
+            Debug.LogWarning($"SoundManager: No sound clips found for {sfxType}.");
+            return;
+        }
+
+        // check if index is within bounds
+        if (index < 0 || index >= clips.Length)
+        {
+            Debug.LogWarning($"SoundManager: Index {index} is out of range.");
+            return;
+        }
+        
+        AudioClip clip = clips[index];
+        
+        var sfxSource = sfxType is GlobalSfxTypes.MENUCLICK or GlobalSfxTypes.MENUHOVER ? Instance._UISfxSource : Instance._globalSfxSource;
+        
+        if (clip != null && Instance._globalSfxSource != null)
+        {
+            sfxSource.PlayOneShot(clip, Instance._sfxVolume);
+        }
+        else
+        {
+            Debug.LogWarning($"SoundManager: AudioSource or clip for {clip.name} is not set.");
+        }
+    }
 
     public static void PlayShootSound(PlayerWeaponTypes weaponType, AudioSource audioSource)
     {

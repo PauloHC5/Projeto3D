@@ -471,6 +471,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             Destroy(other.gameObject);
             _playerGunAmmo[AmmoTypes.Acorn] += 1;
             OnAmmoPickedUp?.Invoke(1, AmmoTypes.Acorn);
+            SoundManager.PlaySfx(GlobalSfxTypes.PICKUP, 1);
             return;
         }
 
@@ -479,6 +480,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
             var amountCollected = ammoTreeBehaviour.CollectAmmo();
             _playerGunAmmo[ammoTreeBehaviour.AmmoType] += amountCollected;
             OnAmmoPickedUp?.Invoke(amountCollected, ammoTreeBehaviour.AmmoType);
+            SoundManager.PlaySfx(GlobalSfxTypes.PICKUP, 0);
         }
     }
 }

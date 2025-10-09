@@ -1,82 +1,68 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ButtomBehaviour : MonoBehaviour
+public struct ButtomImageOriginalColor
 {
-    private Canvas canvasAttached;
-    private Vector3 originalScale;
-    private Image[] buttonImages;
+    public Image image;
+    public Color originalColor;
 
-    private void Awake()
+    public ButtomImageOriginalColor(Image img, Color color)
     {
-        canvasAttached = GetComponentInParent<Canvas>();
+        image = img;
+        originalColor = color;
+    }
+}
 
-        if (canvasAttached == null)
+namespace UI
+{
+    public class ButtomBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    {
+        public Color hoverColor = Color.yellow;
+        private List<ButtomImageOriginalColor> _originalColors = new List<ButtomImageOriginalColor>();
+        private Vector3 _originalScale;
+        private Image[] _images;
+
+        private void Awake()
         {
-            Debug.LogError("No Canvas found in parent hierarchy. Please attach this script to a GameObject that is a child of a Canvas.");
-        }
-
-        buttonImages = GetComponentsInChildren<Image>(true);
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        originalScale = transform.localScale; // Store the original scale of the button        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        MouseOverResumeButton();
-    }
-
-    private void MouseOverResumeButton()
-    {
-
-        if (IsMouseOverResumeButton())
-        {
-            // If the mouse is over the resume button, change its color                        
-            foreach (var image in buttonImages)
+            _images = GetComponentsInChildren<Image>();
+            if (_images.Length > 0)
             {
-                image.color = Color.yellow; // Change to your desired color
+                foreach (var image in _images)
+                {
+                    if (image) _originalColors.Add(new ButtomImageOriginalColor(image, image.color));
+                }
             }
 
-            // Set its scale to indicate it's hovered
-            transform.localScale = originalScale + new Vector3(0.2f, 0.2f, 0.2f); // Slightly increase size
+            _originalScale = transform.localScale;
         }
-        else
+
+        public void OnPointerEnter(PointerEventData eventData)
         {
-            // If the mouse is not over the resume button, reset its color
-            // Get the Image component of the button and reset its color
-            var buttonImages = GetComponentsInChildren<UnityEngine.UI.Image>();
-            foreach (var image in buttonImages)
-            {
-                if (image) image.color = Color.white; // Change to your desired color
-            }
-
-            // Reset its scale to normal
-            transform.localScale = originalScale; // Reset to original scale
+            foreach (var image in _images)
+                image.color = hoverColor;
+            transform.localScale = _originalScale * 1.2f;
+            SoundManager.PlaySfx(GlobalSfxTypes.MENUCLICK, 0);
         }
 
-    }
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            foreach (var image in _images)
+                image.color = _originalColors.Find(img => img.image == image).originalColor;
+                
+            transform.localScale = _originalScale;
+        }
 
-    private bool IsMouseOverResumeButton()
-    {        
+        private void OnDisable()
+        {
+            OnPointerExit(null);
+        }
 
-        // Obtém o RectTransform do botão
-        RectTransform rectTransform = GetComponent<RectTransform>();        
-
-        // Pega a posição do mouse na tela
-        Vector2 mousePosition = Input.mousePosition;
-
-        
-
-        // Verifica se o mouse está sobre o botão
-        return RectTransformUtility.RectangleContainsScreenPoint(
-            rectTransform,
-            mousePosition,
-            canvasAttached.worldCamera
-        );
+        public void OnClick()
+        {
+            SoundManager.PlaySfx(GlobalSfxTypes.MENUCLICK, 1);
+        }
     }
 }

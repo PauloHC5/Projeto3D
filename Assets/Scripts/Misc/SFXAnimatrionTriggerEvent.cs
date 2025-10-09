@@ -15,5 +15,5 @@ public class SFXAnimatrionTriggerEvent : MonoBehaviour
         }
 
         SoundManager.PlayRandomSFX(sfxType, sfxSource, looped);
-    }    
+    }
 }

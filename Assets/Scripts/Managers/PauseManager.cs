@@ -1,15 +1,20 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PauseManager : Singleton<PauseManager>
 {       
     [Header("Pause Menu Properties")]
-    [SerializeField] private GameObject _canvasPauseMenu;
+    [SerializeField] private GameObject canvasPauseMenu;
+    [SerializeField] private RectTransform pauseOverlay;
+    [SerializeField] private float scaleDuration = 0.5f;
     [SerializeField] private GameObject[] buttons = new GameObject[9];    
 
     [SerializeField] private Slider mouseSensitivitySlider;
     [SerializeField] private Slider sfxSlider;
     [SerializeField] private Slider musicSlider;
+    
+    private Vector3 _pauseOverlayOriginalScale;
 
     public static Slider MouseSensitivitySlider
     {
@@ -19,16 +24,18 @@ public class PauseManager : Singleton<PauseManager>
     private void Awake()
     {
         OnAwake();
+        
+        _pauseOverlayOriginalScale = pauseOverlay.localScale;
     }
 
     private void Start()
     {
-        if (_canvasPauseMenu == null)
+        if (canvasPauseMenu == null)
         {
             Debug.LogError("Pause Menu UI is not assigned in the inspector.");
             return;
         }
-        _canvasPauseMenu.SetActive(false);        
+        canvasPauseMenu.SetActive(false);        
     }
 
     private void Update()
@@ -36,15 +43,13 @@ public class PauseManager : Singleton<PauseManager>
         if(Instance == null)
             Debug.Log("PauseManager instance is null. Please ensure it is assigned in the scene.");
 
-        MouseOverResumeButton();
-
         SoundManager.MusicVolume = musicSlider.value;
         SoundManager.SfxVolume = sfxSlider.value;        
     }
 
     private void OnPauseGame()
     {        
-        _canvasPauseMenu.SetActive(true);                
+        canvasPauseMenu.SetActive(true);                
         
         Cursor.lockState = CursorLockMode.None;                
 
@@ -53,11 +58,16 @@ public class PauseManager : Singleton<PauseManager>
         {
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
         }
+        
+        // Start the scaling coroutine
+        StartCoroutine(ScalePauseOverlay());
+        
+        SoundManager.PlayRandomSFX(GlobalSfxTypes.MENUHOVER);
     }
 
     private void OnResumeGame()
     {        
-        _canvasPauseMenu.SetActive(false);                
+        canvasPauseMenu.SetActive(false);                
 
         PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Cursor.lockState = CursorLockMode.Locked;                  
@@ -70,7 +80,7 @@ public class PauseManager : Singleton<PauseManager>
     }
 
     public void ResumeGame()
-    {        
+    {  
         GameManager.ResumeGame();
     }
 
@@ -78,60 +88,21 @@ public class PauseManager : Singleton<PauseManager>
     {
         GameManager.QuitGame();
     }
-
-    private void MouseOverResumeButton()
+    
+    private IEnumerator ScalePauseOverlay()
     {
-        // Check if mouse is over an button
-        for (int i = 0; i < buttons.Length; i++)
+        pauseOverlay.localScale = pauseOverlay.localScale / 2f; // Start at half the original size
+        
+        Vector3 targetScale = _pauseOverlayOriginalScale;
+        Vector3 initialScale = pauseOverlay.localScale;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < scaleDuration)
         {
-            if (IsMouseOverResumeButton(buttons[i]))
-            {
-                // If the mouse is over the resume button, change its color
-                // Get the Image component of the button and change its color
-                var buttonImages = buttons[i].GetComponentsInChildren<UnityEngine.UI.Image>();
-                foreach (var image in buttonImages)
-                {                    
-                    image.color = Color.yellow; // Change to your desired color
-                }
-
-                // Set its scale to indicate it's hovered
-                buttons[i].transform.localScale = new Vector3(1.2f, 1.2f, 1.2f); // Slightly increase size
-            }
-            else
-            {
-                // If the mouse is not over the resume button, reset its color
-                // Get the Image component of the button and reset its color
-                var buttonImages = buttons[i].GetComponentsInChildren<UnityEngine.UI.Image>();
-                foreach (var image in buttonImages)
-                {
-                    if(image) image.color = Color.white; // Change to your desired color
-                }
-
-                // Reset its scale to normal
-                buttons[i].transform.localScale = new Vector3(1f, 1f, 1f); // Reset to normal size
-            }
+            pauseOverlay.localScale = Vector3.Lerp(initialScale, targetScale, (elapsedTime / scaleDuration));
+            elapsedTime += Time.unscaledDeltaTime; // Use unscaled time to ignore time scale changes
+            yield return null;
         }
-    }
-
-    private bool IsMouseOverResumeButton(GameObject buttom)
-    {
-        if (buttom == null)
-            return false;
-
-        // Obt�m o RectTransform do bot�o
-        RectTransform rectTransform = buttom.GetComponent<RectTransform>();
-        if (rectTransform == null)
-            return false;
-
-        // Pega a posi��o do mouse na tela
-        Vector2 mousePosition = Input.mousePosition;        
-
-        // Verifica se o mouse est� sobre o bot�o
-        return RectTransformUtility.RectangleContainsScreenPoint(
-            rectTransform,
-            mousePosition,            
-            _canvasPauseMenu.GetComponent<UnityEngine.Canvas>().worldCamera
-        );
     }
 
     private void OnEnable()

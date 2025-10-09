@@ -672,6 +672,7 @@ GameObject:
   - component: {fileID: 1048106593993494956}
   - component: {fileID: 3046049957753602304}
   - component: {fileID: 5617076831993270352}
+  - component: {fileID: 5174107413664668997}
   m_Layer: 7
   m_Name: Corngun.Armature
   m_TagString: Untagged
@@ -729,6 +730,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d7f071932a0c6b4ca8352339792690d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5174107413664668997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4515764236445207513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38317820d969bd945b584e8de0e503fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxType: 0
+  looped: 0
+  sfxSource: {fileID: 0}
 --- !u!1 &4917749040341360208
 GameObject:
   m_ObjectHideFlags: 0
