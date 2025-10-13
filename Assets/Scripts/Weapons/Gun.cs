@@ -90,7 +90,12 @@ public class Gun : Weapon, IEquippedGun
         if (gunAnimator) gunAnimator.SetTrigger(FireTrigger);
         else Debug.LogWarning("Gun animator not found.");
 
-        if (_muzzleFlash) _muzzleFlash.Play();        
+        if (_muzzleFlash)
+        {
+            var muzzleFlashInstance = Instantiate(_muzzleFlash, _fireSocket.position, _fireSocket.rotation, _fireSocket);
+            muzzleFlashInstance.Play();
+        }
+        
         if (_cameraRecoil) _cameraRecoil.RecoilFire(_recoilX, _recoilY, _recoilZ, _snappiness, _returnSpeed);        
 
         StartCoroutine(ShootDelay());
