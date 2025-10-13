@@ -349,7 +349,8 @@ MonoBehaviour:
   _snappiness: 3
   _returnSpeed: 1.5
   _fireSocket: {fileID: 1729148229857485247}
-  _muzzleFlash: {fileID: 0}
+  _muzzleFlash: {fileID: 3872089742285635009, guid: 86a0999af4bd1574dbcbbc8601b5fc5b,
+    type: 3}
   projectilePrefab: {fileID: 7392494035453153853, guid: 0a87dd43d1d759148bab6cbfab6cb510,
     type: 3}
   projectileForce: 20
@@ -955,7 +956,7 @@ Transform:
   m_GameObject: {fileID: 8226039140624384179}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.187, z: 0.392}
+  m_LocalPosition: {x: 0, y: 0.187, z: 0.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

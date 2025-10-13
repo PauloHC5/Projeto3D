@@ -7,21 +7,23 @@ public class ACorngun : ProjectileGun, IChargeable
     
     private readonly int Charge = Animator.StringToHash("Charge");
 
-    private float originalProjectileForce, originalRecoilX, originalRecoilY, originalRecoilZ, originalSnappiness, originalReturnSpeed;
+    private float _originalProjectileForce, _originalRecoilX, _originalRecoilY, _originalRecoilZ, _originalSnappiness, _originalReturnSpeed;
+    private Vector3 _muzzleFlashOriginalScale;
 
     private void Start()
     {
-        originalProjectileForce = projectileForce; // Store the original projectile force        
-        originalRecoilX = _recoilX; // Store the original recoil X value
-        originalRecoilY = _recoilY; // Store the original recoil Y value
-        originalRecoilZ = _recoilZ; // Store the original recoil Z value
-        originalSnappiness = _snappiness; // Store the original snappiness value
-        originalReturnSpeed = _returnSpeed; // Store the original return speed value
+        _originalProjectileForce = projectileForce; // Store the original projectile force        
+        _originalRecoilX = _recoilX; // Store the original recoil X value
+        _originalRecoilY = _recoilY; // Store the original recoil Y value
+        _originalRecoilZ = _recoilZ; // Store the original recoil Z value
+        _originalSnappiness = _snappiness; // Store the original snappiness value
+        _originalReturnSpeed = _returnSpeed; // Store the original return speed value
+        _muzzleFlashOriginalScale = _muzzleFlash.transform.localScale; // Store the original scale of the muzzle flash
     }
 
     public override void Fire()
     {
-        projectileForce = originalProjectileForce; // Reset projectile force to original value after firing
+        projectileForce = _originalProjectileForce; // Reset projectile force to original value after firing
         base.Fire();        
         spawnedProjectile.transform.localScale = Vector3.one; // Reset the size of the projectile after firing
         _magAmmo--;
@@ -58,6 +60,7 @@ public class ACorngun : ProjectileGun, IChargeable
         _snappiness *= 2f; // Increase snappiness for super fire
         _returnSpeed /= 2f; // Increase return speed for super fire
         projectileForce *= 2f; // Increase the force for super fire
+        _muzzleFlash.transform.localScale = Vector3.one;
         
         if (superAcorngunProjectilePrefab)
         {
@@ -69,10 +72,11 @@ public class ACorngun : ProjectileGun, IChargeable
         SoundManager.PlayRandomSFX(WorldSfxType.SUPERSHOOT, _gunAudioSource); // Play the super fire sound
 
         // Reset recoil values after firing
-        _recoilX = originalRecoilX;
-        _recoilY = originalRecoilY;
-        _recoilZ = originalRecoilZ;
-        _snappiness = originalSnappiness;
-        _returnSpeed = originalReturnSpeed;
+        _recoilX = _originalRecoilX;
+        _recoilY = _originalRecoilY;
+        _recoilZ = _originalRecoilZ;
+        _snappiness = _originalSnappiness;
+        _returnSpeed = _originalReturnSpeed;
+        _muzzleFlash.transform.localScale = _muzzleFlashOriginalScale; // Reset the muzzle flash scale
     }
 }
