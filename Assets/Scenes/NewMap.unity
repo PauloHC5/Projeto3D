@@ -6346,16 +6346,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3164638836893852914, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
-        type: 3}
-      propertyPath: skipWeaponInspection
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3635807062837744148, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
-        type: 3}
-      propertyPath: Frequency.y
-      value: 11.39
-      objectReference: {fileID: 0}
     - target: {fileID: 4791302133543716961, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
         type: 3}
       propertyPath: m_Name
@@ -16962,11 +16952,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1963020311414406052, guid: 7b88a521f88473e44962f73b67f570e4,
-        type: 3}
-      propertyPath: _skipPlayerTutorial
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2477071576534336466, guid: 7b88a521f88473e44962f73b67f570e4,
         type: 3}
       propertyPath: m_LocalPosition.x
