@@ -2528,7 +2528,8 @@ MonoBehaviour:
   _snappiness: 5
   _returnSpeed: 2.65
   _fireSocket: {fileID: 7309336431696816505}
-  _muzzleFlash: {fileID: 0}
+  _muzzleFlash: {fileID: 5421312653027564346, guid: 781376e98bd6f894b9206f972d1cd49b,
+    type: 3}
   damage: 50
   gunRange: 4.4
   shootLayer:
