@@ -6366,12 +6366,6 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: -0.15119743
       objectReference: {fileID: 0}
-    - target: {fileID: 8019242648768571977, guid: 48bebeb8f1c8d8044b2c3fb12713d3d2,
-        type: 3}
-      propertyPath: OutputAudioMixerGroup
-      value: 
-      objectReference: {fileID: 24300002, guid: f34ee5ec697a25341bbd0190600e6468,
-        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
