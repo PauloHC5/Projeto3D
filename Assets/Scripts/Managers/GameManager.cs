@@ -15,13 +15,13 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private GameObject _canvasGameOver;
     [SerializeField] private GameObject _canvasVictory;
+    [SerializeField] private PulsatingLightBehaviour lightEffect;
 
     [Space] [Header("Player progress")] 
     [SerializeField] private List<GameObject> weaponsPrefabs;
     
     private WaveManager _waveManager;
     private Transform _weaponsSpawnPoint;
-    private PulsatingLightBehaviour _lightEffect;
     private List<GameObject> weaponsToSpawn = new List<GameObject>();
 
     public static bool SkipPlayerTutorial => Instance._skipPlayerTutorial;
@@ -69,8 +69,7 @@ public class GameManager : Singleton<GameManager>
         else
             StartCoroutine(StartGame());
         
-        _lightEffect = FindFirstObjectByType<PulsatingLightBehaviour>();
-        if(!_lightEffect) Debug.LogWarning("No PulsatingLightBehaviour found in the scene.");
+        if(!lightEffect) Debug.LogWarning("No PulsatingLightBehaviour found in the scene.");
     }
 
     private void Update()
@@ -109,7 +108,7 @@ public class GameManager : Singleton<GameManager>
 
         Instance._waveManager.StartHorde(WaveFinished);
 
-        if(_lightEffect) _lightEffect.enabled = false;
+        if(lightEffect) lightEffect.enabled = false;
         
         yield return null;
     }    
