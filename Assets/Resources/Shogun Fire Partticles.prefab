@@ -29442,6 +29442,7 @@ GameObject:
   - component: {fileID: 3048045203960485424}
   - component: {fileID: 5421312653027564346}
   - component: {fileID: 4084301047163379546}
+  - component: {fileID: 8772920532919488541}
   m_Layer: 0
   m_Name: Shogun Fire Partticles
   m_TagString: Untagged
@@ -34386,3 +34387,15 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &8772920532919488541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621054890956376056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba9b52e0bc0146c4e81dbd38dbaf4679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
