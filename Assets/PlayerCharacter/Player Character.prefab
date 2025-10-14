@@ -683,7 +683,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 8002709758977372624}
   Amount: {x: 0.06, y: 0.03}
-  Frequency: {x: 5, y: 10}
+  Frequency: {x: 5, y: 11.39}
 --- !u!1 &2168371858986161816
 GameObject:
   m_ObjectHideFlags: 0
