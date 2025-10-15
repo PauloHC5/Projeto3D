@@ -52,6 +52,8 @@ public class GameManager : Singleton<GameManager>
 
     private void HandleSceneStart()
     {
+        if(SceneManager.GetActiveScene().buildIndex != 1) return;
+        
         // Find the player character controller in the scene
         Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();
 
