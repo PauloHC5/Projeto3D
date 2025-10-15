@@ -127,7 +127,7 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            if(weaponsPrefabs.Count == 0)
+            if(weaponsToSpawn.Count == 0)
             {
                 yield return new WaitForSeconds(5f);
                 StartCoroutine(StartGame());
