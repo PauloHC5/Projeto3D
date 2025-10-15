@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shouldPersistBetweenScenes: 1
-  _skipPlayerTutorial: 0
+  _skipPlayerTutorial: 1
   _canvasGameOver: {fileID: 4479818352807064268, guid: 88f01673783c5a442b7c63e36a781874,
     type: 3}
   _canvasVictory: {fileID: 8368953788387507134, guid: 27115ccd0f7c3fa41a3c35e9270b8238,
@@ -55,22 +55,6 @@ MonoBehaviour:
   - {fileID: 5934105960677187514, guid: c01f5f2ee6f4ac446b2272564a315b3a, type: 3}
   - {fileID: 3279981972159822858, guid: 27bd9de503e3d8f4b86b5c4cbd729ec9, type: 3}
   - {fileID: 8543736380258689134, guid: cac6572748ee7e14cb6cb7f8ce128c81, type: 3}
-  weaponsSpawnPoint: {fileID: 0}
-  OnGameStarted:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &6160668832429094257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +93,7 @@ MonoBehaviour:
     enemies:
     - {fileID: 6076036143720261335, guid: 21b3b941d463e4a41bfb64ecaa0b65ff, type: 3}
     - {fileID: 5140632698899567251, guid: 515189fad3a8baf44bfb500b695d4bc9, type: 3}
-    enemiesAmountToSpawn: 20
+    enemiesAmountToSpawn: 30
     maxEnemiesInTheScene: 5
     timeToSpawn: 5
     spawnInterval: 5
@@ -122,18 +106,3 @@ MonoBehaviour:
     timeToSpawn: 5
     spawnInterval: 3
   hordeIndex: 0
-  onWaveFinishedEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
