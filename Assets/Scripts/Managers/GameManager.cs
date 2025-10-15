@@ -15,7 +15,6 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private GameObject _canvasGameOver;
     [SerializeField] private GameObject _canvasVictory;
-    [SerializeField] private PulsatingLightBehaviour lightEffect;
 
     [Space] [Header("Player progress")] 
     [SerializeField] private List<GameObject> weaponsPrefabs;
@@ -23,6 +22,7 @@ public class GameManager : Singleton<GameManager>
     private WaveManager _waveManager;
     private Transform _weaponsSpawnPoint;
     private List<GameObject> weaponsToSpawn = new List<GameObject>();
+    private PulsatingLightBehaviour _lightEffect;
 
     public static bool SkipPlayerTutorial => Instance._skipPlayerTutorial;
     public PlayerCharacterController Player { get; private set; }
@@ -57,10 +57,10 @@ public class GameManager : Singleton<GameManager>
 
         _weaponsSpawnPoint = GameObject.FindWithTag("WeaponsSpawnPoint")?.transform;
         if (_weaponsSpawnPoint == null)
-            Debug.LogError("Weapons spawn point not found int the scene.");
+            Debug.LogWarning("Weapons spawn point not found int the scene.");
         
         
-        SoundManager.PlayMusic(MusicType.AMBIENCE, true);
+        if(SoundManager.CurrentMusicType != MusicType.AMBIENCE) SoundManager.PlayMusic(MusicType.AMBIENCE, true);
         
         weaponsToSpawn = new List<GameObject>(weaponsPrefabs);
 
@@ -69,7 +69,8 @@ public class GameManager : Singleton<GameManager>
         else
             StartCoroutine(StartGame());
         
-        if(!lightEffect) Debug.LogWarning("No PulsatingLightBehaviour found in the scene.");
+        _lightEffect = Resources.FindObjectsOfTypeAll<PulsatingLightBehaviour>().FirstOrDefault();
+        if(!_lightEffect) Debug.LogWarning("No PulsatingLightBehaviour found in the scene.");
     }
 
     private void Update()
@@ -108,7 +109,7 @@ public class GameManager : Singleton<GameManager>
 
         Instance._waveManager.StartHorde(WaveFinished);
 
-        if(lightEffect) lightEffect.enabled = false;
+        if(_lightEffect) _lightEffect.enabled = false;
         
         yield return null;
     }    
@@ -137,6 +138,8 @@ public class GameManager : Singleton<GameManager>
         
             var weaponPickup = weaponPrefab.GetComponent<PickupBehaviour>();
             if (weaponPickup is null) yield break;
+
+            if (_lightEffect) _lightEffect.enabled = true;
         
             weaponPickup.OnPickup += PlayerPickedUpWeapon; // Subscribe to the weapon pickup event
         }
