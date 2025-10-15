@@ -3,25 +3,29 @@ using UnityEngine;
 
 public class CameraHeadbob : MonoBehaviour
 {
-    [SerializeField] private Transform target;
-
-    //[Range(0.001f, 0.1f)]
+    
     [SerializeField] private Vector2 Amount;
+    [SerializeField] private Vector2 Frequency;
+    
+    [Header("Player Arms")]
+    [SerializeField] private Transform playerArms;
+    [SerializeField] private Vector2 ArmsAmount;
+    [SerializeField] private Vector2 ArmsFrequency;
 
-    //[Range(1f, 20)]
-    [SerializeField] private Vector2 Frequency;                  
-
-    private PlayerCharacterMovementController playerCharacterMovementController;    
-    private Vector3 originalPosition;    
+    private PlayerCharacterMovementController _playerCharacterMovementController;    
+    private Vector3 _armsOriginalPosition;    
+    private Vector3 _originalPosition;
 
     private void Awake()
     {
-        playerCharacterMovementController = GetComponentInParent<PlayerCharacterMovementController>();                
+        _playerCharacterMovementController = GetComponentInParent<PlayerCharacterMovementController>();                
     }
 
     void Start()
     {
-        originalPosition = target.localPosition;
+        if(playerArms) _armsOriginalPosition = playerArms.localPosition;
+        else
+            Debug.LogWarning("Player Arms not assigned in CameraHeadbob script.");
     }
 
     
@@ -29,15 +33,15 @@ public class CameraHeadbob : MonoBehaviour
     {        
         CheckForHeadbobTrigger();
 
-        if (playerCharacterMovementController.PlayerMovementStates == PlayerMovementStates.CROUCH || playerCharacterMovementController.PlayerMovementStates == PlayerMovementStates.CROUCHING)
+        if (_playerCharacterMovementController.PlayerMovementStates == PlayerMovementStates.CROUCH || _playerCharacterMovementController.PlayerMovementStates == PlayerMovementStates.CROUCHING)
             Frequency /= 2f;
     }    
 
     private void CheckForHeadbobTrigger()
     {
-        if (!playerCharacterMovementController.IsGrounded) return;
+        if (!_playerCharacterMovementController.IsGrounded) return;
 
-        float inputMagnitude = playerCharacterMovementController.PlayerMovementVelocityMagnitude;        
+        float inputMagnitude = _playerCharacterMovementController.PlayerMovementVelocityMagnitude;        
 
         if (inputMagnitude > 0f)
         {
@@ -48,17 +52,24 @@ public class CameraHeadbob : MonoBehaviour
 
     private void StartHeadbob()
     {
-        if (target)
+        Vector3 pos = Vector3.zero;
+        pos.x += Mathf.Sin(Time.time * Frequency.x) * Amount.x;
+        pos.y += Mathf.Sin(Time.time * Frequency.y) * Amount.y;
+        transform.localPosition = pos;
+        
+        if (playerArms)
         {            
             Vector3 armsPos = Vector3.zero;
-            armsPos.x += Mathf.Sin(Time.time * Frequency.x) * Amount.x;
-            armsPos.y += Mathf.Sin(Time.time * Frequency.y) * Amount.y;
-            target.localPosition = armsPos;
+            armsPos.x += Mathf.Sin(Time.time * ArmsFrequency.x) * ArmsAmount.x;
+            armsPos.y += Mathf.Sin(Time.time * ArmsFrequency.y) * ArmsAmount.y;
+            playerArms.localPosition = armsPos;
         }
     }
 
     private void StopHeadbob()
     {
-        if (target) target.localPosition = Vector3.Slerp(target.localPosition, originalPosition, 1f * Time.smoothDeltaTime);
+        transform.localPosition = Vector3.Slerp(transform.localPosition, _originalPosition, 1f * Time.smoothDeltaTime);
+        
+        if (playerArms) playerArms.localPosition = Vector3.Slerp(playerArms.localPosition, _armsOriginalPosition, 1f * Time.smoothDeltaTime);
     }
 }

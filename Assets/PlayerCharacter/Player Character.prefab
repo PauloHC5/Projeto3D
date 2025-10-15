@@ -666,6 +666,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 586123004645549830}
   - {fileID: 2056276868697944349}
   m_Father: {fileID: 1790979581169680410}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -681,9 +682,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe35e60867b11b4387a382138a3cc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 8002709758977372624}
   Amount: {x: 0.06, y: 0.03}
   Frequency: {x: 5, y: 11.39}
+  playerArms: {fileID: 0}
+  ArmsAmount: {x: 0, y: 0}
+  ArmsFrequency: {x: 0, y: 0}
 --- !u!1 &2168371858986161816
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,13 +810,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2823818639865070570}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.417696, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.21160841, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1367476817322579109}
-  m_Father: {fileID: 2075349027788936261}
+  m_Father: {fileID: 7692538159652464609}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2844080080322737969
 GameObject:
@@ -1212,7 +1215,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 586123004645549830}
   - {fileID: 9180909906419331081}
   - {fileID: 2799087654367545719}
   - {fileID: 1790979581169680410}
@@ -1440,7 +1442,7 @@ MonoBehaviour:
   crouchSmooth: 3
   crouchJumpImpulse: 1
   crouchCameraHeight: 0.85
-  crouchMeshRootHeight: 0.67
+  crouchMeshRootHeight: -0.15
   crouchGroundCheckHeight: -0.12
   obstacleDetectorPosition: {x: 0, y: 1.15, z: 0}
   obstacleMask:
