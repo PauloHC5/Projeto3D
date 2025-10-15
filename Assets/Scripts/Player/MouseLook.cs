@@ -37,7 +37,7 @@ public class MouseLook : MonoBehaviour
         
     private float _defaultFoV;
     private bool _zoomIn = false;
-    private const float DefaultZoomSpeed = 1000f;
+    private float _defaultZoomSpeed = 1f;
     private LayerMask _defaultCullingMask;
     private float _currentMouseSensitivity;
     private PlayerCharacter _playerCharacter;
@@ -121,6 +121,7 @@ public class MouseLook : MonoBehaviour
     private void PerformAim(float zoomFoV, float zoomSpeed)
     {
         _zoomIn = !_zoomIn;
+        _defaultZoomSpeed = zoomSpeed;
 
         if(_zoomIn)
         {
@@ -147,13 +148,12 @@ public class MouseLook : MonoBehaviour
         float elapsedTime = 0;
         float startFoV = _playerCameras[0].fieldOfView;
         float targetFoV = _zoomIn ? zoomFoV : _defaultFoV;
-        float localscopeSpeed = _zoomIn ? zoomSpeed : zoomSpeed * 3;        
 
         while (Mathf.Abs(_playerCameras[0].fieldOfView - targetFoV) > 0.01f)
         {
             foreach (Camera playerCamera in _playerCameras)
             {
-                playerCamera.fieldOfView = Mathf.Lerp(startFoV, targetFoV, localscopeSpeed * (elapsedTime / zoomSpeed));
+                playerCamera.fieldOfView = Mathf.Lerp(startFoV, targetFoV, elapsedTime / zoomSpeed);
             }
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -177,7 +177,7 @@ public class MouseLook : MonoBehaviour
         {
             StopCoroutine(_zoomCoroutine);
         }
-        _zoomCoroutine = StartCoroutine(Zoom(_defaultFoV, DefaultZoomSpeed));
+        _zoomCoroutine = StartCoroutine(Zoom(_defaultFoV, _defaultZoomSpeed));
     }
 
     private void OnEnable()

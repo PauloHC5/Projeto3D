@@ -1946,7 +1946,7 @@ MonoBehaviour:
   projectileForce: 120
   intervalBetweenShots: 0.07
   scopeZoom: 30
-  scopeSpeed: 200
+  scopeSpeed: 0.5
 --- !u!82 &1146334129554183040
 AudioSource:
   m_ObjectHideFlags: 0
