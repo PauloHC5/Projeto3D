@@ -60,6 +60,12 @@ public class WaveManager : MonoBehaviour
         enemiesInSceneCount = _enemiesInScene.Count;
     }
 
+    private void FixedUpdate()
+    {
+        if(hordeTimer > 0f)
+            hordeTimer -= Time.fixedDeltaTime;
+    }
+
     private void FindSpawnPoints()
     {
         // Find all spawn points in the scene by tag
@@ -140,8 +146,6 @@ public class WaveManager : MonoBehaviour
         
         while (hordeTimer > 0f)
         {
-            // You can display 'timer' as the countdown value
-            hordeTimer -= Time.deltaTime;
             yield return null;
         }
     }
