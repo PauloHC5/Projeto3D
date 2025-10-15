@@ -242,8 +242,6 @@ public class HUDManager : Singleton<HUDManager>
                 break;
             
             case WaveStatus.Preparing:
-                if(_currentWaveRunningRoutine is not null) StopCoroutine(_currentWaveRunningRoutine);
-                
                 wavePanel?.gameObject?.SetActive(true);
                 raidersComingText?.gameObject.SetActive(true);
                 waveText?.gameObject.SetActive(false);
@@ -367,6 +365,7 @@ public class HUDManager : Singleton<HUDManager>
         goGetNewWeaponText.gameObject.SetActive(false);
         StartCoroutine(ScaleUpHordePanel());
         yield return new WaitForSeconds(10f);
+        if(GameManager.WaveStatus != WaveStatus.Finished) yield break;
         waveCompletedText.gameObject.SetActive(false);
         goGetNewWeaponText.gameObject.SetActive(true);
     }
