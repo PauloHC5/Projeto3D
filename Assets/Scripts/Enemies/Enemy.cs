@@ -129,7 +129,7 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void Die(DamageType damageType)
     {
         OnDeath?.Invoke(this);
-        gameObject.tag = "Untagged"; // Remove the enemy tag to prevent further detectio
+        gameObject.tag = "DeadBody"; 
 
         _enemyCollider.enabled = false;
         BehaviorGraph.enabled = false;

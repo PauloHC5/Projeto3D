@@ -12,6 +12,7 @@ TagManager:
   - SpawnPoint
   - AcornAmmo
   - WeaponsSpawnPoint
+  - DeadBody
   layers:
   - Default
   - TransparentFX

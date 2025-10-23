@@ -51,6 +51,8 @@ public class BananaShotgun : RaycastGun
         // Desaatch shotgun from player
         transform.SetParent(null);
 
+        GetComponent<DestroyAfterSeconds>().enabled = true;
+
         // Set shotgun to default layer
         int defaultLayer = LayerMask.NameToLayer("Default");
         gameObject.layer = defaultLayer;

@@ -103,6 +103,8 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log("Starting Game");
         
+        GameObject.FindGameObjectsWithTag("DeadBody").ToList().ForEach(Destroy);
+        
         Time.timeScale = 1f; // Resume time scale     
         if(!SkipPlayerTutorial) FadeManager.FadeIn(() => {});
 
@@ -211,6 +213,7 @@ public class GameManager : Singleton<GameManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         HandleSceneStart();
+        PlayerCharacterController.PlayerControls = new PlayerInputActions();
     }
     
     private void OnEnable()

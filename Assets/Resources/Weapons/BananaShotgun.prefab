@@ -2479,6 +2479,7 @@ GameObject:
   - component: {fileID: 3354618866198349738}
   - component: {fileID: 5263204524248774029}
   - component: {fileID: 6169239370593857701}
+  - component: {fileID: 2637185774834386933}
   m_Layer: 7
   m_Name: BananaShotgun
   m_TagString: Untagged
@@ -2691,6 +2692,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2637185774834386933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6961345242618615251}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08e85eb05e50504192aabada588d713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seconds: 5
 --- !u!1 &7468417896748121649
 GameObject:
   m_ObjectHideFlags: 0

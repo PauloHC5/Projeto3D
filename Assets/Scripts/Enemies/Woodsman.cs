@@ -52,6 +52,8 @@ public class Woodsman : Enemy
     {
         base.Die(damageType);
 
+        weapon.gameObject.tag = "DeadBody";
+
         DropWeapon();
     }
 
