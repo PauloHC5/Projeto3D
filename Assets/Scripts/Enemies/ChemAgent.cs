@@ -81,6 +81,8 @@ public class ChemAgent : Enemy
         base.Die(damageType);
         
         Agent.enabled = false;
+        var enemyDetection = GetComponent<EnemyDetectionController>();
+        if (enemyDetection) enemyDetection.enabled = false;
     }
 
     private void OnDestroy()
