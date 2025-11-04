@@ -36,6 +36,7 @@ public class CutsceneManager : Singleton<CutsceneManager>
 
     private float _skipSliderInactivityTimer = 0f;
     private bool _wantsToSkip = false;
+    private PlayerCharacterController _playerCharacterController;
 
     private void Awake()
     {
@@ -44,12 +45,19 @@ public class CutsceneManager : Singleton<CutsceneManager>
 
     private void Start()
     {
-        PlayerCharacterController.PlayerControls.Cutscene.Skip.started += ctx =>
+        _playerCharacterController = FindFirstObjectByType<PlayerCharacterController>();
+        if(_playerCharacterController == null)
+        {
+            Debug.LogError("PlayerCharacterController not found in the scene. Cutscene skipping will not work.");
+            return;
+        }
+        
+        _playerCharacterController.PlayerControls.Cutscene.Skip.started += ctx =>
         {
             _wantsToSkip = true;
         };
 
-        PlayerCharacterController.PlayerControls.Cutscene.Skip.canceled += ctx =>
+        _playerCharacterController.PlayerControls.Cutscene.Skip.canceled += ctx =>
         {
             _wantsToSkip = false;
         };

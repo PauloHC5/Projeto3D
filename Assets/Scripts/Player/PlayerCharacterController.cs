@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum PlayerControlTypes
 {
@@ -11,43 +12,47 @@ public enum PlayerControlTypes
 
 public class PlayerCharacterController : MonoBehaviour
 {
-    public static bool PrimaryActionButtonPressed = false;
-    public static bool SecondaryActionButtonPressed = false;
+    [HideInInspector] public bool primaryActionButtonPressed = false;
+    [HideInInspector] public bool secondaryActionButtonPressed = false;
 
-    private static PlayerInputActions _playerControls;
-    public static PlayerInputActions PlayerControls => _playerControls;
+    private PlayerInputActions _playerControls;
+    public PlayerInputActions PlayerControls => _playerControls;
+    
+    private InputAction _reloadAction;
+    private InputAction _jumpAction;
+    private InputAction _crouchAction;
 
-    private int MouseScroll;
-    private Vector2 playerMovementInput;
-    private Vector2 playerLookInput;
+    private int _mouseScroll;
+    private Vector2 _playerMovementInput;
+    private Vector2 _playerLookInput;
 
-    private PlayerCharacterMovementController playerCharacterMovementController;
-    private PlayerCharacterCombatController playerCharacterCombatController;
+    private PlayerCharacterMovementController _playerCharacterMovementController;
+    private PlayerCharacterCombatController _playerCharacterCombatController;
 
     private void Awake()
     {
+        _playerControls = new PlayerInputActions();
+        
         Cursor.lockState = CursorLockMode.Locked;
-
-        playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
-        playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
-
+        
+        _playerCharacterMovementController = GetComponent<PlayerCharacterMovementController>();
+        _playerCharacterCombatController = GetComponent<PlayerCharacterCombatController>();
+        
         InitializePlayerControls();
     }
 
     private void InitializePlayerControls()
     {
-        _playerControls = new PlayerInputActions();
+        _playerControls.Player.PrimaryAction.started += ctx => primaryActionButtonPressed = true;
+        _playerControls.Player.PrimaryAction.canceled += ctx => primaryActionButtonPressed = false;
 
-        _playerControls.Player.PrimaryAction.started += ctx => PrimaryActionButtonPressed = true;
-        _playerControls.Player.PrimaryAction.canceled += ctx => PrimaryActionButtonPressed = false;
-
-        _playerControls.Player.SecondaryAction.started += ctx => SecondaryActionButtonPressed = true;
-        _playerControls.Player.SecondaryAction.canceled += ctx => SecondaryActionButtonPressed = false;
+        _playerControls.Player.SecondaryAction.started += ctx => secondaryActionButtonPressed = true;
+        _playerControls.Player.SecondaryAction.canceled += ctx => secondaryActionButtonPressed = false;
 
         _playerControls.Player.SecondaryAction.performed += ctx => PerformSecondaryAction();
-        _playerControls.Player.Jump.performed += ctx => PerformJump();
-        _playerControls.Player.Reload.performed += ctx => PerformReload();
-        _playerControls.Player.Crouch.performed += ctx => Crouch();
+        _reloadAction = _playerControls.Player.Reload;
+        _jumpAction = _playerControls.Player.Jump;
+        _crouchAction = _playerControls.Player.Crouch;
 
         _playerControls.Player.Pause.performed += ctx =>
         {
@@ -63,25 +68,25 @@ public class PlayerCharacterController : MonoBehaviour
         };
 
         // Assign the SwitchToWeapon method to the respective input action        
-        _playerControls.Player.Weapon1.performed += ctx => playerCharacterCombatController.SwitchToWeapon(0);
-        _playerControls.Player.Weapon2.performed += ctx => playerCharacterCombatController.SwitchToWeapon(1);
-        _playerControls.Player.Weapon3.performed += ctx => playerCharacterCombatController.SwitchToWeapon(2);
-        _playerControls.Player.Weapon4.performed += ctx => playerCharacterCombatController.SwitchToWeapon(3);
+        _playerControls.Player.Weapon1.performed += ctx => _playerCharacterCombatController.SwitchToWeapon(0);
+        _playerControls.Player.Weapon2.performed += ctx => _playerCharacterCombatController.SwitchToWeapon(1);
+        _playerControls.Player.Weapon3.performed += ctx => _playerCharacterCombatController.SwitchToWeapon(2);
+        _playerControls.Player.Weapon4.performed += ctx => _playerCharacterCombatController.SwitchToWeapon(3);
 
 
         // Assign the HandleMouseScroll method to the respective input actions
-        _playerControls.Player.MouseScrollUp.performed += ctx => { MouseScroll = 1; HandleMouseScroll(); };
-        _playerControls.Player.MouseScrollDown.performed += ctx => { MouseScroll = -1; HandleMouseScroll(); };
+        _playerControls.Player.MouseScrollUp.performed += ctx => { _mouseScroll = 1; HandleMouseScroll(); };
+        _playerControls.Player.MouseScrollDown.performed += ctx => { _mouseScroll = -1; HandleMouseScroll(); };
     }
 
     void Update()
     {
         HandleInput();
-        playerCharacterMovementController.HandleMovement(playerMovementInput, playerLookInput);
+        _playerCharacterMovementController.HandleMovement(_playerMovementInput, _playerLookInput);
     }
 
     // ReSharper disable Unity.PerformanceAnalysis
-    public static void SwitchPlayerControlType(PlayerControlTypes playerControlTypes)
+    public void SwitchPlayerControlType(PlayerControlTypes playerControlTypes)
     {
         switch (playerControlTypes)
         {
@@ -116,22 +121,22 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void HandleMouseScroll()
     {
-        if (playerCharacterCombatController == null || playerCharacterCombatController.EquippedWeapon == null || playerCharacterCombatController.WeaponOrder == null || playerCharacterCombatController.PlayerWeapons == null)
+        if (_playerCharacterCombatController == null || _playerCharacterCombatController.EquippedWeapon == null || _playerCharacterCombatController.WeaponOrder == null || _playerCharacterCombatController.PlayerWeapons == null)
             return;
         
         // Get the weapon order and the dictionary of weapons
-        var weaponOrder = playerCharacterCombatController.WeaponOrder;
-        var playerWeapons = playerCharacterCombatController.PlayerWeapons;
+        var weaponOrder = _playerCharacterCombatController.WeaponOrder;
+        var playerWeapons = _playerCharacterCombatController.PlayerWeapons;
 
         int inventoryCount = weaponOrder.Count;
         if (inventoryCount <= 1)
             return; // No need to scroll if only one weapon
 
         // Get the current index of the equipped weapon
-        int currentIndex = playerCharacterCombatController.WeaponOrder.ToList().IndexOf(playerCharacterCombatController.EquippedWeapon.WeaponType);
+        int currentIndex = _playerCharacterCombatController.WeaponOrder.ToList().IndexOf(_playerCharacterCombatController.EquippedWeapon.WeaponType);
 
         // Calculate new index based on scroll direction
-        int newIndex = currentIndex - MouseScroll;
+        int newIndex = currentIndex - _mouseScroll;
 
         // Wrap around
         if (newIndex < 0)
@@ -146,7 +151,7 @@ public class PlayerCharacterController : MonoBehaviour
             var tryWeaponType = weaponOrder[tryIndex];
             if (playerWeapons.TryGetValue(tryWeaponType, out var weapon) && weapon != null)
             {
-                playerCharacterCombatController.SwitchToWeapon(tryWeaponType);
+                _playerCharacterCombatController.SwitchToWeapon(tryWeaponType);
                 break;
             }
         }
@@ -154,55 +159,76 @@ public class PlayerCharacterController : MonoBehaviour
 
     private void HandleInput()
     {
-        if (PrimaryActionButtonPressed) PerformPrimaryAction();
+        if (primaryActionButtonPressed) PerformPrimaryAction();
 
-        playerCharacterCombatController?.ChargeWeapon(SecondaryActionButtonPressed);
+        _playerCharacterCombatController?.ChargeWeapon(secondaryActionButtonPressed);
 
-        playerMovementInput = _playerControls.Player.Move.ReadValue<Vector2>();
-        playerLookInput = _playerControls.Player.Look.ReadValue<Vector2>();
+        _playerMovementInput = _playerControls.Player.Move.ReadValue<Vector2>();
+        _playerLookInput = _playerControls.Player.Look.ReadValue<Vector2>();
     }
 
     private void PerformPrimaryAction()
     {
-        if (playerCharacterCombatController)
+        if (_playerCharacterCombatController)
         {
-            if (playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING || playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RAISING) return;
+            if (_playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RELOADING || _playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.ATTACKING || _playerCharacterCombatController.PlayerCombatStates == PlayerCombatStates.RAISING) return;
 
-            playerCharacterCombatController.PerformPrimaryAction();
+            _playerCharacterCombatController.PerformPrimaryAction();
         }
     }
 
     private void PerformSecondaryAction()
     {
-        if (playerCharacterCombatController)
+        if (_playerCharacterCombatController)
         {
-            playerCharacterCombatController.PerformSecondaryAction();
+            _playerCharacterCombatController.PerformSecondaryAction();
         }
     }
 
     private void PerformReload()
     {
-        playerCharacterCombatController.PerformReload();
+        _playerCharacterCombatController.PerformReload();
     }
 
     private void PerformJump()
     {
-        playerCharacterMovementController.Jump();
+        _playerCharacterMovementController.Jump();
     }
 
     private void Crouch()
     {
-        playerCharacterMovementController.Crouch();
+        _playerCharacterMovementController.Crouch();
     }
 
     private void OnEnable()
     {
         _playerControls.Enable();
+        if (_reloadAction != null)
+            _reloadAction.performed += OnReloadPerformed;
+        if(_jumpAction != null)
+            _jumpAction.performed += ctx => PerformJump();
+        if(_crouchAction != null)
+            _crouchAction.performed += ctx => Crouch();
     }
 
     private void OnDisable()
     {
+        if (_reloadAction != null)
+            _reloadAction.performed -= OnReloadPerformed;
+        if(_jumpAction != null)
+            _jumpAction.performed -= ctx => PerformJump();
+        if(_crouchAction != null)
+            _crouchAction.performed -= ctx => Crouch();
+        
         _playerControls.Disable();
+    }
+    
+    private void OnReloadPerformed(InputAction.CallbackContext ctx)
+    {
+        // Unity's null check works for "destroyed" objects due to operator overload
+        if (this == null) return;
+
+        _playerCharacterCombatController.PerformReload();
     }
 
 }

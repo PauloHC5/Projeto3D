@@ -3,15 +3,19 @@ using UnityEngine;
 public class PlayerInspectWeaponBehaviour : StateMachineBehaviour
 {   
     PlayerCharacterCombatController _playerCharacterCombatController;
+    PlayerCharacterController _playerCharacterController;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {        
+        _playerCharacterController = animator.GetComponentInParent<PlayerCharacterController>();
+        
         HUDManager.Disable();
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.DISABLED);
+        _playerCharacterController.SwitchPlayerControlType(PlayerControlTypes.DISABLED);
     }         
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {        
         _playerCharacterCombatController = animator.GetComponentInParent<PlayerCharacterCombatController>();
+        _playerCharacterController = animator.GetComponentInParent<PlayerCharacterController>();
         
         var weaponTutorialType = _playerCharacterCombatController.EquippedWeapon?.WeaponType switch
         {
@@ -22,7 +26,7 @@ public class PlayerInspectWeaponBehaviour : StateMachineBehaviour
             _ => WeaponTutorialType.NONE  
         };
 
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
+        _playerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
 
         if(!GameManager.SkipPlayerTutorial) TutorialManager.PlayTutorial(weaponTutorialType);
     }    

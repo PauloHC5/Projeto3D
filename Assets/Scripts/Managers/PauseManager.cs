@@ -15,6 +15,7 @@ public class PauseManager : Singleton<PauseManager>
     [SerializeField] private Slider musicSlider;
     
     private Vector3 _pauseOverlayOriginalScale;
+    private PlayerCharacterController _playerCharacterController;
 
     public static Slider MouseSensitivitySlider
     {
@@ -35,7 +36,14 @@ public class PauseManager : Singleton<PauseManager>
             Debug.LogError("Pause Menu UI is not assigned in the inspector.");
             return;
         }
-        canvasPauseMenu.SetActive(false);        
+        canvasPauseMenu.SetActive(false);   
+        
+        _playerCharacterController = FindFirstObjectByType<PlayerCharacterController>();
+        if(_playerCharacterController == null)
+        {
+            Debug.LogError("PlayerCharacterController not found in the scene. Pause menu functionality may be impaired.");
+            return;
+        }
     }
 
     private void Update()
@@ -69,7 +77,7 @@ public class PauseManager : Singleton<PauseManager>
     {        
         canvasPauseMenu.SetActive(false);                
 
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
+        _playerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Cursor.lockState = CursorLockMode.Locked;                  
 
         // refocus the game window to allow input

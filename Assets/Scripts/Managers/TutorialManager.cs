@@ -48,6 +48,7 @@ public class TutorialManager : Singleton<TutorialManager>
     private VideoPlayer _videoPlayer;
     private RenderTexture _renderTexture;
     private WeaponTutorialType _currentWeaponTutorial;
+    private PlayerCharacterController _playerCharacterController;
     
     private static bool _isPlayingTutorial = false;
     public static bool IsPlayingTutorial => _isPlayingTutorial;
@@ -67,29 +68,32 @@ public class TutorialManager : Singleton<TutorialManager>
 
     private void Start()
     {
-        if(Application.isPlaying)
-        {            
-            if (_canvasTutorial == null) Debug.LogError("CanvasTutorial is not assigned in the TutorialManager.");
+        if (!Application.isPlaying) return;
+        
+        if (_canvasTutorial == null) Debug.LogError("CanvasTutorial is not assigned in the TutorialManager.");
 
-            if (_canvasTutorial.activeSelf)
-            {
-                _canvasTutorial.SetActive(false);
-            }
+        if (_canvasTutorial.activeSelf)
+        {
+            _canvasTutorial.SetActive(false);
+        }
 
-            _videoPlayer = _canvasTutorial.GetComponentInChildren<VideoPlayer>(true);
-            if (_videoPlayer == null)
-            {
-                Debug.LogError("VideoPlayer component not found in the TutorialManager's canvas.");
-                return;
-            }
+        _videoPlayer = _canvasTutorial.GetComponentInChildren<VideoPlayer>(true);
+        if (_videoPlayer == null)
+        {
+            Debug.LogError("VideoPlayer component not found in the TutorialManager's canvas.");
+            return;
+        }
 
-            _renderTexture = _canvasTutorial.GetComponentInChildren<RawImage>(true).texture as RenderTexture;
-            if (_renderTexture == null)
-            {
-                Debug.LogError("RenderTexture component not found in the TutorialManager's canvas.");
-                return;
-            }
-        }        
+        _renderTexture = _canvasTutorial.GetComponentInChildren<RawImage>(true).texture as RenderTexture;
+        if (_renderTexture == null)
+        {
+            Debug.LogError("RenderTexture component not found in the TutorialManager's canvas.");
+            return;
+        }
+        
+        _playerCharacterController = FindFirstObjectByType<PlayerCharacterController>();
+        if(_playerCharacterController == null)
+            Debug.LogError("PlayerCharacterController not found in the TutorialManager's canvas.");
     }
 
 #if UNITY_EDITOR
@@ -140,7 +144,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
         _isPlayingTutorial = true;
         Instance._canvasTutorial.SetActive(true);
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
+        Instance._playerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
         Time.timeScale = 0f;
 
         Instance.PlayWeaponVideoTutorial(weaponTutorial);
@@ -191,7 +195,7 @@ public class TutorialManager : Singleton<TutorialManager>
     public void ExitTutorial()
     {        
         _videoPlayer.Stop();
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
+        Instance._playerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Time.timeScale = 1f;
         _tutorialCompleted[_currentWeaponTutorial] = true; // Mark the tutorial as completed
         _canvasTutorial.SetActive(false);   

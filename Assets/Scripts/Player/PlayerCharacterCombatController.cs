@@ -70,6 +70,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
 
     private PlayerCombatStates _playerCombatStates = PlayerCombatStates.DEFAULT;
     private PlayerCharacterAnimationsController _playerCharacterAnimationsController;
+    private PlayerCharacterController _playerCharacterController;
 
     private List<PlayerWeaponTypes> _weaponOrder = new List<PlayerWeaponTypes>();
     public IReadOnlyList<PlayerWeaponTypes> WeaponOrder => _weaponOrder;
@@ -99,6 +100,8 @@ public class PlayerCharacterCombatController : MonoBehaviour
     {
         _playerCharacterAnimationsController =
             new PlayerCharacterAnimationsController(GetComponentInChildren<Animator>(), skipWeaponInspection);
+        
+        _playerCharacterController = GetComponent<PlayerCharacterController>();
 
         InitializePlayerWeapons();
 
@@ -260,7 +263,7 @@ public class PlayerCharacterCombatController : MonoBehaviour
     }
 
     private bool ConditionToSwitchWeapon(PlayerWeaponTypes weaponToSwitch) =>
-        !PlayerCharacterController.PrimaryActionButtonPressed &&
+        !_playerCharacterController.primaryActionButtonPressed &&
         PlayerCombatStates != PlayerCombatStates.ATTACKING &&
         PlayerCombatStates != PlayerCombatStates.INSPECTINGWEAPON &&
         PlayerCombatStates != PlayerCombatStates.FIRING &&

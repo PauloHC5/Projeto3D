@@ -86,7 +86,7 @@ public class GameManager : Singleton<GameManager>
 
     private IEnumerator IntroductionRoutine()
     {                
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.CUTSCENE);
+        Player.SwitchPlayerControlType(PlayerControlTypes.CUTSCENE);
 
         HUDManager.Disable(); 
 
@@ -107,8 +107,11 @@ public class GameManager : Singleton<GameManager>
         
         Time.timeScale = 1f; // Resume time scale     
         if(!SkipPlayerTutorial) FadeManager.FadeIn(() => {});
+        
+        if(Player is null)
+            Player = FindObjectOfType<PlayerCharacterController>();
 
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
+        Player.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
 
         Instance._waveManager.StartHorde(WaveFinished);
@@ -123,7 +126,7 @@ public class GameManager : Singleton<GameManager>
         if (_waveManager.WavesFinished)
         {
             Instantiate(_canvasVictory, Vector3.zero, Quaternion.identity);
-            PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
+            Player.SwitchPlayerControlType(PlayerControlTypes.UI);
             Cursor.lockState = CursorLockMode.None;
             FadeManager.FadeOut(() => { });
         }
@@ -160,7 +163,7 @@ public class GameManager : Singleton<GameManager>
         
         Time.timeScale = 0f;
         IsPaused = true;
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.UI);
+        Instance.Player.SwitchPlayerControlType(PlayerControlTypes.UI);
 
         // Invoke pause event
         OnPauseGame?.Invoke();
@@ -171,7 +174,7 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 1f;
         IsPaused = false;
         
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
+        Instance.Player.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
 
         // Invoke resume event
         OnResumeGame?.Invoke();
@@ -195,7 +198,7 @@ public class GameManager : Singleton<GameManager>
             Debug.LogError("Endgame canvas is not assigned in the GameManager.");
         }
 
-        PlayerCharacterController.SwitchPlayerControlType(PlayerControlTypes.CUTSCENE);
+        Instance.Player.SwitchPlayerControlType(PlayerControlTypes.CUTSCENE);
         Cursor.lockState = CursorLockMode.None;
         
         // Invoke game over event
@@ -213,7 +216,6 @@ public class GameManager : Singleton<GameManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         HandleSceneStart();
-        PlayerCharacterController.PlayerControls = new PlayerInputActions();
     }
     
     private void OnEnable()

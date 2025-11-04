@@ -41,6 +41,7 @@ public class MouseLook : MonoBehaviour
     private LayerMask _defaultCullingMask;
     private float _currentMouseSensitivity;
     private PlayerCharacter _playerCharacter;
+    private PlayerCharacterController _playerCharacterController;
 
     private float _xRotation = 0f;
     private float _yRotation = 0f;    
@@ -54,6 +55,7 @@ public class MouseLook : MonoBehaviour
     private void Awake()
     {
         _playerCharacter = GetComponentInParent<PlayerCharacter>();
+        _playerCharacterController = GetComponentInParent<PlayerCharacterController>();
     }
 
     void Start()
@@ -74,7 +76,7 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _mouseInput = PlayerCharacterController.PlayerControls.Player.Look.ReadValue<Vector2>();        
+        _mouseInput = _playerCharacterController.PlayerControls.Player.Look.ReadValue<Vector2>();        
 
         _xRotation -= _mouseInput.y * _currentMouseSensitivity * Time.deltaTime;
         _yRotation = _mouseInput.x * _currentMouseSensitivity * Time.deltaTime;
