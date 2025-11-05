@@ -55,7 +55,7 @@ public class GameManager : Singleton<GameManager>
         if(SceneManager.GetActiveScene().buildIndex != 1) return;
         
         // Find the player character controller in the scene
-        Player = UnityEngine.Object.FindFirstObjectByType<PlayerCharacterController>();
+        Player = FindFirstObjectByType<PlayerCharacterController>();
 
         _weaponsSpawnPoint = GameObject.FindWithTag("WeaponsSpawnPoint")?.transform;
         if (_weaponsSpawnPoint == null)
@@ -108,8 +108,7 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 1f; // Resume time scale     
         if(!SkipPlayerTutorial) FadeManager.FadeIn(() => {});
         
-        if(Player is null)
-            Player = FindObjectOfType<PlayerCharacterController>();
+        Player ??= FindFirstObjectByType<PlayerCharacterController>();
 
         Player.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
