@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class FadeManager : Singleton<FadeManager>
@@ -79,8 +80,18 @@ public class FadeManager : Singleton<FadeManager>
             OnFadeOutComplete = null;
         }
     }
+    
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
-    private void OnLevelWasLoaded(int level)
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         _canvasFade.SetActive(false); // Hide the fade canvas when a new level is loaded
     }
