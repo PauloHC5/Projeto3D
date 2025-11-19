@@ -101,8 +101,6 @@ public class GameManager : Singleton<GameManager>
 
     private IEnumerator StartGame()
     {
-        Debug.Log("Starting Game");
-        
         GameObject.FindGameObjectsWithTag("DeadBody").ToList().ForEach(Destroy);
         
         Time.timeScale = 1f; // Resume time scale     
@@ -112,10 +110,14 @@ public class GameManager : Singleton<GameManager>
 
         Player.SwitchPlayerControlType(PlayerControlTypes.GAMEPLAY);
         Player.GetComponent<PlayerCharacterCombatController>().enabled = true;
+        
+        if(!Instance._waveManager.enabled) yield break;
 
         Instance._waveManager.StartHorde(WaveFinished);
 
         if(_lightEffect) _lightEffect.enabled = false;
+        
+        Debug.Log("Starting Game");
         
         yield return null;
     }    
